@@ -36,24 +36,33 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@tetsup/web2d": "^0.0.2",
+    "@tetsup/web2d": "^0.0.3",
     "yaml": "^2.8.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
     "@types/node": "^25.5.0",
+    "@types/pngjs": "^6.0.5",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
     "@vitest/browser-playwright": "4.1.2",
     "@vitest/coverage-v8": "4.1.2",
     "eslint": "^10.2.0",
+    "msw": "^2.13.3",
     "oxlint": "^1.58.0",
     "playwright": "^1.59.1",
+    "pngjs": "^7.0.0",
     "prettier": "^3.8.1",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
+    "vite": "^8.0.8",
     "vitest": "4.1.2",
     "zocker": "^3.0.0"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
