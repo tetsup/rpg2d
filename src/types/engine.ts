@@ -35,6 +35,8 @@ export type RpgConfig = {
   };
 };
 
+export type RpgKey = 'left' | 'right' | 'up' | 'down' | 'enter' | 'cancel';
+
 export type RpgManifest = {
   initialState: RpgState;
   config: RpgConfig;
