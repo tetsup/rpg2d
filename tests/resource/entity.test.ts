@@ -1,9 +1,8 @@
 import { Entity } from '@/resource/entity';
 import { ResourceManager } from '@/resource/resource-manager';
 import { Skin } from '@/resource/skin';
-import { EntitySchema } from '@/schemas/entity';
+import { EntityData } from '@/schemas/entity';
 import { SkinSchema } from '@/schemas/image/skin';
-import { zocker } from 'zocker';
 
 describe('Entity.factory', () => {
   it('依存を解決してインスタンス生成される', async () => {
@@ -11,11 +10,15 @@ describe('Entity.factory', () => {
     const resources = {
       get: getMock,
     } as unknown as ResourceManager;
-    const raw = zocker(EntitySchema).generate();
+    const raw: EntityData = {
+      id: 'entity1',
+      appearance: { default: { layer1: 'skin1' }, rules: [] },
+      position: { x: 0, y: 0 },
+    };
     const entity = await Entity.factory(resources, raw);
 
     expect(entity).toBeInstanceOf(Entity);
-    expect(getMock).toHaveBeenCalledWith(raw.skin, SkinSchema, Skin.factory);
+    expect(getMock).toHaveBeenCalledWith(raw.appearance.default.layer1, SkinSchema, Skin.factory);
   });
 
   it('loadDepsの結果がconstructorに渡る', async () => {
@@ -23,9 +26,13 @@ describe('Entity.factory', () => {
     const resources = {
       get: vi.fn().mockResolvedValue(skin),
     } as unknown as ResourceManager;
-    const raw = zocker(EntitySchema).generate();
-    const entity = await Entity.factory<'entity'>(resources, raw);
+    const raw: EntityData = {
+      id: 'entity1',
+      appearance: { default: { layer1: 'skin1' }, rules: [] },
+      position: { x: 0, y: 0 },
+    };
+    const entity = await Entity.factory(resources, raw);
 
-    expect((entity as any).deps.skin).toBe(skin);
+    expect(entity.deps.appearance.deps.layers.default.layer1).toBe(skin);
   });
 });

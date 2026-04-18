@@ -1,15 +1,14 @@
 import z from 'zod';
-import { IdSchema, ResourceSchemaBase } from './common';
-import { ActionSchema } from './action';
+import { AppearanceSchema } from './appearance';
 
-const EntityActionTriggerSchema = z.enum(['check', 'touch']);
-
-const ConditionSchema = z.object();
-
-export const EntitySchema = ResourceSchemaBase('entity', {
-  skin: IdSchema,
-  condition: ConditionSchema,
-  actions: z.record(EntityActionTriggerSchema, ActionSchema),
+export const EntitySchema = z.object({
+  id: z.string(),
+  appearance: AppearanceSchema,
+  position: z.object({
+    x: z.number(),
+    y: z.number(),
+  }),
+  context: z.record(z.string(), z.any()).optional(),
 });
 
 export type EntityData = z.infer<typeof EntitySchema>;

@@ -1,18 +1,20 @@
 import z from 'zod';
 import type { ResourceManager } from './resource-manager';
 import type { ActionData } from '@/schemas/action';
+import type { AppearanceData } from '@/schemas/appearance';
 import type { EntityData } from '@/schemas/entity';
 import type { FieldData } from '@/schemas/field';
 import type { SkinData } from '@/schemas/image/skin';
 import type { TextureData } from '@/schemas/image/texture';
 import type { TileActionTrigger, TileData } from '@/schemas/tile';
+import type { Appearance, AppearanceDeps } from './appearance';
 import type { Skin } from './skin';
 import type { Action } from './action';
 import type { Entity } from './entity';
 import type { Field } from './field';
 import type { Texture } from './texture';
 import type { Tile } from './tile';
-import { Position } from '@/schemas/common';
+import type { Position } from '@/schemas/common';
 
 export type ResourceDefinition = {
   action: {
@@ -20,10 +22,15 @@ export type ResourceDefinition = {
     class: typeof Action;
     deps: {};
   };
+  appearance: {
+    data: AppearanceData;
+    class: typeof Appearance;
+    deps: AppearanceDeps;
+  };
   entity: {
     data: EntityData;
     class: typeof Entity;
-    deps: { skin: Skin };
+    deps: { appearance: Appearance };
   };
   field: {
     data: FieldData;
