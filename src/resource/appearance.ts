@@ -1,9 +1,9 @@
 import { AppearanceData, AppearanceRuleData, AppearanceSchema, LayersData } from '@/schemas/appearance';
+import { SkinSchema } from '@/schemas/image/skin';
+import { Condition } from '@/schemas/condition';
 import { ResourceManager } from './resource-manager';
 import { ResourceBase } from './resource-base';
-import { SkinSchema } from '@/schemas/image/skin';
 import { Skin } from './skin';
-import { Condition } from '@/schemas/condition';
 
 type Layers = Record<string, Skin | null>;
 

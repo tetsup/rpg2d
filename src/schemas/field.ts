@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import z from 'zod';
 import { IdSchema, ResourceSchemaBase, PositionSchema } from './common';
 
 export const TileCodeSchema = z.string().min(1);

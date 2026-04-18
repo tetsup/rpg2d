@@ -1,6 +1,6 @@
-import { TexturePlayback, type TextureData, TextureSchema } from '@/schemas/image/texture';
-import { ResourceBase } from './resource-base';
 import type { ResourceManager } from './resource-manager';
+import { ResourceBase } from './resource-base';
+import { TexturePlayback, type TextureData, TextureSchema } from '@/schemas/image/texture';
 
 export class Texture extends ResourceBase<'texture'> {
   static schema = TextureSchema;

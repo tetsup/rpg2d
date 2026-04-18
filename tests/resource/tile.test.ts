@@ -1,9 +1,9 @@
-import { Tile } from '@/resource/tile';
-import { ResourceManager } from '@/resource/resource-manager';
 import { zocker } from 'zocker';
+import { ResourceManager } from '@/resource/resource-manager';
+import { Tile } from '@/resource/tile';
+import { Texture } from '@/resource/texture';
 import { TileSchema } from '@/schemas/tile';
 import { TextureSchema } from '@/schemas/image/texture';
-import { Texture } from '@/resource/texture';
 
 describe('Tile.factory', () => {
   it('依存を解決してインスタンス生成される', async () => {

@@ -1,5 +1,5 @@
-import { Entity } from '@/resource/entity';
 import { ResourceManager } from '@/resource/resource-manager';
+import { Entity } from '@/resource/entity';
 import { Skin } from '@/resource/skin';
 import { EntityData } from '@/schemas/entity';
 import { SkinSchema } from '@/schemas/image/skin';

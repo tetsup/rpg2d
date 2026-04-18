@@ -1,7 +1,7 @@
 import { TileSchema, type TileData } from '@/schemas/tile';
 import { TextureSchema } from '@/schemas/image/texture';
-import { ResourceBase } from './resource-base';
 import type { ResourceManager } from './resource-manager';
+import { ResourceBase } from './resource-base';
 import { Action } from './action';
 import { Texture } from './texture';
 

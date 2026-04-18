@@ -1,5 +1,5 @@
-import type { ResourceManager } from './resource-manager';
 import { EntityData, EntitySchema } from '@/schemas/entity';
+import type { ResourceManager } from './resource-manager';
 import { ResourceBase } from './resource-base';
 import { Appearance } from './appearance';
 

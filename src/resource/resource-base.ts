@@ -7,14 +7,14 @@ import type { FieldData } from '@/schemas/field';
 import type { SkinData } from '@/schemas/image/skin';
 import type { TextureData } from '@/schemas/image/texture';
 import type { TileActionTrigger, TileData } from '@/schemas/tile';
-import type { Appearance, AppearanceDeps } from './appearance';
-import type { Skin } from './skin';
+import type { Position } from '@/schemas/common';
 import type { Action } from './action';
+import type { Appearance, AppearanceDeps } from './appearance';
 import type { Entity } from './entity';
 import type { Field } from './field';
+import type { Skin } from './skin';
 import type { Texture } from './texture';
 import type { Tile } from './tile';
-import type { Position } from '@/schemas/common';
 
 export type ResourceDefinition = {
   action: {

@@ -1,4 +1,4 @@
-import z, { ZodRawShape } from 'zod';
+import z from 'zod';
 
 export const IdSchema = z.string().min(1);
 export type Id = z.infer<typeof IdSchema>;
@@ -12,5 +12,5 @@ export const ResourceSchema = <T extends string>(resourceType: T) =>
     type: z.literal(resourceType),
   });
 
-export const ResourceSchemaBase = <T extends ZodRawShape>(resourceType: string, data: T) =>
+export const ResourceSchemaBase = <T extends z.ZodRawShape>(resourceType: string, data: T) =>
   z.object({ ...ResourceSchema(resourceType).shape, ...data }).strict();

@@ -2,11 +2,9 @@ import z from 'zod';
 import { zocker } from 'zocker';
 import { Field } from '@/resource/field';
 import { ResourceManager } from '@/resource/resource-manager';
-import { EntityMappingSchema, FieldSchema } from '@/schemas/field';
-import { Entity } from '@/resource/entity';
+import { EntityMappingSchema } from '@/schemas/field';
 import { EntitySchema } from '@/schemas/entity';
 import { TileSchema } from '@/schemas/tile';
-import { Tile } from '@/resource/tile';
 
 function createFieldSchema<const TKeys extends readonly [string, ...string[]]>(keys: TKeys) {
   const TileKeyEnum = z.enum(keys);

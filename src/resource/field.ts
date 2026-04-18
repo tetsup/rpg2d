@@ -1,12 +1,12 @@
-import { FieldData, FieldSchema, type TileCode } from '@/schemas/field';
-import { ResourceBase } from './resource-base';
-import { Entity } from './entity';
-import { Tile } from './tile';
-import { ResourceManager } from './resource-manager';
+import { FieldData, FieldSchema } from '@/schemas/field';
 import { TileSchema } from '@/schemas/tile';
 import { EntitySchema } from '@/schemas/entity';
 import { Rect } from '@/utils/rect';
 import { Size2d } from '@/types/engine';
+import { ResourceManager } from './resource-manager';
+import { ResourceBase } from './resource-base';
+import { Entity } from './entity';
+import { Tile } from './tile';
 
 export class Field extends ResourceBase<'field'> {
   static schema = FieldSchema;
