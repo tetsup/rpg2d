@@ -1,0 +1,24 @@
+import type { Manifest } from '@/schemas/manifest';
+import { ResourceStore } from './resource-store';
+import { AssetCache } from './asset-cache';
+import { GameState } from './game-state';
+import { SchemaRegistry } from './schema-registry';
+import { ResourceFactory } from './resource-factory';
+
+export class GameContext {
+  assets: AssetCache;
+  factory: ResourceFactory;
+  resources: ResourceStore;
+  state: GameState;
+  schemas: SchemaRegistry;
+  readonly manifest: Manifest;
+
+  constructor(manifest: Manifest) {
+    this.manifest = manifest;
+    this.assets = new AssetCache();
+    this.factory = new ResourceFactory(this);
+    this.resources = new ResourceStore(this);
+    this.state = new GameState(manifest);
+    this.schemas = new SchemaRegistry(manifest);
+  }
+}

@@ -38,43 +38,28 @@ describe('PlayerSchema', () => {
   it('正常にパースできる', () => {
     const result: any = schema.parse({
       id: 'hero',
+      type: 'player',
       name: { type: 'fixed', value: 'Hero' },
-      appearance: { default: { base: 'hero' } },
-      state: {
+      initialState: {
         hp: 10,
         status: { poison: 0 },
       },
+      initialSkin: 'dummyskin',
     });
 
-    expect(result.state.hp).toBe(10);
-  });
-
-  it('appearanceが適用される', () => {
-    const result = schema.parse({
-      id: 'hero',
-      name: { type: 'fixed', value: 'Hero' },
-      appearance: {
-        default: { base: 'hero' },
-        rules: [],
-      },
-      state: {
-        hp: 10,
-        status: { poison: 1 },
-      },
-    });
-
-    expect(result.appearance.default.base).toBe('hero');
+    expect(result.initialState.hp).toBe(10);
   });
 
   it('state不正は落ちる', () => {
     expect(() =>
       schema.parse({
         id: 'hero',
+        type: 'player',
         name: { type: 'fixed', value: 'Hero' },
-        appearance: { default: {} },
-        state: {
-          hp: '10',
+        initialState: {
+          status: { poison: 0 },
         },
+        initialSkin: 'dummyskin',
       })
     ).toThrow();
   });

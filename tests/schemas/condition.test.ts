@@ -1,10 +1,5 @@
-import {
-  SingleConditionSchema,
-  ConditionSchema,
-  PathSchema,
-  ValueDefinitionSchema,
-  buildValueSchema,
-} from '@/schemas/condition';
+import { IdSchema } from '@/schemas/common';
+import { SingleConditionSchema, ConditionSchema, ValueDefinitionSchema, buildValueSchema } from '@/schemas/condition';
 
 describe('ValueDefinitionSchema', () => {
   it('number定義が通る', () => {
@@ -66,18 +61,6 @@ describe('buildValueSchema', () => {
     expect(schema.parse('abc')).toBe('abc');
     expect(() => schema.parse('a')).toThrow();
     expect(() => schema.parse('abcdef')).toThrow();
-  });
-});
-
-describe('PathSchema', () => {
-  it('正常系', () => {
-    expect(PathSchema.parse('status.poison')).toBe('status.poison');
-  });
-
-  it('異常系', () => {
-    expect(() => PathSchema.parse('.invalid')).toThrow();
-    expect(() => PathSchema.parse('invalid.')).toThrow();
-    expect(() => PathSchema.parse('a..b')).toThrow();
   });
 });
 

@@ -1,12 +1,29 @@
-import type { Battle } from '@/engine/battle';
-import type { MenuWindow } from '@/engine/menu';
-import { TexturePlayback } from '@/schemas/image/texture';
-
-export type ResourceId = string;
+import type { Action } from '@/resource/domain/action';
+import type { Field } from '@/resource/domain/field';
+import type { Player } from '@/resource/domain/player';
+import type { TexturePlayback } from '@/schemas/image/texture';
+import type { Queue } from '@/utils/queue';
 
 export type Point2d = {
   x: number;
   y: number;
+};
+
+export type Direction2d = 'left' | 'right' | 'up' | 'down';
+
+export type WalkingState = {
+  current: Point2d;
+  direction: Direction2d;
+  moving: boolean;
+  stepMs: number;
+  spendMsPerBlock: number;
+};
+
+export type FieldState = {
+  field: Field;
+  pos: WalkingState;
+  players: Player[];
+  actions: Queue<Action>;
 };
 
 export type Size2d = { width: number; height: number };
@@ -17,16 +34,9 @@ export type VariableState = {};
 
 export type EventState = {};
 
-export type RpgState = {
+export type CoreState = {
   variableStates: Map<string, VariableState>;
   mode: RpgMode;
-  playerPos: {
-    fieldId: string;
-    pos: Point2d;
-  };
-  presenceWindows: MenuWindow[];
-  activeEventState?: EventState;
-  battle?: Battle;
 };
 
 export type RpgConfig = {
@@ -36,8 +46,3 @@ export type RpgConfig = {
 };
 
 export type RpgKey = 'left' | 'right' | 'up' | 'down' | 'enter' | 'cancel';
-
-export type RpgManifest = {
-  initialState: RpgState;
-  config: RpgConfig;
-};

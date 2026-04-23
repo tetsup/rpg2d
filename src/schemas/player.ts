@@ -1,6 +1,7 @@
 import z from 'zod';
-import { AppearanceSchema } from './appearance';
+import { IdSchema, ResourceSchemaBase } from './common';
 import { type StateDefinition, buildStateSchema } from './playerState';
+import { Skin } from '@/resource/domain/skin';
 
 export const NameSchema = z.discriminatedUnion('type', [
   z.object({
@@ -22,12 +23,15 @@ export const NameSchema = z.discriminatedUnion('type', [
 ]);
 
 export function buildPlayerSchema<T extends StateDefinition = any>(def: T) {
-  return z.object({
-    id: z.string(),
+  return ResourceSchemaBase('player', {
     name: NameSchema,
-    appearance: AppearanceSchema,
-    state: buildStateSchema(def),
+    initialSkin: IdSchema,
+    initialState: buildStateSchema(def),
   });
 }
 
 export type PlayerData<T extends StateDefinition = any> = z.infer<ReturnType<typeof buildPlayerSchema<T>>>;
+
+export type PlayerDeps = {
+  initialSkin: Skin;
+};

@@ -1,8 +1,8 @@
-import { ImageCache } from '@/resource/image-cache';
+import { AssetCache } from '@/resource/core/asset-cache';
 
 const mockBitmap = {} as ImageBitmap;
 
-describe('imageCache', () => {
+describe('assetCache', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.stubGlobal(
@@ -14,17 +14,8 @@ describe('imageCache', () => {
     vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue(mockBitmap));
   });
 
-  it('constructorで渡した画像は即取得できる', () => {
-    const cache = new ImageCache({
-      a: mockBitmap,
-    });
-    const result = cache.get('a');
-
-    expect(result).toBe(mockBitmap);
-  });
-
   it('未キャッシュ時はundefinedを返しcacheを開始する', () => {
-    const cache = new ImageCache();
+    const cache = new AssetCache();
     const spy = vi.spyOn(cache, 'cache');
     const result = cache.get('a');
 
@@ -33,7 +24,7 @@ describe('imageCache', () => {
   });
 
   it('cache後は画像を取得できる', async () => {
-    const cache = new ImageCache();
+    const cache = new AssetCache();
     await cache.cache('a');
     const result = cache.get('a');
 
@@ -52,7 +43,7 @@ describe('imageCache', () => {
           })
       )
     );
-    const cache = new ImageCache();
+    const cache = new AssetCache();
     cache.cache('a');
     const result = cache.get('a');
 
@@ -65,7 +56,7 @@ describe('imageCache', () => {
   });
 
   it('同一IDは1回しかfetchされない', () => {
-    const cache = new ImageCache();
+    const cache = new AssetCache();
     cache.get('a');
     cache.get('a');
     cache.get('a');
@@ -74,7 +65,7 @@ describe('imageCache', () => {
   });
 
   it('cache成功時はloaded状態になる', async () => {
-    const cache = new ImageCache();
+    const cache = new AssetCache();
     await cache.cache('a');
 
     expect(cache.images.get('a')).toEqual({
@@ -85,7 +76,7 @@ describe('imageCache', () => {
 
   it('fetch失敗時はキャッシュが削除される', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fail')));
-    const cache = new ImageCache();
+    const cache = new AssetCache();
     await cache.cache('a');
     expect(cache.images.has('a')).toBe(false);
   });
@@ -99,7 +90,7 @@ describe('imageCache', () => {
       });
     vi.stubGlobal('fetch', fetchMock);
 
-    const cache = new ImageCache();
+    const cache = new AssetCache();
     await cache.cache('a');
 
     expect(cache.images.has('a')).toBe(false);

@@ -42,3 +42,5 @@ export const BooleanAggregationSchema = z.object({ agg: z.enum(['and', 'or']), e
 export const ActionSchema = ResourceSchemaBase('action', {});
 
 export type ActionData = z.infer<typeof ActionSchema>;
+
+export type ActionDeps = {};

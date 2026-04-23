@@ -1,16 +1,22 @@
 import z from 'zod';
-import { IdSchema, ResourceSchemaBase, PositionSchema } from './common';
+import type { Direction2d, Point2d } from '@/types/engine';
+import type { Tile } from '@/resource/domain/tile';
+import type { Entity } from '@/resource/domain/entity';
+import { IdSchema, ResourceSchemaBase, PositionSchema, DirectionSchema } from './common';
 
 export const TileCodeSchema = z.string().min(1);
 export type TileCode = z.infer<typeof TileCodeSchema>;
 
-export const EntityMappingSchema = z.object({ instanceId: IdSchema, pos: PositionSchema, entityId: IdSchema });
+export const EntityMappingSchema = z.record(
+  IdSchema,
+  z.object({ pos: PositionSchema, direction: DirectionSchema, entityId: IdSchema })
+);
 
 export const FieldSchema = ResourceSchemaBase('field', {
   name: z.string(),
   tiles: z.record(TileCodeSchema, IdSchema),
   map: z.array(z.array(TileCodeSchema)),
-  entities: z.array(EntityMappingSchema),
+  entities: EntityMappingSchema,
 }).superRefine((data, ctx) => {
   const tileKeys = new Set(Object.keys(data.tiles));
 
@@ -28,3 +34,8 @@ export const FieldSchema = ResourceSchemaBase('field', {
 });
 
 export type FieldData = z.infer<typeof FieldSchema>;
+
+export type FieldDeps = {
+  tiles: Map<string, Tile>;
+  entities: Map<string, { pos: Point2d; direction: Direction2d; entity: Entity }>;
+};

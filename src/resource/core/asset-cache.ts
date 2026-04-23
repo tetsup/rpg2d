@@ -1,4 +1,4 @@
-import type { ResourceId } from '@/types/engine';
+import type { ResourceId } from '@/schemas/common';
 
 type LazyImage =
   | {
@@ -6,18 +6,10 @@ type LazyImage =
     }
   | { loaded: true; image: ImageBitmap };
 
-export class ImageCache {
+export class AssetCache {
   images: Map<ResourceId, LazyImage> = new Map();
 
-  constructor(localImages?: Record<ResourceId, ImageBitmap>) {
-    if (localImages !== undefined) this.loadLocalImages(localImages);
-  }
-
-  private loadLocalImages(localImages: Record<ResourceId, ImageBitmap>) {
-    Object.entries(localImages).map(([id, image]) => {
-      this.images.set(id, { loaded: true, image });
-    });
-  }
+  constructor() {}
 
   async cache(id: ResourceId) {
     if (this.images.has(id)) return;

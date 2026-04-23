@@ -1,4 +1,5 @@
 import z from 'zod';
+import { IdSchema, PrimitiveValueSchema } from './common';
 
 export const ValueDefinitionSchema = z.discriminatedUnion('type', [
   z.object({
@@ -38,18 +39,9 @@ export function buildValueSchema(
 
 const OperatorSchema = z.enum(['==', '!=', '<', '<=', '>', '>=']);
 
-const PrimitiveValueSchema = z.union([z.string(), z.number()]);
-
-export const PathSchema = z
-  .string()
-  .regex(
-    /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)*$/,
-    "pathは 'a.b.c' 形式で、英数字、アンダースコアと単一ドットのみ使用できます"
-  );
-
 export const SingleConditionSchema = z
   .object({
-    path: PathSchema,
+    path: IdSchema,
     operator: OperatorSchema,
     value: PrimitiveValueSchema,
   })

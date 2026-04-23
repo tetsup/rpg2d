@@ -1,7 +1,8 @@
 import z from 'zod';
+import { IdSchema } from './common';
 import { ConditionSchema } from './condition';
 
-export const LayerValueSchema = z.union([z.string(), z.null()]);
+export const LayerValueSchema = z.union([IdSchema, z.null()]);
 
 export const LayersSchema = z.record(z.string(), LayerValueSchema);
 

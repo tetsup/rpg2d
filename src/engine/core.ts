@@ -1,21 +1,35 @@
-import type { Game } from '@tetsup/web2d';
-import type { RpgState, RpgManifest } from '@/types/engine';
-import { ResourceManager } from '@/resource/resource-manager';
+import type { InputManager, Game, GameRenderer } from '@tetsup/web2d';
+import type { RpgKey, RpgMode } from '@/types/engine';
+import type { Manifest } from '@/schemas/manifest';
+import { GameContext } from '@/resource/core/game-context';
+import { FieldEngine } from './field';
+import type { Player } from '@/resource/domain/player';
 
-export class RpgCore implements Game<any> {
-  private state: RpgState;
-  private resources: ResourceManager;
-  constructor(manifest: RpgManifest) {
-    this.state = {
-      variableStates: new Map(),
-      mode: 'field',
-      playerPos: { fieldId: '', pos: { x: 0, y: 0 } },
-      presenceWindows: [],
-    };
-    this.resources = new ResourceManager(manifest);
+export class RpgCore implements Game<RpgKey> {
+  private ctx: GameContext;
+  private mode: RpgMode = 'field';
+  private field: FieldEngine | null = null;
+  private players: Player[] = [];
+  constructor(manifest: Manifest) {
+    this.ctx = new GameContext(manifest);
   }
-  async init() {
-    this.state = this.resources.initialState;
+
+  async onInit(renderer: GameRenderer) {
+    this.players = await Promise.all(
+      this.ctx.manifest.initialState.core.players.map(
+        async (playerId) => (await this.ctx.resources.get(playerId, 'player')) as Player
+      )
+    );
+    this.field = await FieldEngine.factory(this.ctx, this.players);
   }
-  async tick() {}
+
+  async onTick(input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) {
+    switch (this.mode) {
+      case 'field':
+        this.field?.onTick(input, clock, renderer);
+        break;
+      default:
+        break;
+    }
+  }
 }

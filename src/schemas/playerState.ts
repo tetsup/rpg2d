@@ -58,7 +58,7 @@ type ValueTypeFromDefinition<T> = T extends OptionalNumberDefinition
         ? string
         : never;
 
-type StateFromDefinition<T> = T extends { type: string }
+export type StateFromDefinition<T> = T extends { type: string }
   ? ValueTypeFromDefinition<T>
   : T extends Record<string, any>
     ? { [K in keyof T]: StateFromDefinition<T[K]> }
