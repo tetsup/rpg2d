@@ -1,6 +1,6 @@
 import { FieldData, FieldDeps } from '@/schemas/field';
 import { Rect } from '@/utils/rect';
-import { Size2d } from '@/types/engine';
+import { Point2d, Size2d } from '@/types/engine';
 import { ResourceBase } from '../core/resource-base';
 import { GameContext } from '../core/game-context';
 import { Entity } from './entity';
@@ -14,14 +14,26 @@ export class Field extends ResourceBase<'field'> {
     );
     const entities = Object.fromEntries(
       await Promise.all(
-        Object.entries(data.entities).map(async ([instanceId, { entityId, pos, direction }]) => {
+        Object.values(data.entities).map(async ({ entityId }) => {
           const entity = (await ctx.resources.get(entityId, 'entity')) as Entity;
-          entity.jump(pos, direction);
-          return [instanceId, entity];
+          return [entityId, entity];
         })
       )
     );
     return { tiles, entities };
+  }
+
+  get entityInstances() {
+    return this.data.entities;
+  }
+
+  get entities() {
+    return this.deps.entities;
+  }
+
+  checkReachable(dest: Point2d) {
+    const tile = this.deps.tiles.get(this.data.map[dest.y][dest.x]);
+    return tile?.allowOverwrap ?? false;
   }
 
   resolveLayers(nowMs: number, view: Rect, blockSize: Size2d) {

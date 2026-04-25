@@ -24,8 +24,4 @@ export class ResourceStore {
     this.resources.set(id, createdResource);
     return createdResource;
   }
-
-  async createInstance<K extends ResourceName>(instanceId: ResourceId, resourceId: ResourceId, type: K) {
-    return await this.resolve(resourceId, type);
-  }
 }

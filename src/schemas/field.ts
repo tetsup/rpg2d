@@ -7,9 +7,17 @@ import { IdSchema, ResourceSchemaBase, PositionSchema, DirectionSchema } from '.
 export const TileCodeSchema = z.string().min(1);
 export type TileCode = z.infer<typeof TileCodeSchema>;
 
+export const EntityInitialStateSchema = z.object({
+  pos: PositionSchema,
+  direction: DirectionSchema,
+  visible: z.boolean(),
+});
+
+export type EntityInitialState = z.infer<typeof EntityInitialStateSchema>;
+
 export const EntityMappingSchema = z.record(
   IdSchema,
-  z.object({ pos: PositionSchema, direction: DirectionSchema, entityId: IdSchema })
+  z.object({ entityId: IdSchema, initialState: EntityInitialStateSchema })
 );
 
 export const FieldSchema = ResourceSchemaBase('field', {
@@ -37,5 +45,5 @@ export type FieldData = z.infer<typeof FieldSchema>;
 
 export type FieldDeps = {
   tiles: Map<string, Tile>;
-  entities: Map<string, { pos: Point2d; direction: Direction2d; entity: Entity }>;
+  entities: Map<string, Entity>;
 };

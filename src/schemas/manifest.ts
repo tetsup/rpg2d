@@ -36,7 +36,7 @@ export const BlockSizeSchema = z.object({ width: z.number().int().min(1), height
 
 export const ConfigSchema = z.object({
   blockSize: BlockSizeSchema,
-  walkingTimePerBlock: z.number().int().min(100).max(5000),
+  moveDurationMs: z.number().int().min(0),
 });
 
 export const ManifestSchema = z.object({

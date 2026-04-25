@@ -1,3 +1,5 @@
+import type { EntityInstance } from '@/engine/entity';
+import { FieldPos } from '@/engine/fieldPos';
 import type { Action } from '@/resource/domain/action';
 import type { Field } from '@/resource/domain/field';
 import type { Player } from '@/resource/domain/player';
@@ -11,19 +13,18 @@ export type Point2d = {
 
 export type Direction2d = 'left' | 'right' | 'up' | 'down';
 
-export type WalkingState = {
-  current: Point2d;
-  direction: Direction2d;
-  moving: boolean;
-  stepMs: number;
-  spendMsPerBlock: number;
-};
-
 export type FieldState = {
-  field: Field;
-  pos: WalkingState;
+  playerPos: FieldPos;
   players: Player[];
   actions: Queue<Action>;
+  entities: Record<string, EntityInstance>;
+};
+
+export type EntityState = {
+  pos: FieldPos;
+  actions: Queue<Action>;
+  visible: boolean;
+  allowOverwrap: boolean;
 };
 
 export type Size2d = { width: number; height: number };

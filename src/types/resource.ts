@@ -24,21 +24,19 @@ export type ResourceName = 'action' | 'entity' | 'field' | 'player' | 'skin' | '
 
 export type ResourceData<Name extends ResourceName> = Name extends 'action'
   ? ActionData
-  : Name extends 'action'
-    ? ActionData
-    : Name extends 'entity'
-      ? EntityData
-      : Name extends 'field'
-        ? FieldData
-        : Name extends 'player'
-          ? PlayerData
-          : Name extends 'skin'
-            ? SkinData
-            : Name extends 'texture'
-              ? TextureData
-              : Name extends 'tile'
-                ? TileData
-                : never;
+  : Name extends 'entity'
+    ? EntityData
+    : Name extends 'field'
+      ? FieldData
+      : Name extends 'player'
+        ? PlayerData
+        : Name extends 'skin'
+          ? SkinData
+          : Name extends 'texture'
+            ? TextureData
+            : Name extends 'tile'
+              ? TileData
+              : never;
 
 export type ResourceClass<Name extends ResourceName> = Name extends 'action'
   ? typeof Action
