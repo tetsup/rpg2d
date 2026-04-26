@@ -21,6 +21,7 @@ export class RpgCore implements Game<RpgKey> {
       )
     );
     this.field = await FieldEngine.factory(this.ctx, this.players);
+    return true;
   }
 
   async onTick(input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) {
@@ -31,5 +32,6 @@ export class RpgCore implements Game<RpgKey> {
       default:
         break;
     }
+    return true;
   }
 }

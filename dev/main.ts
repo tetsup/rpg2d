@@ -13,7 +13,7 @@ const keyAssignment: KeyAssignment<RpgKey> = {
   ArrowUp: 'up',
   ArrowDown: 'down',
   Enter: 'enter',
-  Escape: 'cancel',
+  Escape: 'esc',
 };
 
 function assignPad(input: any) {

@@ -46,7 +46,7 @@ export type RpgConfig = {
   };
 };
 
-export type RpgKey = 'left' | 'right' | 'up' | 'down' | 'enter' | 'cancel';
+export type RpgKey = 'left' | 'right' | 'up' | 'down' | 'enter' | 'esc';
 
 export type ImageLayer = { priority: number; image: string };
 

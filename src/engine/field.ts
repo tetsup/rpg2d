@@ -2,14 +2,14 @@ import type { InputManager, GameRenderer } from '@tetsup/web2d';
 import type { Direction2d, FieldState, Point2d, RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { calcDest, samePos } from '@/utils/pos';
+import { Rect } from '@/utils/rect';
 import type { GameContext } from '@/resource/core/game-context';
 import type { Player } from '@/resource/domain/player';
 import type { Action } from '@/resource/domain/action';
 import type { Field } from '@/resource/domain/field';
+import { Movement } from '@/schemas/actions/movement';
 import { FieldPos } from './fieldPos';
 import { EntityInstance } from './entity';
-import { Movement } from '@/schemas/actions/movement';
-import { Rect } from '@/utils/rect';
 
 export class FieldEngine {
   private state: FieldState;
@@ -34,7 +34,7 @@ export class FieldEngine {
       moveDurationMs: ctx.manifest.config.moveDurationMs,
       blockSize: ctx.manifest.config.blockSize,
       initialPos: ctx.manifest.initialState.field.pos,
-      initialDirection: 'down' as const,
+      initialDirection: ctx.manifest.initialState.field.direction,
     };
 
     const playerPos = new FieldPos(ctx, fieldPosConfig);
@@ -88,13 +88,13 @@ export class FieldEngine {
     return null;
   }
 
-  onTick(input: InputManager, nowMs: number, renderer: GameRenderer) {
+  onTick(input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) {
     const moveDirection = this.resolveMove(input);
     if (moveDirection != null)
       this.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
     this.state.playerPos.tick(nowMs);
     Object.values(this.state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
-    renderer.render();
+    renderer.render(this.retrieveLayers(nowMs, viewport));
   }
 
   calcViewPort(nowMs: number) {
