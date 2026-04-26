@@ -23,7 +23,8 @@ export class AssetCache {
   }
 
   private async fetchBitmap(id: ResourceId) {
-    const res = await fetch(`${process.env.RESOURCE_URI}/${id}`);
+    const imageUri = process.env.IMAGE_URI ?? process.env.RESOURCE_URI;
+    const res = await fetch(`${imageUri}/${id}`);
     return await createImageBitmap(await res.blob());
   }
 

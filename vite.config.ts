@@ -46,6 +46,7 @@ export default defineConfig({
   base: './',
   publicDir: '../public',
   define: {
+    'process.env.IMAGE_URI': JSON.stringify('/api/images'),
     'process.env.RESOURCE_URI': JSON.stringify('/api/resources'),
   },
   worker: {
