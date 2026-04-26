@@ -10,4 +10,8 @@ export class Player extends ResourceBase<'player'> {
       initialSkin,
     };
   }
+
+  get skin() {
+    return this.deps.initialSkin;
+  }
 }

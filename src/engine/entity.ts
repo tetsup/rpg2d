@@ -26,4 +26,7 @@ export class EntityInstance {
     const actions = new Queue<Action>();
     this.state = { pos, actions, visible: initialState.visible, allowOverwrap: this.entity.allowOverwrap };
   }
+  resolveLayers(nowMs: number) {
+    return this.entity.resolveLayers(nowMs, this.state.pos.direction);
+  }
 }

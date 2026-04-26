@@ -9,6 +9,7 @@ import type { Field } from '@/resource/domain/field';
 import { FieldPos } from './fieldPos';
 import { EntityInstance } from './entity';
 import { Movement } from '@/schemas/actions/movement';
+import { Rect } from '@/utils/rect';
 
 export class FieldEngine {
   private state: FieldState;
@@ -94,5 +95,45 @@ export class FieldEngine {
     this.state.playerPos.tick(nowMs);
     Object.values(this.state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
     renderer.render();
+  }
+
+  calcViewPort(nowMs: number) {
+    const anchorLeftTop = this.state.playerPos.getCurrentPixel(nowMs);
+    const cameraCenter = {
+      x: (anchorLeftTop.x + this.ctx.manifest.config.blockSize.width) >> 1,
+      y: (anchorLeftTop.y + this.ctx.manifest.config.blockSize.height) >> 1,
+    };
+    const width = this.ctx.manifest.config.screen.width;
+    const height = this.ctx.manifest.config.screen.height;
+    return new Rect(cameraCenter.x - (width >> 1), cameraCenter.y - (height >> 1), width, height);
+  }
+
+  resolvePlayerLayers(nowMs: number) {
+    return this.state.players.map((player) => {
+      const rect = Rect.fromTopLeft(this.state.playerPos.getCurrentPixel(nowMs), this.ctx.manifest.config.blockSize);
+      return player.skin.resolveLayers(nowMs, this.state.playerPos.direction).map((layer) => ({ rect, layer }));
+    });
+  }
+
+  resolveEntitiesLayers(nowMs: number, viewport: Rect) {
+    return Object.entries(this.state.entities)
+      .filter(([_, entity]) => entity.state.visible)
+      .map(([_, entity]) => {
+        const rect = Rect.fromTopLeft(entity.state.pos.getCurrentPixel(nowMs), this.ctx.manifest.config.blockSize);
+        return { rect, entity };
+      })
+      .filter(({ rect }) => rect.overwrap(viewport))
+      .map(({ rect, entity }) => {
+        const layers = entity.resolveLayers(nowMs);
+        return layers.map((layer) => ({ rect, layer }));
+      })
+      .flat(1);
+  }
+
+  retrieveLayers(nowMs: number, viewport: Rect) {
+    const playerLayers = this.resolvePlayerLayers(nowMs);
+    const entityLayers = this.resolveEntitiesLayers(nowMs, viewport);
+    const tileLayers = this.field.resolveLayers(nowMs, viewport);
+    return [...playerLayers, ...entityLayers, ...tileLayers];
   }
 }

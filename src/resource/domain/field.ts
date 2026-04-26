@@ -36,12 +36,20 @@ export class Field extends ResourceBase<'field'> {
     return tile?.allowOverwrap ?? false;
   }
 
-  resolveLayers(nowMs: number, view: Rect, blockSize: Size2d) {
-    this.data.map.slice(view.top, view.bottom).map((row, ty) =>
-      row.slice(view.left, view.right).map((symbol, tx) => ({
-        pos: { x: (view.left + tx) * blockSize.width, y: (view.top + ty) * blockSize.height },
-        layers: this.deps.tiles.get(symbol)?.resolveLayers(nowMs),
-      }))
-    );
+  resolveLayers(nowMs: number, view: Rect) {
+    return this.data.map
+      .slice(view.top, view.bottom)
+      .map((row, ty) =>
+        row.slice(view.left, view.right).map((symbol, tx) => ({
+          rect: new Rect(
+            (view.left + tx) * this.ctx.manifest.config.blockSize.width,
+            (view.top + ty) * this.ctx.manifest.config.blockSize.height,
+            this.ctx.manifest.config.blockSize.width,
+            this.ctx.manifest.config.blockSize.height
+          ),
+          layers: this.deps.tiles.get(symbol)?.resolveLayers(nowMs),
+        }))
+      )
+      .flat(1);
   }
 }

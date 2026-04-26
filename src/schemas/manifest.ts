@@ -1,5 +1,5 @@
 import z from 'zod';
-import { DirectionSchema, IdSchema, PositionSchema, PrimitiveValueSchema } from '@/schemas/common';
+import { DirectionSchema, IdSchema, PositionSchema, PrimitiveValueSchema, SizeSchema } from '@/schemas/common';
 import { StateDefinitionSchema } from './playerState';
 
 export const ModeSchema = z.enum(['menu', 'field', 'battle']);
@@ -32,11 +32,10 @@ export const DslSchema = z.object({
   playerState: StateDefinitionSchema,
 });
 
-export const BlockSizeSchema = z.object({ width: z.number().int().min(1), height: z.number().int().min(1) });
-
 export const ConfigSchema = z.object({
-  blockSize: BlockSizeSchema,
+  blockSize: SizeSchema,
   moveDurationMs: z.number().int().min(0),
+  screen: SizeSchema,
 });
 
 export const ManifestSchema = z.object({

@@ -13,9 +13,12 @@ export const PrimitiveValueSchema = z.union([z.string(), z.number()]);
 export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
 
 export const PositionSchema = z.object({ x: z.number().int(), y: z.number().int() });
+
 export type Position = z.infer<typeof PositionSchema>;
 
 export const DirectionSchema = z.enum(['left', 'right', 'up', 'down']);
+
+export const SizeSchema = z.object({ width: z.number().int().min(1), height: z.number().int().min(1) });
 
 export const ResourceSchema = <T extends string>(resourceType: T) =>
   z.object({

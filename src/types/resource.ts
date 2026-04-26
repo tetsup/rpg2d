@@ -15,10 +15,6 @@ import type { PlayerData, PlayerDeps } from '@/schemas/player';
 import type { SkinData, SkinDeps } from '@/schemas/image/skin';
 import type { TextureData, TextureDeps } from '@/schemas/image/texture';
 import type { TileData, TileDeps } from '@/schemas/tile';
-import type { Condition } from '@/schemas/condition';
-
-export type Layers = Record<string, Skin | null>;
-export type Rule = { when: Condition; set: Layers };
 
 export type ResourceName = 'action' | 'entity' | 'field' | 'player' | 'skin' | 'texture' | 'tile';
 

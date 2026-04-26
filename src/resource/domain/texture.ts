@@ -1,9 +1,9 @@
+import type { ImageLayer } from '@/types/engine';
+import type { TextureDeps, TextureData, LayerAnimation } from '@/schemas/image/texture';
 import type { GameContext } from '../core/game-context';
 import { ResourceBase } from '../core/resource-base';
-import type { TextureDeps, TextureData, LayerAnimation } from '@/schemas/image/texture';
 
 type PlayState = 'init' | 'play' | 'stop';
-type ImageLayer = { priority: number; image: string };
 
 export class Texture extends ResourceBase<'texture'> {
   private startMs: number = 0;

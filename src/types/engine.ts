@@ -1,10 +1,10 @@
 import type { EntityInstance } from '@/engine/entity';
 import { FieldPos } from '@/engine/fieldPos';
 import type { Action } from '@/resource/domain/action';
-import type { Field } from '@/resource/domain/field';
 import type { Player } from '@/resource/domain/player';
 import type { TexturePlayback } from '@/schemas/image/texture';
 import type { Queue } from '@/utils/queue';
+import { Rect } from '@/utils/rect';
 
 export type Point2d = {
   x: number;
@@ -47,3 +47,7 @@ export type RpgConfig = {
 };
 
 export type RpgKey = 'left' | 'right' | 'up' | 'down' | 'enter' | 'cancel';
+
+export type ImageLayer = { priority: number; image: string };
+
+export type FixedImageLayer = ImageLayer & { rect: Rect };

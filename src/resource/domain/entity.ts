@@ -4,6 +4,7 @@ import type { GameContext } from '../core/game-context';
 import type { Action } from './action';
 import type { Skin } from './skin';
 import type { Texture } from './texture';
+import { Direction2d } from '@/types/engine';
 
 export class Entity extends ResourceBase<'entity'> {
   static async loadDeps(ctx: GameContext, data: EntityData): Promise<EntityDeps> {
@@ -26,5 +27,13 @@ export class Entity extends ResourceBase<'entity'> {
   }
   get moveDurationMs() {
     return this.data.moveDurationMs;
+  }
+
+  resolveLayers(nowMs: number, direction: Direction2d) {
+    return this.deps.visual === 'skin'
+      ? this.deps.skin.resolveLayers(nowMs, direction)
+      : this.deps.visual === 'texture'
+        ? this.deps.texture.resolveLayers(nowMs)
+        : [];
   }
 }
