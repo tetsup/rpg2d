@@ -12,16 +12,14 @@ class ResourceLoader {
 
   constructor() {
     this.resources = new Map(
-      Object.entries(import.meta.glob('../resources/yaml/**/*.yaml', { as: 'raw' })).map(([path, loader]) => [
-        pathToId(path),
-        loader,
-      ])
+      Object.entries(import.meta.glob('../../resources/yaml/**/*.yaml', { query: '?raw', import: 'default' })).map(
+        ([path, loader]) => [pathToId(path), loader]
+      )
     );
     this.images = new Map(
-      Object.entries(import.meta.glob('../images/**/*', { as: 'raw' })).map(([path, loader]) => [
-        pathToId(path),
-        loader,
-      ])
+      Object.entries(import.meta.glob('../../resources/images/**/*', { query: '?raw', import: 'default' })).map(
+        ([path, loader]) => [pathToId(path), loader]
+      )
     );
   }
 

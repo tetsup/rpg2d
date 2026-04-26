@@ -1,35 +1,37 @@
 import yaml from 'yaml';
-import { PNG } from 'pngjs';
 import { Size2d } from '@/types/engine';
 
-function colorArrayToPng(size: Size2d, colorArray: number[][]) {
-  const png = new PNG(size);
+async function colorArrayToPng(size: Size2d, colorArray: number[][]) {
+  const canvas = new OffscreenCanvas(size.width, size.height);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas 2D context not available');
+
+  const imageData = ctx.createImageData(size.width, size.height);
   colorArray.forEach((color: number[], i: number) => {
     const [r, g, b, a] = color;
     const idx = i * 4;
 
-    png.data[idx] = r;
-    png.data[idx + 1] = g;
-    png.data[idx + 2] = b;
-    png.data[idx + 3] = a;
+    imageData.data[idx] = r;
+    imageData.data[idx + 1] = g;
+    imageData.data[idx + 2] = b;
+    imageData.data[idx + 3] = a;
   });
 
-  const buffer = PNG.sync.write(png);
-
-  return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+  ctx.putImageData(imageData, 0, 0);
+  return await (await canvas.convertToBlob({ type: 'image/png' })).arrayBuffer();
 }
 
-export function yamlToPng(yamlText: string): ArrayBuffer | SharedArrayBuffer {
+export async function yamlToPng(yamlText: string) {
   const { size, palette, pixels } = yaml.parse(yamlText);
 
   const tokens = pixels.match(/[0-9a-zA-Z]{2}/g);
   if (!tokens) throw new Error('invalid pixels');
 
   const colorArray = tokens.map((token: string) => palette[token]);
-  return colorArrayToPng(size, colorArray);
+  return await colorArrayToPng(size, colorArray);
 }
 
-export function dt3ToPng(dt3Text: string): ArrayBuffer | SharedArrayBuffer {
+export async function dt3ToPng(dt3Text: string) {
   const [sizeText, pixelsText, paletteText, transparentText] = dt3Text.split(':');
 
   const [height, width] = sizeText.split(',').map(Number);
@@ -47,5 +49,5 @@ export function dt3ToPng(dt3Text: string): ArrayBuffer | SharedArrayBuffer {
     ]);
 
   const colorArray = pixels.map((pixel) => palette[pixel]);
-  return colorArrayToPng({ height, width }, colorArray);
+  return await colorArrayToPng({ height, width }, colorArray);
 }
