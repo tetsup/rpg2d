@@ -7,7 +7,7 @@ import { ActionSchema } from './action';
 const TileActionTriggerSchema = z.enum(['onEnter', 'onLeave', 'onStay', 'postEnter', 'postLeave']);
 export type TileActionTrigger = z.infer<typeof TileActionTriggerSchema>;
 
-const TileActionsSchema = z.record(TileActionTriggerSchema, ActionSchema);
+const TileActionsSchema = z.partialRecord(TileActionTriggerSchema, ActionSchema);
 
 export const TileSchema = ResourceSchemaBase('tile', {
   texture: IdSchema,
