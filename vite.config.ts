@@ -44,6 +44,7 @@ function appSourceAlias(): Plugin {
 export default defineConfig({
   root: 'dev',
   base: './',
+  publicDir: '../public',
   define: {
     'process.env.RESOURCE_URI': JSON.stringify('/api/resources'),
   },
