@@ -10,7 +10,7 @@ export class Texture extends ResourceBase<'texture'> {
   private playState: PlayState = 'init';
 
   static async loadDeps(ctx: GameContext, data: TextureData): Promise<TextureDeps> {
-    data.layers.map((layer) => layer.images.map((image) => ctx.assets.cache(image)));
+    await Promise.all(data.layers.flatMap((layer) => layer.images.map((image) => ctx.assets.cache(image))));
     return {};
   }
 

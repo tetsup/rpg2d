@@ -39,7 +39,7 @@ const manifest: RpgManifest = {
       mode: 'field',
     },
     field: {
-      fieldId: 'local:field:startField:v0',
+      fieldId: 'local.field.startField.v0',
       pos: { x: 1, y: 1 },
       direction: 'down',
       actionIds: [],

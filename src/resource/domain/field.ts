@@ -7,12 +7,12 @@ import { Entity } from './entity';
 
 export class Field extends ResourceBase<'field'> {
   static async loadDeps(ctx: GameContext, data: FieldData): Promise<FieldDeps> {
-    const tiles = Object.fromEntries(
+    const tiles = new Map(
       await Promise.all(
         Object.entries(data.tiles).map(async ([key, tileId]) => [key, await ctx.resources.get(tileId, 'tile')])
       )
     );
-    const entities = Object.fromEntries(
+    const entities = new Map(
       await Promise.all(
         Object.values(data.entities).map(async ({ entityId }) => {
           const entity = (await ctx.resources.get(entityId, 'entity')) as Entity;
