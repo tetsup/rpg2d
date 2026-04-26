@@ -2,7 +2,8 @@ import './debug/log-forwarder';
 import './debug/error-forwarder';
 import { GameApp, resolveTransparentMode, type KeyAssignment, type TransparentMode } from '@tetsup/web2d';
 import { RpgCore } from '@/engine/core';
-import type { RpgManifest, RpgKey } from '@/types/engine';
+import type { RpgKey } from '@/types/engine';
+import { Manifest } from '@/schemas/manifest';
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 
@@ -30,14 +31,22 @@ function assignPad(input: any) {
   bind('esc', 'esc');
 }
 
-const manifest: RpgManifest = {
+const manifest: Manifest = {
   initialState: {
-    variableStates: new Map(),
-    mode: 'field',
-    playerPos: { fieldId: 'local:field:startField:v0', pos: { x: 10, y: 10 } },
-    presenceWindows: [],
+    core: {
+      variables: new Map(),
+      mode: 'field',
+      players: ['local.player.hiro.v0'],
+    },
+    field: {
+      fieldId: 'local.field.startField.v0',
+      pos: { x: 10, y: 10 },
+      direction: 'down',
+      actionIds: [],
+    },
   },
-  config: { texture: { playback: { repeat: true, tickMs: 500 } } },
+  config: { blockSize: { width: 16, height: 16 }, moveDurationMs: 500, screen: { width: 320, height: 240 } },
+  schemas: { playerState: {} },
 };
 
 const app = new GameApp(canvas, new RpgCore(manifest), {
