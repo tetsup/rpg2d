@@ -22,20 +22,20 @@ export const EntitySchema = z.discriminatedUnion('visual', [
     visual: z.literal('skin'),
     skin: IdSchema,
     allowOverwrap: z.boolean(),
-    moveDurationMs: z.number().int(),
+    moveDurationMs: z.number().int().optional(),
     actions: EntityActionsSchema,
   }),
   ResourceSchemaBase('entity', {
     visual: z.literal('texture'),
     texture: IdSchema,
     allowOverwrap: z.boolean(),
-    moveDurationMs: z.number().int(),
+    moveDurationMs: z.number().int().optional(),
     actions: EntityActionsSchema,
   }),
   ResourceSchemaBase('entity', {
     visual: z.literal('none'),
     allowOverwrap: z.boolean(),
-    moveDurationMs: z.number().int(),
+    moveDurationMs: z.number().int().optional(),
     actions: EntityActionsSchema,
   }),
 ]);

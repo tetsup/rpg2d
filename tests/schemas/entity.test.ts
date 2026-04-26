@@ -5,6 +5,7 @@ describe('EntitySchema', () => {
     const result = EntitySchema.parse({
       id: 'npc1',
       type: 'entity',
+      visual: 'skin',
       skin: 'dummyskin',
       allowOverwrap: true,
       actions: [],
@@ -18,6 +19,7 @@ describe('EntitySchema', () => {
       EntitySchema.parse({
         id: 'npc1',
         type: 'notaentity',
+        visual: 'skin',
         skin: 'dummyskin',
         allowOverwrap: true,
         actions: [],
