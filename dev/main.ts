@@ -1,5 +1,6 @@
 import './debug/log-forwarder';
 import './debug/error-forwarder';
+import { worker } from './mocks/api/browser';
 import { GameApp, resolveTransparentMode, type KeyAssignment, type TransparentMode } from '@tetsup/web2d';
 import { RpgCore } from '@/engine/core';
 import type { RpgManifest, RpgKey } from '@/types/engine';
@@ -27,18 +28,36 @@ function assignPad(input: any) {
   bind('up', 'up');
   bind('down', 'down');
   bind('enter', 'enter');
-  bind('esc', 'esc');
+  bind('esc', 'cancel');
 }
 
 const manifest: RpgManifest = {
   initialState: {
-    variableStates: new Map(),
-    mode: 'field',
-    playerPos: { fieldId: 'local:field:startField:v0', pos: { x: 10, y: 10 } },
-    presenceWindows: [],
+    core: {
+      players: ['local:player:hero:v0'],
+      variables: new Map(),
+      mode: 'field',
+    },
+    field: {
+      fieldId: 'local:field:startField:v0',
+      pos: { x: 1, y: 1 },
+      direction: 'down',
+      actionIds: [],
+    },
   },
-  config: { texture: { playback: { repeat: true, tickMs: 500 } } },
+  schemas: {
+    playerState: {},
+  },
+  config: {
+    blockSize: { width: 16, height: 16 },
+    moveDurationMs: 200,
+    screen: { width: 320, height: 240 },
+  },
 };
+
+await worker.start({
+  onUnhandledRequest: 'bypass',
+});
 
 const app = new GameApp(canvas, new RpgCore(manifest), {
   maxObjects: 10,
@@ -52,7 +71,7 @@ const modeParam = params.get('mode');
 const mode: TransparentMode = modeParam === 'sab' || modeParam === 'message' ? modeParam : resolveTransparentMode();
 app.setTransparentMode(mode);
 
-(document.getElementById('start') as HTMLButtonElement).onclick = () => {
+(document.getElementById('start') as HTMLButtonElement).onclick = async () => {
   console.log(`starting with mode ${modeParam}`);
   app.start();
 };

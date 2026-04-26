@@ -94,7 +94,7 @@ export class FieldEngine {
       this.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
     this.state.playerPos.tick(nowMs);
     Object.values(this.state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
-    renderer.render();
+    renderer.render(this.retrieveImageObjects(nowMs, this.calcViewPort(nowMs)));
   }
 
   calcViewPort(nowMs: number) {
@@ -135,5 +135,14 @@ export class FieldEngine {
     const entityLayers = this.resolveEntitiesLayers(nowMs, viewport);
     const tileLayers = this.field.resolveLayers(nowMs, viewport);
     return [...playerLayers, ...entityLayers, ...tileLayers];
+  }
+
+  retrieveImageObjects(nowMs: number, viewport: Rect) {
+    return this.retrieveLayers(nowMs, viewport)
+      .map(({ rect, layer }) => ({
+        pos: { x: rect.left - viewport.left, y: rect.top - viewport.top },
+        imageId: layer.image,
+      }))
+      .sort((a, b) => a.imageId.localeCompare(b.imageId));
   }
 }

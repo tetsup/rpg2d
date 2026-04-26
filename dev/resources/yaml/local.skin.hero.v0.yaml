@@ -1,0 +1,7 @@
+id: local.skin.hero.v0
+type: skin
+textures:
+  left: local.texture.hero.v0
+  right: local.texture.hero.v0
+  up: local.texture.hero.v0
+  down: local.texture.hero.v0

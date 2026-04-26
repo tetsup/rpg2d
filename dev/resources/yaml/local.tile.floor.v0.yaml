@@ -1,0 +1,5 @@
+id: local.tile.floor.v0
+type: tile
+texture: local.texture.floor.v0
+allowOverwrap: true
+actions: {}

@@ -21,6 +21,12 @@ export class RpgCore implements Game<RpgKey> {
       )
     );
     this.field = await FieldEngine.factory(this.ctx, this.players);
+    await Promise.all(
+      [...this.ctx.assets.images.entries()].map(async ([imageId, image]) => {
+        if (image.loaded) renderer.registerImage({ imageId, imageData: image.image });
+      })
+    );
+    return true;
   }
 
   async onTick(input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) {
@@ -31,5 +37,6 @@ export class RpgCore implements Game<RpgKey> {
       default:
         break;
     }
+    return true;
   }
 }

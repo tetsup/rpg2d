@@ -1,0 +1,7 @@
+id: local.player.hero.v0
+type: player
+name:
+  type: fixed
+  value: Hero
+initialSkin: local.skin.hero.v0
+initialState: {}

@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import yaml from 'yaml';
 
 function pathToId(path: string) {
-  return path.replace(/^\.\/resources\//, '').replace(/\//g, '.');
+  return path.replace(/^.*\/resources\/(?:yaml|images)\//, '').replace(/\//g, '.');
 }
 
 class ResourceLoader {
