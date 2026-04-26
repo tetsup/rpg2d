@@ -9,6 +9,7 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   root: 'dev',
   base: './',
+  publicDir: '../public',
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
