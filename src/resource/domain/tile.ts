@@ -19,7 +19,7 @@ export class Tile extends ResourceBase<'tile'> {
     return this.data.allowOverwrap;
   }
 
-  resolveLayers(nowMs: number) {
+  resolveLayers = (nowMs: number) => {
     return this.deps.texture.resolveLayers(nowMs);
-  }
+  };
 }

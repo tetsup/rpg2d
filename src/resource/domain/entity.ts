@@ -29,11 +29,11 @@ export class Entity extends ResourceBase<'entity'> {
     return this.data.moveDurationMs;
   }
 
-  resolveLayers(nowMs: number, direction: Direction2d) {
+  resolveLayers = (nowMs: number, direction: Direction2d) => {
     return this.deps.visual === 'skin'
       ? this.deps.skin.resolveLayers(nowMs, direction)
       : this.deps.visual === 'texture'
         ? this.deps.texture.resolveLayers(nowMs)
         : [];
-  }
+  };
 }

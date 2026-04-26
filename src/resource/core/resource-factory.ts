@@ -21,11 +21,11 @@ const resourceClassMap = {
 export class ResourceFactory {
   constructor(private ctx: GameContext) {}
 
-  async create<K extends ResourceName>(data: any, type: K) {
+  create = async <K extends ResourceName>(data: any, type: K) => {
     const cls = resourceClassMap[type] as ResourceStatic<K>;
     const schema = this.ctx.schemas.get(type);
     const parsed = schema.parse(data) as ResourceData<K>;
     const deps = await cls.loadDeps(this.ctx, parsed);
     return new cls(this.ctx, parsed, deps);
-  }
+  };
 }

@@ -14,7 +14,7 @@ export class RpgCore implements Game<RpgKey> {
     this.ctx = new GameContext(manifest);
   }
 
-  async onInit(renderer: GameRenderer) {
+  onInit = async (renderer: GameRenderer) => {
     this.players = await Promise.all(
       this.ctx.manifest.initialState.core.players.map(
         async (playerId) => (await this.ctx.resources.get(playerId, 'player')) as Player
@@ -22,9 +22,9 @@ export class RpgCore implements Game<RpgKey> {
     );
     this.field = await FieldEngine.factory(this.ctx, this.players);
     return true;
-  }
+  };
 
-  async onTick(input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) {
+  onTick = async (input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) => {
     switch (this.mode) {
       case 'field':
         this.field?.onTick(input, clock, renderer);
@@ -33,5 +33,5 @@ export class RpgCore implements Game<RpgKey> {
         break;
     }
     return true;
-  }
+  };
 }

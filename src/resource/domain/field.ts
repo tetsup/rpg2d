@@ -31,12 +31,12 @@ export class Field extends ResourceBase<'field'> {
     return this.deps.entities;
   }
 
-  checkReachable(dest: Point2d) {
+  checkReachable = (dest: Point2d) => {
     const tile = this.deps.tiles.get(this.data.map[dest.y][dest.x]);
     return tile?.allowOverwrap ?? false;
-  }
+  };
 
-  resolveLayers(nowMs: number, view: Rect) {
+  resolveLayers = (nowMs: number, view: Rect) => {
     return this.data.map
       .slice(view.top, view.bottom)
       .map((row, ty) =>
@@ -51,5 +51,5 @@ export class Field extends ResourceBase<'field'> {
         }))
       )
       .flat(1);
-  }
+  };
 }

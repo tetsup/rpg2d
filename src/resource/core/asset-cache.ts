@@ -11,7 +11,7 @@ export class AssetCache {
 
   constructor() {}
 
-  async cache(id: ResourceId) {
+  cache = async (id: ResourceId) => {
     if (this.images.has(id)) return;
     this.images.set(id, { loaded: false });
     try {
@@ -20,16 +20,16 @@ export class AssetCache {
     } catch {
       this.images.delete(id);
     }
-  }
+  };
 
   private async fetchBitmap(id: ResourceId) {
     const res = await fetch(`${process.env.RESOURCE_URI}/${id}`);
     return await createImageBitmap(await res.blob());
   }
 
-  get(id: ResourceId) {
+  get = (id: ResourceId) => {
     const lazy = this.images.get(id);
     if (lazy === undefined) this.cache(id);
     else if (lazy.loaded) return lazy.image;
-  }
+  };
 }

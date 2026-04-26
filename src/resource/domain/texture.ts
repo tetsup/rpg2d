@@ -14,20 +14,20 @@ export class Texture extends ResourceBase<'texture'> {
     return {};
   }
 
-  start() {
+  start = () => {
     this.startMs = performance.now();
     this.playState = 'play';
-  }
+  };
 
-  stop() {
+  stop = () => {
     this.playState = 'stop';
-  }
+  };
 
-  resolveLayers(nowMs: number): ImageLayer[] {
+  resolveLayers = (nowMs: number): ImageLayer[] => {
     const elapsedMs = nowMs - this.startMs;
     if (elapsedMs < 0 || this.playState === 'stop') return [];
     return this.data.layers.map((layer) => this.resolveLayer(layer, elapsedMs));
-  }
+  };
 
   private resolveLayer(layer: LayerAnimation, elapsedMs: number): ImageLayer {
     if (layer.playback == null) return { priority: layer.priority, image: layer.images[0] };

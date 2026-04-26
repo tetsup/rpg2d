@@ -52,52 +52,52 @@ export class FieldEngine {
     });
   }
 
-  checkEntityInhibit(dest: Point2d): boolean {
+  checkEntityInhibit = (dest: Point2d): boolean => {
     return Object.values(this.state.entities).some(
       (entity) => !entity.state.allowOverwrap && samePos(dest, entity.state.pos.getDestination())
     );
-  }
+  };
 
-  checkTileReachable(dest: Point2d): boolean {
+  checkTileReachable = (dest: Point2d): boolean => {
     return this.field.checkReachable(dest);
-  }
+  };
 
-  checkReachable(dest: Point2d): boolean {
+  checkReachable = (dest: Point2d): boolean => {
     return this.checkTileReachable(dest) && !this.checkEntityInhibit(dest);
-  }
+  };
 
-  movePlayer(nowMs: number, movement: Movement) {
+  movePlayer = (nowMs: number, movement: Movement) => {
     if (this.state.playerPos.currentMovement != null) return;
     if (this.checkReachable(calcDest(this.state.playerPos.current, movement)))
       this.state.playerPos.move(nowMs, movement);
-  }
+  };
 
-  moveEntity(nowMs: number, entityId: string, movement: Movement) {
+  moveEntity = (nowMs: number, entityId: string, movement: Movement) => {
     const entity = this.state.entities[entityId];
     if (entity.state.pos.currentMovement != null) return;
     const dest = calcDest(entity.state.pos.current, movement);
     if (this.checkReachable(dest) && !samePos(this.state.playerPos.getDestination(), dest))
       entity.state.pos.move(nowMs, movement);
-  }
+  };
 
-  resolveMove(input: InputManager<RpgKey>): Direction2d | null {
+  resolveMove = (input: InputManager<RpgKey>): Direction2d | null => {
     if (input.isPressed('left')) return 'left';
     if (input.isPressed('right')) return 'right';
     if (input.isPressed('up')) return 'up';
     if (input.isPressed('down')) return 'down';
     return null;
-  }
+  };
 
-  onTick(input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) {
+  onTick = (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
     const moveDirection = this.resolveMove(input);
     if (moveDirection != null)
       this.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
     this.state.playerPos.tick(nowMs);
     Object.values(this.state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
     renderer.render(this.retrieveLayers(nowMs, viewport));
-  }
+  };
 
-  calcViewPort(nowMs: number) {
+  calcViewPort = (nowMs: number) => {
     const anchorLeftTop = this.state.playerPos.getCurrentPixel(nowMs);
     const cameraCenter = {
       x: (anchorLeftTop.x + this.ctx.manifest.config.blockSize.width) >> 1,
@@ -106,16 +106,16 @@ export class FieldEngine {
     const width = this.ctx.manifest.config.screen.width;
     const height = this.ctx.manifest.config.screen.height;
     return new Rect(cameraCenter.x - (width >> 1), cameraCenter.y - (height >> 1), width, height);
-  }
+  };
 
-  resolvePlayerLayers(nowMs: number) {
+  resolvePlayerLayers = (nowMs: number) => {
     return this.state.players.map((player) => {
       const rect = Rect.fromTopLeft(this.state.playerPos.getCurrentPixel(nowMs), this.ctx.manifest.config.blockSize);
       return player.skin.resolveLayers(nowMs, this.state.playerPos.direction).map((layer) => ({ rect, layer }));
     });
-  }
+  };
 
-  resolveEntitiesLayers(nowMs: number, viewport: Rect) {
+  resolveEntitiesLayers = (nowMs: number, viewport: Rect) => {
     return Object.entries(this.state.entities)
       .filter(([_, entity]) => entity.state.visible)
       .map(([_, entity]) => {
@@ -128,12 +128,12 @@ export class FieldEngine {
         return layers.map((layer) => ({ rect, layer }));
       })
       .flat(1);
-  }
+  };
 
-  retrieveLayers(nowMs: number, viewport: Rect) {
+  retrieveLayers = (nowMs: number, viewport: Rect) => {
     const playerLayers = this.resolvePlayerLayers(nowMs);
     const entityLayers = this.resolveEntitiesLayers(nowMs, viewport);
     const tileLayers = this.field.resolveLayers(nowMs, viewport);
     return [...playerLayers, ...entityLayers, ...tileLayers];
-  }
+  };
 }
