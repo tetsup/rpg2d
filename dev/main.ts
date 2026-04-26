@@ -34,7 +34,7 @@ function assignPad(input: any) {
 const manifest: RpgManifest = {
   initialState: {
     core: {
-      players: ['local:player:hero:v0'],
+      players: ['local.player.hero.v0'],
       variables: new Map(),
       mode: 'field',
     },
