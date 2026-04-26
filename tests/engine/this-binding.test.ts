@@ -307,18 +307,17 @@ describe('FieldEngine: unbound call must not throw', () => {
     expect(() => movePlayer(1000, { command: 'walk', direction: 'down', async: true, force: false })).not.toThrow();
   });
 
-  it('keeps this binding in moveEntity — unbound call must not throw (no entity)', () => {
-    // No entity registered → accessing state.entities['x'] is undefined;
-    // the method should guard or simply be a no-op.  The critical point is
-    // that it must not throw a TypeError from lost `this`.
+  it('keeps this binding in moveEntity — unbound call must not throw', () => {
+    // Register a real entity in the field state so moveEntity has a valid target
+    const entityPos = makeFieldPos();
+    (engine as any).state.entities['npc1'] = {
+      state: { pos: entityPos, visible: true, allowOverwrap: false, actions: new Queue() },
+    };
+
     const moveEntity = engine.moveEntity;
-    // With no entities in state this will throw because entity is undefined;
-    // that's a logical bug, not a this-binding bug.  We verify it's NOT TypeError.
-    try {
-      moveEntity(1000, 'nonexistent', { command: 'walk', direction: 'down', async: true, force: false });
-    } catch (e) {
-      expect(e).not.toBeInstanceOf(TypeError);
-    }
+    expect(() =>
+      moveEntity(1000, 'npc1', { command: 'walk', direction: 'down', async: true, force: false })
+    ).not.toThrow();
   });
 
   it('keeps this binding in resolveMove — unbound call must not throw', () => {

@@ -7,7 +7,7 @@ export class InputEngine {
     this.lastState = input.state;
   }
 
-  toCommand() {
+  toCommand = () => {
     this.lastState.left;
-  }
+  };
 }

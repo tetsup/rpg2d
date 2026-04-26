@@ -16,7 +16,7 @@ export class Skin extends ResourceBase<'skin'> {
     };
   }
 
-  resolveLayers(nowMs: number, direction: Direction2d) {
+  resolveLayers = (nowMs: number, direction: Direction2d) => {
     return this.deps.textures[direction].resolveLayers(nowMs);
-  }
+  };
 }

@@ -36,24 +36,24 @@ export class FieldPos {
     this._direction = config.initialDirection;
   }
 
-  move(nowMs: number, movement: Movement) {
+  move = (nowMs: number, movement: Movement) => {
     this._currentMovement = {
       dest: calcDest(this._current, movement),
       timeMsStart: nowMs,
       durationMs: movement.durationMs ?? this.ctx.manifest.config.moveDurationMs,
     };
-  }
+  };
 
-  tick(nowMs: number) {
+  tick = (nowMs: number) => {
     if (this._currentMovement == null) return;
     const elapsedMs = nowMs - this._currentMovement.timeMsStart;
     if (elapsedMs >= this._currentMovement.durationMs) {
       this._current = this._currentMovement.dest;
       this._currentMovement = null;
     }
-  }
+  };
 
-  getCurrentPixel(nowMs: number) {
+  getCurrentPixel = (nowMs: number) => {
     if (this._currentMovement == null) {
       return { x: this._current.x * this.config.blockSize.width, y: this._current.y * this.config.blockSize.height };
     } else {
@@ -64,11 +64,11 @@ export class FieldPos {
       const y = this._current.y + dy * proceed;
       return { x: x * this.config.blockSize.width, y: y * this.config.blockSize.height };
     }
-  }
+  };
 
-  getDestination() {
+  getDestination = () => {
     return this._currentMovement?.dest ?? this._current;
-  }
+  };
 
   get current() {
     return this._current;
