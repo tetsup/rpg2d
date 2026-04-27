@@ -51,7 +51,7 @@ const manifest: Manifest = {
   schemas: { playerState: {} },
 };
 
-const config = { resourceUri: import.meta.env.VITE_RESOURCE_URI };
+const config = { resourceUri: '/api/resource', imageUri: '/api/image' };
 
 const app = new GameApp(canvas, new RpgCore(manifest, config), {
   maxObjects: 10,

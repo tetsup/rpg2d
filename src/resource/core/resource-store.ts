@@ -7,7 +7,7 @@ export class ResourceStore {
   constructor(private ctx: GameContext) {}
 
   fetch = async (id: ResourceId): Promise<unknown> => {
-    const res = await fetch(`${process.env.RESOURCE_URI}/${id}`);
+    const res = await fetch(`${this.ctx.config.resourceUri}/${id}`);
     return await res.json();
   };
 

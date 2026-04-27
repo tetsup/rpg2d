@@ -43,12 +43,12 @@ class ResourceLoader {
 const resourceLoader = new ResourceLoader();
 
 export const handlers = [
-  http.get('/api/resources/:id', async ({ params: { id } }) => {
+  http.get('/api/resource/:id', async ({ params: { id } }) => {
     const resource = await resourceLoader.readResource(id);
     return resource ? HttpResponse.json(resource) : HttpResponse.json({ error: 'not found' }, { status: 404 });
   }),
 
-  http.get('/api/images/:id', async ({ params: { id } }) => {
+  http.get('/api/image/:id', async ({ params: { id } }) => {
     const image = await resourceLoader.readImage(id);
     return image
       ? HttpResponse.arrayBuffer(image, {

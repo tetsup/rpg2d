@@ -24,7 +24,7 @@ export class AssetCache {
   };
 
   private async fetchBitmap(id: ResourceId) {
-    const res = await fetch(`${this.config.resourceUri}/${id}`);
+    const res = await fetch(`${this.config.imageUri}/${id}`);
     return await createImageBitmap(await res.blob());
   }
 
