@@ -7,12 +7,13 @@ import type { GameContext } from '@/resource/core/game-context';
 import type { Player } from '@/resource/domain/player';
 import type { Action } from '@/resource/domain/action';
 import type { Field } from '@/resource/domain/field';
-import { Movement } from '@/schemas/actions/movement';
+import type { Movement } from '@/schemas/actions/movement';
 import { FieldPos } from './fieldPos';
 import { EntityInstance } from './entity';
 import { resolveMove } from './field/resolve-move';
 import { calcViewPort } from './field/calc-viewport';
 import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers } from './field/layer-resolver';
+import * as movementController from './field/movement-controller';
 
 export class FieldEngine {
   private state: FieldState;
@@ -56,31 +57,23 @@ export class FieldEngine {
   }
 
   checkEntityInhibit = (dest: Point2d): boolean => {
-    return Object.values(this.state.entities).some(
-      (entity) => !entity.state.allowOverwrap && samePos(dest, entity.state.pos.getDestination())
-    );
+    return movementController.checkEntityInhibit(this.state, samePos, dest);
   };
 
   checkTileReachable = (dest: Point2d): boolean => {
-    return this.field.checkReachable(dest);
+    return movementController.checkTileReachable(this.field, dest);
   };
 
   checkReachable = (dest: Point2d): boolean => {
-    return this.checkTileReachable(dest) && !this.checkEntityInhibit(dest);
+    return movementController.checkReachable(this.state, this.field, samePos, dest);
   };
 
   movePlayer = (nowMs: number, movement: Movement) => {
-    if (this.state.playerPos.currentMovement != null) return;
-    if (this.checkReachable(calcDest(this.state.playerPos.current, movement)))
-      this.state.playerPos.move(nowMs, movement);
+    return movementController.movePlayer(this.state, this.field, calcDest, samePos, nowMs, movement);
   };
 
   moveEntity = (nowMs: number, entityId: string, movement: Movement) => {
-    const entity = this.state.entities[entityId];
-    if (entity.state.pos.currentMovement != null) return;
-    const dest = calcDest(entity.state.pos.current, movement);
-    if (this.checkReachable(dest) && !samePos(this.state.playerPos.getDestination(), dest))
-      entity.state.pos.move(nowMs, movement);
+    return movementController.moveEntity(this.state, this.field, calcDest, samePos, nowMs, entityId, movement);
   };
 
   resolveMove = (input: InputManager<RpgKey>): Direction2d | null => {
