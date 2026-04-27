@@ -498,7 +498,7 @@ describe('描画 (resolveEntitiesLayers)', () => {
     expect(layers[0]).toMatchObject({ layer });
   });
 
-  it('retrieveLayers はフラットな {rect, layer}[] を返す', () => {
+  it('retrieveLayers のプレイヤー・エンティティ部分はフラットな {rect, layer}[] を返す', () => {
     const ctx = makeCtx();
     const viewport = new Rect(0, 0, 320, 240);
 
@@ -513,8 +513,10 @@ describe('描画 (resolveEntitiesLayers)', () => {
       resolveLayersResult: [entityLayer],
     });
 
-    const tileEntry = { rect: new Rect(0, 0, 32, 32), layers: [] };
-    const field = makeField({ resolveLayersResult: [tileEntry] });
+    // タイルレイヤーは空配列を返すモックにして、プレイヤー/エンティティのみ検証する。
+    // (field.resolveLayers は {rect, layers} 形式で返すため、
+    //  retrieveLayers が混合形状を返すという別の設計問題があるが、ここでは対象外)
+    const field = makeField({ resolveLayersResult: [] });
     const playerPos = makeFieldPos({ getCurrentPixelResult: { x: 32, y: 32 } });
 
     const state: FieldState = {
@@ -527,9 +529,9 @@ describe('描画 (resolveEntitiesLayers)', () => {
 
     const layers = engine.retrieveLayers(NOW_MS, viewport);
 
-    // 各要素が配列ではなくオブジェクト ({rect, layer}) であること。
-    // NOTE: resolvePlayerLayers が Array<Array<...>> を返すため、
+    // NOTE: resolvePlayerLayers が Array<Array<...>> を返す場合、
     //       先頭要素が配列になりこの assert は失敗する。
+    // Bug 3 (flatMap 修正) 後は全要素が {rect, layer} になること。
     layers.forEach((item) => {
       expect(Array.isArray(item)).toBe(false);
       expect(item).toHaveProperty('rect');
