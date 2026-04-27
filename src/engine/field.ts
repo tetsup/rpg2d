@@ -13,7 +13,7 @@ import { EntityInstance } from './entity';
 import { resolveMove } from './field/resolve-move';
 import { calcViewPort } from './field/calc-viewport';
 import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers } from './field/layer-resolver';
-import * as movementController from './field/movement-controller';
+import { checkEntityInhibit, checkReachable, checkTileReachable, moveEntity, movePlayer } from './field/movement-controller';
 
 export class FieldEngine {
   private state: FieldState;
@@ -57,23 +57,23 @@ export class FieldEngine {
   }
 
   checkEntityInhibit = (dest: Point2d): boolean => {
-    return movementController.checkEntityInhibit(this.state, samePos, dest);
+    return checkEntityInhibit(this.state, samePos, dest);
   };
 
   checkTileReachable = (dest: Point2d): boolean => {
-    return movementController.checkTileReachable(this.field, dest);
+    return checkTileReachable(this.field, dest);
   };
 
   checkReachable = (dest: Point2d): boolean => {
-    return movementController.checkReachable(this.state, this.field, samePos, dest);
+    return checkReachable(this.state, this.field, samePos, dest);
   };
 
   movePlayer = (nowMs: number, movement: Movement) => {
-    return movementController.movePlayer(this.state, this.field, calcDest, samePos, nowMs, movement);
+    return movePlayer(this.state, this.field, calcDest, samePos, nowMs, movement);
   };
 
   moveEntity = (nowMs: number, entityId: string, movement: Movement) => {
-    return movementController.moveEntity(this.state, this.field, calcDest, samePos, nowMs, entityId, movement);
+    return moveEntity(this.state, this.field, calcDest, samePos, nowMs, entityId, movement);
   };
 
   resolveMove = (input: InputManager<RpgKey>): Direction2d | null => {
