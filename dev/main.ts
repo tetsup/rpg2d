@@ -29,6 +29,8 @@ function assignPad(input: any) {
   bind('down', 'down');
   bind('enter', 'enter');
   bind('esc', 'esc');
+
+  return {} as any;
 }
 
 const manifest: Manifest = {
