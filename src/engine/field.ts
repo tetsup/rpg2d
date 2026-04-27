@@ -94,14 +94,15 @@ export class FieldEngine {
       this.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
     this.state.playerPos.tick(nowMs);
     Object.values(this.state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
+    const viewport = this.calcViewPort(nowMs);
     renderer.render(this.retrieveLayers(nowMs, viewport));
   };
 
   calcViewPort = (nowMs: number) => {
     const anchorLeftTop = this.state.playerPos.getCurrentPixel(nowMs);
     const cameraCenter = {
-      x: (anchorLeftTop.x + this.ctx.manifest.config.blockSize.width) >> 1,
-      y: (anchorLeftTop.y + this.ctx.manifest.config.blockSize.height) >> 1,
+      x: anchorLeftTop.x + (this.ctx.manifest.config.blockSize.width >> 1),
+      y: anchorLeftTop.y + (this.ctx.manifest.config.blockSize.height >> 1),
     };
     const width = this.ctx.manifest.config.screen.width;
     const height = this.ctx.manifest.config.screen.height;
@@ -109,7 +110,7 @@ export class FieldEngine {
   };
 
   resolvePlayerLayers = (nowMs: number) => {
-    return this.state.players.map((player) => {
+    return this.state.players.flatMap((player) => {
       const rect = Rect.fromTopLeft(this.state.playerPos.getCurrentPixel(nowMs), this.ctx.manifest.config.blockSize);
       return player.skin.resolveLayers(nowMs, this.state.playerPos.direction).map((layer) => ({ rect, layer }));
     });
