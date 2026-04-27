@@ -2,6 +2,8 @@ import { AssetCache } from '@/resource/core/asset-cache';
 
 const mockBitmap = {} as ImageBitmap;
 
+const config = { resourceUri: 'http://localhost:5173/api/resource' };
+
 describe('assetCache', () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -15,7 +17,7 @@ describe('assetCache', () => {
   });
 
   it('未キャッシュ時はundefinedを返しcacheを開始する', () => {
-    const cache = new AssetCache();
+    const cache = new AssetCache(config);
     const spy = vi.spyOn(cache, 'cache');
     const result = cache.get('a');
 
@@ -24,7 +26,7 @@ describe('assetCache', () => {
   });
 
   it('cache後は画像を取得できる', async () => {
-    const cache = new AssetCache();
+    const cache = new AssetCache(config);
     await cache.cache('a');
     const result = cache.get('a');
 
@@ -43,7 +45,7 @@ describe('assetCache', () => {
           })
       )
     );
-    const cache = new AssetCache();
+    const cache = new AssetCache(config);
     cache.cache('a');
     const result = cache.get('a');
 
@@ -56,7 +58,7 @@ describe('assetCache', () => {
   });
 
   it('同一IDは1回しかfetchされない', () => {
-    const cache = new AssetCache();
+    const cache = new AssetCache(config);
     cache.get('a');
     cache.get('a');
     cache.get('a');
@@ -65,7 +67,7 @@ describe('assetCache', () => {
   });
 
   it('cache成功時はloaded状態になる', async () => {
-    const cache = new AssetCache();
+    const cache = new AssetCache(config);
     await cache.cache('a');
 
     expect(cache.images.get('a')).toEqual({
@@ -76,7 +78,7 @@ describe('assetCache', () => {
 
   it('fetch失敗時はキャッシュが削除される', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fail')));
-    const cache = new AssetCache();
+    const cache = new AssetCache(config);
     await cache.cache('a');
     expect(cache.images.has('a')).toBe(false);
   });
@@ -90,7 +92,7 @@ describe('assetCache', () => {
       });
     vi.stubGlobal('fetch', fetchMock);
 
-    const cache = new AssetCache();
+    const cache = new AssetCache(config);
     await cache.cache('a');
 
     expect(cache.images.has('a')).toBe(false);

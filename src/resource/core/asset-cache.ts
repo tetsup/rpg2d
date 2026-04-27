@@ -1,4 +1,5 @@
 import type { ResourceId } from '@/schemas/common';
+import type { ResourceConfig } from '@/schemas/resource-config';
 
 type LazyImage =
   | {
@@ -9,7 +10,7 @@ type LazyImage =
 export class AssetCache {
   images: Map<ResourceId, LazyImage> = new Map();
 
-  constructor() {}
+  constructor(private config: ResourceConfig) {}
 
   cache = async (id: ResourceId) => {
     if (this.images.has(id)) return;
@@ -23,7 +24,7 @@ export class AssetCache {
   };
 
   private async fetchBitmap(id: ResourceId) {
-    const res = await fetch(`${process.env.RESOURCE_URI}/${id}`);
+    const res = await fetch(`${this.config.resourceUri}/${id}`);
     return await createImageBitmap(await res.blob());
   }
 

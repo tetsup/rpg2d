@@ -4,14 +4,15 @@ import type { Manifest } from '@/schemas/manifest';
 import { GameContext } from '@/resource/core/game-context';
 import { FieldEngine } from './field';
 import type { Player } from '@/resource/domain/player';
+import { ResourceConfig } from '@/schemas/resource-config';
 
 export class RpgCore implements Game<RpgKey> {
   private ctx: GameContext;
   private mode: RpgMode = 'field';
   private field: FieldEngine | null = null;
   private players: Player[] = [];
-  constructor(manifest: Manifest) {
-    this.ctx = new GameContext(manifest);
+  constructor(manifest: Manifest, config: ResourceConfig) {
+    this.ctx = new GameContext(manifest, config);
   }
 
   onInit = async (renderer: GameRenderer) => {

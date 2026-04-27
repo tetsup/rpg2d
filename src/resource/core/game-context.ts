@@ -1,4 +1,5 @@
 import type { Manifest } from '@/schemas/manifest';
+import type { ResourceConfig } from '@/schemas/resource-config';
 import { ResourceStore } from './resource-store';
 import { AssetCache } from './asset-cache';
 import { GameState } from './game-state';
@@ -11,11 +12,12 @@ export class GameContext {
   resources: ResourceStore;
   state: GameState;
   schemas: SchemaRegistry;
-  readonly manifest: Manifest;
 
-  constructor(manifest: Manifest) {
-    this.manifest = manifest;
-    this.assets = new AssetCache();
+  constructor(
+    readonly manifest: Manifest,
+    readonly config: ResourceConfig
+  ) {
+    this.assets = new AssetCache(config);
     this.factory = new ResourceFactory(this);
     this.resources = new ResourceStore(this);
     this.state = new GameState(manifest);

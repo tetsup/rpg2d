@@ -49,7 +49,9 @@ const manifest: Manifest = {
   schemas: { playerState: {} },
 };
 
-const app = new GameApp(canvas, new RpgCore(manifest), {
+const config = { resourceUri: import.meta.env.VITE_RESOURCE_URI };
+
+const app = new GameApp(canvas, new RpgCore(manifest, config), {
   maxObjects: 10,
   rectSize: { width: 320, height: 240 },
   keyAssignment,
