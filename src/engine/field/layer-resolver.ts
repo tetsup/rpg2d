@@ -10,12 +10,7 @@ export const resolvePlayerLayers = (nowMs: number, state: FieldState, config: Ma
   });
 };
 
-export const resolveEntitiesLayers = (
-  nowMs: number,
-  viewport: Rect,
-  state: FieldState,
-  config: Manifest['config']
-) => {
+export const resolveEntitiesLayers = (nowMs: number, viewport: Rect, state: FieldState, config: Manifest['config']) => {
   return Object.entries(state.entities)
     .filter(([_, entity]) => entity.state.visible)
     .map(([_, entity]) => {
@@ -30,7 +25,13 @@ export const resolveEntitiesLayers = (
     .flat(1);
 };
 
-export const retrieveLayers = (nowMs: number, viewport: Rect, state: FieldState, config: Manifest['config'], field: Field) => {
+export const retrieveLayers = (
+  nowMs: number,
+  viewport: Rect,
+  state: FieldState,
+  config: Manifest['config'],
+  field: Field
+) => {
   const playerLayers = resolvePlayerLayers(nowMs, state, config);
   const entityLayers = resolveEntitiesLayers(nowMs, viewport, state, config);
   const tileLayers = field.resolveLayers(nowMs, viewport);
