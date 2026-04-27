@@ -1,7 +1,7 @@
 import { GameContext } from '@/resource/core/game-context';
 import { Movement } from '@/schemas/actions/movement';
 import type { Direction2d, Point2d, Size2d } from '@/types/engine';
-import { calcDest, move } from '@/utils/pos';
+import { calcDest } from '@/utils/pos';
 
 export type InitialFieldPos = {
   current: Point2d;

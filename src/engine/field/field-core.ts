@@ -8,12 +8,12 @@ import type { Player } from '@/resource/domain/player';
 import type { Action } from '@/resource/domain/action';
 import type { Field } from '@/resource/domain/field';
 import type { Movement } from '@/schemas/actions/movement';
-import { FieldPos } from './fieldPos';
-import { EntityInstance } from './entity';
-import { resolveMove } from './field/resolve-move';
-import { calcViewPort } from './field/calc-viewport';
-import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers } from './field/layer-resolver';
-import { checkEntityInhibit, checkReachable, checkTileReachable, moveEntity, movePlayer } from './field/movement-controller';
+import { EntityInstance } from '../entity';
+import { FieldPos } from './field-pos';
+import { resolveMove } from './resolve-move';
+import { calcViewPort } from './calc-viewport';
+import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers } from './layer-resolver';
+import { checkEntityInhibit, checkReachable, checkTileReachable, moveEntity, movePlayer } from './movement-controller';
 
 export class FieldEngine {
   private state: FieldState;

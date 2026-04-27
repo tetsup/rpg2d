@@ -1,10 +1,10 @@
 import type { InputManager, Game, GameRenderer } from '@tetsup/web2d';
 import type { RpgKey, RpgMode } from '@/types/engine';
 import type { Manifest } from '@/schemas/manifest';
-import { GameContext } from '@/resource/core/game-context';
-import { FieldEngine } from './field';
-import type { Player } from '@/resource/domain/player';
 import { ResourceConfig } from '@/schemas/resource-config';
+import { GameContext } from '@/resource/core/game-context';
+import type { Player } from '@/resource/domain/player';
+import { FieldEngine } from './field/field-core';
 
 export class RpgCore implements Game<RpgKey> {
   private ctx: GameContext;
