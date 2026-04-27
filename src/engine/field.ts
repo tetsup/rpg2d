@@ -81,13 +81,10 @@ export class FieldEngine {
   };
 
   onTick = (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
-    const moveDirection = this.resolveMove(input);
-    if (moveDirection != null)
-      this.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
-    this.state.playerPos.tick(nowMs);
-    Object.values(this.state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
-    const viewport = this.calcViewPort(nowMs);
-    renderer.render(this.retrieveLayers(nowMs, viewport));
+    tickPlayerMove(this, input, nowMs);
+    tickPlayerPos(this.state, nowMs);
+    tickEntities(this.state, nowMs);
+    renderField(this, nowMs, renderer);
   };
 
   calcViewPort = (nowMs: number) => {
@@ -106,3 +103,22 @@ export class FieldEngine {
     return retrieveLayers(nowMs, viewport, this.state, this.ctx.manifest.config, this.field);
   };
 }
+
+const tickPlayerMove = (engine: FieldEngine, input: InputManager<RpgKey>, nowMs: number) => {
+  const moveDirection = engine.resolveMove(input);
+  if (moveDirection != null)
+    engine.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
+};
+
+const tickPlayerPos = (state: FieldState, nowMs: number) => {
+  state.playerPos.tick(nowMs);
+};
+
+const tickEntities = (state: FieldState, nowMs: number) => {
+  Object.values(state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
+};
+
+const renderField = (engine: FieldEngine, nowMs: number, renderer: GameRenderer) => {
+  const viewport = engine.calcViewPort(nowMs);
+  renderer.render(engine.retrieveLayers(nowMs, viewport));
+};
