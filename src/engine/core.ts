@@ -22,6 +22,7 @@ export class RpgCore implements Game<RpgKey> {
       )
     );
     this.field = await FieldEngine.factory(this.ctx, this.players);
+    this.mode = 'field';
     return true;
   };
 
