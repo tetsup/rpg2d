@@ -10,6 +10,8 @@ import type { Field } from '@/resource/domain/field';
 import { Movement } from '@/schemas/actions/movement';
 import { FieldPos } from './fieldPos';
 import { EntityInstance } from './entity';
+import { resolveMove } from './field/resolve-move';
+import { calcViewPort } from './field/calc-viewport';
 
 export class FieldEngine {
   private state: FieldState;
@@ -81,11 +83,7 @@ export class FieldEngine {
   };
 
   resolveMove = (input: InputManager<RpgKey>): Direction2d | null => {
-    if (input.isPressed('left')) return 'left';
-    if (input.isPressed('right')) return 'right';
-    if (input.isPressed('up')) return 'up';
-    if (input.isPressed('down')) return 'down';
-    return null;
+    return resolveMove(input);
   };
 
   onTick = (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
@@ -99,14 +97,7 @@ export class FieldEngine {
   };
 
   calcViewPort = (nowMs: number) => {
-    const anchorLeftTop = this.state.playerPos.getCurrentPixel(nowMs);
-    const cameraCenter = {
-      x: anchorLeftTop.x + (this.ctx.manifest.config.blockSize.width >> 1),
-      y: anchorLeftTop.y + (this.ctx.manifest.config.blockSize.height >> 1),
-    };
-    const width = this.ctx.manifest.config.screen.width;
-    const height = this.ctx.manifest.config.screen.height;
-    return new Rect(cameraCenter.x - (width >> 1), cameraCenter.y - (height >> 1), width, height);
+    return calcViewPort(nowMs, this.state, this.ctx);
   };
 
   resolvePlayerLayers = (nowMs: number) => {
