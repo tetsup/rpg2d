@@ -66,7 +66,7 @@ const mode: TransparentMode = modeParam === 'sab' || modeParam === 'message' ? m
 app.setTransparentMode(mode);
 
 (document.getElementById('start') as HTMLButtonElement).onclick = () => {
-  console.log(`starting with mode ${modeParam}`);
+  console.log(`starting with mode ${mode}`);
   app.start();
 };
 
