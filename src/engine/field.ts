@@ -12,6 +12,7 @@ import { FieldPos } from './fieldPos';
 import { EntityInstance } from './entity';
 import { resolveMove } from './field/resolve-move';
 import { calcViewPort } from './field/calc-viewport';
+import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers } from './field/layer-resolver';
 
 export class FieldEngine {
   private state: FieldState;
@@ -101,31 +102,14 @@ export class FieldEngine {
   };
 
   resolvePlayerLayers = (nowMs: number) => {
-    return this.state.players.flatMap((player) => {
-      const rect = Rect.fromTopLeft(this.state.playerPos.getCurrentPixel(nowMs), this.ctx.manifest.config.blockSize);
-      return player.skin.resolveLayers(nowMs, this.state.playerPos.direction).map((layer) => ({ rect, layer }));
-    });
+    return resolvePlayerLayers(nowMs, this.state, this.ctx.manifest.config);
   };
 
   resolveEntitiesLayers = (nowMs: number, viewport: Rect) => {
-    return Object.entries(this.state.entities)
-      .filter(([_, entity]) => entity.state.visible)
-      .map(([_, entity]) => {
-        const rect = Rect.fromTopLeft(entity.state.pos.getCurrentPixel(nowMs), this.ctx.manifest.config.blockSize);
-        return { rect, entity };
-      })
-      .filter(({ rect }) => rect.overwrap(viewport))
-      .map(({ rect, entity }) => {
-        const layers = entity.resolveLayers(nowMs);
-        return layers.map((layer) => ({ rect, layer }));
-      })
-      .flat(1);
+    return resolveEntitiesLayers(nowMs, viewport, this.state, this.ctx.manifest.config);
   };
 
   retrieveLayers = (nowMs: number, viewport: Rect) => {
-    const playerLayers = this.resolvePlayerLayers(nowMs);
-    const entityLayers = this.resolveEntitiesLayers(nowMs, viewport);
-    const tileLayers = this.field.resolveLayers(nowMs, viewport);
-    return [...playerLayers, ...entityLayers, ...tileLayers];
+    return retrieveLayers(nowMs, viewport, this.state, this.ctx.manifest.config, this.field);
   };
 }
