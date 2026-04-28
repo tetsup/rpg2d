@@ -32,8 +32,9 @@
  *   - spy on `this`               ← cannot detect broken binding
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { GameRenderer, InputManager } from '@tetsup/web2d';
 import { RpgCore } from '@/engine/core';
+import { EntityInstance } from '@/engine/entity';
 import { FieldEngine } from '@/engine/field/field-core';
 import { FieldPos } from '@/engine/field/field-pos';
 import { Texture } from '@/resource/domain/texture';
@@ -42,12 +43,10 @@ import { Entity } from '@/resource/domain/entity';
 import { Field } from '@/resource/domain/field';
 import { Tile } from '@/resource/domain/tile';
 import { Player } from '@/resource/domain/player';
-import { EntityInstance } from '@/engine/entity';
 import { ResourceFactory } from '@/resource/core/resource-factory';
 import { ResourceStore } from '@/resource/core/resource-store';
 import { AssetCache } from '@/resource/core/asset-cache';
 import { GameContext } from '@/resource/core/game-context';
-import type { GameRenderer, InputManager } from '@tetsup/web2d';
 import type { Manifest } from '@/schemas/manifest';
 import type { RpgKey, FieldState } from '@/types/engine';
 import { Queue } from '@/utils/queue';

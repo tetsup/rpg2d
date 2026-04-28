@@ -6,18 +6,16 @@
  * 失敗するテストは実装バグを示す。
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { InputManager, GameRenderer } from '@tetsup/web2d';
 import { FieldEngine } from '@/engine/field/field-core';
-import { Rect } from '@/utils/rect';
-import { calcDest, samePos } from '@/utils/pos';
-import { Queue } from '@/utils/queue';
 import type { FieldPos } from '@/engine/field/field-pos';
 import type { EntityInstance } from '@/engine/entity';
+import { Rect } from '@/utils/rect';
+import { Queue } from '@/utils/queue';
 import type { FieldState } from '@/types/engine';
 import type { GameContext } from '@/resource/core/game-context';
 import type { Field } from '@/resource/domain/field';
 import type { Player } from '@/resource/domain/player';
-import type { InputManager, GameRenderer } from '@tetsup/web2d';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 定数
