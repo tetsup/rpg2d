@@ -51,6 +51,7 @@ import type { Manifest } from '@/schemas/manifest';
 import type { RpgKey, FieldState } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
+import { ResourceConfig } from '@/schemas/resource-config';
 
 // ---------------------------------------------------------------------------
 // Test-fixture helpers
@@ -71,6 +72,10 @@ function makeManifest(): Manifest {
   };
 }
 
+function makeConfig(): ResourceConfig {
+  return { resourceUri: '/api/resource', imageUri: '/api/image' };
+}
+
 function makeRenderer(): GameRenderer {
   return { registerImage: vi.fn(), render: vi.fn() };
 }
@@ -84,8 +89,8 @@ function makeInput(): InputManager<RpgKey> {
   };
 }
 
-function makeContext(manifest?: Manifest): GameContext {
-  return new GameContext(manifest ?? makeManifest());
+function makeContext(manifest?: Manifest, config?: ResourceConfig): GameContext {
+  return new GameContext(manifest ?? makeManifest(), config ?? makeConfig());
 }
 
 function makeFieldPos(ctx?: GameContext) {
