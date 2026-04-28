@@ -34,8 +34,8 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RpgCore } from '@/engine/core';
-import { FieldEngine } from '@/engine/field';
-import { FieldPos } from '@/engine/fieldPos';
+import { FieldEngine } from '@/engine/field/field-core';
+import { FieldPos } from '@/engine/field/field-pos';
 import { Texture } from '@/resource/domain/texture';
 import { Skin } from '@/resource/domain/skin';
 import { Entity } from '@/resource/domain/entity';
@@ -144,8 +144,18 @@ function makeField(ctx?: GameContext) {
   const mockTile = { allowOverwrap: true, resolveLayers: vi.fn().mockReturnValue([]) };
   return new Field(
     c,
-    { id: 'field.test', type: 'field' as const, name: 'F', tiles: { '.': 'tile.grass' }, map: [['.', '.'],['.','.']], entities: {} },
-    { tiles: new Map([['.',  mockTile]]) as any, entities: new Map() }
+    {
+      id: 'field.test',
+      type: 'field' as const,
+      name: 'F',
+      tiles: { '.': 'tile.grass' },
+      map: [
+        ['.', '.'],
+        ['.', '.'],
+      ],
+      entities: {},
+    },
+    { tiles: new Map([['.', mockTile]]) as any, entities: new Map() }
   );
 }
 
@@ -210,10 +220,13 @@ describe('RpgCore: unbound call must not throw', () => {
   beforeEach(() => {
     game = new RpgCore(makeManifest());
 
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      json: vi.fn().mockResolvedValue({ id: 'action.test', type: 'action' }),
-      blob: vi.fn().mockResolvedValue(new Blob()),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        json: vi.fn().mockResolvedValue({ id: 'action.test', type: 'action' }),
+        blob: vi.fn().mockResolvedValue(new Blob()),
+      })
+    );
 
     // Intercept ResourceStore.get so no real network call is needed
     const mockField: any = {
@@ -588,9 +601,12 @@ describe('EntityInstance: unbound call must not throw', () => {
 
 describe('AssetCache: unbound call must not throw', () => {
   beforeEach(() => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      blob: vi.fn().mockResolvedValue(new Blob()),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        blob: vi.fn().mockResolvedValue(new Blob()),
+      })
+    );
     vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue({} as ImageBitmap));
   });
 
@@ -626,9 +642,12 @@ describe('ResourceFactory: unbound call must not throw', () => {
 
 describe('ResourceStore: unbound call must not throw', () => {
   beforeEach(() => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      json: vi.fn().mockResolvedValue({ id: 'action.test', type: 'action' }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        json: vi.fn().mockResolvedValue({ id: 'action.test', type: 'action' }),
+      })
+    );
   });
 
   it('keeps this binding in fetch — unbound call must not throw', async () => {

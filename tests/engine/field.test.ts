@@ -7,11 +7,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { FieldEngine } from '@/engine/field';
+import { FieldEngine } from '@/engine/field/field-core';
 import { Rect } from '@/utils/rect';
 import { calcDest, samePos } from '@/utils/pos';
 import { Queue } from '@/utils/queue';
-import type { FieldPos } from '@/engine/fieldPos';
+import type { FieldPos } from '@/engine/field/field-pos';
 import type { EntityInstance } from '@/engine/entity';
 import type { FieldState } from '@/types/engine';
 import type { GameContext } from '@/resource/core/game-context';
@@ -82,9 +82,7 @@ function makeEntityInstance(opts?: {
       visible: o.visible !== undefined ? o.visible : true,
       allowOverwrap: o.allowOverwrap !== undefined ? o.allowOverwrap : false,
     },
-    resolveLayers: vi.fn().mockReturnValue(
-      o.resolveLayersResult ?? [{ priority: 0, image: 'entity.png' }]
-    ),
+    resolveLayers: vi.fn().mockReturnValue(o.resolveLayersResult ?? [{ priority: 0, image: 'entity.png' }]),
   } as unknown as EntityInstance;
 }
 
@@ -198,10 +196,7 @@ describe('移動ロジック (movePlayer)', () => {
       force: false,
     });
 
-    expect(playerPos.move).toHaveBeenCalledWith(
-      NOW_MS,
-      expect.objectContaining({ direction: 'right' })
-    );
+    expect(playerPos.move).toHaveBeenCalledWith(NOW_MS, expect.objectContaining({ direction: 'right' }));
   });
 
   it('移動中 (currentMovement != null) は次の移動が発火しない', () => {
@@ -234,10 +229,7 @@ describe('移動ロジック (movePlayer)', () => {
       force: false,
     });
 
-    expect(playerPos.move).toHaveBeenCalledWith(
-      NOW_MS,
-      expect.objectContaining({ direction: 'right' })
-    );
+    expect(playerPos.move).toHaveBeenCalledWith(NOW_MS, expect.objectContaining({ direction: 'right' }));
   });
 });
 
@@ -298,10 +290,7 @@ describe('エンティティ移動 (moveEntity)', () => {
       force: false,
     });
 
-    expect(entityPos.move).toHaveBeenCalledWith(
-      NOW_MS,
-      expect.objectContaining({ direction: 'right' })
-    );
+    expect(entityPos.move).toHaveBeenCalledWith(NOW_MS, expect.objectContaining({ direction: 'right' }));
   });
 
   it('エンティティ移動中は次の移動が発火しない', () => {
@@ -556,8 +545,8 @@ describe('viewport (calcViewPort)', () => {
 
     // NOTE: 現在の実装は (px + bw) / 2 で計算するため px=64, bw=32 → 48, 正解は 80。
     //       この assert は失敗する。
-    expect(viewport.left).toBe(80 - 160);  // -80
-    expect(viewport.top).toBe(112 - 120);  // -8
+    expect(viewport.left).toBe(80 - 160); // -80
+    expect(viewport.top).toBe(112 - 120); // -8
   });
 
   it('viewport の width/height は screen サイズと一致する', () => {

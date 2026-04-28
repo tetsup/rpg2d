@@ -5,7 +5,7 @@ import { Queue } from '@/utils/queue';
 import type { GameContext } from '@/resource/core/game-context';
 import type { Entity } from '@/resource/domain/entity';
 import type { Action } from '@/resource/domain/action';
-import { FieldPos } from './fieldPos';
+import { FieldPos } from './field/field-pos';
 
 export class EntityInstance {
   state: EntityState;
