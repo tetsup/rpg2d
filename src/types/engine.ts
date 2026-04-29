@@ -1,5 +1,5 @@
 import type { EntityInstance } from '@/engine/entity';
-import { FieldPos } from '@/engine/fieldPos';
+import type { FieldPos } from '@/engine/field/field-pos';
 import type { Action } from '@/resource/domain/action';
 import type { Player } from '@/resource/domain/player';
 import type { TexturePlayback } from '@/schemas/image/texture';
@@ -50,4 +50,4 @@ export type RpgKey = 'left' | 'right' | 'up' | 'down' | 'enter' | 'esc';
 
 export type ImageLayer = { priority: number; image: string };
 
-export type FixedImageLayer = ImageLayer & { rect: Rect };
+export type LayerWithPos = { rect: Rect; layer: ImageLayer };

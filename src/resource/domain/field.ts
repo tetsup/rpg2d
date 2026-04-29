@@ -1,6 +1,6 @@
 import { FieldData, FieldDeps } from '@/schemas/field';
 import { Rect } from '@/utils/rect';
-import { Point2d, Size2d } from '@/types/engine';
+import { LayerWithPos, Point2d, Size2d } from '@/types/engine';
 import { ResourceBase } from '../core/resource-base';
 import { GameContext } from '../core/game-context';
 import { Entity } from './entity';
@@ -36,20 +36,20 @@ export class Field extends ResourceBase<'field'> {
     return tile?.allowOverwrap ?? false;
   };
 
-  resolveLayers = (nowMs: number, view: Rect) => {
-    return this.data.map
-      .slice(view.top, view.bottom)
-      .map((row, ty) =>
-        row.slice(view.left, view.right).map((symbol, tx) => ({
+  resolveLayers = (nowMs: number, view: Rect): LayerWithPos[] => {
+    return this.data.map.slice(view.top, view.bottom).flatMap((row, ty) =>
+      row
+        .slice(view.left, view.right)
+        .map((symbol, tx) => ({
           rect: new Rect(
             (view.left + tx) * this.ctx.manifest.config.blockSize.width,
             (view.top + ty) * this.ctx.manifest.config.blockSize.height,
             this.ctx.manifest.config.blockSize.width,
             this.ctx.manifest.config.blockSize.height
           ),
-          layers: this.deps.tiles.get(symbol)?.resolveLayers(nowMs),
+          layers: this.deps.tiles.get(symbol)?.resolveLayers(nowMs) ?? [],
         }))
-      )
-      .flat(1);
+        .flatMap((row) => row.layers.map((layer) => ({ rect: row.rect, layer })))
+    );
   };
 }

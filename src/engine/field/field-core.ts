@@ -1,5 +1,5 @@
 import type { InputManager, GameRenderer } from '@tetsup/web2d';
-import type { Direction2d, FieldState, Point2d, RpgKey } from '@/types/engine';
+import type { Direction2d, FieldState, LayerWithPos, Point2d, RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { calcDest, samePos } from '@/utils/pos';
 import { Rect } from '@/utils/rect';
@@ -12,7 +12,7 @@ import { EntityInstance } from '../entity';
 import { FieldPos } from './field-pos';
 import { resolveMove } from './resolve-move';
 import { calcViewPort } from './calc-viewport';
-import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers } from './layer-resolver';
+import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers, sortLayers } from './layer-resolver';
 import { checkEntityInhibit, checkReachable, checkTileReachable, moveEntity, movePlayer } from './movement-controller';
 
 export class FieldEngine {
@@ -84,23 +84,33 @@ export class FieldEngine {
     tickPlayerMove(this, input, nowMs);
     tickPlayerPos(this.state, nowMs);
     tickEntities(this.state, nowMs);
-    renderField(this, nowMs, renderer);
+    this.renderField(nowMs, renderer);
   };
 
   calcViewPort = (nowMs: number) => {
     return calcViewPort(nowMs, this.state, this.ctx);
   };
 
-  resolvePlayerLayers = (nowMs: number) => {
+  resolvePlayerLayers = (nowMs: number): LayerWithPos[] => {
     return resolvePlayerLayers(nowMs, this.state, this.ctx.manifest.config);
   };
 
-  resolveEntitiesLayers = (nowMs: number, viewport: Rect) => {
+  resolveEntitiesLayers = (nowMs: number, viewport: Rect): LayerWithPos[] => {
     return resolveEntitiesLayers(nowMs, viewport, this.state, this.ctx.manifest.config);
   };
 
-  retrieveLayers = (nowMs: number, viewport: Rect) => {
+  retrieveLayers = (nowMs: number, viewport: Rect): LayerWithPos[] => {
     return retrieveLayers(nowMs, viewport, this.state, this.ctx.manifest.config, this.field);
+  };
+
+  renderField = (nowMs: number, renderer: GameRenderer) => {
+    const viewport = this.calcViewPort(nowMs);
+    const sortedLayers = sortLayers(this.retrieveLayers(nowMs, viewport));
+    const images = sortedLayers.map(({ rect, layer }) => ({
+      pos: { x: rect.left, y: rect.top },
+      imageId: layer.image,
+    }));
+    renderer.render(images);
   };
 }
 
@@ -116,9 +126,4 @@ const tickPlayerPos = (state: FieldState, nowMs: number) => {
 
 const tickEntities = (state: FieldState, nowMs: number) => {
   Object.values(state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
-};
-
-const renderField = (engine: FieldEngine, nowMs: number, renderer: GameRenderer) => {
-  const viewport = engine.calcViewPort(nowMs);
-  renderer.render(engine.retrieveLayers(nowMs, viewport));
 };
