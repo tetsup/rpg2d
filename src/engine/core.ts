@@ -19,7 +19,7 @@ export class RpgCore implements Game<RpgKey> {
     try {
       this.players = await Promise.all(
         this.ctx.manifest.initialState.core.players.map(
-          async (playerId) => (await this.ctx.resources.get(playerId, 'player')) as Player
+          async (playerId) => await this.ctx.resources.get(playerId, 'player')
         )
       );
       this.field = await FieldEngine.factory(this.ctx, this.players);

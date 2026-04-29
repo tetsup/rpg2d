@@ -2,17 +2,20 @@ import { AssetCache } from '@/resource/core/asset-cache';
 
 const mockBitmap = {} as ImageBitmap;
 
-const config = { resourceUri: 'http://localhost:5173/api/resource' };
+const config = { resourceUri: '/api/resource', imageUri: '/api/image' };
 
 describe('assetCache', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
-        blob: vi.fn().mockResolvedValue('blob'),
-      } as any)
+        ok: true,
+        blob: vi.fn().mockResolvedValue(new Blob()),
+      })
     );
+
     vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue(mockBitmap));
   });
 

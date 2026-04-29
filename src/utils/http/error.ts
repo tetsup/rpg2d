@@ -2,7 +2,7 @@ export class HttpError extends Error {
   status: number;
   body?: unknown;
 
-  constructor(status: number, body?: unknown, message?: string, cause?: unknown) {
+  constructor(status: number, message?: string, body?: unknown, cause?: unknown) {
     super(message ?? `HTTP ${status}`, { cause });
 
     this.name = 'HttpError';

@@ -33,7 +33,7 @@ export class FieldEngine {
         actions.push((await ctx.resources.get(actionId, 'action')) as Action);
       })
     );
-    const field = (await ctx.resources.get(ctx.manifest.initialState.field.fieldId, 'field')) as Field;
+    const field = await ctx.resources.get(ctx.manifest.initialState.field.fieldId, 'field');
     const fieldPosConfig = {
       moveDurationMs: ctx.manifest.config.moveDurationMs,
       blockSize: ctx.manifest.config.blockSize,

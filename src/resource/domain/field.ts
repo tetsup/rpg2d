@@ -1,9 +1,8 @@
 import { FieldData, FieldDeps } from '@/schemas/field';
 import { Rect } from '@/utils/rect';
-import { LayerWithPos, Point2d, Size2d } from '@/types/engine';
+import { LayerWithPos, Point2d } from '@/types/engine';
 import { ResourceBase } from '../core/resource-base';
 import { GameContext } from '../core/game-context';
-import { Entity } from './entity';
 
 export class Field extends ResourceBase<'field'> {
   static async loadDeps(ctx: GameContext, data: FieldData): Promise<FieldDeps> {
@@ -15,7 +14,7 @@ export class Field extends ResourceBase<'field'> {
     const entities = Object.fromEntries(
       await Promise.all(
         Object.values(data.entities).map(async ({ entityId }) => {
-          const entity = (await ctx.resources.get(entityId, 'entity')) as Entity;
+          const entity = await ctx.resources.get(entityId, 'entity');
           return [entityId, entity];
         })
       )

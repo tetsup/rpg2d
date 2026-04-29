@@ -52,6 +52,7 @@ import type { RpgKey, FieldState } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
 import { ResourceConfig } from '@/schemas/resource-config';
+import { ActionSchema } from '@/schemas/action';
 
 // ---------------------------------------------------------------------------
 // Test-fixture helpers
@@ -645,29 +646,32 @@ describe('ResourceFactory: unbound call must not throw', () => {
 // ---------------------------------------------------------------------------
 
 describe('ResourceStore: unbound call must not throw', () => {
-  beforeEach(() => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        json: vi.fn().mockResolvedValue({ id: 'action.test', type: 'action' }),
-      })
-    );
-  });
-
   it('keeps this binding in fetch — unbound call must not throw', async () => {
     const store = new ResourceStore(makeContext());
+    vi.spyOn(store, 'fetch').mockResolvedValue({
+      id: 'action.test',
+      type: 'action',
+    });
     const fetchMethod = store.fetch;
-    await expect(fetchMethod('action.test')).resolves.not.toThrow();
+    await expect(fetchMethod('action.test', ActionSchema)).resolves.not.toThrow();
   });
 
   it('keeps this binding in get — unbound call must not throw', async () => {
     const store = new ResourceStore(makeContext());
+    vi.spyOn(store, 'fetch').mockResolvedValue({
+      id: 'action.test',
+      type: 'action',
+    });
     const get = store.get;
     await expect(get('action.test', 'action')).resolves.not.toThrow();
   });
 
   it('get called multiple times unbound must not throw', async () => {
     const store = new ResourceStore(makeContext());
+    vi.spyOn(store, 'fetch').mockResolvedValue({
+      id: 'action.test',
+      type: 'action',
+    });
     const get = store.get;
     await expect(get('action.test', 'action')).resolves.not.toThrow();
     await expect(get('action.test', 'action')).resolves.not.toThrow();

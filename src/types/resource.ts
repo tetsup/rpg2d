@@ -16,7 +16,9 @@ import type { SkinData, SkinDeps } from '@/schemas/image/skin';
 import type { TextureData, TextureDeps } from '@/schemas/image/texture';
 import type { TileData, TileDeps } from '@/schemas/tile';
 
-export type ResourceName = 'action' | 'entity' | 'field' | 'player' | 'skin' | 'texture' | 'tile';
+export const resources = ['action', 'entity', 'field', 'player', 'skin', 'texture', 'tile'] as const;
+
+export type ResourceName = (typeof resources)[number];
 
 export type ResourceData<Name extends ResourceName> = Name extends 'action'
   ? ActionData

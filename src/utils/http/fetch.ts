@@ -8,7 +8,22 @@ export async function fetchWithThrow<T>(
 ): Promise<T> {
   const res = await fetch(req, init);
   if (!res.ok) {
-    throw new HttpError(res.status, await res.text());
+    let message = 'Request failed';
+    let body: unknown;
+
+    try {
+      const contentType = res.headers.get('content-type') ?? '';
+
+      if (contentType.includes('application/json')) {
+        body = await res.json();
+        message = (body as any)?.message ?? message;
+      } else {
+        body = await res.text();
+        message = body as string;
+      }
+    } catch {}
+
+    throw new HttpError(res.status, message, body);
   }
   const body = await parser(res);
   return body;
