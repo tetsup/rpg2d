@@ -16,14 +16,19 @@ export class RpgCore implements Game<RpgKey> {
   }
 
   onInit = async (renderer: GameRenderer) => {
-    this.players = await Promise.all(
-      this.ctx.manifest.initialState.core.players.map(
-        async (playerId) => (await this.ctx.resources.get(playerId, 'player')) as Player
-      )
-    );
-    this.field = await FieldEngine.factory(this.ctx, this.players);
-    this.mode = 'field';
-    return true;
+    try {
+      this.players = await Promise.all(
+        this.ctx.manifest.initialState.core.players.map(
+          async (playerId) => (await this.ctx.resources.get(playerId, 'player')) as Player
+        )
+      );
+      this.field = await FieldEngine.factory(this.ctx, this.players);
+      this.mode = 'field';
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   };
 
   onTick = async (input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) => {
