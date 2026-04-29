@@ -10,7 +10,8 @@ size:
 palette:
   aa: [255, 0, 0, 255]
   bb: [0, 255, 0, 255]
-pixels: "aa bb"
+pixels:
+  - "aa bb"
 `;
 
     const { size, rgba } = yamlToRgba(yamlText);
@@ -23,9 +24,10 @@ pixels: "aa bb"
     const yamlText = `
 size: { width: 1, height: 1 }
 palette: { aa: [0, 0, 0, 255] }
-pixels: ""
+pixels: 
+  - ""
 `;
 
-    expect(() => yamlToRgba(yamlText)).toThrow('invalid pixels');
+    expect(() => yamlToRgba(yamlText)).toThrow('invalid_format');
   });
 });
