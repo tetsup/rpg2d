@@ -1,6 +1,6 @@
-import { dt3ToPng, yamlToPng } from '@dev/utils/image-converter';
 import { http, HttpResponse } from 'msw';
 import yaml from 'yaml';
+import { dt3ToPng, yamlToPng } from '@dev/utils/image/converter';
 
 function pathToId(path: string) {
   return path.replace(/^\.\/resources\//, '').replace(/\//g, '.');
@@ -36,7 +36,7 @@ class ResourceLoader {
     const yamlText = await this.images.get(`${id}.yaml`)?.();
     if (yamlText) return yamlToPng(yamlText);
     const dt3Text = await this.images.get(`${id}.dt3`)?.();
-    return dt3Text ? dt3ToPng(dt3Text) : undefined;
+    return dt3Text ? await dt3ToPng(dt3Text) : undefined;
   }
 }
 
