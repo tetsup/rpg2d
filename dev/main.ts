@@ -1,9 +1,19 @@
 import './debug/log-forwarder';
 import './debug/error-forwarder';
 import { GameApp, resolveTransparentMode, type KeyAssignment, type TransparentMode } from '@tetsup/web2d';
+import { worker } from '@dev/mocks/api/browser';
 import { RpgCore } from '@/engine/core';
 import type { RpgKey } from '@/types/engine';
 import { Manifest } from '@/schemas/manifest';
+
+await worker.start({
+  onUnhandledRequest(req) {
+    const url = req.url;
+    if (url.includes('/@fs/') || url.includes('node_modules') || url.includes('worker.js')) {
+      return;
+    }
+  },
+});
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 
