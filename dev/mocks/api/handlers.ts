@@ -3,39 +3,40 @@ import yaml from 'yaml';
 import { dt3ToPng, yamlToPng } from '@dev/utils/image/converter';
 
 function pathToId(path: string) {
-  return path.replace(/^\.\/resources\//, '').replace(/\//g, '.');
+  return path
+    .split('/')
+    .at(-1)
+    ?.replace(/.(yaml|dt3)$/, '')!;
 }
 
 class ResourceLoader {
-  private resources: Map<string, () => Promise<string>>;
-  private images: Map<string, () => Promise<string>>;
+  private resources: Map<string, string>;
+  private images: Map<string, string>;
 
   constructor() {
     this.resources = new Map(
-      Object.entries(import.meta.glob('../resources/yaml/**/*.yaml', { as: 'raw' })).map(([path, loader]) => [
-        pathToId(path),
-        loader,
-      ])
+      Object.entries(
+        import.meta.glob<string>('../../resources/**/*', { eager: true, query: '?raw', import: 'default' })
+      ).map(([path, loader]) => [pathToId(path), loader])
     );
     this.images = new Map(
-      Object.entries(import.meta.glob('../images/**/*', { as: 'raw' })).map(([path, loader]) => [
-        pathToId(path),
-        loader,
-      ])
+      Object.entries(
+        import.meta.glob<string>('../../images/**/*', { eager: true, query: '?raw', import: 'default' })
+      ).map(([path, loader]) => [pathToId(path), loader])
     );
   }
 
   async readResource(id?: string | readonly string[]) {
     if (typeof id !== 'string') return;
-    const raw = await this.resources.get(`${id}.yaml`)?.();
+    const raw = this.resources.get(id);
     return raw ? await yaml.parse(raw) : undefined;
   }
 
   async readImage(id?: string | readonly string[]) {
     if (typeof id !== 'string') return;
-    const yamlText = await this.images.get(`${id}.yaml`)?.();
+    const yamlText = this.images.get(`${id}.yaml`);
     if (yamlText) return yamlToPng(yamlText);
-    const dt3Text = await this.images.get(`${id}.dt3`)?.();
+    const dt3Text = this.images.get(`${id}.dt3`);
     return dt3Text ? await dt3ToPng(dt3Text) : undefined;
   }
 }
