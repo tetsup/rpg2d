@@ -58,7 +58,7 @@ const manifest: Manifest = {
     },
   },
   config: { blockSize: { width: 16, height: 16 }, moveDurationMs: 500, screen: { width: 320, height: 240 } },
-  schemas: { playerState: {} },
+  schemas: { playerState: { hp: { type: 'number', asInt: true } } },
 };
 
 const config = { resourceUri: '/api/resource', imageUri: '/api/image' };
