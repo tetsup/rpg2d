@@ -1,5 +1,4 @@
 import z from 'zod';
-import type { Direction2d, Point2d } from '@/types/engine';
 import type { Tile } from '@/resource/domain/tile';
 import type { Entity } from '@/resource/domain/entity';
 import { IdSchema, ResourceSchemaBase, PositionSchema, DirectionSchema } from './common';
@@ -24,7 +23,7 @@ export const FieldSchema = ResourceSchemaBase('field', {
   name: z.string(),
   tiles: z.record(TileCodeSchema, IdSchema),
   map: z.array(z.array(TileCodeSchema)),
-  entities: EntityMappingSchema,
+  entities: EntityMappingSchema.optional(),
 }).superRefine((data, ctx) => {
   const tileKeys = new Set(Object.keys(data.tiles));
 

@@ -12,7 +12,7 @@ const TileActionsSchema = z.record(TileActionTriggerSchema, ActionSchema);
 export const TileSchema = ResourceSchemaBase('tile', {
   texture: IdSchema,
   allowOverwrap: z.boolean(),
-  actions: TileActionsSchema,
+  actions: TileActionsSchema.optional(),
 });
 
 export type TileData = z.infer<typeof TileSchema>;
