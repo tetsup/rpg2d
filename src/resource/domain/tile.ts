@@ -8,7 +8,7 @@ export class Tile extends ResourceBase<'tile'> {
       texture: await ctx.resources.get(data.texture, 'texture'),
       actions: Object.fromEntries(
         await Promise.all(
-          Object.entries(data.actions).map(async ([key, val]) => [key, await ctx.resources.get(val.id, 'field')])
+          Object.entries(data.actions ?? []).map(async ([key, val]) => [key, await ctx.resources.get(val.id, 'field')])
         )
       ),
     };

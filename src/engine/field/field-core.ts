@@ -43,7 +43,7 @@ export class FieldEngine {
 
     const playerPos = new FieldPos(ctx, fieldPosConfig);
     const entities = Object.fromEntries(
-      Object.entries(field.entityInstances).map(([instanceId, { entityId, initialState }]) => [
+      Object.entries(field.entityInstances ?? []).map(([instanceId, { entityId, initialState }]) => [
         instanceId,
         new EntityInstance(ctx, field.entities.get(entityId)!, initialState),
       ])

@@ -13,7 +13,7 @@ export class Field extends ResourceBase<'field'> {
     );
     const entities = Object.fromEntries(
       await Promise.all(
-        Object.values(data.entities).map(async ({ entityId }) => {
+        Object.values(data.entities ?? []).map(async ({ entityId }) => {
           const entity = await ctx.resources.get(entityId, 'entity');
           return [entityId, entity];
         })
