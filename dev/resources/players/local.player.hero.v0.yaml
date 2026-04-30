@@ -1,0 +1,5 @@
+name: 
+  type: fixed
+  value: hero
+initialSkin: local.skin.hero.v0
+initialState:

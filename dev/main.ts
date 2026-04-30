@@ -48,7 +48,7 @@ const manifest: Manifest = {
     core: {
       variables: new Map(),
       mode: 'field',
-      players: ['local.player.hiro.v0'],
+      players: ['local.player.hero.v0'],
     },
     field: {
       fieldId: 'local.field.startField.v0',
