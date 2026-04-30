@@ -1,0 +1,4 @@
+id: local.tile.grass.v0
+type: tile
+texture: local.texture.field.grass.v0
+allowOverwrap: true

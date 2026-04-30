@@ -1,0 +1,6 @@
+id: local.texture.hero.left.v0
+type: texture
+layers:
+  - priority: 8
+    images:
+      - local.image.hero.left.v0

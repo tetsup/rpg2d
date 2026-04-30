@@ -1,0 +1,17 @@
+id: local.field.startField.v0.yaml
+type: field
+name: はじまりのだいち
+tiles:
+  gr: local.tile.grass.v0
+  mt: local.tile.mountain.v0
+map:
+  - [mt, mt, mt, mt, mt, mt, mt, mt]
+  - [mt, gr, gr, gr, gr, gr, gr, mt]
+  - [mt, gr, gr, gr, gr, gr, gr, mt]
+  - [mt, gr, gr, gr, gr, gr, gr, mt]
+  - [mt, gr, gr, gr, gr, gr, gr, mt]
+  - [mt, gr, gr, gr, gr, gr, gr, mt]
+  - [mt, gr, gr, gr, gr, gr, gr, mt]
+  - [mt, mt, mt, mt, mt, mt, mt, mt]
+
+

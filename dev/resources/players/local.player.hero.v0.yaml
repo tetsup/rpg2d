@@ -1,5 +1,8 @@
+id: local.player.hero.v0
+type: player
 name: 
   type: fixed
   value: hero
 initialSkin: local.skin.hero.v0
 initialState:
+  hp: 10
