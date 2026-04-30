@@ -15,14 +15,15 @@ export async function fetchWithThrow<T>(
       const contentType = res.headers.get('content-type') ?? '';
 
       if (contentType.includes('application/json')) {
-        body = await res.json();
+        body = { request: req, status: res.status, response: await res.json() };
         message = (body as any)?.message ?? message;
       } else {
-        body = await res.text();
+        body = { request: req, status: res.status, response: await res.text() };
         message = body as string;
       }
     } catch {}
 
+    console.error(message, body);
     throw new HttpError(res.status, message, body);
   }
   const body = await parser(res);

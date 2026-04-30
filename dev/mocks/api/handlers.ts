@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import yaml from 'yaml';
 import { dt3ToPng, yamlToPng } from '@dev/utils/image/converter';
+import { BadRequestError, execWithHandleError, InternalServerError, NotFoundError } from './errors';
 
 function pathToId(path: string) {
   return path
@@ -27,36 +28,50 @@ class ResourceLoader {
   }
 
   async readResource(id?: string | readonly string[]) {
-    if (typeof id !== 'string') return;
+    if (typeof id !== 'string') throw new BadRequestError();
     const raw = this.resources.get(id);
-    return raw ? await yaml.parse(raw) : undefined;
+    if (raw === undefined) throw new NotFoundError();
+    return await yaml.parse(raw);
   }
 
   async readImage(id?: string | readonly string[]) {
-    if (typeof id !== 'string') return;
-    const yamlText = this.images.get(`${id}.yaml`);
-    if (yamlText) return yamlToPng(yamlText);
-    const dt3Text = this.images.get(`${id}.dt3`);
-    return dt3Text ? await dt3ToPng(dt3Text) : undefined;
+    if (typeof id !== 'string') throw new BadRequestError();
+    const raw = this.images.get(id);
+    if (raw === undefined) throw new NotFoundError();
+    try {
+      return yamlToPng(raw);
+    } catch (e) {
+      try {
+        return dt3ToPng(raw);
+      } catch (e) {
+        throw new InternalServerError((e as any)?.message);
+      }
+    }
   }
 }
 
 const resourceLoader = new ResourceLoader();
 
 export const handlers = [
-  http.get('/api/resource/:id', async ({ params: { id } }) => {
-    const resource = await resourceLoader.readResource(id);
-    return resource ? HttpResponse.json(resource) : HttpResponse.json({ error: 'not found' }, { status: 404 });
-  }),
+  http.get(
+    '/api/resource/:id',
+    async ({ params: { id } }) =>
+      await execWithHandleError(async () => {
+        const resource = await resourceLoader.readResource(id);
+        return HttpResponse.json(resource);
+      })
+  ),
 
-  http.get('/api/image/:id', async ({ params: { id } }) => {
-    const image = await resourceLoader.readImage(id);
-    return image
-      ? HttpResponse.arrayBuffer(image, {
+  http.get(
+    '/api/image/:id',
+    async ({ params: { id } }) =>
+      await execWithHandleError(async () => {
+        const image = await resourceLoader.readImage(id);
+        return HttpResponse.arrayBuffer(image, {
           headers: {
             'Content-Type': 'image/png',
           },
-        })
-      : HttpResponse.json({ error: 'not found' }, { status: 404 });
-  }),
+        });
+      })
+  ),
 ];
