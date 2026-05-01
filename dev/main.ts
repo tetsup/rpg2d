@@ -9,9 +9,8 @@ import { Manifest } from '@/schemas/manifest';
 await worker.start({
   onUnhandledRequest(req) {
     const url = req.url;
-    if (url.includes('/@fs/') || url.includes('node_modules') || url.includes('worker.js')) {
-      return;
-    }
+    //    if (url.includes('/@fs/') || url.includes('node_modules') || url.includes('worker.js')) {
+    if (!url.includes('/api/')) return;
   },
 });
 
@@ -52,7 +51,7 @@ const manifest: Manifest = {
     },
     field: {
       fieldId: 'local.field.startField.v0',
-      pos: { x: 10, y: 10 },
+      pos: { x: 5, y: 5 },
       direction: 'down',
       actionIds: [],
     },
@@ -64,7 +63,7 @@ const manifest: Manifest = {
 const config = { resourceUri: '/api/resource', imageUri: '/api/image' };
 
 const app = new GameApp(canvas, new RpgCore(manifest, config), {
-  maxObjects: 10,
+  maxObjects: 1000,
   rectSize: { width: 320, height: 240 },
   keyAssignment,
   assignPad,

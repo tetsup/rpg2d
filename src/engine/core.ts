@@ -16,6 +16,7 @@ export class RpgCore implements Game<RpgKey> {
   }
 
   onInit = async (renderer: GameRenderer) => {
+    this.ctx.assets.setRenderer(renderer);
     this.players = await Promise.all(
       this.ctx.manifest.initialState.core.players.map(
         async (playerId) => await this.ctx.resources.get(playerId, 'player')

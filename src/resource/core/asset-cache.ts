@@ -1,6 +1,7 @@
 import type { ResourceId } from '@/schemas/common';
 import type { ResourceConfig } from '@/schemas/resource-config';
 import { fetchBlob } from '@/utils/http/fetch';
+import { GameRenderer } from '@tetsup/web2d';
 
 type LazyImage =
   | {
@@ -10,14 +11,20 @@ type LazyImage =
 
 export class AssetCache {
   images: Map<ResourceId, LazyImage> = new Map();
-
+  renderer?: GameRenderer;
   constructor(private config: ResourceConfig) {}
+
+  setRenderer(renderer: GameRenderer) {
+    this.renderer = renderer;
+  }
 
   cache = async (id: ResourceId) => {
     if (this.images.has(id)) return;
+    if (this.renderer === undefined) throw new Error('renderer has not been initialized');
     this.images.set(id, { loaded: false });
     try {
       const image = await this.fetchBitmap(id);
+      this.renderer.registerImage({ imageId: id, imageData: image });
       this.images.set(id, { loaded: true, image });
     } catch {
       this.images.delete(id);

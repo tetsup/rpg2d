@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@tetsup/web2d':
-        specifier: ^0.0.9
-        version: 0.0.9
+        specifier: ^0.0.11
+        version: 0.0.11
       yaml:
         specifier: ^2.8.3
         version: 2.8.3
@@ -760,8 +760,8 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@tetsup/web2d@0.0.9':
-    resolution: {integrity: sha512-/7v1i4TPvFYopb9ZjE2Y6UOsLyZ7C2NHUFxV8nRF/H45b8xBQ2oTHdA2ntZQb0VfeR9SV/XrK41DCeAE5ojwKQ==}
+  '@tetsup/web2d@0.0.11':
+    resolution: {integrity: sha512-Xp05VuphwSMFf92sG0Y0BWuelw5SRAg65WU9kgfo/8lpF108JQEoWJ+Xw7I/F/xKQFEtind/+JMCpdt95AdBgA==}
     engines: {node: '>=24'}
 
   '@tybys/wasm-util@0.10.1':
@@ -2234,7 +2234,7 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@tetsup/web2d@0.0.9': {}
+  '@tetsup/web2d@0.0.11': {}
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
