@@ -35,4 +35,16 @@ export class Rect {
   get bottom() {
     return this.top + this.height;
   }
+
+  get topLeft() {
+    return { x: this.left, y: this.top };
+  }
+
+  shift(diff: Point2d) {
+    return new Rect(this.left + diff.x, this.top + diff.y, this.width, this.height);
+  }
+
+  relational(anchor: Point2d) {
+    return this.shift({ x: -anchor.x, y: -anchor.y });
+  }
 }

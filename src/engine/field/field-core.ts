@@ -91,8 +91,8 @@ export class FieldEngine {
     return calcViewPort(nowMs, this.state, this.ctx);
   };
 
-  resolvePlayerLayers = (nowMs: number): LayerWithPos[] => {
-    return resolvePlayerLayers(nowMs, this.state, this.ctx.manifest.config);
+  resolvePlayerLayers = (nowMs: number, viewport: Rect): LayerWithPos[] => {
+    return resolvePlayerLayers(nowMs, viewport, this.state, this.ctx.manifest.config);
   };
 
   resolveEntitiesLayers = (nowMs: number, viewport: Rect): LayerWithPos[] => {

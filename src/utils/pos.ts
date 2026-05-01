@@ -18,3 +18,8 @@ export const samePos = (p1?: Point2d, p2?: Point2d) => p1?.x == p2?.x && p1?.y =
 
 export const calcDest = (current: Point2d, movement: Movement) =>
   movement.command === 'walk' ? move(current, movement.direction) : movement.dest;
+
+export const shiftPos = (current: Point2d, anchor: Point2d): Point2d => ({
+  x: current.x - anchor.x,
+  y: current.y - anchor.y,
+});

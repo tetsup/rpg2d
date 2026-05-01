@@ -37,17 +37,25 @@ export class Field extends ResourceBase<'field'> {
     return tile?.allowOverwrap ?? false;
   };
 
-  resolveLayers = (nowMs: number, view: Rect): LayerWithPos[] => {
-    return this.data.map.slice(view.top, view.bottom).flatMap((row, ty) =>
+  resolveLayers = (nowMs: number, viewport: Rect): LayerWithPos[] => {
+    const blockSize = this.ctx.manifest.config.blockSize;
+    const tileMask = {
+      xMin: Math.max(0, Math.floor(viewport.left / blockSize.width)),
+      xMax: Math.floor(viewport.right + 1 / blockSize.width),
+      yMin: Math.max(0, Math.floor(viewport.top / blockSize.height)),
+      yMax: Math.floor(viewport.bottom + 1 / blockSize.height),
+    };
+
+    return this.data.map.slice(tileMask.yMin, tileMask.yMax).flatMap((row, iy) =>
       row
-        .slice(view.left, view.right)
-        .map((symbol, tx) => ({
+        .slice(tileMask.xMin, tileMask.xMax)
+        .map((symbol, ix) => ({
           rect: new Rect(
-            (view.left + tx) * this.ctx.manifest.config.blockSize.width,
-            (view.top + ty) * this.ctx.manifest.config.blockSize.height,
-            this.ctx.manifest.config.blockSize.width,
-            this.ctx.manifest.config.blockSize.height
-          ),
+            (ix + tileMask.xMin) * blockSize.width,
+            (iy + tileMask.yMin) * blockSize.height,
+            blockSize.width,
+            blockSize.height
+          ).relational(viewport.topLeft),
           layers: this.deps.tiles.get(symbol)?.resolveLayers(nowMs) ?? [],
         }))
         .flatMap((row) => row.layers.map((layer) => ({ rect: row.rect, layer })))
