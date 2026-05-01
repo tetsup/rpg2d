@@ -87,7 +87,7 @@ function makeInput(): InputManager<RpgKey> {
     release: vi.fn(),
     isPressed: vi.fn().mockReturnValue(false),
     state: new Map() as any,
-  };
+  } as any;
 }
 
 function makeContext(manifest?: Manifest, config?: ResourceConfig): GameContext {
@@ -189,7 +189,7 @@ function makeTile(ctx?: GameContext) {
   const texture = makeTexture(ctx ?? makeContext());
   return new Tile(
     ctx ?? makeContext(),
-    { id: 'tile.test', type: 'tile' as const, texture: 'texture.test', allowOverwrap: true, actions: {} },
+    { id: 'tile.test', type: 'tile' as const, texture: 'texture.test', allowOverwrap: true, actions: {} as any },
     { texture, actions: {} }
   );
 }
@@ -223,7 +223,7 @@ describe('RpgCore: unbound call must not throw', () => {
   let game: RpgCore;
 
   beforeEach(() => {
-    game = new RpgCore(makeManifest());
+    game = new RpgCore(makeManifest(), makeConfig());
 
     vi.stubGlobal(
       'fetch',
@@ -350,7 +350,7 @@ describe('FieldEngine: unbound call must not throw', () => {
 
   it('keeps this binding in resolvePlayerLayers — unbound call must not throw', () => {
     const resolvePlayerLayers = engine.resolvePlayerLayers;
-    expect(() => resolvePlayerLayers(1000)).not.toThrow();
+    expect(() => resolvePlayerLayers(1000, new Rect(0, 0, 320, 240))).not.toThrow();
   });
 
   it('keeps this binding in resolveEntitiesLayers — unbound call must not throw', () => {
