@@ -10,12 +10,14 @@ export class Field extends ResourceBase<'field'> {
   static async loadDeps(ctx: GameContext, data: FieldData): Promise<FieldDeps> {
     const tiles = new Map(
       await Promise.all(
-        Object.entries(data.tiles).map(async ([key, tileId]) => [key, await ctx.resources.get(tileId, 'tile')])
+        Object.entries(data.tiles).map(
+          async ([key, tileId]): Promise<[string, Tile]> => [key, await ctx.resources.get(tileId, 'tile')]
+        )
       )
     );
     const entities = new Map(
       await Promise.all(
-        Object.values(data.entities ?? []).map(async ({ entityId }) => {
+        Object.values(data.entities ?? []).map(async ({ entityId }): Promise<[string, Entity]> => {
           const entity = await ctx.resources.get(entityId, 'entity');
           return [entityId, entity];
         })
