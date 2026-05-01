@@ -1,6 +1,6 @@
 id: local.texture.field.mountain.v0
 type: texture
 layers:
-  - priority: 8
+  - priority: 0
     images:
       - local.image.field.mountain.v0
