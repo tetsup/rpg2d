@@ -616,13 +616,15 @@ describe('AssetCache: unbound call must not throw', () => {
   });
 
   it('keeps this binding in cache — unbound call must not throw', async () => {
-    const assetCache = new AssetCache();
+    const assetCache = new AssetCache(makeConfig());
+    assetCache.setRenderer(makeRenderer());
     const cache = assetCache.cache;
     await expect(cache('img.test')).resolves.not.toThrow();
   });
 
   it('keeps this binding in get — unbound call must not throw', () => {
-    const assetCache = new AssetCache();
+    const assetCache = new AssetCache(makeConfig());
+    assetCache.setRenderer(makeRenderer());
     const get = assetCache.get;
     expect(() => get('img.test')).not.toThrow();
   });

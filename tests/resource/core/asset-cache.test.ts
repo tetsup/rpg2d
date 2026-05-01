@@ -4,6 +4,15 @@ const mockBitmap = {} as ImageBitmap;
 
 const config = { resourceUri: '/api/resource', imageUri: '/api/image' };
 
+const createCache = () => {
+  const cache = new AssetCache(config);
+  cache.setRenderer({
+    registerImage: vi.fn(),
+  } as any);
+
+  return cache;
+};
+
 describe('assetCache', () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -20,7 +29,7 @@ describe('assetCache', () => {
   });
 
   it('未キャッシュ時はundefinedを返しcacheを開始する', () => {
-    const cache = new AssetCache(config);
+    const cache = createCache();
     const spy = vi.spyOn(cache, 'cache');
     const result = cache.get('a');
 
@@ -29,7 +38,7 @@ describe('assetCache', () => {
   });
 
   it('cache後は画像を取得できる', async () => {
-    const cache = new AssetCache(config);
+    const cache = createCache();
     await cache.cache('a');
     const result = cache.get('a');
 
@@ -48,7 +57,7 @@ describe('assetCache', () => {
           })
       )
     );
-    const cache = new AssetCache(config);
+    const cache = createCache();
     cache.cache('a');
     const result = cache.get('a');
 
@@ -61,7 +70,7 @@ describe('assetCache', () => {
   });
 
   it('同一IDは1回しかfetchされない', () => {
-    const cache = new AssetCache(config);
+    const cache = createCache();
     cache.get('a');
     cache.get('a');
     cache.get('a');
@@ -70,7 +79,7 @@ describe('assetCache', () => {
   });
 
   it('cache成功時はloaded状態になる', async () => {
-    const cache = new AssetCache(config);
+    const cache = createCache();
     await cache.cache('a');
 
     expect(cache.images.get('a')).toEqual({
@@ -81,7 +90,7 @@ describe('assetCache', () => {
 
   it('fetch失敗時はキャッシュが削除される', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fail')));
-    const cache = new AssetCache(config);
+    const cache = createCache();
     await cache.cache('a');
     expect(cache.images.has('a')).toBe(false);
   });
@@ -95,7 +104,7 @@ describe('assetCache', () => {
       });
     vi.stubGlobal('fetch', fetchMock);
 
-    const cache = new AssetCache(config);
+    const cache = createCache();
     await cache.cache('a');
 
     expect(cache.images.has('a')).toBe(false);
@@ -103,5 +112,27 @@ describe('assetCache', () => {
     cache.get('a');
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('読み込み成功時 renderer に登録される', async () => {
+    const renderer = {
+      registerImage: vi.fn(),
+    };
+
+    const cache = new AssetCache(config);
+    cache.setRenderer(renderer as any);
+
+    await cache.cache('a');
+
+    expect(renderer.registerImage).toHaveBeenCalledWith({
+      imageId: 'a',
+      imageData: mockBitmap,
+    });
+  });
+
+  it('renderer未初期化でcacheするとエラーになる', async () => {
+    const cache = new AssetCache(config);
+
+    await expect(cache.cache('a')).rejects.toThrow('renderer has not been initialized');
   });
 });
