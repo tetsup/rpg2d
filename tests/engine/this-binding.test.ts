@@ -52,7 +52,7 @@ import type { RpgKey, FieldState } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
 import { ResourceConfig } from '@/schemas/resource-config';
-import { ActionSchema } from '@/schemas/action';
+import { ActionSchema } from '@/schemas/action/action';
 
 // ---------------------------------------------------------------------------
 // Test-fixture helpers

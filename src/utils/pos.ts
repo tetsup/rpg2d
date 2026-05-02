@@ -1,4 +1,4 @@
-import type { Movement } from '@/schemas/actions/movement';
+import type { Movement } from '@/schemas/action/movement';
 import type { Direction2d, Point2d } from '@/types/engine';
 
 export const move = (current: Point2d, direction: Direction2d) => {
