@@ -1,5 +1,5 @@
 import { GameContext } from '@/resource/core/game-context';
-import { Movement } from '@/schemas/actions/movement';
+import { Movement } from '@/schemas/action/movement';
 import type { Direction2d, Point2d, Size2d } from '@/types/engine';
 import { calcDest } from '@/utils/pos';
 

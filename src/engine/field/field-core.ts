@@ -7,7 +7,7 @@ import type { GameContext } from '@/resource/core/game-context';
 import type { Player } from '@/resource/domain/player';
 import type { Action } from '@/resource/domain/action';
 import type { Field } from '@/resource/domain/field';
-import type { Movement } from '@/schemas/actions/movement';
+import type { Movement } from '@/schemas/action/movement';
 import { EntityInstance } from '../entity';
 import { FieldPos } from './field-pos';
 import { resolveMove } from './resolve-move';

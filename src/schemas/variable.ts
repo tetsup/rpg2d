@@ -1,10 +1,10 @@
 import z from 'zod';
-import { ResourceSchemaBase } from './common';
+import { IdSchema, ResourceSchemaBase } from './common';
 
 export const ValueTypeVariableSchema = z.literal('variable');
 export const ValueTypeConstSchema = z.literal('const');
 export const ValueTypeOperationSchema = z.literal('operation');
-export const VariableIdSchema = z.string(); //暫定
+export const VariableIdSchema = IdSchema;
 
 export const ValueSchema = z.union([
   z.object({ type: ValueTypeVariableSchema, value: VariableIdSchema }),
@@ -38,9 +38,3 @@ export const ComparisonSchema = z.object({
 });
 
 export const BooleanAggregationSchema = z.object({ agg: z.enum(['and', 'or']), elements: z.array(ComparisonSchema) });
-
-export const ActionSchema = ResourceSchemaBase('action', {});
-
-export type ActionData = z.infer<typeof ActionSchema>;
-
-export type ActionDeps = {};
