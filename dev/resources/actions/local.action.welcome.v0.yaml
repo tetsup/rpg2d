@@ -1,0 +1,4 @@
+id: local.action.welcome.v0
+type: action
+command: message
+message: ようこそ、RPGのせかいへ
