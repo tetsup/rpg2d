@@ -5,18 +5,12 @@ import { Direction2d } from '@/types/engine';
 
 export class Entity extends ResourceBase<'entity'> {
   static async loadDeps(ctx: GameContext, data: EntityData): Promise<EntityDeps> {
-    const actions = (
-      await Promise.all(
-        Object.entries(data.actions).map(async ([trigger, action]) =>
-          action
-            ? {
-                trigger,
-                action: await ctx.resources.get(action, 'action'),
-              }
-            : null
-        )
-      )
-    ).filter((v) => v != null);
+    const actions = await Promise.all(
+      Object.entries(data.actions).map(async ([trigger, action]) => ({
+        trigger,
+        action: await ctx.resources.get(action, 'action'),
+      }))
+    );
     if (data.visual === 'skin') {
       const skin = await ctx.resources.get(data.skin, 'skin');
       return { visual: data.visual, skin, actions };

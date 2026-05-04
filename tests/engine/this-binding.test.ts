@@ -141,7 +141,7 @@ function makeEntity(ctx?: GameContext) {
       visual: 'texture',
       texture: 'texture.test',
       allowOverwrap: false,
-      actions: [],
+      actions: {},
     },
     { visual: 'texture', texture, actions: [] }
   );

@@ -15,7 +15,7 @@ const EntityActionTriggerSchema = z.enum([
 ]);
 export type EntityActionTrigger = z.infer<typeof EntityActionTriggerSchema>;
 
-const EntityActionsSchema = z.record(EntityActionTriggerSchema, IdSchema.optional());
+const EntityActionsSchema = z.partialRecord(EntityActionTriggerSchema, IdSchema);
 
 export const EntitySchema = z.discriminatedUnion('visual', [
   ResourceSchemaBase('entity', {
