@@ -8,7 +8,7 @@ describe('EntitySchema', () => {
       visual: 'skin',
       skin: 'dummyskin',
       allowOverwrap: true,
-      actions: [],
+      actions: {},
     });
 
     expect(result.skin).toBe('dummyskin');
@@ -22,7 +22,7 @@ describe('EntitySchema', () => {
         visual: 'skin',
         skin: 'dummyskin',
         allowOverwrap: true,
-        actions: [],
+        actions: {},
       })
     ).toThrow();
   });
