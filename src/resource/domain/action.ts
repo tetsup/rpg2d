@@ -1,4 +1,4 @@
-import { ActionDeps } from '@/schemas/action';
+import { ActionDeps } from '@/schemas/action/action';
 import { ResourceBase } from '../core/resource-base';
 
 export class Action extends ResourceBase<'action'> {

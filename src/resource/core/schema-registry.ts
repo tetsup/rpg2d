@@ -1,9 +1,10 @@
 import z from 'zod';
 import type { Manifest } from '@/schemas/manifest';
 import type { ResourceName } from '@/types/resource';
-import { ActionSchema } from '@/schemas/action';
+import { ActionSchema } from '@/schemas/action/action';
 import { EntitySchema } from '@/schemas/entity';
 import { FieldSchema } from '@/schemas/field';
+import { PanelSchema } from '@/schemas/panel/panel';
 import { buildPlayerSchema } from '@/schemas/player';
 import { SkinSchema } from '@/schemas/image/skin';
 import { TextureSchema } from '@/schemas/image/texture';
@@ -16,6 +17,7 @@ export class SchemaRegistry {
     this.schemas.set('action', ActionSchema);
     this.schemas.set('entity', EntitySchema);
     this.schemas.set('field', FieldSchema);
+    this.schemas.set('panel', PanelSchema);
     this.schemas.set('player', buildPlayerSchema(manifest.schemas.playerState));
     this.schemas.set('skin', SkinSchema);
     this.schemas.set('texture', TextureSchema);

@@ -40,6 +40,18 @@ export class Rect {
     return { x: this.left, y: this.top };
   }
 
+  get topRight() {
+    return { x: this.right, y: this.top };
+  }
+
+  get bottomLeft() {
+    return { x: this.left, y: this.bottom };
+  }
+
+  get bottomRight() {
+    return { x: this.right, y: this.bottom };
+  }
+
   shift(diff: Point2d) {
     return new Rect(this.left + diff.x, this.top + diff.y, this.width, this.height);
   }

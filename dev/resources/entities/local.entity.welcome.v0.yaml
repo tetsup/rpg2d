@@ -4,5 +4,4 @@ visual: skin
 skin: local.skin.hero.v0
 allowOverwrap: false
 actions:
-  - trigger: onCheck
-    action: local.action.welcome.v0
+  onCheck: local.action.welcome.v0

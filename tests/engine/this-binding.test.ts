@@ -66,9 +66,12 @@ function makeManifest(): Manifest {
     },
     schemas: { playerState: {} },
     config: {
-      blockSize: { width: 32, height: 32 },
+      blockSize: { width: 16, height: 16 },
+      textSize: { width: 8, height: 8 },
       moveDurationMs: 200,
       screen: { width: 320, height: 240 },
+      defaultMessagePanel: 'message',
+      messageConfig: { speedMs: 100, margin: { left: 2, right: 2, top: 1, bottom: 1 } },
     },
   };
 }
@@ -638,7 +641,7 @@ describe('ResourceFactory: unbound call must not throw', () => {
   it('keeps this binding in create — unbound call must not throw', async () => {
     const factory = new ResourceFactory(makeContext());
     const create = factory.create;
-    const actionData = { id: 'action.test', type: 'action' };
+    const actionData = { id: 'action.test', type: 'action', sequence: [] };
     await expect(create(actionData, 'action')).resolves.not.toThrow();
   });
 });
@@ -653,6 +656,7 @@ describe('ResourceStore: unbound call must not throw', () => {
     vi.spyOn(store, 'fetch').mockResolvedValue({
       id: 'action.test',
       type: 'action',
+      sequence: [],
     });
     const fetchMethod = store.fetch;
     await expect(fetchMethod('action.test', ActionSchema)).resolves.not.toThrow();
@@ -663,6 +667,7 @@ describe('ResourceStore: unbound call must not throw', () => {
     vi.spyOn(store, 'fetch').mockResolvedValue({
       id: 'action.test',
       type: 'action',
+      sequence: [],
     });
     const get = store.get;
     await expect(get('action.test', 'action')).resolves.not.toThrow();
@@ -673,6 +678,7 @@ describe('ResourceStore: unbound call must not throw', () => {
     vi.spyOn(store, 'fetch').mockResolvedValue({
       id: 'action.test',
       type: 'action',
+      sequence: [],
     });
     const get = store.get;
     await expect(get('action.test', 'action')).resolves.not.toThrow();

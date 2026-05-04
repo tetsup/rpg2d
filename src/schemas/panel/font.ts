@@ -10,3 +10,7 @@ export const FontSchema = ResourceSchemaBase('font', {
   chars: z.record(z.string().length(1), GlyphHexSchema),
   compose: z.record(z.string().length(1), z.tuple([z.string().length(1), z.string().length(1)])).default({}),
 });
+
+export type FontData = z.infer<typeof FontSchema>;
+
+export type FontDeps = {};

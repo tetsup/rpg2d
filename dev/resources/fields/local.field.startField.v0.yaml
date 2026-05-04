@@ -13,5 +13,12 @@ map:
   - [mt, gr, gr, gr, gr, gr, gr, mt]
   - [mt, gr, gr, gr, gr, gr, gr, mt]
   - [mt, mt, mt, mt, mt, mt, mt, mt]
-
-
+entities:
+  local.entity.instance.welcome.v0:
+    entityId: local.entity.welcome.v0
+    initialState:
+      pos:
+        x: 3
+        y: 3
+      direction: down
+      visible: true

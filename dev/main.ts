@@ -9,7 +9,6 @@ import { Manifest } from '@/schemas/manifest';
 await worker.start({
   onUnhandledRequest(req) {
     const url = req.url;
-    //    if (url.includes('/@fs/') || url.includes('node_modules') || url.includes('worker.js')) {
     if (!url.includes('/api/')) return;
   },
 });
@@ -56,7 +55,14 @@ const manifest: Manifest = {
       actionIds: [],
     },
   },
-  config: { blockSize: { width: 16, height: 16 }, moveDurationMs: 500, screen: { width: 320, height: 240 } },
+  config: {
+    blockSize: { width: 16, height: 16 },
+    textSize: { width: 8, height: 8 },
+    moveDurationMs: 500,
+    screen: { width: 320, height: 240 },
+    defaultMessagePanel: 'local.panel.message.v0',
+    messageConfig: { speedMs: 100, margin: { left: 2, right: 2, top: 1, bottom: 1 } },
+  },
   schemas: { playerState: { hp: { type: 'number', asInt: true } } },
 };
 

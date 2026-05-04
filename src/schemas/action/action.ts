@@ -1,11 +1,11 @@
 import z from 'zod';
 import { ResourceSchemaBase } from '../common';
 
-const actionCommands = ['message'] as const;
+const SendMessageSchema = z.object({ command: z.literal('sendMessage'), messages: z.array(z.string()) });
 
-const ActionCommandSchema = z.enum(actionCommands);
+const ActionElementSchema = z.discriminatedUnion('command', [SendMessageSchema]);
 
-export const ActionSchema = ResourceSchemaBase('action', { command: ActionCommandSchema, message: z.string() });
+export const ActionSchema = ResourceSchemaBase('action', { sequence: z.array(ActionElementSchema) });
 
 export type ActionData = z.infer<typeof ActionSchema>;
 

@@ -32,10 +32,25 @@ export const DslSchema = z.object({
   playerState: StateDefinitionSchema,
 });
 
+export const MessageConfigSchema = z.object({
+  speedMs: z.number().int().min(0),
+  margin: z.object({
+    left: z.number().int().min(0),
+    right: z.number().int().min(0),
+    top: z.number().int().min(0),
+    bottom: z.number().int().min(0),
+  }),
+});
+
+export type MessageConfig = z.infer<typeof MessageConfigSchema>;
+
 export const ConfigSchema = z.object({
   blockSize: SizeSchema,
+  textSize: SizeSchema,
   moveDurationMs: z.number().int().min(0),
   screen: SizeSchema,
+  defaultMessagePanel: IdSchema,
+  messageConfig: MessageConfigSchema,
 });
 
 export const ManifestSchema = z.object({

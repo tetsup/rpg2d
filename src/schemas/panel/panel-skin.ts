@@ -1,5 +1,8 @@
 import z from 'zod';
-import { IdSchema } from '../common';
+import type { Texture } from '@/resource/domain/texture';
+import type { Font } from '@/resource/domain/panel/font';
+import type { Color } from '@/resource/domain/panel/color';
+import { ColorSchema, IdSchema } from '../common';
 
 export const PanelSkinSchema = z.object({
   plane: IdSchema,
@@ -10,5 +13,23 @@ export const PanelSkinSchema = z.object({
   topLeft: IdSchema,
   topRight: IdSchema,
   bottomLeft: IdSchema,
-  bottomRigth: IdSchema,
+  bottomRight: IdSchema,
+  defaultFont: IdSchema,
+  defaultTextColor: ColorSchema,
 });
+
+export type PanelSkinData = z.infer<typeof PanelSkinSchema>;
+
+export type PanelSkinDeps = {
+  plane: Texture;
+  top: Texture;
+  bottom: Texture;
+  left: Texture;
+  right: Texture;
+  topLeft: Texture;
+  topRight: Texture;
+  bottomLeft: Texture;
+  bottomRight: Texture;
+  defaultFont: Font;
+  defaultTextColor: Color;
+};

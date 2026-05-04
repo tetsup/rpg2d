@@ -2,7 +2,7 @@ import z from 'zod';
 import type { Action } from '@/resource/domain/action';
 import type { Texture } from '@/resource/domain/texture';
 import { IdSchema, ResourceSchemaBase } from './common';
-import { ActionSchema } from './action';
+import { ActionSchema } from './action/action';
 
 const TileActionTriggerSchema = z.enum(['onEnter', 'onLeave', 'onStay', 'postEnter', 'postLeave']);
 export type TileActionTrigger = z.infer<typeof TileActionTriggerSchema>;

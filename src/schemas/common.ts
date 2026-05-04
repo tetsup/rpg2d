@@ -28,3 +28,12 @@ export const ResourceSchema = <T extends string>(resourceType: T) =>
 
 export const ResourceSchemaBase = <T extends z.ZodRawShape>(resourceType: string, data: T) =>
   z.object({ ...ResourceSchema(resourceType).shape, ...data }).strict();
+
+export const ByteNumberSchema = z.number().int().min(0).max(255);
+
+export const ColorSchema = z.object({
+  r: ByteNumberSchema,
+  g: ByteNumberSchema,
+  b: ByteNumberSchema,
+  a: ByteNumberSchema.default(255),
+});

@@ -1,8 +1,8 @@
+import z from 'zod';
 import type { ResourceId } from '@/schemas/common';
+import { fetchJson } from '@/utils/http/fetch';
 import { resources, type ResourceClass, type ResourceName } from '@/types/resource';
 import type { GameContext } from './game-context';
-import { fetchJson } from '@/utils/http/fetch';
-import z from 'zod';
 
 type Resources = {
   [K in ResourceName]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
