@@ -3,9 +3,11 @@ import { ResourceBase } from '@/resource/core/resource-base';
 import type { GameContext } from '@/resource/core/game-context';
 import { Rect } from '@/utils/rect';
 import type { TextArea } from './panel-skin';
-import { RpgKey } from '@/types/engine';
+import type { RpgKey } from '@/types/engine';
 
 export class Panel extends ResourceBase<'panel'> {
+  readonly id: string;
+  active = false;
   protected textAreas: TextArea[] = [];
   protected visible: boolean = false;
   protected childPanel: Panel | null = null;
@@ -14,6 +16,7 @@ export class Panel extends ResourceBase<'panel'> {
 
   constructor(ctx: GameContext, data: PanelData, deps: PanelDeps) {
     super(ctx, data, deps);
+    this.id = data.id;
     this.panelRect = this.resolveRect();
   }
 
@@ -33,6 +36,24 @@ export class Panel extends ResourceBase<'panel'> {
   protected close() {
     this.visible = false;
   }
+
+  onOpen = () => {
+    this.open();
+  };
+
+  onClose = () => {
+    this.close();
+  };
+
+  onActive = () => {
+    this.active = true;
+  };
+
+  onInactive = () => {
+    this.active = false;
+  };
+
+  sendKey = (_key: RpgKey) => {};
 
   setParent = (parent: Panel) => {
     this.parent = parent;

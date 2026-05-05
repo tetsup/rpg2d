@@ -47,7 +47,7 @@ export class ActionManager {
 
   constructor(deps: ActionManagerDeps = {}) {
     this.ctx = deps.ctx;
-    this.panelManager = deps.panelManager;
+    this.panelManager = deps.panelManager ?? deps.ctx?.panels;
   }
 
   start(sequence: Sequence, runtimeContext: ActionStartContext = {}): void {

@@ -63,11 +63,12 @@ describe('PanelManager', () => {
     manager.push(panelA);
     manager.push(panelB);
 
-    manager.tick(input);
+    const blocked = manager.tick(input);
 
     expect(panelA.tick).not.toHaveBeenCalled();
     expect(panelB.tick).toHaveBeenCalledTimes(1);
     expect(panelB.tick).toHaveBeenCalledWith(input);
+    expect(blocked).toBe(true);
   });
 
   it('clearは全panelをclose扱いで除去する', () => {
@@ -126,6 +127,12 @@ describe('PanelManager', () => {
     expect(manager.pop()).toBeUndefined();
   });
 
+  it('panelがないtickはfieldを止めない', () => {
+    const manager = new PanelManager();
+
+    expect(manager.tick(100, { enter: true })).toBe(false);
+  });
+
   it('MessagePanel pushでtop管理し、MessagePanel tick形式で呼び出す', () => {
     const manager = new PanelManager();
     const messagePanel = {
@@ -157,5 +164,20 @@ describe('PanelManager', () => {
     expect(panelA.active).toBe(true);
     expect(panelB.active).toBe(false);
     expect(panelB.onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('sendKeyは押した瞬間のedgeだけtop panelへ送る', () => {
+    const manager = new PanelManager();
+    const panel = { ...makePanel('input'), sendKey: vi.fn() };
+    manager.push(panel);
+
+    manager.tick(100, { enter: true });
+    manager.tick(101, { enter: true });
+    manager.tick(102, { enter: false });
+    manager.tick(103, { enter: true });
+
+    expect(panel.sendKey).toHaveBeenCalledTimes(2);
+    expect(panel.sendKey).toHaveBeenNthCalledWith(1, 'enter');
+    expect(panel.sendKey).toHaveBeenNthCalledWith(2, 'enter');
   });
 });
