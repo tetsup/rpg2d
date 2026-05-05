@@ -29,6 +29,8 @@ type MessageStatus =
   | { phase: 'inActive' };
 
 export class MessagePanel {
+  readonly id = 'message';
+  active = false;
   status: MessageStatus;
   private messageRect: Rect;
   private queue: Queue<Message> = new Queue();
@@ -84,7 +86,7 @@ export class MessagePanel {
     });
   };
 
-  private render = () => {
+  render = () => {
     if (this.status.phase === 'inActive') return;
     this.panel.setTextAreas([
       {
@@ -98,6 +100,14 @@ export class MessagePanel {
 
   addQueue = (messages: Message[]) => messages.forEach((message) => this.queue.push(message));
 
+  get isClosed(): boolean {
+    return this.status.phase === 'inActive';
+  }
+
+  onClose = () => {
+    if (this.status.phase !== 'inActive') this.updateStatus({ phase: 'inActive' });
+  };
+
   tick = (nowMs: number, enter: boolean, esc: boolean): boolean => {
     switch (this.status.phase) {
       case 'inActive':
@@ -105,7 +115,10 @@ export class MessagePanel {
       case 'pause':
         return false;
       case 'loading':
-        this.pop(nowMs);
+        if (this.pop(nowMs) === false) {
+          this.updateStatus({ phase: 'inActive' });
+          return false;
+        }
         return true;
       case 'running':
         if (enter || esc)
