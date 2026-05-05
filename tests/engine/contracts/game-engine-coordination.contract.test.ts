@@ -229,7 +229,40 @@ describe('GameEngine contract: Sequence opens panel and waits', () => {
       hasOpenPanel: vi.fn(() => panelOpenState.open),
       tick: vi.fn(),
     });
-    const actionManager = makeActionManager();
+    let commandIndex = 0;
+    let activeSequence: SequenceContract | undefined;
+    let waitingPanel: PanelContract | undefined;
+    const actionManager = makeActionManager({
+      start: vi.fn((startedSequence: SequenceContract) => {
+        activeSequence = startedSequence;
+        commandIndex = 0;
+        waitingPanel = undefined;
+      }),
+      tick: vi.fn(() => {
+        if (!activeSequence) return;
+        if (waitingPanel && panelManager.hasOpenPanel()) return;
+        if (waitingPanel && !panelManager.hasOpenPanel()) {
+          waitingPanel = undefined;
+          commandIndex += 1;
+        }
+
+        while (commandIndex < activeSequence.commands.length) {
+          const command = activeSequence.commands[commandIndex];
+          if (typeof command === 'function') {
+            command();
+            commandIndex += 1;
+            continue;
+          }
+          if (command.type === 'openPanel') {
+            panelManager.push(command.panel);
+            waitingPanel = command.panel;
+            return;
+          }
+        }
+      }),
+      hasPlayerBlock: vi.fn(() => activeSequence?.blockPlayerInput ?? false),
+      hasParallelBlock: vi.fn(() => activeSequence?.blockParallelActions ?? false),
+    });
     const { engine } = await createGameEngine({ panelManager, actionManager });
 
     // act
@@ -238,6 +271,7 @@ describe('GameEngine contract: Sequence opens panel and waits', () => {
 
     // assert
     expect(beforeOpen).toHaveBeenCalledTimes(1);
+    expect(actionManager.tick).toHaveBeenCalledTimes(1);
     expect(panelManager.push).toHaveBeenCalledTimes(1);
     expect(panelManager.push).toHaveBeenCalledWith(panel);
     expect(afterClose).not.toHaveBeenCalled();
@@ -247,6 +281,7 @@ describe('GameEngine contract: Sequence opens panel and waits', () => {
     engine.tick(input);
 
     // assert
+    expect(actionManager.tick).toHaveBeenCalledTimes(2);
     expect(afterClose).toHaveBeenCalledTimes(1);
   });
 });

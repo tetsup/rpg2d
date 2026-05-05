@@ -48,6 +48,8 @@ type TileTriggerManagerContract = {
 };
 
 type FieldManagerContract = {
+  tickPlayerInput(input: unknown): void;
+  tickWorld(): void;
   triggerCheck(): void;
   triggerTouch(): void;
   triggerTile(): void;
@@ -153,7 +155,7 @@ describe('FieldManager contract: Entity Trigger', () => {
     expect(actionManager.start).toHaveBeenCalledWith(onTouch, expect.objectContaining({ source: entity, trigger: 'onTouch' }));
   });
 
-  it('onAutoを持つentityがfield上にいるとき、そのsequenceを開始する', async () => {
+  it('onAutoを持つentityがfield上にいるとき、tickWorldでそのsequenceを開始する', async () => {
     // arrange
     const actionManager = makeActionManager();
     const autoA = makeSequence('entity.autoA');
@@ -168,7 +170,7 @@ describe('FieldManager contract: Entity Trigger', () => {
     });
 
     // act
-    manager.triggerCheck();
+    manager.tickWorld();
 
     // assert
     expect(actionManager.start).toHaveBeenCalledTimes(2);
