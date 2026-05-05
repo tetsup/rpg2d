@@ -9,12 +9,10 @@ export type PanelInput = {
 
 export type PanelTickInput = InputManager<RpgKey> | PanelInput;
 
-type ManagedPanelTick = ((input: unknown) => void | boolean) | ((nowMs: number, enter: boolean, esc: boolean) => boolean);
-
 export interface ManagedPanel {
   id: string;
   active: boolean;
-  tick?: ManagedPanelTick;
+  tick?(nowMs: number): void | boolean;
   render?(): void;
   onOpen?(): void;
   onClose?(): void;
@@ -135,13 +133,18 @@ export class PanelManager {
   }
 
   private tickPanel(panel: ManagedPanel, nowMs: number, input: PanelInput, legacyInput?: PanelTickInput): void {
-    if (this.isMessagePanel(panel)) {
-      panel.tick(nowMs, input.enter === true, input.esc === true);
-      return;
-    }
     this.sendEdgeKeys(panel, input);
     if (!panel.tick) return;
-    panel.tick(legacyInput ?? input);
+    if (legacyInput !== undefined) {
+      this.tickLegacyPanel(panel.tick, legacyInput);
+      return;
+    }
+    panel.tick(nowMs);
+  }
+
+  private tickLegacyPanel(tick: ManagedPanel['tick'], input: PanelTickInput): void {
+    if (!tick) return;
+    (tick as unknown as (input: PanelTickInput) => void | boolean)(input);
   }
 
   private sendEdgeKeys(panel: ManagedPanel, input: PanelInput): void {
@@ -173,12 +176,6 @@ export class PanelManager {
 
   private keys(): RpgKey[] {
     return ['left', 'right', 'up', 'down', 'enter', 'esc'];
-  }
-
-  private isMessagePanel(
-    panel: ManagedPanel
-  ): panel is ManagedPanel & { tick: (nowMs: number, enter: boolean, esc: boolean) => boolean } {
-    return panel.tick !== undefined && 'status' in panel;
   }
 
   private syncActiveState(): void {

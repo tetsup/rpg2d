@@ -1,6 +1,7 @@
 import { GameContext } from '@/resource/core/game-context';
 import { Panel } from '@/resource/domain/panel/panel';
 import type { MessageConfig } from '@/schemas/manifest';
+import type { RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
 
@@ -34,6 +35,7 @@ export class MessagePanel {
   status: MessageStatus;
   private messageRect: Rect;
   private queue: Queue<Message> = new Queue();
+  private advanceRequested = false;
 
   constructor(
     private ctx: GameContext,
@@ -108,27 +110,38 @@ export class MessagePanel {
     if (this.status.phase !== 'inActive') this.updateStatus({ phase: 'inActive' });
   };
 
-  tick = (nowMs: number, enter: boolean, esc: boolean): boolean => {
+  sendKey = (key: RpgKey) => {
+    if (key === 'enter' || key === 'esc') this.advanceRequested = true;
+  };
+
+  tick = (nowMs: number): boolean => {
     switch (this.status.phase) {
       case 'inActive':
         return false;
       case 'pause':
         return false;
       case 'loading':
+        this.advanceRequested = false;
         if (this.pop(nowMs) === false) {
           this.updateStatus({ phase: 'inActive' });
           return false;
         }
         return true;
       case 'running':
-        if (enter || esc)
+        if (this.consumeAdvanceRequest())
           this.updateStatus({ ...this.status, phase: 'waiting', currentPos: this.status.currentMessage.length });
         else this.tickCurrentMessage(nowMs);
         return true;
       case 'waiting':
-        if (enter || esc) this.updateStatus({ ...this.status, phase: 'loading' });
+        if (this.consumeAdvanceRequest()) this.updateStatus({ ...this.status, phase: 'loading' });
         return true;
     }
+  };
+
+  private consumeAdvanceRequest = () => {
+    const requested = this.advanceRequested;
+    this.advanceRequested = false;
+    return requested;
   };
 
   resume = () => {

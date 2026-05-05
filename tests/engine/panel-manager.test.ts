@@ -77,11 +77,11 @@ describe('PanelManager', () => {
     manager.push(panelA);
     manager.push(panelB);
 
-    const blocked = manager.tick(input);
+    const blocked = manager.tick(0, input);
 
     expect(panelA.tick).not.toHaveBeenCalled();
     expect(panelB.tick).toHaveBeenCalledTimes(1);
-    expect(panelB.tick).toHaveBeenCalledWith(input);
+    expect(panelB.tick).toHaveBeenCalledWith(0);
     expect(blocked).toBe(true);
   });
 
@@ -147,12 +147,13 @@ describe('PanelManager', () => {
     expect(manager.tick(100, { enter: true })).toBe(false);
   });
 
-  it('MessagePanel pushでtop管理し、MessagePanel tick形式で呼び出す', () => {
+  it('MessagePanel pushでtop管理し、通常panel tick形式で呼び出す', () => {
     const manager = new PanelManager();
     const messagePanel = {
       id: 'message',
       active: false,
       tick: vi.fn(),
+      sendKey: vi.fn(),
       status: { phase: 'loading' },
     } as unknown as MessagePanel;
 
@@ -161,8 +162,10 @@ describe('PanelManager', () => {
 
     expect(manager.top()).toBe(messagePanel);
     expect(messagePanel.active).toBe(true);
+    expect(messagePanel.sendKey).toHaveBeenCalledTimes(1);
+    expect(messagePanel.sendKey).toHaveBeenCalledWith('enter');
     expect(messagePanel.tick).toHaveBeenCalledTimes(1);
-    expect(messagePanel.tick).toHaveBeenCalledWith(100, true, false);
+    expect(messagePanel.tick).toHaveBeenCalledWith(100);
   });
 
   it('closeで前panelへ復帰する', () => {
