@@ -19,7 +19,7 @@ type PanelManagerContract = {
   pop(): PanelContract | undefined;
   top(): PanelContract | undefined;
   hasOpenPanel(): boolean;
-  tick(input: unknown): void;
+  tick(nowMs: number, input: unknown): void;
 };
 
 type PanelManagerConstructor = new () => PanelManagerContract;
@@ -62,13 +62,13 @@ describe('PanelManager contract: panel priority control', () => {
     // act
     manager.push(messagePanel);
     manager.push(choicePanel);
-    manager.tick(input);
+    manager.tick(100, input);
 
     // assert
     expect(manager.hasOpenPanel()).toBe(true);
     expect(manager.top()).toBe(choicePanel);
     expect(choicePanel.tick).toHaveBeenCalledTimes(1);
-    expect(choicePanel.tick).toHaveBeenCalledWith(input);
+    expect(choicePanel.tick).toHaveBeenCalledWith(100, input);
     expect(messagePanel.tick).not.toHaveBeenCalled();
   });
 
@@ -83,7 +83,7 @@ describe('PanelManager contract: panel priority control', () => {
 
     // act
     const popped = manager.pop();
-    manager.tick(input);
+    manager.tick(100, input);
 
     // assert
     expect(popped).toBe(choicePanel);
@@ -91,7 +91,7 @@ describe('PanelManager contract: panel priority control', () => {
     expect(manager.top()).toBe(messagePanel);
     expect(choicePanel.tick).not.toHaveBeenCalled();
     expect(messagePanel.tick).toHaveBeenCalledTimes(1);
-    expect(messagePanel.tick).toHaveBeenCalledWith(input);
+    expect(messagePanel.tick).toHaveBeenCalledWith(100, input);
   });
 
   it('最後のpanelをpopするとopen panelなしになりtickしても入力は消費されない', async () => {
@@ -103,7 +103,7 @@ describe('PanelManager contract: panel priority control', () => {
 
     // act
     const popped = manager.pop();
-    manager.tick(input);
+    manager.tick(100, input);
 
     // assert
     expect(popped).toBe(messagePanel);

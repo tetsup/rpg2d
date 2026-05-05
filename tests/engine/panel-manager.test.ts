@@ -81,7 +81,7 @@ describe('PanelManager', () => {
 
     expect(panelA.tick).not.toHaveBeenCalled();
     expect(panelB.tick).toHaveBeenCalledTimes(1);
-    expect(panelB.tick).toHaveBeenCalledWith(0);
+    expect(panelB.tick).toHaveBeenCalledWith(0, input);
     expect(blocked).toBe(true);
   });
 
@@ -165,7 +165,7 @@ describe('PanelManager', () => {
     expect(messagePanel.sendKey).toHaveBeenCalledTimes(1);
     expect(messagePanel.sendKey).toHaveBeenCalledWith('enter');
     expect(messagePanel.tick).toHaveBeenCalledTimes(1);
-    expect(messagePanel.tick).toHaveBeenCalledWith(100);
+    expect(messagePanel.tick).toHaveBeenCalledWith(100, { enter: true, esc: false });
   });
 
   it('closeで前panelへ復帰する', () => {

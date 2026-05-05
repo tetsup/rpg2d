@@ -12,7 +12,7 @@ export type PanelTickInput = InputManager<RpgKey> | PanelInput;
 export interface ManagedPanel {
   id: string;
   active: boolean;
-  tick?(nowMs: number): void | boolean;
+  tick?(nowMs: number, input: PanelInput): void | boolean;
   render?(): void;
   onOpen?(): void;
   onClose?(): void;
@@ -94,15 +94,13 @@ export class PanelManager {
     return this.stack.length > 0;
   }
 
-  tick(nowMsOrInput?: number | PanelTickInput, input?: PanelTickInput): boolean {
-    const legacyInput = typeof nowMsOrInput === 'number' ? undefined : nowMsOrInput;
-    const panelInput = typeof nowMsOrInput === 'number' ? input : nowMsOrInput;
-    const edges = this.resolveInputEdges(panelInput);
+  tick(nowMs: number, input?: PanelTickInput): boolean {
+    const edges = this.resolveInputEdges(input);
+    const panelInput = this.resolvePanelInput(input);
     const panel = this.top();
     if (!panel) return false;
 
-    const nowMs = typeof nowMsOrInput === 'number' ? nowMsOrInput : 0;
-    this.tickPanel(panel, nowMs, edges, legacyInput);
+    this.tickPanel(panel, nowMs, edges, panelInput);
     if (panel.isClosed === true) this.pop();
     return true;
   }
@@ -132,19 +130,10 @@ export class PanelManager {
     }
   }
 
-  private tickPanel(panel: ManagedPanel, nowMs: number, input: PanelInput, legacyInput?: PanelTickInput): void {
-    this.sendEdgeKeys(panel, input);
+  private tickPanel(panel: ManagedPanel, nowMs: number, edges: PanelInput, input: PanelInput): void {
+    this.sendEdgeKeys(panel, edges);
     if (!panel.tick) return;
-    if (legacyInput !== undefined) {
-      this.tickLegacyPanel(panel.tick, legacyInput);
-      return;
-    }
-    panel.tick(nowMs);
-  }
-
-  private tickLegacyPanel(tick: ManagedPanel['tick'], input: PanelTickInput): void {
-    if (!tick) return;
-    (tick as unknown as (input: PanelTickInput) => void | boolean)(input);
+    panel.tick(nowMs, input);
   }
 
   private sendEdgeKeys(panel: ManagedPanel, input: PanelInput): void {
@@ -162,6 +151,16 @@ export class PanelManager {
       this.buttons[key] = pressed;
     }
     return edges;
+  }
+
+  private resolvePanelInput(input?: PanelTickInput): PanelInput {
+    if (!input) return {};
+    if (!this.isInputManager(input)) return input;
+    const panelInput: PanelInput = {};
+    for (const key of this.keys()) {
+      if (input.isPressed(key)) panelInput[key] = true;
+    }
+    return panelInput;
   }
 
   private isPressed(input: PanelTickInput | undefined, key: RpgKey): boolean {
