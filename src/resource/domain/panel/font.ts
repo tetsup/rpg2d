@@ -13,7 +13,7 @@ export class Font extends ResourceBase<'font'> {
   };
 
   createImage = (char: string, color: Color): ImageBitmap => {
-    const mask = this.data.chars[char];
+    const mask = this.data.chars[char] ?? this.data.chars[' '];
     const buf = new Uint8Array(256); // 4*8*8
     let i = 0;
     for (const hex of mask) {
@@ -28,7 +28,10 @@ export class Font extends ResourceBase<'font'> {
       }
       i += 4;
     }
-    return new ImageBitmap();
+    const canvas = new OffscreenCanvas(8, 8);
+    const context = canvas.getContext('2d');
+    context?.putImageData(new ImageData(new Uint8ClampedArray(buf), 8, 8), 0, 0);
+    return canvas.transferToImageBitmap();
   };
 
   registerImage = (imageId: string, imageData: ImageBitmap) => {
@@ -36,7 +39,8 @@ export class Font extends ResourceBase<'font'> {
   };
 
   resolveImages = (letter: string, color: Color): string[] => {
-    const chars = this.data.compose[letter].map((composed) => this.data.chars[composed]) ?? [this.data.chars[letter]];
+    const composed = this.data.compose[letter];
+    const chars = composed ?? [this.data.chars[letter] ? letter : ' '];
     return chars.map((char) => this.getImage(char, color));
   };
 }

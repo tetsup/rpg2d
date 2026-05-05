@@ -1,0 +1,16 @@
+id: local.panel.message.v0
+type: panel
+skin: local.panelSkin.message.v0
+layout:
+  anchorType: screen
+  anchor: bottom-left
+  pos:
+    x: 1
+    y: -6
+  size:
+    width: 18
+    height: 5
+content:
+  type: message
+  staticContents: []
+  variantContents: []

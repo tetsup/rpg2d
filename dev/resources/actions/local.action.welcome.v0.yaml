@@ -3,4 +3,5 @@ type: action
 sequence:
   - command: sendMessage
     messages:
-      - ようこそ、RPGのせかいへ
+      - こんにちは！
+      - PR9 panel system テスト中です。

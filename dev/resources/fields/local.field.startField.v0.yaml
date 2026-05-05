@@ -18,7 +18,7 @@ entities:
     entityId: local.entity.welcome.v0
     initialState:
       pos:
-        x: 3
-        y: 3
-      direction: down
+        x: 5
+        y: 6
+      direction: up
       visible: true
