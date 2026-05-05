@@ -1,6 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { MessagePanel } from '@/engine/panel/message-panel';
 import { PanelManager, type ManagedPanel } from '@/engine/panel/panel-manager';
+import type { RpgKey } from '@/types/engine';
+
+const inputKeys = ['left', 'right', 'up', 'down', 'enter', 'esc'] as const satisfies readonly RpgKey[];
+
+type InputPanel = ManagedPanel & {
+  sendKey: ReturnType<typeof vi.fn>;
+};
 
 function makePanel(id: string): ManagedPanel {
   return {
@@ -12,6 +19,13 @@ function makePanel(id: string): ManagedPanel {
     onClose: vi.fn(),
     onActive: vi.fn(),
     onInactive: vi.fn(),
+  };
+}
+
+function makeInputPanel(id: string): InputPanel {
+  return {
+    ...makePanel(id),
+    sendKey: vi.fn(),
   };
 }
 
@@ -179,5 +193,58 @@ describe('PanelManager', () => {
     expect(panel.sendKey).toHaveBeenCalledTimes(2);
     expect(panel.sendKey).toHaveBeenNthCalledWith(1, 'enter');
     expect(panel.sendKey).toHaveBeenNthCalledWith(2, 'enter');
+  });
+});
+
+describe('PanelManager input routing', () => {
+  it('only top panel receives key', () => {
+    const manager = new PanelManager();
+    const lowerPanel = makeInputPanel('lower');
+    const topPanel = makeInputPanel('top');
+    manager.push(lowerPanel);
+    manager.push(topPanel);
+
+    manager.tick(100, { enter: true });
+
+    expect(lowerPanel.sendKey).not.toHaveBeenCalled();
+    expect(topPanel.sendKey).toHaveBeenCalledTimes(1);
+    expect(topPanel.sendKey).toHaveBeenCalledWith('enter');
+  });
+
+  it.each(inputKeys)('edge press triggers once for %s', (key) => {
+    const manager = new PanelManager();
+    const panel = makeInputPanel('input');
+    const pressedInput: Partial<Record<RpgKey, boolean>> = { [key]: true };
+    manager.push(panel);
+
+    manager.tick(100, pressedInput);
+    manager.tick(101, pressedInput);
+
+    expect(panel.sendKey).toHaveBeenCalledTimes(1);
+    expect(panel.sendKey).toHaveBeenCalledWith(key);
+  });
+
+  it.each(inputKeys)('release then press triggers %s again', (key) => {
+    const manager = new PanelManager();
+    const panel = makeInputPanel('input');
+    const pressedInput: Partial<Record<RpgKey, boolean>> = { [key]: true };
+    const releasedInput: Partial<Record<RpgKey, boolean>> = { [key]: false };
+    manager.push(panel);
+
+    manager.tick(100, pressedInput);
+    manager.tick(101, pressedInput);
+    manager.tick(102, releasedInput);
+    manager.tick(103, pressedInput);
+
+    expect(panel.sendKey).toHaveBeenCalledTimes(2);
+    expect(panel.sendKey).toHaveBeenNthCalledWith(1, key);
+    expect(panel.sendKey).toHaveBeenNthCalledWith(2, key);
+  });
+
+  it('does nothing when no panel exists', () => {
+    const manager = new PanelManager();
+
+    expect(() => manager.tick(100, { enter: true })).not.toThrow();
+    expect(manager.tick(100, { enter: true })).toBe(false);
   });
 });
