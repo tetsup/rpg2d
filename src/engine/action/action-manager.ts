@@ -83,6 +83,15 @@ export class ActionManager {
     return this.running.filter((item) => !item.done).length;
   }
 
+  runFieldActions(nowMs = 0): void {
+    for (const item of this.running) {
+      if (item.done) continue;
+      if (this.isParallelBlocked(item)) continue;
+      this.tickSequence(item);
+    }
+    this.removeDone();
+  }
+
   clear(): void {
     this.running.length = 0;
   }

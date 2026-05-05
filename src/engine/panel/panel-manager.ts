@@ -1,6 +1,6 @@
 import type { InputManager } from '@tetsup/web2d';
 import type { GameContext } from '@/resource/core/game-context';
-import type { RpgKey } from '@/types/engine';
+import type { LayerWithPos, RpgKey } from '@/types/engine';
 import { MessagePanel, type Message } from './message-panel';
 
 export type PanelInput = {
@@ -20,6 +20,7 @@ export interface ManagedPanel {
   onInactive?(): void;
   isClosed?: boolean;
   sendKey?(key: RpgKey): void;
+  resolveLayers?(nowMs: number): LayerWithPos[];
 }
 
 export class PanelManager {
@@ -109,6 +110,10 @@ export class PanelManager {
     for (const panel of this.stack) {
       panel.render?.();
     }
+  }
+
+  resolveLayers(nowMs: number): LayerWithPos[] {
+    return this.stack.flatMap((panel) => panel.resolveLayers?.(nowMs) ?? []);
   }
 
   size(): number {

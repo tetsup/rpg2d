@@ -1,7 +1,7 @@
 import { GameContext } from '@/resource/core/game-context';
 import { Panel } from '@/resource/domain/panel/panel';
 import type { MessageConfig } from '@/schemas/manifest';
-import type { RpgKey } from '@/types/engine';
+import type { LayerWithPos, RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
 
@@ -98,6 +98,10 @@ export class MessagePanel {
         overflowY: 'scroll',
       },
     ]);
+  };
+
+  resolveLayers = (nowMs: number): LayerWithPos[] => {
+    return this.panel.resolveLayers(nowMs);
   };
 
   addQueue = (messages: Message[]) => messages.forEach((message) => this.queue.push(message));
