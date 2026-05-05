@@ -5,14 +5,18 @@ import { ResourceConfig } from '@/schemas/resource-config';
 import { GameContext } from '@/resource/core/game-context';
 import type { Player } from '@/resource/domain/player';
 import { FieldEngine } from './field/field-core';
+import { PanelManager } from './panel/panel-manager';
 
 export class RpgCore implements Game<RpgKey> {
   private ctx: GameContext;
+  private panels: PanelManager;
   private mode: RpgMode = 'field';
   private field: FieldEngine | null = null;
   private players: Player[] = [];
   constructor(manifest: Manifest, config: ResourceConfig) {
     this.ctx = new GameContext(manifest, config);
+    this.panels = new PanelManager(this.ctx);
+    this.ctx.panels = this.panels;
   }
 
   onInit = async (renderer: GameRenderer) => {
@@ -30,7 +34,9 @@ export class RpgCore implements Game<RpgKey> {
   onTick = async (input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) => {
     switch (this.mode) {
       case 'field':
-        this.field?.onTick(input, clock, renderer);
+        if (!this.panels.tick(clock, input)) {
+          this.field?.onTick(input, clock, renderer);
+        }
         break;
       default:
         break;

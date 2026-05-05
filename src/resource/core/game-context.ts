@@ -5,6 +5,7 @@ import { AssetCache } from './asset-cache';
 import { GameState } from './game-state';
 import { SchemaRegistry } from './schema-registry';
 import { ResourceFactory } from './resource-factory';
+import type { PanelManager } from '@/engine/panel/panel-manager';
 
 export class GameContext {
   assets: AssetCache;
@@ -12,6 +13,7 @@ export class GameContext {
   resources: ResourceStore;
   state: GameState;
   schemas: SchemaRegistry;
+  panels?: PanelManager;
 
   constructor(
     readonly manifest: Manifest,

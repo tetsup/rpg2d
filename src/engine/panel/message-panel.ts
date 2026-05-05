@@ -1,6 +1,7 @@
 import { GameContext } from '@/resource/core/game-context';
 import { Panel } from '@/resource/domain/panel/panel';
 import type { MessageConfig } from '@/schemas/manifest';
+import type { RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
 
@@ -29,9 +30,12 @@ type MessageStatus =
   | { phase: 'inActive' };
 
 export class MessagePanel {
+  readonly id = 'message';
+  active = false;
   status: MessageStatus;
   private messageRect: Rect;
   private queue: Queue<Message> = new Queue();
+  private advanceRequested = false;
 
   constructor(
     private ctx: GameContext,
@@ -84,7 +88,7 @@ export class MessagePanel {
     });
   };
 
-  private render = () => {
+  render = () => {
     if (this.status.phase === 'inActive') return;
     this.panel.setTextAreas([
       {
@@ -98,24 +102,46 @@ export class MessagePanel {
 
   addQueue = (messages: Message[]) => messages.forEach((message) => this.queue.push(message));
 
-  tick = (nowMs: number, enter: boolean, esc: boolean): boolean => {
+  get isClosed(): boolean {
+    return this.status.phase === 'inActive';
+  }
+
+  onClose = () => {
+    if (this.status.phase !== 'inActive') this.updateStatus({ phase: 'inActive' });
+  };
+
+  sendKey = (key: RpgKey) => {
+    if (key === 'enter' || key === 'esc') this.advanceRequested = true;
+  };
+
+  tick = (nowMs: number, _input: PanelInput = {}): boolean => {
     switch (this.status.phase) {
       case 'inActive':
         return false;
       case 'pause':
         return false;
       case 'loading':
-        this.pop(nowMs);
+        this.advanceRequested = false;
+        if (this.pop(nowMs) === false) {
+          this.updateStatus({ phase: 'inActive' });
+          return false;
+        }
         return true;
       case 'running':
-        if (enter || esc)
+        if (this.consumeAdvanceRequest())
           this.updateStatus({ ...this.status, phase: 'waiting', currentPos: this.status.currentMessage.length });
         else this.tickCurrentMessage(nowMs);
         return true;
       case 'waiting':
-        if (enter || esc) this.updateStatus({ ...this.status, phase: 'loading' });
+        if (this.consumeAdvanceRequest()) this.updateStatus({ ...this.status, phase: 'loading' });
         return true;
     }
+  };
+
+  private consumeAdvanceRequest = () => {
+    const requested = this.advanceRequested;
+    this.advanceRequested = false;
+    return requested;
   };
 
   resume = () => {
