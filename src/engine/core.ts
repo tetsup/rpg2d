@@ -43,8 +43,8 @@ export class RpgCore implements Game<RpgKey> {
           this.field?.onTick(input, clock, renderer);
         } else {
           this.field?.tickWorld(clock);
-          this.renderFieldWithPanels(clock, renderer);
         }
+        this.renderFieldWithPanels(clock, renderer);
         break;
       default:
         break;
@@ -53,8 +53,7 @@ export class RpgCore implements Game<RpgKey> {
   };
 
   private renderFieldWithPanels(clock: number, renderer: GameRenderer): void {
-    if (this.field == null) return;
     const panelLayers = this.panels.resolveLayers(clock);
-    if (panelLayers.length > 0) this.field.renderLayers([...this.field.retrieveSortedLayers(clock), ...panelLayers], renderer);
+    this.field?.renderLayers([...this.field?.retrieveSortedLayers(clock), ...panelLayers], renderer);
   }
 }
