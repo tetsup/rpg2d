@@ -19,14 +19,14 @@ export class Font extends ResourceBase<'font'> {
     for (const hex of mask) {
       const hexVal = parseInt(hex, 16);
       for (let shift = 0; shift < 4; shift++) {
-        if (hexVal & (1 << shift)) {
+        if (hexVal & (8 >> shift)) {
           buf[i] = color.r;
           buf[i + 1] = color.g;
           buf[i + 2] = color.b;
           buf[i + 3] = color.a;
         }
+        i += 4;
       }
-      i += 4;
     }
     const canvas = new OffscreenCanvas(8, 8);
     const context = canvas.getContext('2d');
@@ -35,6 +35,7 @@ export class Font extends ResourceBase<'font'> {
   };
 
   registerImage = (imageId: string, imageData: ImageBitmap) => {
+    this.fontImages.set(imageId, imageData);
     this.ctx.assets.renderer?.registerImage({ imageId, imageData });
   };
 
