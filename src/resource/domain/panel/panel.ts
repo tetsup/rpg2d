@@ -106,7 +106,6 @@ export class Panel extends ResourceBase<'panel'> {
   };
 
   resolveLayers = (nowMs: number) => {
-    if (!this.visible) return [];
     return this.deps.skin.resolveLayers(nowMs, this.panelRect, this.textAreas);
   };
 }
