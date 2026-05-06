@@ -15,6 +15,7 @@ export class RpgCore implements Game<RpgKey> {
   private mode: RpgMode = 'field';
   private field: FieldEngine | null = null;
   private players: Player[] = [];
+
   constructor(manifest: Manifest, config: ResourceConfig) {
     this.ctx = new GameContext(manifest, config);
     this.panels = new PanelManager(this.ctx);
@@ -41,8 +42,6 @@ export class RpgCore implements Game<RpgKey> {
         this.panels.render();
         if (!this.panels.hasOpenPanel() && !this.actions.hasPlayerBlock()) {
           this.field?.onTick(input, clock, renderer);
-        } else {
-          this.field?.tickWorld(clock);
         }
         this.renderFieldWithPanels(clock, renderer);
         break;

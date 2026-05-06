@@ -57,8 +57,10 @@ describe('RpgCore PanelManager coordination', () => {
     const fieldOnTick = vi.fn();
     vi.spyOn(FieldEngine, 'factory').mockResolvedValue({
       onTick: fieldOnTick,
+      retrieveSortedLayers: vi.fn().mockReturnValue([]),
+      renderLayers: vi.fn(),
     } as unknown as FieldEngine);
-    vi.spyOn(PanelManager.prototype, 'tick').mockReturnValue(true);
+    vi.spyOn(PanelManager.prototype, 'hasOpenPanel').mockReturnValue(true);
 
     await core.onInit({} as GameRenderer);
     await core.onTick(makeInput(), 100, {} as GameRenderer);
@@ -71,8 +73,10 @@ describe('RpgCore PanelManager coordination', () => {
     const fieldOnTick = vi.fn();
     vi.spyOn(FieldEngine, 'factory').mockResolvedValue({
       onTick: fieldOnTick,
+      retrieveSortedLayers: vi.fn().mockReturnValue([]),
+      renderLayers: vi.fn(),
     } as unknown as FieldEngine);
-    vi.spyOn(PanelManager.prototype, 'tick').mockReturnValue(false);
+    vi.spyOn(PanelManager.prototype, 'hasOpenPanel').mockReturnValue(false);
     const input = makeInput();
     const renderer = {} as GameRenderer;
 

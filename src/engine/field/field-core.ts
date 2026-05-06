@@ -107,13 +107,9 @@ export class FieldEngine {
   onTick = (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
     this.tickPlayerCheck(input);
     tickPlayerMove(this, input, nowMs);
-    this.tickWorld(nowMs);
-    this.renderField(nowMs, renderer);
-  };
-
-  tickWorld = (nowMs: number) => {
     tickPlayerPos(this.state, nowMs);
     tickEntities(this.state, nowMs);
+    this.renderField(nowMs, renderer);
   };
 
   private tickPlayerCheck(input: InputManager<RpgKey>) {

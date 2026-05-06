@@ -253,14 +253,14 @@ describe('RpgCore: unbound call must not throw', () => {
 
   it('keeps this binding in onTick — unbound call must not throw', async () => {
     // Inject a mock field so the delegate path executes cleanly
-    (game as any).field = { onTick: vi.fn() };
+    (game as any).field = { onTick: vi.fn(), retrieveSortedLayers: vi.fn().mockReturnValue([]), renderLayers: vi.fn() };
 
     const onTick = game.onTick;
     await expect(onTick(makeInput(), 1000, makeRenderer())).resolves.not.toThrow();
   });
 
   it('onTick called multiple times unbound must not throw', async () => {
-    (game as any).field = { onTick: vi.fn() };
+    (game as any).field = { onTick: vi.fn(), retrieveSortedLayers: vi.fn().mockReturnValue([]), renderLayers: vi.fn() };
     const onTick = game.onTick;
 
     for (const t of [100, 200, 300]) {
