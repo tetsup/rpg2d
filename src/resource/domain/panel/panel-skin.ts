@@ -113,6 +113,8 @@ export class PanelSkin extends ResourceBase<'panel-skin'> {
       }
     });
 
+    const panelLeft = rect.left * this.ctx.manifest.config.blockSize.width;
+    const panelTop = rect.top * this.ctx.manifest.config.blockSize.width;
     return images
       .slice(-textArea.rect.height)
       .flatMap((line, y) =>
@@ -120,8 +122,8 @@ export class PanelSkin extends ResourceBase<'panel-skin'> {
           image
             ? {
                 rect: new Rect(
-                  rect.left + (textArea.rect.left + x) * this.ctx.manifest.config.textSize.width,
-                  rect.top + (textArea.rect.top + y) * this.ctx.manifest.config.textSize.height,
+                  panelLeft + (textArea.rect.left + x) * this.ctx.manifest.config.textSize.width,
+                  panelTop + (textArea.rect.top + y) * this.ctx.manifest.config.textSize.height,
                   this.ctx.manifest.config.textSize.width,
                   this.ctx.manifest.config.textSize.height
                 ),
