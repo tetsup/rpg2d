@@ -69,7 +69,7 @@ const manifest: Manifest = {
 const config = { resourceUri: '/api/resource', imageUri: '/api/image' };
 
 const app = new GameApp(canvas, new RpgCore(manifest, config), {
-  maxObjects: 1000,
+  maxObjects: 3000,
   rectSize: { width: 320, height: 240 },
   keyAssignment,
   assignPad,
