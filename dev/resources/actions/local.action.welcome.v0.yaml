@@ -3,4 +3,5 @@ type: action
 sequence:
   - command: sendMessage
     messages:
-      - ようこそ、RPGのせかいへ
+      - ようこそ、あたらしいせかいへ
+      - いっしょにつくりましょう！

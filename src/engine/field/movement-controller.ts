@@ -1,4 +1,4 @@
-import type { Movement } from '@/schemas/actions/movement';
+import type { Movement } from '@/schemas/action/movement';
 import type { FieldState, Point2d } from '@/types/engine';
 import type { Field } from '@/resource/domain/field';
 

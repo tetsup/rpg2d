@@ -6,13 +6,14 @@ function appendError(payload: any) {
   ((line.textContent = JSON.stringify(payload)), el.appendChild(line));
 }
 function sendError(payload: any) {
-  fetch('/__error', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  try {
+    fetch('/__error', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch {}
 }
-
 window.addEventListener('error', (e) => {
   appendError({
     type: 'error',

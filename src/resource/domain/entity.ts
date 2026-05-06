@@ -2,6 +2,7 @@ import type { EntityData, EntityDeps } from '@/schemas/entity';
 import { ResourceBase } from '../core/resource-base';
 import type { GameContext } from '../core/game-context';
 import { Direction2d } from '@/types/engine';
+import type { Action } from './action';
 
 export class Entity extends ResourceBase<'entity'> {
   static async loadDeps(ctx: GameContext, data: EntityData): Promise<EntityDeps> {
@@ -24,6 +25,10 @@ export class Entity extends ResourceBase<'entity'> {
   }
   get moveDurationMs() {
     return this.data.moveDurationMs;
+  }
+
+  getAction(trigger: string): Action | undefined {
+    return this.deps.actions.find((entry) => entry.trigger === trigger)?.action;
   }
 
   resolveLayers = (nowMs: number, direction: Direction2d) => {

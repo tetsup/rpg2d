@@ -1,5 +1,5 @@
 import type { EntityState } from '@/types/engine';
-import type { Movement } from '@/schemas/actions/movement';
+import type { Movement } from '@/schemas/action/movement';
 import type { EntityInitialState } from '@/schemas/field';
 import { Queue } from '@/utils/queue';
 import type { GameContext } from '@/resource/core/game-context';
@@ -26,6 +26,10 @@ export class EntityInstance {
     const actions = new Queue<Action>();
     this.state = { pos, actions, visible: initialState.visible, allowOverwrap: this.entity.allowOverwrap };
   }
+  getAction = (trigger: string): Action | undefined => {
+    return this.entity.getAction(trigger);
+  };
+
   resolveLayers = (nowMs: number) => {
     return this.entity.resolveLayers(nowMs, this.state.pos.direction);
   };

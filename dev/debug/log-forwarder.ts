@@ -21,24 +21,26 @@ function append(type: string, args: any[]) {
 }
 
 function send(type: string, args: any[]) {
-  fetch('/__log', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      type,
-      args: args.map((a) => {
-        try {
-          return a instanceof Map
-            ? `[Map] ${JSON.stringify([...a])}`
-            : typeof a === 'object'
-              ? JSON.stringify(a)
-              : String(a);
-        } catch {
-          return '[unserializable]';
-        }
+  try {
+    fetch('/__log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type,
+        args: args.map((a) => {
+          try {
+            return a instanceof Map
+              ? `[Map] ${JSON.stringify([...a])}`
+              : typeof a === 'object'
+                ? JSON.stringify(a)
+                : String(a);
+          } catch {
+            return '[unserializable]';
+          }
+        }),
       }),
-    }),
-  });
+    });
+  } catch {}
 }
 
 const original = {

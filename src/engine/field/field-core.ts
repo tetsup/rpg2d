@@ -7,6 +7,7 @@ import type { GameContext } from '@/resource/core/game-context';
 import type { Player } from '@/resource/domain/player';
 import type { Action } from '@/resource/domain/action';
 import type { Field } from '@/resource/domain/field';
+import type { ActionManager } from '@/engine/action/action-manager';
 import type { Movement } from '@/schemas/action/movement';
 import { EntityInstance } from '../entity';
 import { FieldPos } from './field-pos';
@@ -17,16 +18,18 @@ import { checkEntityInhibit, checkReachable, checkTileReachable, moveEntity, mov
 
 export class FieldEngine {
   private state: FieldState;
+  private prevEnterPressed = false;
 
   constructor(
     private ctx: GameContext,
     private field: Field,
-    initialState: FieldState
+    initialState: FieldState,
+    private actionManager?: ActionManager
   ) {
     this.state = initialState;
   }
 
-  static async factory(ctx: GameContext, players: Player[]) {
+  static async factory(ctx: GameContext, players: Player[], actionManager?: ActionManager) {
     const actions: Queue<Action> = new Queue();
     await Promise.all(
       ctx.manifest.initialState.field.actionIds.map(async (actionId) => {
@@ -48,12 +51,17 @@ export class FieldEngine {
         new EntityInstance(ctx, field.entities.get(entityId)!, initialState),
       ])
     );
-    return new this(ctx, field, {
-      playerPos,
-      players,
-      actions,
-      entities,
-    });
+    return new this(
+      ctx,
+      field,
+      {
+        playerPos,
+        players,
+        actions,
+        entities,
+      },
+      actionManager
+    );
   }
 
   checkEntityInhibit = (dest: Point2d): boolean => {
@@ -80,12 +88,35 @@ export class FieldEngine {
     return resolveMove(input);
   };
 
+  checkTargetEntity = (): EntityInstance | undefined => {
+    const target = calcDest(this.state.playerPos.current, {
+      command: 'walk',
+      direction: this.state.playerPos.direction,
+    });
+    return Object.values(this.state.entities).find(
+      (entity) => entity.state.visible && samePos(target, entity.state.pos.getDestination())
+    );
+  };
+
+  triggerCheck = () => {
+    const action = this.checkTargetEntity()?.getAction('onCheck');
+    if (action == null) return;
+    this.actionManager?.start(action.toSequence(), { trigger: 'onCheck' });
+  };
+
   onTick = (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
+    this.tickPlayerCheck(input);
     tickPlayerMove(this, input, nowMs);
     tickPlayerPos(this.state, nowMs);
     tickEntities(this.state, nowMs);
     this.renderField(nowMs, renderer);
   };
+
+  private tickPlayerCheck(input: InputManager<RpgKey>) {
+    const enterPressed = input.isPressed('enter');
+    if (enterPressed && !this.prevEnterPressed) this.triggerCheck();
+    this.prevEnterPressed = enterPressed;
+  }
 
   calcViewPort = (nowMs: number) => {
     return calcViewPort(nowMs, this.state, this.ctx);
@@ -106,7 +137,16 @@ export class FieldEngine {
   renderField = (nowMs: number, renderer: GameRenderer) => {
     const viewport = this.calcViewPort(nowMs);
     const sortedLayers = sortLayers(this.retrieveLayers(nowMs, viewport));
-    const images = sortedLayers.map(({ rect, layer }) => ({
+    this.renderLayers(sortedLayers, renderer);
+  };
+
+  retrieveSortedLayers = (nowMs: number): LayerWithPos[] => {
+    const viewport = this.calcViewPort(nowMs);
+    return sortLayers(this.retrieveLayers(nowMs, viewport));
+  };
+
+  renderLayers = (layers: LayerWithPos[], renderer: GameRenderer) => {
+    const images = layers.map(({ rect, layer }) => ({
       pos: { x: rect.left, y: rect.top },
       imageId: layer.image,
     }));
