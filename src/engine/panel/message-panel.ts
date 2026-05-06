@@ -4,6 +4,7 @@ import type { MessageConfig } from '@/schemas/manifest';
 import type { LayerWithPos, RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
+import { PanelInput } from './panel-manager';
 
 export type Message = {
   type: 'simple';
