@@ -7,4 +7,5 @@ export abstract class ResourceBase<K extends ResourceName> {
     protected data: ResourceData<K>,
     protected deps: ResourceDeps<K>
   ) {}
+  static loadDeps = async (ctx: GameContext, data: any): Promise<any> => ({});
 }
