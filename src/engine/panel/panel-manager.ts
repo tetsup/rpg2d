@@ -13,14 +13,14 @@ export interface ManagedPanel {
   id: string;
   active: boolean;
   tick?(nowMs: number, input: PanelInput): void | boolean;
-  render?(): void;
+  render(): void;
   onOpen?(): void;
   onClose?(): void;
   onActive?(): void;
   onInactive?(): void;
   isClosed?: boolean;
   sendKey?(key: RpgKey): void;
-  resolveLayers?(nowMs: number): LayerWithPos[];
+  resolveLayers(nowMs: number): LayerWithPos[];
 }
 
 export class PanelManager {
@@ -108,12 +108,12 @@ export class PanelManager {
 
   render(): void {
     for (const panel of this.stack) {
-      panel.render?.();
+      panel.render();
     }
   }
 
   resolveLayers(nowMs: number): LayerWithPos[] {
-    return this.stack.flatMap((panel) => panel.resolveLayers?.(nowMs) ?? []);
+    return this.stack.flatMap((panel) => panel.resolveLayers(nowMs));
   }
 
   size(): number {
