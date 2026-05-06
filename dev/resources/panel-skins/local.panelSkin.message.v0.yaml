@@ -9,7 +9,7 @@ topLeft: local.texture.panel.frame.v0
 topRight: local.texture.panel.frame.v0
 bottomLeft: local.texture.panel.frame.v0
 bottomRight: local.texture.panel.frame.v0
-defaultFont: local.font.retro-font.v0
+defaultFont: local.font.simple.v0
 defaultTextColor:
   r: 255
   g: 255
