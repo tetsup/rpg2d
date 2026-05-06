@@ -3,12 +3,12 @@ import { PanelManager, type PanelInput, type ManagedPanel } from '@/engine/panel
 import type { GameContext } from '@/resource/core/game-context';
 import type { Panel } from '@/resource/domain/panel/panel';
 import type { PrimitiveValue } from '@/schemas/common';
-import type { Condition } from '@/schemas/condition';
+import type { ConditionData } from '@/schemas/condition';
 
 export type Command =
   | { type: 'message'; messages: Message[] }
   | { type: 'wait'; ticks: number }
-  | { type: 'branch'; condition: Condition; trueTo: number; falseTo: number }
+  | { type: 'branch'; condition: ConditionData; trueTo: number; falseTo: number }
   | { type: 'jump'; to: number }
   | { type: 'end' };
 
@@ -47,7 +47,7 @@ export class ActionManager {
 
   constructor(deps: ActionManagerDeps = {}) {
     this.ctx = deps.ctx;
-    this.panelManager = deps.panelManager ?? deps.ctx?.panels;
+    this.panelManager = deps.panelManager;
   }
 
   start(sequence: Sequence, runtimeContext: ActionStartContext = {}): void {
@@ -106,7 +106,7 @@ export class ActionManager {
       if (typeof command === 'function') {
         command();
         item.index += 1;
-        continue;
+        return;
       }
 
       if (this.runCommand(item, command)) return;
@@ -174,7 +174,7 @@ export class ActionManager {
     return new MessagePanel(this.ctx, panel as Panel, this.ctx.manifest.config.messageConfig, messages);
   }
 
-  private evaluateCondition(condition: Condition): boolean {
+  private evaluateCondition(condition: ConditionData): boolean {
     if ('all' in condition) return condition.all.every((child) => this.evaluateCondition(child));
     if ('any' in condition) return condition.any.some((child) => this.evaluateCondition(child));
 
@@ -192,6 +192,8 @@ export class ActionManager {
         return typeof actual === 'number' && typeof condition.value === 'number' && actual > condition.value;
       case '>=':
         return typeof actual === 'number' && typeof condition.value === 'number' && actual >= condition.value;
+      default:
+        return false;
     }
   }
 
@@ -208,6 +210,9 @@ export class ActionManager {
   }
 
   private isParallelBlocked(item: RunningSequence): boolean {
-    return item.parallel && this.running.some((other) => other !== item && !other.done && other.sequence.blockParallelActions);
+    return (
+      item.parallel &&
+      this.running.some((other) => other !== item && !other.done && other.sequence.blockParallelActions)
+    );
   }
 }
