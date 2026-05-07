@@ -31,7 +31,7 @@ export class Texture extends ResourceBase<'texture'> {
 
   private resolveLayer(layer: LayerAnimation, elapsedMs: number): ImageLayer {
     if (layer.playback == null) return { priority: layer.priority, image: layer.images[0] };
-    const elapsedSteps = elapsedMs / layer.playback.tickMs;
+    const elapsedSteps = Math.floor(elapsedMs / layer.playback.tickMs);
     const index = layer.playback.repeat ? elapsedSteps % layer.images.length : elapsedSteps;
     return { priority: layer.priority, image: layer.images[index] ?? null };
   }
