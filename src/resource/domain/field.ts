@@ -43,9 +43,9 @@ export class Field extends ResourceBase<'field'> {
     const blockSize = this.ctx.manifest.config.blockSize;
     const tileMask = {
       xMin: Math.max(0, Math.floor(viewport.left / blockSize.width)),
-      xMax: Math.floor(viewport.right + 1 / blockSize.width),
+      xMax: Math.floor(viewport.right / blockSize.width + 1),
       yMin: Math.max(0, Math.floor(viewport.top / blockSize.height)),
-      yMax: Math.floor(viewport.bottom + 1 / blockSize.height),
+      yMax: Math.floor(viewport.bottom / blockSize.height + 1),
     };
 
     return this.data.map.slice(tileMask.yMin, tileMask.yMax).flatMap((row, iy) =>
