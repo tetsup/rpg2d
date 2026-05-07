@@ -46,16 +46,16 @@ export class PanelSkin extends ResourceBase<'panel-skin'> {
         switch (y) {
           case rect.top:
             return this.deps.topLeft;
-          case rect.bottom:
+          case rect.bottom - 1:
             return this.deps.bottomLeft;
           default:
             return this.deps.left;
         }
-      case rect.right:
+      case rect.right - 1:
         switch (y) {
           case rect.top:
             return this.deps.topRight;
-          case rect.bottom:
+          case rect.bottom - 1:
             return this.deps.bottomRight;
           default:
             return this.deps.right;
@@ -64,10 +64,10 @@ export class PanelSkin extends ResourceBase<'panel-skin'> {
         switch (y) {
           case rect.top:
             return this.deps.top;
-          case rect.bottom:
-            return this.deps.plane;
-          default:
+          case rect.bottom - 1:
             return this.deps.bottom;
+          default:
+            return this.deps.plane;
         }
     }
   };

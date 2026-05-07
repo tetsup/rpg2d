@@ -1,14 +1,14 @@
 id: local.panelSkin.message.v0
 type: panel-skin
-plane: local.texture.panel.frame.v0
-top: local.texture.panel.frame.v0
-bottom: local.texture.panel.frame.v0
-left: local.texture.panel.frame.v0
-right: local.texture.panel.frame.v0
-topLeft: local.texture.panel.frame.v0
-topRight: local.texture.panel.frame.v0
-bottomLeft: local.texture.panel.frame.v0
-bottomRight: local.texture.panel.frame.v0
+plane: local.texture.panel.plane.v0
+top: local.texture.panel.top.v0
+bottom: local.texture.panel.bottom.v0
+left: local.texture.panel.left.v0
+right: local.texture.panel.right.v0
+topLeft: local.texture.panel.topleft.v0
+topRight: local.texture.panel.topright.v0
+bottomLeft: local.texture.panel.bottomleft.v0
+bottomRight: local.texture.panel.bottomright.v0
 defaultFont: local.font.simple.v0
 defaultTextColor:
   r: 255
