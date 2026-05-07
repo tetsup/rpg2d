@@ -63,6 +63,7 @@ function makeFieldPos(opts?: {
     tick: vi.fn(),
     getCurrentPixel: vi.fn().mockReturnValue(o.getCurrentPixelResult ?? { x: 0, y: 0 }),
     getDestination: vi.fn().mockReturnValue(o.getDestinationResult ?? current),
+    setDirection: vi.fn(),
   } as unknown as FieldPos;
 }
 
