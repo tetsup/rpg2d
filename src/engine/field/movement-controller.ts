@@ -34,6 +34,7 @@ export const movePlayer = (
   movement: Movement
 ) => {
   if (state.playerPos.currentMovement != null) return;
+  if (movement.command === 'walk') state.playerPos.setDirection(movement.direction);
   if (checkReachable(state, field, samePos, calcDest(state.playerPos.current, movement)))
     state.playerPos.move(nowMs, movement);
 };
@@ -49,6 +50,7 @@ export const moveEntity = (
 ) => {
   const entity = state.entities[entityId];
   if (entity.state.pos.currentMovement != null) return;
+  if (movement.command === 'walk') entity.state.pos.setDirection(movement.direction);
   const dest = calcDest(entity.state.pos.current, movement);
   if (checkReachable(state, field, samePos, dest) && !samePos(state.playerPos.getDestination(), dest))
     entity.state.pos.move(nowMs, movement);

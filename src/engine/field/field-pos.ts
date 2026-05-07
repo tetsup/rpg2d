@@ -44,6 +44,10 @@ export class FieldPos {
     };
   };
 
+  setDirection = (direction: Direction2d) => {
+    this._direction = direction;
+  };
+
   tick = (nowMs: number) => {
     if (this._currentMovement == null) return;
     const elapsedMs = nowMs - this._currentMovement.timeMsStart;
