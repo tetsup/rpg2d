@@ -50,7 +50,7 @@ const manifest: Manifest = {
     },
     field: {
       fieldId: 'local.field.startField.v0',
-      pos: { x: 5, y: 5 },
+      pos: { x: 30, y: 40 },
       direction: 'down',
       actionIds: [],
     },
@@ -69,7 +69,7 @@ const manifest: Manifest = {
 const config = { resourceUri: '/api/resource', imageUri: '/api/image' };
 
 const app = new GameApp(canvas, new RpgCore(manifest, config), {
-  maxObjects: 3000,
+  maxObjects: 10000,
   rectSize: { width: 320, height: 240 },
   keyAssignment,
   assignPad,
