@@ -1,0 +1,6 @@
+id: local.texture.field.water.v0
+type: texture
+layers:
+  - priority: 0
+    images:
+      - local.image.field.water.v0

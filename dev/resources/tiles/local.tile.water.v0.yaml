@@ -1,0 +1,4 @@
+id: local.tile.water.v0
+type: tile
+texture: local.texture.field.water.v0
+allowOverwrap: false

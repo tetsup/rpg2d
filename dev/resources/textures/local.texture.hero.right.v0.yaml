@@ -3,4 +3,8 @@ type: texture
 layers:
   - priority: 8
     images:
-      - local.image.hero.right.v0
+      - local.image.hero.right1.v0
+      - local.image.hero.right2.v0
+    playback: 
+      repeat: true
+      tickMs: 500

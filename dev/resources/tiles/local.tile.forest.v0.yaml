@@ -1,0 +1,4 @@
+id: local.tile.forest.v0
+type: tile
+texture: local.texture.field.forest.v0
+allowOverwrap: true
