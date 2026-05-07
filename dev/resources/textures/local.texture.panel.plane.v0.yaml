@@ -1,0 +1,6 @@
+id: local.texture.panel.plane.v0
+type: texture
+layers:
+  - priority: 15
+    images:
+      - local.image.panel.plane.v0

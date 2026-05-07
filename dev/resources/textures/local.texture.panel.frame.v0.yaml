@@ -1,6 +1,0 @@
-id: local.texture.panel.frame.v0
-type: texture
-layers:
-  - priority: 15
-    images:
-      - local.image.panel.frame.v0
