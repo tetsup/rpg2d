@@ -83,7 +83,7 @@ export class MessagePanel {
     if (next == null) return false;
     this.updateStatus({
       phase: 'running',
-      currentMessage: this.status.currentMessage + next.message,
+      currentMessage: this.status.currentMessage + '\n' + next.message,
       currentPos: this.status.currentPos,
       lastTickTime: nowMs,
     });
