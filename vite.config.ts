@@ -8,8 +8,8 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   root: 'dev',
-  base: './',
-  publicDir: '../public',
+  base: '/rpg2d/',
+  publicDir: resolve(__dirname, 'public'),
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',

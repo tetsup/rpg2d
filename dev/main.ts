@@ -7,6 +7,9 @@ import type { RpgKey } from '@/types/engine';
 import { Manifest } from '@/schemas/manifest';
 
 await worker.start({
+  serviceWorker: {
+    url: `${import.meta.env.BASE_URL}mockServiceWorker.js`,
+  },
   onUnhandledRequest(req) {
     const url = req.url;
     if (!url.includes('/api/')) return;
