@@ -20,7 +20,7 @@ export class RpgCore implements Game<RpgKey> {
     this.ctx = new GameContext(manifest, config);
     this.panels = new PanelManager(this.ctx);
     this.ctx.panels = this.panels;
-    this.actions = new ActionManager({ ctx: this.ctx, panelManager: this.panels });
+    this.actions = new ActionManager(this.ctx, this.panels);
   }
 
   onInit = async (renderer: GameRenderer) => {
@@ -35,15 +35,16 @@ export class RpgCore implements Game<RpgKey> {
     return true;
   };
 
-  onTick = async (input: InputManager<RpgKey>, clock: number, renderer: GameRenderer) => {
+  onTick = async (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
     switch (this.mode) {
       case 'field':
-        this.actions.tick(clock, input);
+        this.actions.tick();
+        this.panels.tick(nowMs, input);
         this.panels.render();
         if (!this.panels.hasOpenPanel() && !this.actions.hasPlayerBlock()) {
-          this.field?.onTick(input, clock, renderer);
+          this.field?.onTick(input, nowMs, renderer);
         }
-        this.renderFieldWithPanels(clock, renderer);
+        this.renderFieldWithPanels(nowMs, renderer);
         break;
       default:
         break;

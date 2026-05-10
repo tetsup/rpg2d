@@ -308,21 +308,6 @@ describe('FieldEngine: unbound call must not throw', () => {
     }
   });
 
-  it('keeps this binding in checkReachable — unbound call must not throw', () => {
-    const checkReachable = engine.checkReachable;
-    expect(() => checkReachable({ x: 0, y: 0 })).not.toThrow();
-  });
-
-  it('keeps this binding in checkTileReachable — unbound call must not throw', () => {
-    const checkTileReachable = engine.checkTileReachable;
-    expect(() => checkTileReachable({ x: 0, y: 0 })).not.toThrow();
-  });
-
-  it('keeps this binding in checkEntityInhibit — unbound call must not throw', () => {
-    const checkEntityInhibit = engine.checkEntityInhibit;
-    expect(() => checkEntityInhibit({ x: 0, y: 0 })).not.toThrow();
-  });
-
   it('keeps this binding in movePlayer — unbound call must not throw', () => {
     const movePlayer = engine.movePlayer;
     expect(() => movePlayer(1000, { command: 'walk', direction: 'down', async: true, force: false })).not.toThrow();
@@ -339,11 +324,6 @@ describe('FieldEngine: unbound call must not throw', () => {
     expect(() =>
       moveEntity(1000, 'npc1', { command: 'walk', direction: 'down', async: true, force: false })
     ).not.toThrow();
-  });
-
-  it('keeps this binding in resolveMove — unbound call must not throw', () => {
-    const resolveMove = engine.resolveMove;
-    expect(() => resolveMove(makeInput())).not.toThrow();
   });
 
   it('keeps this binding in calcViewPort — unbound call must not throw', () => {

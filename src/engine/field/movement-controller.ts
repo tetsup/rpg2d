@@ -1,8 +1,9 @@
+import type { InputManager } from '@tetsup/web2d';
 import type { Movement } from '@/schemas/action/movement';
-import type { FieldState, Point2d } from '@/types/engine';
+import type { FieldState, Point2d, Direction2d, RpgKey } from '@/types/engine';
 import type { Field } from '@/resource/domain/field';
 
-export const checkEntityInhibit = (
+const checkEntityInhibit = (
   state: FieldState,
   samePos: (p1?: Point2d, p2?: Point2d) => boolean,
   dest: Point2d
@@ -12,17 +13,13 @@ export const checkEntityInhibit = (
   );
 };
 
-export const checkTileReachable = (field: Field, dest: Point2d): boolean => {
-  return field.checkReachable(dest);
-};
-
-export const checkReachable = (
+const checkReachable = (
   state: FieldState,
   field: Field,
   samePos: (p1?: Point2d, p2?: Point2d) => boolean,
   dest: Point2d
 ): boolean => {
-  return checkTileReachable(field, dest) && !checkEntityInhibit(state, samePos, dest);
+  return field.checkReachable(dest) && !checkEntityInhibit(state, samePos, dest);
 };
 
 export const movePlayer = (
@@ -54,4 +51,12 @@ export const moveEntity = (
   const dest = calcDest(entity.state.pos.current, movement);
   if (checkReachable(state, field, samePos, dest) && !samePos(state.playerPos.getDestination(), dest))
     entity.state.pos.move(nowMs, movement);
+};
+
+export const resolveMove = (input: InputManager<RpgKey>): Direction2d | null => {
+  if (input.isPressed('left')) return 'left';
+  if (input.isPressed('right')) return 'right';
+  if (input.isPressed('up')) return 'up';
+  if (input.isPressed('down')) return 'down';
+  return null;
 };

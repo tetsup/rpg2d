@@ -36,12 +36,6 @@ export class PanelManager {
 
   constructor(private readonly ctx?: GameContext) {}
 
-  async open(id: string): Promise<void> {
-    if (!this.ctx) throw new Error('PanelManager requires GameContext to open panel resources.');
-    const panel = await this.ctx.resources.get(id, 'panel');
-    this.push(panel);
-  }
-
   async openMessages(messages: Message[], panelId?: string): Promise<void> {
     if (!this.ctx) throw new Error('PanelManager requires GameContext to open message panels.');
     const panel = await this.ctx.resources.get(panelId ?? this.ctx.manifest.config.defaultMessagePanel, 'panel');

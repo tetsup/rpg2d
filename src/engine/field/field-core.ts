@@ -1,7 +1,7 @@
 import type { InputManager, GameRenderer } from '@tetsup/web2d';
-import type { Direction2d, FieldState, LayerWithPos, Point2d, RpgKey } from '@/types/engine';
+import type { Direction2d, FieldState, LayerWithPos, RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
-import { calcDest, samePos } from '@/utils/pos';
+import { calcDest, move, samePos } from '@/utils/pos';
 import { Rect } from '@/utils/rect';
 import type { GameContext } from '@/resource/core/game-context';
 import type { Player } from '@/resource/domain/player';
@@ -11,10 +11,8 @@ import type { ActionManager } from '@/engine/action/action-manager';
 import type { Movement } from '@/schemas/action/movement';
 import { EntityInstance } from '../entity';
 import { FieldPos } from './field-pos';
-import { resolveMove } from './resolve-move';
-import { calcViewPort } from './calc-viewport';
-import { resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers, sortLayers } from './layer-resolver';
-import { checkEntityInhibit, checkReachable, checkTileReachable, moveEntity, movePlayer } from './movement-controller';
+import { calcViewPort, resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers, sortLayers } from './layer-resolver';
+import { moveEntity, movePlayer, resolveMove } from './movement-controller';
 
 export class FieldEngine {
   private state: FieldState;
@@ -24,12 +22,12 @@ export class FieldEngine {
     private ctx: GameContext,
     private field: Field,
     initialState: FieldState,
-    private actionManager?: ActionManager
+    private actionManager: ActionManager
   ) {
     this.state = initialState;
   }
 
-  static async factory(ctx: GameContext, players: Player[], actionManager?: ActionManager) {
+  static async factory(ctx: GameContext, players: Player[], actionManager: ActionManager) {
     const actions: Queue<Action> = new Queue();
     await Promise.all(
       ctx.manifest.initialState.field.actionIds.map(async (actionId) => {
@@ -64,18 +62,6 @@ export class FieldEngine {
     );
   }
 
-  checkEntityInhibit = (dest: Point2d): boolean => {
-    return checkEntityInhibit(this.state, samePos, dest);
-  };
-
-  checkTileReachable = (dest: Point2d): boolean => {
-    return checkTileReachable(this.field, dest);
-  };
-
-  checkReachable = (dest: Point2d): boolean => {
-    return checkReachable(this.state, this.field, samePos, dest);
-  };
-
   movePlayer = (nowMs: number, movement: Movement) => {
     return movePlayer(this.state, this.field, calcDest, samePos, nowMs, movement);
   };
@@ -84,37 +70,30 @@ export class FieldEngine {
     return moveEntity(this.state, this.field, calcDest, samePos, nowMs, entityId, movement);
   };
 
-  resolveMove = (input: InputManager<RpgKey>): Direction2d | null => {
-    return resolveMove(input);
-  };
-
   checkTargetEntity = (): EntityInstance | undefined => {
-    const target = calcDest(this.state.playerPos.current, {
-      command: 'walk',
-      direction: this.state.playerPos.direction,
-    });
+    const target = move(this.state.playerPos.current, this.state.playerPos.direction);
     return Object.values(this.state.entities).find(
       (entity) => entity.state.visible && samePos(target, entity.state.pos.getDestination())
     );
   };
 
-  triggerCheck = () => {
+  onCheck = () => {
     const action = this.checkTargetEntity()?.getAction('onCheck');
     if (action == null) return;
-    this.actionManager?.start(action.toSequence(), { trigger: 'onCheck' });
+    this.actionManager.start(action);
   };
 
   onTick = (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
     this.tickPlayerCheck(input);
-    tickPlayerMove(this, input, nowMs);
-    tickPlayerPos(this.state, nowMs);
-    tickEntities(this.state, nowMs);
+    this.tickPlayerMove(input, nowMs);
+    this.tickPlayerPos(nowMs);
+    this.tickEntities(nowMs);
     this.renderField(nowMs, renderer);
   };
 
   private tickPlayerCheck(input: InputManager<RpgKey>) {
     const enterPressed = input.isPressed('enter');
-    if (enterPressed && !this.prevEnterPressed) this.triggerCheck();
+    if (enterPressed && !this.prevEnterPressed) this.onCheck();
     this.prevEnterPressed = enterPressed;
   }
 
@@ -152,18 +131,18 @@ export class FieldEngine {
     }));
     renderer.render(images);
   };
+
+  tickPlayerMove = (input: InputManager<RpgKey>, nowMs: number) => {
+    const moveDirection = resolveMove(input);
+    if (moveDirection != null)
+      this.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
+  };
+
+  tickPlayerPos = (nowMs: number) => {
+    this.state.playerPos.tick(nowMs);
+  };
+
+  tickEntities = (nowMs: number) => {
+    Object.values(this.state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
+  };
 }
-
-const tickPlayerMove = (engine: FieldEngine, input: InputManager<RpgKey>, nowMs: number) => {
-  const moveDirection = engine.resolveMove(input);
-  if (moveDirection != null)
-    engine.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
-};
-
-const tickPlayerPos = (state: FieldState, nowMs: number) => {
-  state.playerPos.tick(nowMs);
-};
-
-const tickEntities = (state: FieldState, nowMs: number) => {
-  Object.values(state.entities).forEach((entity) => entity.state.pos.tick(nowMs));
-};

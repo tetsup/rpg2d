@@ -62,4 +62,4 @@ export const ConditionSchema: z.ZodType<any> = z.lazy(() =>
   ])
 );
 
-export type Condition = z.infer<typeof ConditionSchema>;
+export type ConditionData = z.infer<typeof ConditionSchema>;

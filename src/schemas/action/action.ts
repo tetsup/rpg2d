@@ -1,11 +1,8 @@
 import z from 'zod';
 import { ResourceSchemaBase } from '../common';
+import { SequenceSchema } from './sequence';
 
-const SendMessageSchema = z.object({ command: z.literal('sendMessage'), messages: z.array(z.string()) });
-
-const ActionElementSchema = z.discriminatedUnion('command', [SendMessageSchema]);
-
-export const ActionSchema = ResourceSchemaBase('action', { sequence: z.array(ActionElementSchema) });
+export const ActionSchema = ResourceSchemaBase('action', { sequence: SequenceSchema });
 
 export type ActionData = z.infer<typeof ActionSchema>;
 
