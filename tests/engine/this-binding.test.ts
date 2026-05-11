@@ -273,7 +273,7 @@ describe('RpgCore: unbound call must not throw', () => {
     (game as any).field = { onTick: vi.fn(), retrieveSortedLayers: vi.fn().mockReturnValue([]), renderLayers: vi.fn() };
 
     const onTick = game.onTick;
-    await expect(onTick(makeInput(), 1000, makeRenderer())).resolves.not.toThrow();
+    await expect(onTick(makeInput().inputManager as any, 1000, makeRenderer())).resolves.not.toThrow();
   });
 
   it('onTick called multiple times unbound must not throw', async () => {
@@ -281,7 +281,7 @@ describe('RpgCore: unbound call must not throw', () => {
     const onTick = game.onTick;
 
     for (const t of [100, 200, 300]) {
-      await expect(onTick(makeInput(), t, makeRenderer())).resolves.not.toThrow();
+      await expect(onTick(makeInput().inputManager as any, t, makeRenderer())).resolves.not.toThrow();
     }
   });
 });
@@ -314,8 +314,10 @@ describe('FieldEngine: unbound call must not throw', () => {
    */
   it('keeps this binding in onTick — unbound call: only source-bug ReferenceError allowed, not TypeError', () => {
     const onTick = engine.onTick;
+    const input = makeInput();
+    input.tick(1000);
     try {
-      onTick(makeInput(), 1000, makeRenderer());
+      onTick(input.engine, 1000, makeRenderer());
       // If it completes, great.
     } catch (e) {
       // A TypeError means `this` was undefined — that is the binding bug.
