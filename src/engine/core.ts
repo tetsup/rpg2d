@@ -1,4 +1,4 @@
-import type { InputManager, Game, GameRenderer } from '@tetsup/web2d';
+import type { Game, GameRenderer } from '@tetsup/web2d';
 import type { RpgKey, RpgMode } from '@/types/engine';
 import type { Manifest } from '@/schemas/manifest';
 import { ResourceConfig } from '@/schemas/resource-config';
@@ -8,6 +8,8 @@ import { ActionManager } from './action/action-manager';
 import { FieldEngine } from './field/field-core';
 import { PanelManager } from './panel/panel-manager';
 import { DEFAULT_RPG_KEYS, InputEngine } from './input/input-engine';
+
+type RawInput = Parameters<InputEngine<RpgKey>['tick']>[1];
 
 export class RpgCore implements Game<RpgKey> {
   private ctx: GameContext;
@@ -39,7 +41,7 @@ export class RpgCore implements Game<RpgKey> {
     return true;
   };
 
-  onTick = async (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
+  onTick = async (input: RawInput, nowMs: number, renderer: GameRenderer) => {
     this.input.tick(nowMs, input);
     switch (this.mode) {
       case 'field':

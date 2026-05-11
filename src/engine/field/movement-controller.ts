@@ -1,7 +1,7 @@
-import type { InputManager } from '@tetsup/web2d';
 import type { Movement } from '@/schemas/action/movement';
 import type { FieldState, Point2d, Direction2d, RpgKey } from '@/types/engine';
 import type { Field } from '@/resource/domain/field';
+import type { InputEngine } from '@/engine/input/input-engine';
 
 const checkEntityInhibit = (
   state: FieldState,
@@ -53,10 +53,4 @@ export const moveEntity = (
     entity.state.pos.move(nowMs, movement);
 };
 
-export const resolveMove = (input: InputManager<RpgKey>): Direction2d | null => {
-  if (input.isPressed('left')) return 'left';
-  if (input.isPressed('right')) return 'right';
-  if (input.isPressed('up')) return 'up';
-  if (input.isPressed('down')) return 'down';
-  return null;
-};
+export const resolveMove = (input: InputEngine<RpgKey>): Direction2d | null => input.resolveDirection();

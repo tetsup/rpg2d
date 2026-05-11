@@ -1,13 +1,13 @@
-import type { InputManager } from '@tetsup/web2d';
 import type { GameContext } from '@/resource/core/game-context';
 import type { LayerWithPos, RpgKey } from '@/types/engine';
+import type { InputEngine } from '@/engine/input/input-engine';
 import { MessagePanel, type Message } from './message-panel';
 
 export type PanelInput = {
   [K in RpgKey]?: boolean;
 };
 
-export type PanelTickInput = InputManager<RpgKey> | PanelInput;
+export type PanelTickInput = InputEngine<RpgKey>;
 
 export interface ManagedPanel {
   id: string;
@@ -24,14 +24,6 @@ export interface ManagedPanel {
 }
 
 export class PanelManager {
-  private readonly buttons: Record<RpgKey, boolean> = {
-    left: false,
-    right: false,
-    up: false,
-    down: false,
-    enter: false,
-    esc: false,
-  };
   private readonly stack: ManagedPanel[] = [];
 
   constructor(private readonly ctx?: GameContext) {}
@@ -90,8 +82,8 @@ export class PanelManager {
   }
 
   tick(nowMs: number, input?: PanelTickInput): boolean {
-    const edges = this.resolveInputEdges(input);
-    const panelInput = this.resolvePanelInput(input);
+    const edges = input ? { ...input.triggered } : {};
+    const panelInput = input ? { ...input.pressed } : {};
     const panel = this.top();
     if (!panel) return false;
 
@@ -140,36 +132,6 @@ export class PanelManager {
     for (const key of this.keys()) {
       if (input[key] === true) panel.sendKey(key);
     }
-  }
-
-  private resolveInputEdges(input?: PanelTickInput): PanelInput {
-    const edges: PanelInput = {};
-    for (const key of this.keys()) {
-      const pressed = this.isPressed(input, key);
-      edges[key] = !this.buttons[key] && pressed;
-      this.buttons[key] = pressed;
-    }
-    return edges;
-  }
-
-  private resolvePanelInput(input?: PanelTickInput): PanelInput {
-    if (!input) return {};
-    if (!this.isInputManager(input)) return input;
-    const panelInput: PanelInput = {};
-    for (const key of this.keys()) {
-      if (input.isPressed(key)) panelInput[key] = true;
-    }
-    return panelInput;
-  }
-
-  private isPressed(input: PanelTickInput | undefined, key: RpgKey): boolean {
-    if (!input) return false;
-    if (this.isInputManager(input)) return input.isPressed(key);
-    return input[key] === true;
-  }
-
-  private isInputManager(input: PanelTickInput): input is InputManager<RpgKey> {
-    return typeof (input as { isPressed?: unknown }).isPressed === 'function';
   }
 
   private keys(): RpgKey[] {

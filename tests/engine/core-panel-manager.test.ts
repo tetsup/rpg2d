@@ -2,6 +2,7 @@ import type { GameRenderer, InputManager } from '@tetsup/web2d';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { RpgCore } from '@/engine/core';
 import { FieldEngine } from '@/engine/field/field-core';
+import { InputEngine } from '@/engine/input/input-engine';
 import { PanelManager } from '@/engine/panel/panel-manager';
 import type { Manifest } from '@/schemas/manifest';
 import type { ResourceConfig } from '@/schemas/resource-config';
@@ -83,6 +84,6 @@ describe('RpgCore PanelManager coordination', () => {
     await core.onInit(renderer);
     await core.onTick(input, 100, renderer);
 
-    expect(fieldOnTick).toHaveBeenCalledWith(input, 100, renderer);
+    expect(fieldOnTick).toHaveBeenCalledWith(expect.any(InputEngine), 100, renderer);
   });
 });

@@ -21,9 +21,17 @@ type RepeatState = {
 
 export const DEFAULT_RPG_KEYS = ['left', 'right', 'up', 'down', 'enter', 'esc'] as const;
 
+const createInputCommand = <K extends string>(): InputCommand<K> => ({
+  pressed: {},
+  triggered: {},
+  released: {},
+  repeated: {},
+});
+
 export class InputEngine<K extends string = RpgKey> {
   private lastState: InputSnapshot<K> = {};
   private repeatState: Partial<Record<K, RepeatState>> = {};
+  private command: InputCommand<K> = createInputCommand();
 
   constructor(
     private readonly keys: readonly K[],
@@ -71,28 +79,47 @@ export class InputEngine<K extends string = RpgKey> {
       this.lastState[key] = current;
     }
 
-    return {
+    this.command = {
       pressed,
       triggered,
       released,
       repeated,
     };
+
+    return this.command;
   }
 
-  isPressed(key: K, input: InputManager<K>): boolean {
-    return input.isPressed(key);
+  get pressed(): InputSnapshot<K> {
+    return this.command.pressed;
   }
 
-  resolveDirection(input: InputManager<K>): 'left' | 'right' | 'up' | 'down' | null {
-    if (input.isPressed('left' as K)) return 'left';
-    if (input.isPressed('right' as K)) return 'right';
-    if (input.isPressed('up' as K)) return 'up';
-    if (input.isPressed('down' as K)) return 'down';
+  get triggered(): InputSnapshot<K> {
+    return this.command.triggered;
+  }
+
+  get released(): InputSnapshot<K> {
+    return this.command.released;
+  }
+
+  get repeated(): InputSnapshot<K> {
+    return this.command.repeated;
+  }
+
+  isPressed(key: K): boolean {
+    return this.command.pressed[key] === true;
+  }
+
+  resolveDirection(): 'left' | 'right' | 'up' | 'down' | null {
+    if (this.isPressed('left' as K)) return 'left';
+    if (this.isPressed('right' as K)) return 'right';
+    if (this.isPressed('up' as K)) return 'up';
+    if (this.isPressed('down' as K)) return 'down';
     return null;
   }
 
   reset() {
     this.lastState = {};
     this.repeatState = {};
+    this.command = createInputCommand();
   }
 }
