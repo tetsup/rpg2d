@@ -32,7 +32,7 @@
  *   - spy on `this`               ← cannot detect broken binding
  */
 
-import type { GameRenderer, InputManager } from '@tetsup/web2d';
+import type { GameRenderer } from '@tetsup/web2d';
 import { RpgCore } from '@/engine/core';
 import { EntityInstance } from '@/engine/entity';
 import { FieldEngine } from '@/engine/field/field-core';
@@ -53,6 +53,7 @@ import { Queue } from '@/utils/queue';
 import { Rect } from '@/utils/rect';
 import { ResourceConfig } from '@/schemas/resource-config';
 import { ActionSchema } from '@/schemas/action/action';
+import { InputEngine, DEFAULT_RPG_KEYS } from '@/engine/input/input-engine';
 
 // ---------------------------------------------------------------------------
 // Test-fixture helpers
@@ -84,13 +85,29 @@ function makeRenderer(): GameRenderer {
   return { registerImage: vi.fn(), render: vi.fn() };
 }
 
-function makeInput(): InputManager<RpgKey> {
+function makeInput() {
+  const state: Partial<Record<RpgKey, boolean>> = {};
+
+  const inputManager = {
+    isPressed: vi.fn((key: RpgKey) => state[key] === true),
+  };
+
+  const engine = new InputEngine<RpgKey>(DEFAULT_RPG_KEYS);
+
   return {
-    press: vi.fn(),
-    release: vi.fn(),
-    isPressed: vi.fn().mockReturnValue(false),
-    state: new Map() as any,
-  } as any;
+    state,
+    press(key: RpgKey) {
+      state[key] = true;
+    },
+    release(key: RpgKey) {
+      state[key] = false;
+    },
+    inputManager,
+    engine,
+    tick(nowMs = 0) {
+      return engine.tick(nowMs, inputManager as any);
+    },
+  };
 }
 
 function makeContext(manifest?: Manifest, config?: ResourceConfig): GameContext {
