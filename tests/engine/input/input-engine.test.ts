@@ -158,9 +158,10 @@ describe('InputEngine', () => {
       const engine = new InputEngine<Key>(DEFAULT_RPG_KEYS);
 
       state.left = true;
+      engine.tick(1000, input as any);
 
-      expect(engine.isPressed('left', input as any)).toBe(true);
-      expect(engine.isPressed('right', input as any)).toBe(false);
+      expect(engine.isPressed('left')).toBe(true);
+      expect(engine.isPressed('right')).toBe(false);
     });
   });
 
@@ -169,8 +170,9 @@ describe('InputEngine', () => {
       const engine = new InputEngine<Key>(DEFAULT_RPG_KEYS);
 
       state.left = true;
+      engine.tick(1000, input as any);
 
-      expect(engine.resolveDirection(input as any)).toBe('left');
+      expect(engine.resolveDirection()).toBe('left');
     });
 
     it('left > right > up > down の優先順', () => {
@@ -178,20 +180,23 @@ describe('InputEngine', () => {
 
       state.right = true;
       state.up = true;
+      engine.tick(1000, input as any);
 
-      expect(engine.resolveDirection(input as any)).toBe('right');
+      expect(engine.resolveDirection()).toBe('right');
 
       state.left = true;
+      engine.tick(1016, input as any);
 
-      expect(engine.resolveDirection(input as any)).toBe('left');
+      expect(engine.resolveDirection()).toBe('left');
     });
 
     it('方向キーがなければ null', () => {
       const engine = new InputEngine<Key>(DEFAULT_RPG_KEYS);
 
       state.enter = true;
+      engine.tick(1000, input as any);
 
-      expect(engine.resolveDirection(input as any)).toBe(null);
+      expect(engine.resolveDirection()).toBe(null);
     });
   });
 
@@ -210,6 +215,18 @@ describe('InputEngine', () => {
       const result = engine.tick(1010, input as any);
 
       expect(result.triggered.enter).toBe(true);
+    });
+
+    it('現在の pressed snapshot も初期化する', () => {
+      const engine = new InputEngine<Key>(DEFAULT_RPG_KEYS);
+
+      state.enter = true;
+      engine.tick(1000, input as any);
+
+      engine.reset();
+
+      expect(engine.isPressed('enter')).toBe(false);
+      expect(engine.resolveDirection()).toBe(null);
     });
   });
 });

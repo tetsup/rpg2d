@@ -11,6 +11,8 @@
  */
 
 import { movePlayer, moveEntity, resolveMove } from '@/engine/field/movement-controller';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
+import type { RpgKey } from '@/types/engine';
 
 describe('movePlayer', () => {
   let state: any;
@@ -203,10 +205,13 @@ describe('moveEntity', () => {
 });
 
 describe('resolveMove', () => {
-  const createInput = (pressed: string[]) =>
-    ({
-      isPressed: (key: string) => pressed.includes(key),
-    }) as any;
+  const createInput = (pressed: RpgKey[]) => {
+    const input = new InputEngine<RpgKey>(DEFAULT_RPG_KEYS);
+    input.tick(0, {
+      isPressed: (key: RpgKey) => pressed.includes(key),
+    } as any);
+    return input;
+  };
 
   it('left 押下で left', () => {
     expect(resolveMove(createInput(['left']))).toBe('left');

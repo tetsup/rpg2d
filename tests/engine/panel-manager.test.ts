@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
 import { MessagePanel } from '@/engine/panel/message-panel';
 import { PanelManager, type ManagedPanel } from '@/engine/panel/panel-manager';
 import type { RpgKey } from '@/types/engine';
@@ -26,6 +27,22 @@ function makeInputPanel(id: string): InputPanel {
   return {
     ...makePanel(id),
     sendKey: vi.fn(),
+  };
+}
+
+function makeInput() {
+  let state: Partial<Record<RpgKey, boolean>> = {};
+  const rawInput = {
+    isPressed: vi.fn((key: RpgKey) => state[key] === true),
+  };
+  const engine = new InputEngine<RpgKey>(DEFAULT_RPG_KEYS);
+
+  return {
+    tick(nowMs: number, nextState: Partial<Record<RpgKey, boolean>>) {
+      state = nextState;
+      engine.tick(nowMs, rawInput as any);
+      return engine;
+    },
   };
 }
 
@@ -71,17 +88,17 @@ describe('PanelManager', () => {
 
   it('tickはtop panelのみに呼び出す', () => {
     const manager = new PanelManager();
-    const input = { enter: true };
+    const input = makeInput();
     const panelA = makePanel('A');
     const panelB = makePanel('B');
     manager.push(panelA);
     manager.push(panelB);
 
-    const blocked = manager.tick(0, input);
+    const blocked = manager.tick(0, input.tick(0, { enter: true }));
 
     expect(panelA.tick).not.toHaveBeenCalled();
     expect(panelB.tick).toHaveBeenCalledTimes(1);
-    expect(panelB.tick).toHaveBeenCalledWith(0, input);
+    expect(panelB.tick).toHaveBeenCalledWith(0, { enter: true });
     expect(blocked).toBe(true);
   });
 
@@ -143,8 +160,9 @@ describe('PanelManager', () => {
 
   it('panelがないtickはfieldを止めない', () => {
     const manager = new PanelManager();
+    const input = makeInput();
 
-    expect(manager.tick(100, { enter: true })).toBe(false);
+    expect(manager.tick(100, input.tick(100, { enter: true }))).toBe(false);
   });
 
   it('MessagePanel pushでtop管理し、通常panel tick形式で呼び出す', () => {
@@ -156,16 +174,17 @@ describe('PanelManager', () => {
       sendKey: vi.fn(),
       status: { phase: 'loading' },
     } as unknown as MessagePanel;
+    const input = makeInput();
 
     manager.push(messagePanel);
-    manager.tick(100, { enter: true, esc: false });
+    manager.tick(100, input.tick(100, { enter: true, esc: false }));
 
     expect(manager.top()).toBe(messagePanel);
     expect(messagePanel.active).toBe(true);
     expect(messagePanel.sendKey).toHaveBeenCalledTimes(1);
     expect(messagePanel.sendKey).toHaveBeenCalledWith('enter');
     expect(messagePanel.tick).toHaveBeenCalledTimes(1);
-    expect(messagePanel.tick).toHaveBeenCalledWith(100, { enter: true, esc: false });
+    expect(messagePanel.tick).toHaveBeenCalledWith(100, { enter: true });
   });
 
   it('closeで前panelへ復帰する', () => {
@@ -175,7 +194,7 @@ describe('PanelManager', () => {
     manager.push(panelA);
     manager.push(panelB);
 
-    manager.tick(100, {});
+    manager.tick(100);
 
     expect(manager.top()).toBe(panelA);
     expect(panelA.active).toBe(true);
@@ -186,12 +205,13 @@ describe('PanelManager', () => {
   it('sendKeyは押した瞬間のedgeだけtop panelへ送る', () => {
     const manager = new PanelManager();
     const panel = { ...makePanel('input'), sendKey: vi.fn() };
+    const input = makeInput();
     manager.push(panel);
 
-    manager.tick(100, { enter: true });
-    manager.tick(101, { enter: true });
-    manager.tick(102, { enter: false });
-    manager.tick(103, { enter: true });
+    manager.tick(100, input.tick(100, { enter: true }));
+    manager.tick(101, input.tick(101, { enter: true }));
+    manager.tick(102, input.tick(102, { enter: false }));
+    manager.tick(103, input.tick(103, { enter: true }));
 
     expect(panel.sendKey).toHaveBeenCalledTimes(2);
     expect(panel.sendKey).toHaveBeenNthCalledWith(1, 'enter');
@@ -204,10 +224,11 @@ describe('PanelManager input routing', () => {
     const manager = new PanelManager();
     const lowerPanel = makeInputPanel('lower');
     const topPanel = makeInputPanel('top');
+    const input = makeInput();
     manager.push(lowerPanel);
     manager.push(topPanel);
 
-    manager.tick(100, { enter: true });
+    manager.tick(100, input.tick(100, { enter: true }));
 
     expect(lowerPanel.sendKey).not.toHaveBeenCalled();
     expect(topPanel.sendKey).toHaveBeenCalledTimes(1);
@@ -217,11 +238,11 @@ describe('PanelManager input routing', () => {
   it.each(inputKeys)('edge press triggers once for %s', (key) => {
     const manager = new PanelManager();
     const panel = makeInputPanel('input');
-    const pressedInput: Partial<Record<RpgKey, boolean>> = { [key]: true };
+    const input = makeInput();
     manager.push(panel);
 
-    manager.tick(100, pressedInput);
-    manager.tick(101, pressedInput);
+    manager.tick(100, input.tick(100, { [key]: true }));
+    manager.tick(101, input.tick(101, { [key]: true }));
 
     expect(panel.sendKey).toHaveBeenCalledTimes(1);
     expect(panel.sendKey).toHaveBeenCalledWith(key);
@@ -230,14 +251,13 @@ describe('PanelManager input routing', () => {
   it.each(inputKeys)('release then press triggers %s again', (key) => {
     const manager = new PanelManager();
     const panel = makeInputPanel('input');
-    const pressedInput: Partial<Record<RpgKey, boolean>> = { [key]: true };
-    const releasedInput: Partial<Record<RpgKey, boolean>> = { [key]: false };
+    const input = makeInput();
     manager.push(panel);
 
-    manager.tick(100, pressedInput);
-    manager.tick(101, pressedInput);
-    manager.tick(102, releasedInput);
-    manager.tick(103, pressedInput);
+    manager.tick(100, input.tick(100, { [key]: true }));
+    manager.tick(101, input.tick(101, { [key]: true }));
+    manager.tick(102, input.tick(102, { [key]: false }));
+    manager.tick(103, input.tick(103, { [key]: true }));
 
     expect(panel.sendKey).toHaveBeenCalledTimes(2);
     expect(panel.sendKey).toHaveBeenNthCalledWith(1, key);
@@ -246,8 +266,9 @@ describe('PanelManager input routing', () => {
 
   it('does nothing when no panel exists', () => {
     const manager = new PanelManager();
+    const input = makeInput();
 
-    expect(() => manager.tick(100, { enter: true })).not.toThrow();
-    expect(manager.tick(100, { enter: true })).toBe(false);
+    expect(() => manager.tick(100, input.tick(100, { enter: true }))).not.toThrow();
+    expect(manager.tick(100, input.tick(100, { enter: true }))).toBe(false);
   });
 });

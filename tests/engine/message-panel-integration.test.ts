@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
 import { MessagePanel, type Message } from '@/engine/panel/message-panel';
 import { PanelManager, type ManagedPanel } from '@/engine/panel/panel-manager';
 import type { GameContext } from '@/resource/core/game-context';
 import type { Panel } from '@/resource/domain/panel/panel';
 import type { MessageConfig } from '@/schemas/manifest';
+import type { RpgKey } from '@/types/engine';
 
 function makeMessages(message = 'hello'): Message[] {
   return [{ type: 'simple', message }];
@@ -45,6 +47,22 @@ function makeManagedPanel(id: string): ManagedPanel & { sendKey: ReturnType<type
   };
 }
 
+function makeInput() {
+  let state: Partial<Record<RpgKey, boolean>> = {};
+  const rawInput = {
+    isPressed: vi.fn((key: RpgKey) => state[key] === true),
+  };
+  const engine = new InputEngine<RpgKey>(DEFAULT_RPG_KEYS);
+
+  return {
+    tick(nowMs: number, nextState: Partial<Record<RpgKey, boolean>>) {
+      state = nextState;
+      engine.tick(nowMs, rawInput as any);
+      return engine;
+    },
+  };
+}
+
 describe('MessagePanel integration', () => {
   it('openMessages pushes MessagePanel onto stack', async () => {
     const getPanel = vi.fn().mockResolvedValue(makePanelResource());
@@ -68,7 +86,8 @@ describe('MessagePanel integration', () => {
     expect(typeof messagePanel?.sendKey).toBe('function');
 
     const sendKey = vi.spyOn(messagePanel as MessagePanel, 'sendKey');
-    manager.tick(0, { enter: true });
+    const input = makeInput();
+    manager.tick(0, input.tick(0, { enter: true }));
 
     expect(lowerPanel.sendKey).not.toHaveBeenCalled();
     expect(sendKey).toHaveBeenCalledTimes(1);
@@ -81,10 +100,11 @@ describe('MessagePanel integration', () => {
     const messagePanel = manager.top();
     expect(messagePanel).toBeInstanceOf(MessagePanel);
 
-    manager.tick(0, {});
+    const input = makeInput();
+    manager.tick(0);
     expect((messagePanel as MessagePanel).status.phase).toBe('running');
 
-    manager.tick(1, { enter: true });
+    manager.tick(1, input.tick(1, { enter: true }));
 
     expect((messagePanel as MessagePanel).status.phase).toBe('waiting');
     expect(manager.hasOpenPanel()).toBe(true);
@@ -93,11 +113,12 @@ describe('MessagePanel integration', () => {
   it('esc closes message panel', async () => {
     const manager = new PanelManager(makeContext());
     await manager.openMessages(makeMessages('hello'));
+    const input = makeInput();
 
-    manager.tick(0, {});
-    manager.tick(10, {});
-    manager.tick(11, { esc: true });
-    manager.tick(12, { esc: false });
+    manager.tick(0);
+    manager.tick(10);
+    manager.tick(11, input.tick(11, { esc: true }));
+    manager.tick(12, input.tick(12, { esc: false }));
 
     expect(manager.hasOpenPanel()).toBe(false);
     expect(manager.top()).toBeUndefined();
@@ -106,12 +127,13 @@ describe('MessagePanel integration', () => {
   it('closing restores field pass-through', async () => {
     const manager = new PanelManager(makeContext());
     await manager.openMessages(makeMessages('hello'));
+    const input = makeInput();
 
-    expect(manager.tick(0, {})).toBe(true);
-    manager.tick(10, {});
-    manager.tick(11, { enter: true });
-    manager.tick(12, { enter: false });
+    expect(manager.tick(0)).toBe(true);
+    manager.tick(10);
+    manager.tick(11, input.tick(11, { enter: true }));
+    manager.tick(12, input.tick(12, { enter: false }));
 
-    expect(manager.tick(13, {})).toBe(false);
+    expect(manager.tick(13)).toBe(false);
   });
 });

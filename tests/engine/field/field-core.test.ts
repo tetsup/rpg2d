@@ -12,6 +12,7 @@
  * - resolveEntitiesLayers / retrieveLayers / sortLayers → layer-resolver.spec.ts
  */
 import { FieldEngine } from '@/engine/field/field-core';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
 
 vi.mock('@/engine/field/layer-resolver', () => ({
   resolveEntitiesLayers: vi.fn(),
@@ -36,7 +37,7 @@ import {
 } from '@/engine/field/layer-resolver';
 
 import { moveEntity, movePlayer, resolveMove } from '@/engine/field/movement-controller';
-import type { LayerWithPos } from '@/types/engine';
+import type { LayerWithPos, RpgKey } from '@/types/engine';
 
 describe('FieldEngine', () => {
   let ctx: any;
@@ -44,7 +45,9 @@ describe('FieldEngine', () => {
   let state: any;
   let actionManager: any;
   let renderer: any;
-  let input: any;
+  let inputState: Partial<Record<RpgKey, boolean>>;
+  let rawInput: any;
+  let input: InputEngine<RpgKey>;
   let engine: FieldEngine;
 
   const emptyLayers: LayerWithPos[] = [];
@@ -83,9 +86,11 @@ describe('FieldEngine', () => {
       render: vi.fn(),
     };
 
-    input = {
-      isPressed: vi.fn(() => false),
+    inputState = {};
+    rawInput = {
+      isPressed: vi.fn((key: RpgKey) => inputState[key] === true),
     };
+    input = new InputEngine<RpgKey>(DEFAULT_RPG_KEYS);
 
     (calcViewPort as any).mockReturnValue({
       left: 0,
@@ -103,6 +108,11 @@ describe('FieldEngine', () => {
 
     engine = new FieldEngine(ctx, field, state, actionManager);
   });
+
+  const tickInput = (nowMs: number) => {
+    input.tick(nowMs, rawInput);
+    return input;
+  };
 
   describe('delegate methods', () => {
     it('movePlayer を委譲', () => {
@@ -200,17 +210,16 @@ describe('FieldEngine', () => {
     it('enter押下瞬間のみ onCheck', () => {
       const spy = vi.spyOn(engine, 'onCheck');
 
-      input.isPressed.mockReturnValue(true);
-      engine.onTick(input, 1000, renderer);
+      inputState.enter = true;
+      engine.onTick(tickInput(1000), 1000, renderer);
 
-      input.isPressed.mockReturnValue(true);
-      engine.onTick(input, 1016, renderer);
+      engine.onTick(tickInput(1016), 1016, renderer);
 
       expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('playerPos.tick(nowMs)', () => {
-      engine.onTick(input, 1000, renderer);
+      engine.onTick(tickInput(1000), 1000, renderer);
 
       expect(state.playerPos.tick).toHaveBeenCalledWith(1000);
     });
@@ -223,16 +232,17 @@ describe('FieldEngine', () => {
 
       engine = new FieldEngine(ctx, field, state, actionManager);
 
-      engine.onTick(input, 1000, renderer);
+      engine.onTick(tickInput(1000), 1000, renderer);
 
       expect(state.entities.a.state.pos.tick).toHaveBeenCalledWith(1000);
       expect(state.entities.b.state.pos.tick).toHaveBeenCalledWith(1000);
     });
 
     it('移動方向ありなら movePlayer', () => {
-      (resolveMove as any).mockReturnValue('left');
+      (resolveMove as any).mockImplementation((input: InputEngine<RpgKey>) => input.resolveDirection());
+      inputState.left = true;
 
-      engine.onTick(input, 1000, renderer);
+      engine.onTick(tickInput(1000), 1000, renderer);
 
       expect(movePlayer).toHaveBeenCalled();
     });
@@ -240,7 +250,7 @@ describe('FieldEngine', () => {
     it('renderField が呼ばれる', () => {
       const spy = vi.spyOn(engine, 'renderField');
 
-      engine.onTick(input, 1000, renderer);
+      engine.onTick(tickInput(1000), 1000, renderer);
 
       expect(spy).toHaveBeenCalledWith(1000, renderer);
     });

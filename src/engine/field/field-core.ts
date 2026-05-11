@@ -1,4 +1,4 @@
-import type { InputManager, GameRenderer } from '@tetsup/web2d';
+import type { GameRenderer } from '@tetsup/web2d';
 import type { Direction2d, FieldState, LayerWithPos, RpgKey } from '@/types/engine';
 import { Queue } from '@/utils/queue';
 import { calcDest, move, samePos } from '@/utils/pos';
@@ -9,6 +9,7 @@ import type { Action } from '@/resource/domain/action';
 import type { Field } from '@/resource/domain/field';
 import type { ActionManager } from '@/engine/action/action-manager';
 import type { Movement } from '@/schemas/action/movement';
+import type { InputEngine } from '@/engine/input/input-engine';
 import { EntityInstance } from '../entity';
 import { FieldPos } from './field-pos';
 import { calcViewPort, resolveEntitiesLayers, resolvePlayerLayers, retrieveLayers, sortLayers } from './layer-resolver';
@@ -16,7 +17,6 @@ import { moveEntity, movePlayer, resolveMove } from './movement-controller';
 
 export class FieldEngine {
   private state: FieldState;
-  private prevEnterPressed = false;
 
   constructor(
     private ctx: GameContext,
@@ -83,7 +83,7 @@ export class FieldEngine {
     this.actionManager.start(action);
   };
 
-  onTick = (input: InputManager<RpgKey>, nowMs: number, renderer: GameRenderer) => {
+  onTick = (input: InputEngine<RpgKey>, nowMs: number, renderer: GameRenderer) => {
     this.tickPlayerCheck(input);
     this.tickPlayerMove(input, nowMs);
     this.tickPlayerPos(nowMs);
@@ -91,10 +91,8 @@ export class FieldEngine {
     this.renderField(nowMs, renderer);
   };
 
-  private tickPlayerCheck(input: InputManager<RpgKey>) {
-    const enterPressed = input.isPressed('enter');
-    if (enterPressed && !this.prevEnterPressed) this.onCheck();
-    this.prevEnterPressed = enterPressed;
+  private tickPlayerCheck(input: InputEngine<RpgKey>) {
+    if (input.triggered.enter === true) this.onCheck();
   }
 
   calcViewPort = (nowMs: number) => {
@@ -132,7 +130,7 @@ export class FieldEngine {
     renderer.render(images);
   };
 
-  tickPlayerMove = (input: InputManager<RpgKey>, nowMs: number) => {
+  tickPlayerMove = (input: InputEngine<RpgKey>, nowMs: number) => {
     const moveDirection = resolveMove(input);
     if (moveDirection != null)
       this.movePlayer(nowMs, { command: 'walk', direction: moveDirection, async: true, force: false });
