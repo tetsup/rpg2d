@@ -1,8 +1,9 @@
 {
   "files": [],
   "references": [
-    { "path": "./tsconfig.lib.json" },
-    { "path": "./tsconfig.test.json" },
-    { "path": "./tsconfig.dev.json" }
+    { "path": "./packages/engine" },
+    { "path": "./apps/preview" },
+    { "path": "./apps/editor" },
+    { "path": "./apps/api" }
   ]
 }

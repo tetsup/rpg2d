@@ -1,21 +1,12 @@
 {
-  "name": "@tetsup/rpg2d",
+  "name": "@tetsup/rpg2d-workspace",
   "version": "0.0.0",
   "license": "MIT",
   "author": "tetsup",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
+    "type": "git",
     "url": "https://github.com/tetsup/rpg2d"
   },
-  "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "engines": {
     "node": ">=24"
   },
