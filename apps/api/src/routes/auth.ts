@@ -4,7 +4,7 @@ import { authMiddleware } from '@api/auth/middleware';
 import type { Auth0TokenResponse, Auth0User, Variables } from 'apps/api/types/auth';
 import { setCookie } from 'hono/cookie';
 
-export const authRoute = new Hono<{ Variables: Variables }>();
+const authRoute = new Hono<{ Variables: Variables }>();
 
 authRoute.get('/login', (c) => {
   const domain = process.env.AUTH0_DOMAIN!;
@@ -69,3 +69,5 @@ authRoute.get('/me', authMiddleware, (c) => {
     user: c.get('user'),
   });
 });
+
+export { authRoute };

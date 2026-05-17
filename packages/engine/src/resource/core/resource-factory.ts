@@ -11,6 +11,7 @@ import { Player } from '../domain/player';
 import { Skin } from '../domain/skin';
 import { Texture } from '../domain/texture';
 import { Tile } from '../domain/tile';
+import { ImageLoader } from '../domain/imageLoader';
 
 const getResourceClass = <K extends ResourceType>(type: K) =>
   type === 'action'
@@ -19,21 +20,23 @@ const getResourceClass = <K extends ResourceType>(type: K) =>
       ? Entity
       : type === 'field'
         ? Field
-        : type === 'panel'
-          ? Panel
-          : type === 'panel-skin'
-            ? PanelSkin
-            : type === 'font'
-              ? Font
-              : type === 'player'
-                ? Player
-                : type === 'skin'
-                  ? Skin
-                  : type === 'texture'
-                    ? Texture
-                    : type === 'tile'
-                      ? Tile
-                      : undefined;
+        : type === 'image'
+          ? ImageLoader
+          : type === 'panel'
+            ? Panel
+            : type === 'panel-skin'
+              ? PanelSkin
+              : type === 'font'
+                ? Font
+                : type === 'player'
+                  ? Player
+                  : type === 'skin'
+                    ? Skin
+                    : type === 'texture'
+                      ? Texture
+                      : type === 'tile'
+                        ? Tile
+                        : undefined;
 
 export class ResourceFactory {
   constructor(private ctx: GameContext) {}

@@ -12,13 +12,15 @@ const resourceDir = path.resolve(__dirname, '../../../../fixtures/resources/samp
 
 const resourceLoader = new LocalLoader(resourceDir);
 
-export const resourceRoute = new Hono();
+const resourceRoute = new Hono();
 
 resourceRoute.get(
   '/:namespace/:type/:id',
   handle(async (c) => {
     const { namespace, type, id } = parseParams(ResourceParamsSchema, c.req.param());
     const resource = resourceLoader.readResource(namespace, type, id);
-    return c.json(resource);
+    return resource;
   })
 );
+
+export { resourceRoute };
