@@ -1,5 +1,5 @@
 {
-  "name": "@tetsup/rpg2d-preview",
+  "name": "@tetsup/rpg2d-runtime",
   "private": true,
   "version": "0.0.0",
   "type": "module",
