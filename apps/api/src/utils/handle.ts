@@ -5,16 +5,12 @@ export function handle<T>(fn: (c: Context) => Promise<T>) {
   return async (c: Context) => {
     try {
       const data = await fn(c);
-
-      return c.json({
-        ok: true,
-        data,
-      });
+      console.log(data);
+      return c.json(data);
     } catch (err) {
       if (err instanceof ApiError) {
         return c.json(
           {
-            ok: false,
             error: err.message,
           },
           err.status
@@ -23,7 +19,6 @@ export function handle<T>(fn: (c: Context) => Promise<T>) {
       console.error(err);
       return c.json(
         {
-          ok: false,
           error: 'internal_error',
         },
         500
