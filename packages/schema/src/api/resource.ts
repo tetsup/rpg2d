@@ -1,6 +1,5 @@
 import z from 'zod';
 import { StateDefinition } from '../../../../types/variable';
-import { IdSchema } from '../resource/common/base';
 import { ActionSchema } from '../resource/action';
 import { EntitySchema } from '../resource/entity';
 import { FontSchema } from '../resource/font';
