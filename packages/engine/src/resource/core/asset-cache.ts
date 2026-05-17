@@ -1,7 +1,6 @@
 import { GameRenderer } from '@tetsup/web2d';
 import type { ResourceId } from '@sharedTypes/resource/common';
 import { ImageLoader } from '../domain/imageLoader';
-import { GameContext } from './game-context';
 import { ResourceStore } from './resource-store';
 
 type LazyImage =
@@ -27,8 +26,9 @@ export class AssetCache {
       const image = await this.fetchBitmap(id);
       this.renderer.registerImage({ imageId: id, imageData: image });
       this.images.set(id, { loaded: true, image });
-    } catch {
+    } catch (e) {
       this.images.delete(id);
+      throw e;
     }
   };
 
