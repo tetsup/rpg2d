@@ -10,7 +10,12 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["packages/engine/src/*"]
+      "@sharedTypes/*": ["types/*"],
+      "@engine/*": ["packages/engine/src/*"],
+      "@schema/*": ["packages/schema/src/*"],
+      "@api/*": ["apps/api/src/*"],
+      "@editor/*": ["apps/editor/*"],
+      "@runtime/*": ["apps/runtime/*"]
     }
   }
 }
