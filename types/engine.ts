@@ -1,10 +1,10 @@
-import type { EntityInstance } from '@/engine/entity';
-import type { FieldPos } from '@/engine/field/field-pos';
-import type { Action } from '@/resource/domain/action';
-import type { Player } from '@/resource/domain/player';
-import type { TexturePlayback } from '@/schemas/image/texture';
-import type { Queue } from '@/utils/queue';
-import { Rect } from '@/utils/rect';
+import type { EntityInstance } from '@engine/manager/entity';
+import type { FieldPos } from '@engine/manager/field/field-pos';
+import type { Action } from '@engine/resource/domain/action';
+import type { Player } from '@engine/resource/domain/player';
+import type { Queue } from '@engine/utils/queue';
+import type { Rect } from '@engine/utils/rect';
+import type { TexturePlayback } from './resource/texture';
 
 export type Point2d = {
   x: number;
