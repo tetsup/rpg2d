@@ -1,5 +1,5 @@
 import z from 'zod';
-import { PositionSchema } from '../common';
+import { PositionSchema } from '../common/coordinate';
 
 export const DirectionSchema = z.enum(['left', 'right', 'up', 'down']);
 
@@ -21,5 +21,3 @@ const JumpSchema = z.object({
 });
 
 export const MovementSchema = z.discriminatedUnion('command', [WalkSchema, JumpSchema]);
-
-export type Movement = z.infer<typeof MovementSchema>;

@@ -1,6 +1,7 @@
 import z from 'zod';
-import { IdSchema, PositionSchema, SizeSchema } from '../common';
-import { ActionSchema } from '../action/action';
+import { IdSchema } from '../common/base';
+import { PositionSchema, SizeSchema } from '../common/coordinate';
+import { ActionSchema } from '../action';
 
 const panelContentTypes = ['message', 'menu-list', 'data-list'] as const;
 const overflowTreatments = ['hide', 'turn-down'] as const;

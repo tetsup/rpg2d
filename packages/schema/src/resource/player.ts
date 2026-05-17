@@ -1,7 +1,7 @@
 import z from 'zod';
-import { IdSchema, ResourceSchemaBase } from './common';
-import { type StateDefinition, buildStateSchema } from './playerState';
-import { Skin } from '@/resource/domain/skin';
+import type { StateDefinition } from '@sharedTypes/variable';
+import { IdSchema, ResourceSchemaBase } from './common/base';
+import { buildStateSchema } from './variable/player-state';
 
 export const NameSchema = z.discriminatedUnion('type', [
   z.object({
@@ -30,8 +30,4 @@ export function buildPlayerSchema<T extends StateDefinition = any>(def: T) {
   });
 }
 
-export type PlayerData<T extends StateDefinition = any> = z.infer<ReturnType<typeof buildPlayerSchema<T>>>;
-
-export type PlayerDeps = {
-  initialSkin: Skin;
-};
+export const PlayerSchema = buildPlayerSchema({});

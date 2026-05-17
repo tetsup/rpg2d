@@ -1,7 +1,7 @@
 import z from 'zod';
-import type { PanelSkin } from '@/resource/domain/panel/panel-skin';
-import { IdSchema, PositionSchema, ResourceSchemaBase, SizeSchema } from '../common';
-import { PanelContentSchema } from './panel-content';
+import { IdSchema, ResourceSchemaBase } from './common/base';
+import { PositionSchema, SizeSchema } from './common/coordinate';
+import { PanelContentSchema } from './panel/panel-content';
 
 const panelAnchors = ['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const;
 
@@ -24,7 +24,3 @@ export const PanelSchema = ResourceSchemaBase('panel', {
   ]),
   content: PanelContentSchema,
 });
-
-export type PanelData = z.infer<typeof PanelSchema>;
-
-export type PanelDeps = { skin: PanelSkin };

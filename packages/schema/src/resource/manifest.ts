@@ -1,6 +1,8 @@
 import z from 'zod';
-import { DirectionSchema, IdSchema, PositionSchema, PrimitiveValueSchema, SizeSchema } from '@/schemas/common';
-import { StateDefinitionSchema } from './playerState';
+import { IdSchema, ResourceSchemaBase } from './common/base';
+import { DirectionSchema, PositionSchema, SizeSchema } from './common/coordinate';
+import { PrimitiveValueSchema } from './variable/condition';
+import { StateDefinitionSchema } from './variable/definition';
 
 export const ModeSchema = z.enum(['menu', 'field', 'battle']);
 
@@ -21,8 +23,6 @@ export const InitialFieldStateSchema = z.object({
   actionIds: z.array(IdSchema),
 });
 
-export type InitialFieldState = z.infer<typeof InitialFieldStateSchema>;
-
 export const InitialStateSchema = z.object({
   core: InitialCoreStateSchema,
   field: InitialFieldStateSchema,
@@ -42,8 +42,6 @@ export const MessageConfigSchema = z.object({
   }),
 });
 
-export type MessageConfig = z.infer<typeof MessageConfigSchema>;
-
 export const ConfigSchema = z.object({
   blockSize: SizeSchema,
   textSize: SizeSchema,
@@ -53,10 +51,8 @@ export const ConfigSchema = z.object({
   messageConfig: MessageConfigSchema,
 });
 
-export const ManifestSchema = z.object({
+export const ManifestSchema = ResourceSchemaBase('manifest', {
   initialState: InitialStateSchema,
   schemas: DslSchema,
   config: ConfigSchema,
 });
-
-export type Manifest = z.infer<typeof ManifestSchema>;

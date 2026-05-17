@@ -1,5 +1,5 @@
 import z from 'zod';
-import { IdSchema, ResourceSchemaBase } from './common';
+import { IdSchema } from '../common/base';
 
 export const ValueTypeVariableSchema = z.literal('variable');
 export const ValueTypeConstSchema = z.literal('const');

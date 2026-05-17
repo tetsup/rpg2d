@@ -1,10 +1,7 @@
 import z from 'zod';
-import type { Skin } from '@/resource/domain/skin';
-import type { Texture } from '@/resource/domain/texture';
-import type { Action } from '@/resource/domain/action';
-import { IdSchema, ResourceSchemaBase } from './common';
+import { IdSchema, ResourceSchemaBase } from './common/base';
 
-const EntityActionTriggerSchema = z.enum([
+export const EntityActionTriggerSchema = z.enum([
   'onEnter',
   'onLeave',
   'onStay',
@@ -13,9 +10,8 @@ const EntityActionTriggerSchema = z.enum([
   'onCheck',
   'onTick',
 ]);
-export type EntityActionTrigger = z.infer<typeof EntityActionTriggerSchema>;
 
-const EntityActionsSchema = z.partialRecord(EntityActionTriggerSchema, IdSchema);
+export const EntityActionsSchema = z.partialRecord(EntityActionTriggerSchema, IdSchema);
 
 export const EntitySchema = z.discriminatedUnion('visual', [
   ResourceSchemaBase('entity', {
@@ -39,19 +35,3 @@ export const EntitySchema = z.discriminatedUnion('visual', [
     actions: EntityActionsSchema,
   }),
 ]);
-
-export type EntityData = z.infer<typeof EntitySchema>;
-
-export type EntityDeps = (
-  | {
-      visual: 'skin';
-      skin: Skin;
-    }
-  | {
-      visual: 'texture';
-      texture: Texture;
-    }
-  | { visual: 'none' }
-) & {
-  actions: { trigger: string; action: Action }[];
-};

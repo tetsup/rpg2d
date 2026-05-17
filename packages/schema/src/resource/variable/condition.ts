@@ -1,5 +1,7 @@
 import z from 'zod';
-import { IdSchema, PrimitiveValueSchema } from './common';
+import { IdSchema } from '../common/base';
+
+export const PrimitiveValueSchema = z.union([z.string(), z.number()]);
 
 export const ValueDefinitionSchema = z.discriminatedUnion('type', [
   z.object({

@@ -1,18 +1,14 @@
 import z from 'zod';
-import type { Tile } from '@/resource/domain/tile';
-import type { Entity } from '@/resource/domain/entity';
-import { IdSchema, ResourceSchemaBase, PositionSchema, DirectionSchema } from './common';
+import { IdSchema, ResourceSchemaBase } from './common/base';
+import { PositionSchema, DirectionSchema } from './common/coordinate';
 
 export const TileCodeSchema = z.string().min(1);
-export type TileCode = z.infer<typeof TileCodeSchema>;
 
 export const EntityInitialStateSchema = z.object({
   pos: PositionSchema,
   direction: DirectionSchema,
   visible: z.boolean(),
 });
-
-export type EntityInitialState = z.infer<typeof EntityInitialStateSchema>;
 
 export const EntityMappingSchema = z.record(
   IdSchema,
@@ -39,10 +35,3 @@ export const FieldSchema = ResourceSchemaBase('field', {
     });
   });
 });
-
-export type FieldData = z.infer<typeof FieldSchema>;
-
-export type FieldDeps = {
-  tiles: Map<string, Tile>;
-  entities: Map<string, Entity>;
-};
