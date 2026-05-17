@@ -30,7 +30,8 @@ export class LocalLoader {
   private loadOne(filePath: string) {
     const raw = fs.readFileSync(filePath, 'utf-8');
     const data = yaml.parse(raw);
-    this.resources[data.type].set(data.id, parseResource(data));
+    parseResource(data);
+    this.resources[data.type].set(data.id, data);
   }
 
   private walk(dir: string): string[] {
