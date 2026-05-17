@@ -1,14 +1,18 @@
 import { defineConfig, UserConfig } from 'vite';
 import devServer from '@hono/vite-dev-server';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
-const config = {
+export default defineConfig({
+  resolve: {
+    tsconfigPaths: true,
+  },
   plugins: [
-    tsconfigPaths(),
     devServer({
       entry: 'src/index.ts',
     }),
   ],
-} as UserConfig;
 
-export default defineConfig(config);
+  server: {
+    port: 3000,
+    strictPort: true,
+  },
+} as UserConfig);
