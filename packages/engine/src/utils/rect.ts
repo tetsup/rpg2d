@@ -1,4 +1,4 @@
-import { Point2d, Size2d } from '@/types/engine';
+import { Point2d, Size2d } from '@sharedTypes/engine';
 
 export class Rect {
   left: number;

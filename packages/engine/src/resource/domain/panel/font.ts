@@ -1,4 +1,4 @@
-import { ResourceBase } from '@/resource/core/resource-base';
+import { ResourceBase } from '@engine/resource/core/resource-base';
 import { Color } from './color';
 
 export class Font extends ResourceBase<'font'> {

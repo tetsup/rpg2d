@@ -1,7 +1,8 @@
-import type { EntityData, EntityDeps } from '@/schemas/entity';
+import { Direction2d } from '@sharedTypes/engine';
+import type { EntityData } from '@sharedTypes/resource/entity';
+import type { EntityDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '../core/resource-base';
 import type { GameContext } from '../core/game-context';
-import { Direction2d } from '@/types/engine';
 import type { Action } from './action';
 
 export class Entity extends ResourceBase<'entity'> {

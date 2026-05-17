@@ -47,10 +47,3 @@ export async function fetchJson<T>(req: RequestInfo, schema: z.ZodType<T>, init?
   };
   return await fetchWithThrow(req, parser, init);
 }
-
-export async function fetchBlob(req: RequestInfo, init?: RequestInit) {
-  const parser = async (res: Response) => {
-    return await res.blob();
-  };
-  return await fetchWithThrow(req, parser, init);
-}

@@ -1,15 +1,15 @@
-import type { FieldState, LayerWithPos } from '@/types/engine';
-import type { Manifest } from '@/schemas/manifest';
-import type { GameContext } from '@/resource/core/game-context';
-import type { Field } from '@/resource/domain/field';
-import { shiftPos } from '@/utils/pos';
-import { Rect } from '@/utils/rect';
+import type { FieldState, LayerWithPos } from '@sharedTypes/engine';
+import type { ManifestData } from '@sharedTypes/resource/manifest';
+import type { GameContext } from '@engine/resource/core/game-context';
+import type { Field } from '@engine/resource/domain/field';
+import { shiftPos } from '@engine/utils/pos';
+import { Rect } from '@engine/utils/rect';
 
 export const resolvePlayerLayers = (
   nowMs: number,
   viewport: Rect,
   state: FieldState,
-  config: Manifest['config']
+  config: ManifestData['config']
 ): LayerWithPos[] => {
   return state.players.flatMap((player) => {
     const globalPos = state.playerPos.getCurrentPixel(nowMs);
@@ -23,7 +23,7 @@ export const resolveEntitiesLayers = (
   nowMs: number,
   viewport: Rect,
   state: FieldState,
-  config: Manifest['config']
+  config: ManifestData['config']
 ): LayerWithPos[] => {
   return Object.entries(state.entities)
     .filter(([_, entity]) => entity.state.visible)
@@ -43,7 +43,7 @@ export const retrieveLayers = (
   nowMs: number,
   viewport: Rect,
   state: FieldState,
-  config: Manifest['config'],
+  config: ManifestData['config'],
   field: Field
 ): LayerWithPos[] => {
   const playerLayers = resolvePlayerLayers(nowMs, viewport, state, config);

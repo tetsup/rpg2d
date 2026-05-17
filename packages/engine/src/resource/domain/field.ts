@@ -1,6 +1,7 @@
-import type { FieldData, FieldDeps } from '@/schemas/field';
-import { Rect } from '@/utils/rect';
-import type { LayerWithPos, Point2d } from '@/types/engine';
+import type { FieldData } from '@sharedTypes/resource/field';
+import type { LayerWithPos, Point2d } from '@sharedTypes/engine';
+import type { FieldDeps } from '@engine/types/resource-deps';
+import { Rect } from '@engine/utils/rect';
 import { ResourceBase } from '../core/resource-base';
 import type { GameContext } from '../core/game-context';
 import type { Tile } from './tile';

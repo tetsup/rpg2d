@@ -1,13 +1,13 @@
 import type { Game, GameRenderer } from '@tetsup/web2d';
-import type { RpgKey, RpgMode } from '@/types/engine';
-import type { Manifest } from '@/schemas/manifest';
-import { ResourceConfig } from '@/schemas/resource-config';
-import { GameContext } from '@/resource/core/game-context';
-import type { Player } from '@/resource/domain/player';
-import { ActionManager } from './action/action-manager';
-import { FieldEngine } from './field/field-core';
-import { PanelManager } from './panel/panel-manager';
-import { DEFAULT_RPG_KEYS, InputEngine } from './input/input-engine';
+import type { RpgKey, RpgMode } from '@sharedTypes/engine';
+import type { ManifestData } from '@sharedTypes/resource/manifest';
+import { ResourceConfig } from '@sharedTypes/config';
+import { GameContext } from '@engine/resource/core/game-context';
+import type { Player } from '@engine/resource/domain/player';
+import { ActionManager } from './manager/action/action-manager';
+import { FieldEngine } from './manager/field/field-core';
+import { PanelManager } from './manager/panel/panel-manager';
+import { DEFAULT_RPG_KEYS, InputEngine } from './manager/input/input-engine';
 
 type RawInput = Parameters<InputEngine<RpgKey>['tick']>[1];
 
@@ -20,7 +20,7 @@ export class RpgCore implements Game<RpgKey> {
   private field: FieldEngine | null = null;
   private players: Player[] = [];
 
-  constructor(manifest: Manifest, config: ResourceConfig) {
+  constructor(manifest: ManifestData, config: ResourceConfig) {
     this.ctx = new GameContext(manifest, config);
     this.input = new InputEngine(DEFAULT_RPG_KEYS);
     this.panels = new PanelManager(this.ctx);
@@ -33,7 +33,7 @@ export class RpgCore implements Game<RpgKey> {
     this.input.reset();
     this.players = await Promise.all(
       this.ctx.manifest.initialState.core.players.map(
-        async (playerId) => await this.ctx.resources.get(playerId, 'player')
+        async (playerId: string) => await this.ctx.resources.get(playerId, 'player')
       )
     );
     this.field = await FieldEngine.factory(this.ctx, this.players, this.actions);

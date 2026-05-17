@@ -1,6 +1,6 @@
-import type { Size2d } from '@/types/engine';
+import type { Size2d } from '@sharedTypes/engine';
 
-export async function rgbaToPng(size: Size2d, rgba: Uint8Array): Promise<ArrayBuffer> {
+export async function rgbaToPng(size: Size2d, rgba: Uint8Array): Promise<Blob> {
   const canvas = document.createElement('canvas');
   canvas.width = size.width;
   canvas.height = size.height;
@@ -17,5 +17,5 @@ export async function rgbaToPng(size: Size2d, rgba: Uint8Array): Promise<ArrayBu
 
   const blob = await new Promise<Blob>((resolve) => canvas.toBlob((b) => resolve(b!), 'image/png'));
 
-  return blob.arrayBuffer();
+  return blob;
 }

@@ -1,4 +1,5 @@
-import type { PlayerData, PlayerDeps } from '@/schemas/player';
+import type { PlayerData } from '@sharedTypes/resource/player';
+import type { PlayerDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '../core/resource-base';
 import type { GameContext } from '../core/game-context';
 

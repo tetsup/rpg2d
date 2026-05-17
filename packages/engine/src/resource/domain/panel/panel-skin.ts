@@ -1,8 +1,9 @@
-import type { GameContext } from '@/resource/core/game-context';
-import { ResourceBase } from '@/resource/core/resource-base';
-import type { PanelSkinData, PanelSkinDeps } from '@/schemas/panel/panel-skin';
-import type { LayerWithPos } from '@/types/engine';
-import { Rect } from '@/utils/rect';
+import type { PanelSkinData } from '@sharedTypes/resource/panel-skin';
+import type { LayerWithPos } from '@sharedTypes/engine';
+import type { GameContext } from '@engine/resource/core/game-context';
+import type { PanelSkinDeps } from '@engine/types/resource-deps';
+import { ResourceBase } from '@engine/resource/core/resource-base';
+import { Rect } from '@engine/utils/rect';
 import { Color } from './color';
 
 export type TextArea = {

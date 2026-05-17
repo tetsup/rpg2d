@@ -1,4 +1,5 @@
-import type { ResourceData, ResourceName, ResourceStatic } from '@/types/resource';
+import type { ResourceType } from '@sharedTypes/resource/common';
+import type { ResourceData, ResourceStatic } from '@engine/types/resource';
 import type { GameContext } from './game-context';
 import { Action } from '../domain/action';
 import { Entity } from '../domain/entity';
@@ -11,7 +12,7 @@ import { Skin } from '../domain/skin';
 import { Texture } from '../domain/texture';
 import { Tile } from '../domain/tile';
 
-const getResourceClass = <K extends ResourceName>(type: K) =>
+const getResourceClass = <K extends ResourceType>(type: K) =>
   type === 'action'
     ? Action
     : type === 'entity'
@@ -30,12 +31,14 @@ const getResourceClass = <K extends ResourceName>(type: K) =>
                   ? Skin
                   : type === 'texture'
                     ? Texture
-                    : Tile;
+                    : type === 'tile'
+                      ? Tile
+                      : undefined;
 
 export class ResourceFactory {
   constructor(private ctx: GameContext) {}
 
-  create = async <K extends ResourceName>(data: any, type: K) => {
+  create = async <K extends ResourceType>(data: any, type: K) => {
     const cls = getResourceClass(type) as ResourceStatic<K>;
     const schema = this.ctx.schemas.get(type);
     const parsed = schema.parse(data) as ResourceData<K>;

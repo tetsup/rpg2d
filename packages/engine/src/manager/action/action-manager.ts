@@ -1,6 +1,6 @@
-import type { PanelManager } from '@/engine/panel/panel-manager';
-import type { GameContext } from '@/resource/core/game-context';
-import type { Action } from '@/resource/domain/action';
+import type { PanelManager } from '@engine/manager/panel/panel-manager';
+import type { GameContext } from '@engine/resource/core/game-context';
+import type { Action } from '@engine/resource/domain/action';
 import { Sequence } from './sequence';
 
 export class ActionManager {

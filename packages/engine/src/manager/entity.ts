@@ -1,10 +1,10 @@
-import type { EntityState } from '@/types/engine';
-import type { Movement } from '@/schemas/action/movement';
-import type { EntityInitialState } from '@/schemas/field';
-import { Queue } from '@/utils/queue';
-import type { GameContext } from '@/resource/core/game-context';
-import type { Entity } from '@/resource/domain/entity';
-import type { Action } from '@/resource/domain/action';
+import type { EntityState } from '@sharedTypes/engine';
+import type { Movement } from '@sharedTypes/resource/action';
+import type { EntityInitialState } from '@sharedTypes/resource/field';
+import { Queue } from '@engine/utils/queue';
+import type { GameContext } from '@engine/resource/core/game-context';
+import type { Entity } from '@engine/resource/domain/entity';
+import type { Action } from '@engine/resource/domain/action';
 import { FieldPos } from './field/field-pos';
 
 export class EntityInstance {

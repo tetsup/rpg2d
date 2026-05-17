@@ -1,11 +1,12 @@
 import z from 'zod';
-import type { ResourceId } from '@/schemas/common';
-import { fetchJson } from '@/utils/http/fetch';
-import { resources, type ResourceClass, type ResourceName } from '@/types/resource';
+import type { ResourceId, ResourceType } from '@sharedTypes/resource/common';
+import { resources } from '@schema/resource/common/base';
+import { fetchJson } from '@engine/utils/http/fetch';
+import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
 
 type Resources = {
-  [K in ResourceName]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
+  [K in ResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
 };
 
 export class ResourceStore {
@@ -18,13 +19,13 @@ export class ResourceStore {
     return await fetchJson(`${this.ctx.config.resourceUri}/${id}`, schema);
   };
 
-  private async resolve<K extends ResourceName>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> {
+  private async resolve<K extends ResourceType>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> {
     const schema = this.ctx.schemas.get(type);
     const data = await this.fetch(id, schema);
     return await this.ctx.factory.create(data, type);
   }
 
-  get = async <K extends ResourceName>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> => {
+  get = async <K extends ResourceType>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> => {
     const resource = this.resources[type].get(id);
     if (resource !== undefined) return resource;
     const createdResource = await this.resolve(id, type);

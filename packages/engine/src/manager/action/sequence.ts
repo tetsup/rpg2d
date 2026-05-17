@@ -1,9 +1,9 @@
-import type { SequenceData } from '@/schemas/action/sequence';
-import type { PrimitiveValue } from '@/schemas/common';
-import type { ConditionData } from '@/schemas/condition';
-import type { GameContext } from '@/resource/core/game-context';
+import type { SequenceData } from '@schema/resource/action/sequence';
+import type { PrimitiveValue } from '@sharedTypes/resource/common';
+import type { ConditionData } from '@schema/resource/variable/condition';
+import type { GameContext } from '@engine/resource/core/game-context';
 import type { PanelManager } from '../panel/panel-manager';
-import { Message } from '../panel/message-panel';
+import type { Message } from '../panel/message-panel';
 
 type RunningStatus = 'init' | 'running' | 'done';
 

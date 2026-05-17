@@ -1,7 +1,8 @@
-import type { SkinData, SkinDeps } from '@/schemas/image/skin';
+import type { Direction2d } from '@sharedTypes/engine';
+import type { SkinData } from '@sharedTypes/resource/skin';
+import type { SkinDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '../core/resource-base';
 import type { GameContext } from '../core/game-context';
-import { Direction2d } from '@/types/engine';
 
 export class Skin extends ResourceBase<'skin'> {
   static async loadDeps(ctx: GameContext, data: SkinData): Promise<SkinDeps> {

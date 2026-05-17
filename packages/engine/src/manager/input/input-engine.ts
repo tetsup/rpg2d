@@ -1,5 +1,5 @@
 import type { InputManager } from '@tetsup/web2d';
-import type { RpgKey } from '@/types/engine';
+import type { RpgKey } from '@sharedTypes/engine';
 
 export type InputSnapshot<K extends string = RpgKey> = Partial<Record<K, boolean>>;
 

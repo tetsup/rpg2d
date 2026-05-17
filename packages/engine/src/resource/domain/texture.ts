@@ -1,5 +1,6 @@
-import type { ImageLayer } from '@/types/engine';
-import type { TextureDeps, TextureData, LayerAnimation } from '@/schemas/image/texture';
+import type { ImageLayer } from '@sharedTypes/engine';
+import type { TextureData, LayerAnimation } from '@sharedTypes/resource/texture';
+import type { TextureDeps } from '@engine/types/resource-deps';
 import type { GameContext } from '../core/game-context';
 import { ResourceBase } from '../core/resource-base';
 

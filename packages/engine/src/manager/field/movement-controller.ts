@@ -1,7 +1,7 @@
-import type { Movement } from '@/schemas/action/movement';
-import type { FieldState, Point2d, Direction2d, RpgKey } from '@/types/engine';
-import type { Field } from '@/resource/domain/field';
-import type { InputEngine } from '@/engine/input/input-engine';
+import type { Movement } from '@sharedTypes/resource/action';
+import type { FieldState, Point2d, Direction2d, RpgKey } from '@sharedTypes/engine';
+import type { Field } from '@engine/resource/domain/field';
+import type { InputEngine } from '@engine/manager/input/input-engine';
 
 const checkEntityInhibit = (
   state: FieldState,

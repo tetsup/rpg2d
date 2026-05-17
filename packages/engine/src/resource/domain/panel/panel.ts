@@ -1,9 +1,10 @@
-import type { PanelData, PanelDeps } from '@/schemas/panel/panel';
-import { ResourceBase } from '@/resource/core/resource-base';
-import type { GameContext } from '@/resource/core/game-context';
-import { Rect } from '@/utils/rect';
+import type { PanelData } from '@sharedTypes/resource/panel';
+import type { RpgKey } from '@sharedTypes/engine';
+import type { PanelDeps } from '@engine/types/resource-deps';
+import { ResourceBase } from '@engine/resource/core/resource-base';
+import type { GameContext } from '@engine/resource/core/game-context';
+import { Rect } from '@engine/utils/rect';
 import type { TextArea } from './panel-skin';
-import type { RpgKey } from '@/types/engine';
 
 export class Panel extends ResourceBase<'panel'> {
   readonly id: string;

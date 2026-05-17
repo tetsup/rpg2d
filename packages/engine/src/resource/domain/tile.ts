@@ -1,5 +1,6 @@
-import type { TileDeps, TileData } from '@/schemas/tile';
-import { ResourceBase } from '@/resource/core/resource-base';
+import type { TileData } from '@sharedTypes/resource/tile';
+import type { TileDeps } from '@engine/types/resource-deps';
+import { ResourceBase } from '@engine/resource/core/resource-base';
 import type { GameContext } from '../core/game-context';
 
 export class Tile extends ResourceBase<'tile'> {

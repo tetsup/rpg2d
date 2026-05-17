@@ -1,6 +1,6 @@
-import type { GameContext } from '@/resource/core/game-context';
-import type { LayerWithPos, RpgKey } from '@/types/engine';
-import type { InputEngine } from '@/engine/input/input-engine';
+import type { LayerWithPos, RpgKey } from '@sharedTypes/engine';
+import type { GameContext } from '@engine/resource/core/game-context';
+import type { InputEngine } from '@engine/manager/input/input-engine';
 import { MessagePanel, type Message } from './message-panel';
 
 export type PanelInput = {

@@ -1,5 +1,5 @@
-import type { Movement } from '@/schemas/action/movement';
-import type { Direction2d, Point2d } from '@/types/engine';
+import type { Movement } from '@sharedTypes/resource/action';
+import type { Direction2d, Point2d } from '@sharedTypes/engine';
 
 export const move = (current: Point2d, direction: Direction2d) => {
   switch (direction) {
