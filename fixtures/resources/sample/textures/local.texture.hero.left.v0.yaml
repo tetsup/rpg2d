@@ -1,0 +1,10 @@
+id: sample/texture/hero.left.v0
+type: texture
+layers:
+  - priority: 8
+    images:
+      - sample/image/hero.left1.v0
+      - sample/image/hero.left2.v0
+    playback: 
+      repeat: true
+      tickMs: 500

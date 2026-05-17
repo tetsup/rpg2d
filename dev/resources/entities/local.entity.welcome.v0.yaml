@@ -1,7 +1,0 @@
-id: local.entity.welcome.v0
-type: entity
-visual: skin
-skin: local.skin.hero.v0
-allowOverwrap: false
-actions:
-  onCheck: local.action.welcome.v0

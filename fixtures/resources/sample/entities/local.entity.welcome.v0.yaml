@@ -1,0 +1,7 @@
+id: sample/entity/welcome.v0
+type: entity
+visual: skin
+skin: sample/skin/hero.v0
+allowOverwrap: false
+actions:
+  onCheck: sample/action/welcome.v0

@@ -1,0 +1,7 @@
+id: sample/skin/hero.v0
+type: skin
+textures:
+  left: sample/texture/hero.left.v0
+  right: sample/texture/hero.right.v0
+  up: sample/texture/hero.up.v0
+  down: sample/texture/hero.down.v0
