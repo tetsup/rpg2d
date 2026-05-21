@@ -8,6 +8,7 @@ import { ActionManager } from './manager/action/action-manager';
 import { FieldEngine } from './manager/field/field-core';
 import { PanelManager } from './manager/panel/panel-manager';
 import { DEFAULT_RPG_KEYS, InputEngine } from './manager/input/input-engine';
+import { StatManager } from './manager/stat';
 
 type RawInput = Parameters<InputEngine<RpgKey>['tick']>[1];
 
@@ -19,6 +20,7 @@ export class RpgCore implements Game<RpgKey> {
   private mode: RpgMode = 'field';
   private field: FieldEngine | null = null;
   private players: Player[] = [];
+  readonly stat: StatManager;
 
   constructor(manifest: ManifestData, config: ResourceConfig) {
     this.ctx = new GameContext(manifest, config);
@@ -26,6 +28,7 @@ export class RpgCore implements Game<RpgKey> {
     this.panels = new PanelManager(this.ctx);
     this.ctx.panels = this.panels;
     this.actions = new ActionManager(this.ctx, this.panels);
+    this.stat = new StatManager();
   }
 
   onInit = async (renderer: GameRenderer) => {

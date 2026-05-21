@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
+import { setCookie } from 'hono/cookie';
 import { sessionStore } from '@api/auth/session';
 import { authMiddleware } from '@api/auth/middleware';
 import type { Auth0TokenResponse, Auth0User, Variables } from 'apps/api/types/auth';
-import { setCookie } from 'hono/cookie';
 
 const authRoute = new Hono<{ Variables: Variables }>();
 

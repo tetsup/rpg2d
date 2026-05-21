@@ -28,7 +28,7 @@ export const resourceTypes = [
   'tile',
 ] as const;
 
-export const ResourceParamsSchema = z.object({
+export const ResourceGetParamsSchema = z.object({
   namespace: z.string().min(1),
   type: z.enum(resourceTypes),
   id: z.string().min(1),
