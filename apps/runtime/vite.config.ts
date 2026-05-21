@@ -20,6 +20,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@viewer': resolve(__dirname, 'src'),
+      '@runtime': resolve(__dirname, '../runtime/src'),
       '@engine': resolve(__dirname, '../../packages/engine/src'),
       '@schema': resolve(__dirname, '../../packages/schema/src'),
     },

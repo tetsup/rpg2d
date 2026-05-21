@@ -1,0 +1,140 @@
+.runtime-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: black;
+}
+
+.runtime-viewport {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.runtime-canvas {
+  aspect-ratio: 16 / 9;
+  width: min(
+    100vw,
+    calc(100vh * 16 / 9)
+  );
+  height: min(
+    100vh,
+    calc(100vw * 9 / 16)
+  );
+  background: #222;
+  image-rendering: pixelated;
+}
+
+.runtime-hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 12px;
+  background:
+    rgb(0 0 0 / 0.6);
+  color: white;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.runtime-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.runtime-toolbar button {
+  border: none;
+  border-radius: 999px;
+  padding:
+    8px 12px;
+  background: #444;
+  color: white;
+}
+
+.runtime-toolbar button[data-active="true"] {
+  background: #60a5fa;
+}
+
+.softpad {
+  position: absolute;
+  display: flex;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.softpad button {
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 999px;
+  background:
+    rgb(255 255 255 / 0.15);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-size: 18px;
+}
+
+.runtime-shell[data-layout="landscape"]
+  .softpad-left {
+  left: 24px;
+  bottom: 24px;
+  flex-direction: column;
+}
+
+.runtime-shell[data-layout="landscape"]
+  .softpad-right {
+  right: 24px;
+  bottom: 24px;
+  flex-direction: column;
+}
+
+.runtime-shell[data-layout="portrait"]
+  .softpad-left {
+  left: 24px;
+  bottom: 24px;
+  flex-direction: row;
+}
+
+.runtime-shell[data-layout="portrait"]
+  .softpad-right {
+  right: 24px;
+  bottom: 24px;
+  flex-direction: row;
+}
+
+.runtime-toolbar {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.runtime-toolbar-group {
+  display: flex;
+  gap: 8px;
+}
+
+.runtime-toolbar-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding:
+    8px 12px;
+  border-radius: 999px;
+  background:
+    rgb(0 0 0 / 0.5);
+  color: white;
+  backdrop-filter: blur(8px);
+}
+
+.runtime-toolbar-slider input {
+  width: 120px;
+}
