@@ -14,8 +14,8 @@
       "@engine/*": ["packages/engine/src/*"],
       "@schema/*": ["packages/schema/src/*"],
       "@api/*": ["apps/api/src/*"],
-      "@editor/*": ["apps/editor/*"],
-      "@runtime/*": ["apps/runtime/*"]
+      "@editor/*": ["apps/editor/src/*"],
+      "@runtime/*": ["apps/runtime/src/*"]
     }
   }
 }
