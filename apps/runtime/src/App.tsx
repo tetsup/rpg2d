@@ -127,5 +127,5 @@ export default function App() {
     };
   }, [runtimeConfig, canvasRef.current]);
 
-  return <RuntimeShell app={appRef.current} engine={engineRef.current} canvasRef={canvasRef} />;
+  return <RuntimeShell appRef={appRef} engineRef={engineRef} canvasRef={canvasRef} />;
 }

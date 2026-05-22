@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { InputManager } from '@tetsup/web2d';
 import { RpgKey } from '@sharedTypes/engine';
 
-export const useAssignPad = () => (input: InputManager<RpgKey>) => {
+export const useAssignPad = () => {
+  const inputRef = useRef<InputManager<RpgKey> | null>(null);
+
   useEffect(() => {
-    if (!input) return;
+    if (!inputRef.current) return;
 
     const keyMap: Record<string, string> = {
       left: 'left',
@@ -20,7 +22,7 @@ export const useAssignPad = () => (input: InputManager<RpgKey>) => {
       const button = target.closest('[data-pad]');
       if (!button) return;
       const key = keyMap[(button as HTMLElement).dataset.pad ?? ''];
-      if (key) input.press(key as RpgKey);
+      if (key) inputRef.current?.press(key as RpgKey);
     };
 
     const release = (e: PointerEvent) => {
@@ -28,7 +30,7 @@ export const useAssignPad = () => (input: InputManager<RpgKey>) => {
       const button = target.closest('[data-pad]');
       if (!button) return;
       const key = keyMap[(button as HTMLElement).dataset.pad ?? ''];
-      if (key) input.release(key as RpgKey);
+      if (key) inputRef.current?.release(key as RpgKey);
     };
 
     document.addEventListener('pointerdown', onPointerDown);
@@ -40,5 +42,9 @@ export const useAssignPad = () => (input: InputManager<RpgKey>) => {
       window.removeEventListener('pointerup', release);
       window.removeEventListener('pointercancel', release);
     };
-  }, [input]);
+  }, []);
+
+  return (input: InputManager<RpgKey>) => {
+    inputRef.current = input;
+  };
 };

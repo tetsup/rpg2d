@@ -11,12 +11,12 @@ import '../styles/layout.css';
 import { RpgCore } from '@engine/index';
 
 export function RuntimeShell({
-  app,
-  engine,
+  appRef,
+  engineRef,
   canvasRef,
 }: {
-  app: GameApp<RpgKey> | null;
-  engine: RpgCore | null;
+  appRef: RefObject<GameApp<RpgKey> | null>;
+  engineRef: RefObject<RpgCore | null>;
   canvasRef: RefObject<HTMLCanvasElement | null>;
 }) {
   const { layout } = useRuntimeLayout();
@@ -26,8 +26,8 @@ export function RuntimeShell({
   return (
     <div className="runtime-shell" data-layout={layout}>
       <RuntimeViewport canvasRef={canvasRef} />
-      {showHud && <RuntimeHud engine={engine} />}
-      <RuntimeToolbar app={app} engine={engine} />
+      {showHud && <RuntimeHud engineRef={engineRef} />}
+      <RuntimeToolbar appRef={appRef} engineRef={engineRef} />
       {showSoftPad && <SoftPad />}
     </div>
   );
