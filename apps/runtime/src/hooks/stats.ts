@@ -1,18 +1,20 @@
-import { useEffect, useState } from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import { RpgCore } from '@engine/index';
 
-export function useEngineStats(engine: RpgCore | null) {
-  const [stats, setStats] = useState(engine?.stat);
+export function useEngineStats(engineRef: RefObject<RpgCore | null>) {
+  const [stats, setStats] = useState(engineRef.current?.stat.snapShot());
+
   useEffect(() => {
-    let frameId = 0;
     const update = () => {
-      setStats(engine?.stat);
-      frameId = requestAnimationFrame(update);
+      setStats(engineRef.current?.stat.snapShot());
     };
     update();
+    const intervalId = setInterval(update, 100);
+
     return () => {
-      cancelAnimationFrame(frameId);
+      clearInterval(intervalId);
     };
   }, []);
+
   return stats;
 }
