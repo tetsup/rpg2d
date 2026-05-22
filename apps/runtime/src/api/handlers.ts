@@ -22,9 +22,9 @@ class ResourceLoader {
 
   async readResource(id?: string | readonly string[]) {
     if (typeof id !== 'string') throw new BadRequestError();
-    const raw = this.resources.get(id);
-    if (raw === undefined) throw new NotFoundError();
-    return await yaml.parse(raw);
+    const data = this.resources.get(id);
+    if (data === undefined) throw new NotFoundError();
+    return data;
   }
 }
 
