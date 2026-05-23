@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { GameApp, resolveTransparentMode, type KeyAssignment, type TransparentMode } from '@tetsup/web2d';
 import { RpgCore } from '@engine/index';
 import type { RpgKey } from '@sharedTypes/engine';
@@ -75,6 +75,8 @@ export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const appRef = useRef<GameApp<RpgKey> | null>(null);
   const engineRef = useRef<RpgCore | null>(null);
+
+  const [_, setReady] = useState(false);
   const assignPad = useAssignPad();
   const runtimeConfig = useMemo(() => {
     return getSearchParams();
@@ -83,7 +85,6 @@ export default function App() {
   useEffect(() => {
     if (!canvasRef.current) return;
     let disposed = false;
-
     async function bootstrap() {
       await setupMockIfNeeded(runtimeConfig.mode);
       const resourceUri = resolveResourceUri(runtimeConfig.mode);
@@ -97,7 +98,6 @@ export default function App() {
         Enter: 'enter',
         Escape: 'esc',
       };
-
       const coreConfig = {
         resourceUri,
       };
@@ -118,14 +118,16 @@ export default function App() {
         return;
       }
       appRef.current = app;
+      setReady(true);
     }
 
     bootstrap();
+
     return () => {
       disposed = true;
       appRef.current?.pause();
     };
-  }, [runtimeConfig, canvasRef.current]);
+  }, [runtimeConfig]);
 
   return <RuntimeShell appRef={appRef} engineRef={engineRef} canvasRef={canvasRef} />;
 }

@@ -15,14 +15,14 @@
 }
 
 .runtime-canvas {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   width: min(
     100vw,
-    calc(100vh * 16 / 9)
+    calc(100vh * 4 / 3)
   );
   height: min(
     100vh,
-    calc(100vw * 9 / 16)
+    calc(100vw * 3 / 4)
   );
   background: #222;
   image-rendering: pixelated;
@@ -54,7 +54,7 @@
 
 .runtime-toolbar button {
   border: none;
-  border-radius: 999px;
+  border-radius: 5px;
   padding:
     8px 12px;
   background: #444;

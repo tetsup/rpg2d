@@ -42,6 +42,7 @@ export class RpgCore implements Game<RpgKey> {
     this.field = await FieldEngine.factory(this.ctx, this.players, this.actions);
     this.mode = 'field';
     console.log('init comp');
+    this.stat.ready();
     return true;
   };
 
@@ -60,6 +61,7 @@ export class RpgCore implements Game<RpgKey> {
       default:
         break;
     }
+    this.stat.tick();
     return true;
   };
 

@@ -33,6 +33,8 @@ export function RuntimeToolbar({
         <button data-active={layoutMode === 'landscape'} onClick={() => setLayoutMode('landscape')}>
           LANDSCAPE
         </button>
+      </div>
+      <div className="runtime-toolbar-group">
         <button data-active={showHud} onClick={toggleHud}>
           HUD
         </button>
@@ -55,7 +57,7 @@ export function RuntimeToolbar({
           max={4}
           step={0.25}
           defaultValue={1}
-          onChange={(e) => appRef.current?.setSpeed(Number(e.target.value))}
+          onChange={(e) => appRef.current?.changeSpeed(Number(e.target.value))}
         />
       </div>
     </div>

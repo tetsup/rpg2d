@@ -1,20 +1,13 @@
-import { RefObject, useEffect, useState } from 'react';
-import { RpgCore } from '@engine/index';
+import { type RefObject, useSyncExternalStore } from 'react';
+import type { RpgCore } from '@engine/index';
+
+const emptySubscribe = () => () => {};
+
+const emptySnapshot = () => undefined;
 
 export function useEngineStats(engineRef: RefObject<RpgCore | null>) {
-  const [stats, setStats] = useState(engineRef.current?.stat.snapShot());
-
-  useEffect(() => {
-    const update = () => {
-      setStats(engineRef.current?.stat.snapShot());
-    };
-    update();
-    const intervalId = setInterval(update, 100);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
-  return stats;
+  return useSyncExternalStore(
+    engineRef.current?.stat.subscribe ?? emptySubscribe,
+    engineRef.current?.stat.getSnapshot ?? emptySnapshot
+  );
 }
