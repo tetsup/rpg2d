@@ -21,8 +21,9 @@
     "typecheck": "tsc -b",
     "test:schema":"pnpm --filter @tetsup/rpg2d-schema test",
     "test:engine":"pnpm --filter @tetsup/rpg2d-engine test",
+    "test:database":"pnpm --filter @tetsup/rpg2d-database test",
     "test:api":"pnpm --filter @tetsup/rpg2d-api test",
-    "test": "pnpm test:schema && pnpm test:engine && pnpm test:api"
+    "test": "pnpm test:schema && pnpm test:engine && pnpm test:database && pnpm test:api"
   },
   "dependencies": {
     "zod": "^4.3.6"

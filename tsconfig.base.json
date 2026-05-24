@@ -13,6 +13,7 @@
       "@sharedTypes/*": ["types/*"],
       "@engine/*": ["packages/engine/src/*"],
       "@schema/*": ["packages/schema/src/*"],
+      "@database/*": ["packages/database/src/*"],
       "@api/*": ["apps/api/src/*"],
       "@editor/*": ["apps/editor/src/*"],
       "@runtime/*": ["apps/runtime/src/*"]

@@ -3,6 +3,7 @@
   "references": [
     { "path": "./packages/engine" },
     { "path": "./packages/schema" },
+    { "path": "./packages/database" },
     { "path": "./apps/runtime" },
     { "path": "./apps/editor" },
     { "path": "./apps/api" },

@@ -1,0 +1,16 @@
+{
+  "name": "@tetsup/rpg2d-database",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "mongodb": "^6.16.0"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.1.0"
+  }
+}
