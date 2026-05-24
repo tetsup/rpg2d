@@ -6,6 +6,8 @@ import { rgbaToPng } from '@engine/utils/image/png';
 
 export class ImageLoader extends ResourceBase<'image'> {
   static async loadDeps(ctx: GameContext, data: ImageData): Promise<{}> {
+    void ctx;
+    void data;
     return {};
   }
 

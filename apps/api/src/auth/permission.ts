@@ -1,5 +1,5 @@
+import type { User } from '../types/auth';
 import { ForbiddenError } from '../errors/http-error';
-import { User } from './middleware';
 
 export enum Action {
   READ,
@@ -8,10 +8,26 @@ export enum Action {
   DELETE,
 }
 
-const canRead = (user: User, namespace: string) => true;
-const canCreate = (user: User, namespace: string) => true;
-const canUpdate = (user: User, namespace: string) => true;
-const canDelete = (user: User, namespace: string) => true;
+const canRead = (user: User, namespace: string) => {
+  void user;
+  void namespace;
+  return true;
+};
+const canCreate = (user: User, namespace: string) => {
+  void user;
+  void namespace;
+  return true;
+};
+const canUpdate = (user: User, namespace: string) => {
+  void user;
+  void namespace;
+  return true;
+};
+const canDelete = (user: User, namespace: string) => {
+  void user;
+  void namespace;
+  return true;
+};
 
 export const authorize = (user: User, namespace: string, action: Action) => {
   switch (action) {

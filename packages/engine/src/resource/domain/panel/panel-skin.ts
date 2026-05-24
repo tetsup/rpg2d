@@ -74,7 +74,7 @@ export class PanelSkin extends ResourceBase<'panel-skin'> {
   };
 
   resolvePanelLayers = (nowMs: number, rect: Rect) => {
-    let layers: LayerWithPos[][] = [];
+    const layers: LayerWithPos[][] = [];
     for (let y = rect.top; y < rect.bottom; y++) {
       for (let x = rect.left; x < rect.right; x++) {
         const texture = this.resolveTexture(rect, x, y);

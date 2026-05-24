@@ -76,6 +76,7 @@ export default function App() {
   const appRef = useRef<GameApp<RpgKey> | null>(null);
 
   const [_, setReady] = useState(0);
+  void _;
   const assignPad = useAssignPad();
   const runtimeConfig = useMemo(() => {
     return getSearchParams();

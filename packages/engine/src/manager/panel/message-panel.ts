@@ -119,7 +119,8 @@ export class MessagePanel {
     if (key === 'enter' || key === 'esc') this.advanceRequested = true;
   };
 
-  tick = (nowMs: number, _input: PanelInput = {}): boolean => {
+  tick = (nowMs: number, input: PanelInput = {}): boolean => {
+    void input;
     switch (this.status.phase) {
       case 'inActive':
         return false;

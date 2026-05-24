@@ -10,7 +10,16 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig([
-  globalIgnores(['**/tests/**', '**/*.test.ts', '**/dist/**', '**/node_modules/**']),
+  globalIgnores([
+    '**/tests/**',
+    '**/*.test.ts',
+    '**/coverage/**',
+    '**/dist/**',
+    '**/node_modules/**',
+    'apps/editor/src/components/ui/*',
+    '**/public/**',
+    '**/*.config.ts',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -35,15 +44,12 @@ export default defineConfig([
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
-
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      //'@typescript-eslint/no-unsafe-assignment': 'warn',
-      //'@typescript-eslint/no-unsafe-member-access': 'warn',
-      //'@typescript-eslint/no-unsafe-call': 'warn',
-      //'@typescript-eslint/no-unsafe-return': 'warn',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-unsafe-return': 'warn',
+      'react-hooks/refs': 'off',
+      'react-hooks/incompatible-library': 'off',
     },
   },
 ]);

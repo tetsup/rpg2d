@@ -19,7 +19,7 @@ export const resources = [
 export const IdSchema = z
   .string()
   .regex(
-    /^[a-z][a-z0-9]*\/[a-z\-]+\/[a-z][a-z0-9]*([\.\-][a-z][a-z0-9]*)*$/,
+    /^[a-z][a-z0-9]*\/[a-z-]+\/[a-z][a-z0-9]*([.-][a-z][a-z0-9]*)*$/,
     "idは 'namespace/type/name' 形式で、小英文字、数字、ハイフンと単一ドットのみ使用できます"
   );
 

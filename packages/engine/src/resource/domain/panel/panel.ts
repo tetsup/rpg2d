@@ -54,7 +54,9 @@ export class Panel extends ResourceBase<'panel'> {
     this.active = false;
   };
 
-  sendKey = (_key: RpgKey) => {};
+  sendKey = (_key: RpgKey) => {
+    void _key;
+  };
 
   setParent = (parent: Panel) => {
     this.parent = parent;

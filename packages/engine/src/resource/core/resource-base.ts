@@ -10,5 +10,9 @@ export abstract class ResourceBase<K extends ResourceType> {
     protected deps: ResourceDeps<K>
   ) {}
 
-  static loadDeps = async (ctx: GameContext, data: any): Promise<any> => ({});
+  static loadDeps = async (ctx: GameContext, data: any): Promise<any> => {
+    void ctx;
+    void data;
+    return {};
+  };
 }

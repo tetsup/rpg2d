@@ -21,8 +21,10 @@ export async function fetchWithThrow<T>(
         body = { request: req, status: res.status, response: await res.text() };
         message = body as string;
       }
-    } catch {}
-
+    } catch (e) {
+      console.error(e);
+      throw new HttpError(res.status, String(e));
+    }
     console.error(message, body);
     throw new HttpError(res.status, message, body);
   }
@@ -34,7 +36,7 @@ async function parseJson(res: Response) {
   const raw = await res.text();
   try {
     return JSON.parse(raw);
-  } catch (e) {
+  } catch {
     return new ParseError(raw);
   }
 }

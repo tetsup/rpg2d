@@ -100,7 +100,7 @@ export class Sequence {
     const external = this.externals.get(index);
     if (external == null) return true;
     if (external.status === 'done') {
-      external.returnValue != null && this.variables.set(index, external.returnValue);
+      if (external.returnValue != null) this.variables.set(index, external.returnValue);
       return true;
     }
     return false;

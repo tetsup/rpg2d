@@ -61,7 +61,8 @@ export class RpgCore implements Game<RpgKey> {
   };
 
   private renderFieldWithPanels(clock: number, renderer: GameRenderer): void {
+    const fieldLayers = this.field?.retrieveSortedLayers(clock) ?? [];
     const panelLayers = this.panels.resolveLayers(clock);
-    this.field?.renderLayers([...this.field?.retrieveSortedLayers(clock), ...panelLayers], renderer);
+    this.field?.renderLayers([...fieldLayers, ...panelLayers], renderer);
   }
 }

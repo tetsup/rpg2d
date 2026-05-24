@@ -25,9 +25,9 @@ export const resolveEntitiesLayers = (
   state: FieldState,
   config: ManifestData['config']
 ): LayerWithPos[] => {
-  return Object.entries(state.entities)
-    .filter(([_, entity]) => entity.state.visible)
-    .map(([_, entity]) => {
+  return Object.values(state.entities)
+    .filter((entity) => entity.state.visible)
+    .map((entity) => {
       const rect = Rect.fromTopLeft(entity.state.pos.getCurrentPixel(nowMs), config.blockSize);
       return { rect, entity };
     })
