@@ -11,10 +11,10 @@
  * - calcViewPort の座標演算 → calc-viewport.spec.ts
  * - resolveEntitiesLayers / retrieveLayers / sortLayers → layer-resolver.spec.ts
  */
-import { FieldEngine } from '@/engine/field/field-core';
-import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
+import { FieldEngine } from '@engine/manager/field/field-core';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@engine/manager/input/input-engine';
 
-vi.mock('@/engine/field/layer-resolver', () => ({
+vi.mock('@engine/manager/field/layer-resolver', () => ({
   resolveEntitiesLayers: vi.fn(),
   resolvePlayerLayers: vi.fn(),
   retrieveLayers: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock('@/engine/field/layer-resolver', () => ({
   calcViewPort: vi.fn(),
 }));
 
-vi.mock('@/engine/field/movement-controller', () => ({
+vi.mock('@engine/manager/field/movement-controller', () => ({
   moveEntity: vi.fn(),
   movePlayer: vi.fn(),
   resolveMove: vi.fn(),
@@ -34,10 +34,10 @@ import {
   retrieveLayers,
   sortLayers,
   calcViewPort,
-} from '@/engine/field/layer-resolver';
+} from '@engine/manager/field/layer-resolver';
 
-import { moveEntity, movePlayer, resolveMove } from '@/engine/field/movement-controller';
-import type { LayerWithPos, RpgKey } from '@/types/engine';
+import { moveEntity, movePlayer, resolveMove } from '@engine/manager/field/movement-controller';
+import type { LayerWithPos, RpgKey } from '@sharedTypes/engine';
 
 describe('FieldEngine', () => {
   let ctx: any;

@@ -1,4 +1,4 @@
-import { Sequence } from '@/engine/action/sequence';
+import { Sequence } from '@engine/manager/action/sequence';
 
 type MockGameContext = {
   state: {

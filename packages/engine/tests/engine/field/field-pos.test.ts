@@ -4,7 +4,7 @@
  * - util 依存込みの振る舞いテスト
  */
 
-import { FieldPos } from '@/engine/field/field-pos';
+import { FieldPos } from '@engine/manager/field/field-pos';
 
 describe('FieldPos', () => {
   let ctx: any;

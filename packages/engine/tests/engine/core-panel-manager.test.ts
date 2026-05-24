@@ -1,12 +1,11 @@
 import type { GameRenderer, InputManager } from '@tetsup/web2d';
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { RpgCore } from '@/engine/core';
-import { FieldEngine } from '@/engine/field/field-core';
-import { InputEngine } from '@/engine/input/input-engine';
-import { PanelManager } from '@/engine/panel/panel-manager';
-import type { Manifest } from '@/schemas/manifest';
-import type { ResourceConfig } from '@/schemas/resource-config';
-import type { RpgKey } from '@/types/engine';
+import { RpgCore } from '@engine/index';
+import { FieldEngine } from '@engine/manager/field/field-core';
+import { InputEngine } from '@engine/manager/input/input-engine';
+import { PanelManager } from '@engine/manager/panel/panel-manager';
+import type { ManifestData } from '@sharedTypes/resource/manifest';
+import type { ResourceConfig } from '@sharedTypes/config';
+import type { RpgKey } from '@sharedTypes/engine';
 
 const manifest = {
   initialState: {
@@ -36,7 +35,7 @@ const manifest = {
       margin: { left: 0, right: 0, top: 0, bottom: 0 },
     },
   },
-} as unknown as Manifest;
+} as unknown as ManifestData;
 
 const config = {
   resourceUri: '/resources',

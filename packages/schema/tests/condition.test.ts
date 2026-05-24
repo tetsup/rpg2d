@@ -1,5 +1,9 @@
-import { IdSchema } from '@/schemas/common';
-import { SingleConditionSchema, ConditionSchema, ValueDefinitionSchema, buildValueSchema } from '@/schemas/condition';
+import {
+  SingleConditionSchema,
+  ConditionSchema,
+  ValueDefinitionSchema,
+  buildValueSchema,
+} from '@schema/resource/variable/condition';
 
 describe('ValueDefinitionSchema', () => {
   it('number定義が通る', () => {

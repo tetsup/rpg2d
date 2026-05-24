@@ -10,9 +10,9 @@
  * - 分岐網羅重視
  */
 
-import { movePlayer, moveEntity, resolveMove } from '@/engine/field/movement-controller';
-import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
-import type { RpgKey } from '@/types/engine';
+import { movePlayer, moveEntity, resolveMove } from '@engine/manager/field/movement-controller';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@engine/manager/input/input-engine';
+import type { RpgKey } from '@sharedTypes/engine';
 
 describe('movePlayer', () => {
   let state: any;

@@ -1,5 +1,5 @@
-import { ActionManager } from '@/engine/action/action-manager';
-import { Sequence } from '@/engine/action/sequence';
+import { ActionManager } from '@engine/manager/action/action-manager';
+import { Sequence } from '@engine/manager/action/sequence';
 
 vi.mock('@/engine/action/sequence', () => {
   class MockSequence {

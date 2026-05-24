@@ -1,4 +1,4 @@
-import { EntitySchema } from '@/schemas/entity';
+import { EntitySchema } from '@schema/resource/entity';
 
 describe('EntitySchema', () => {
   it('正常にパースできる', () => {
@@ -11,7 +11,7 @@ describe('EntitySchema', () => {
       actions: {},
     });
 
-    expect(result.skin).toBe('dummyskin');
+    expect(result.visual === 'skin' && result.skin).toBe('dummyskin');
   });
 
   it('type不正は落ちる', () => {

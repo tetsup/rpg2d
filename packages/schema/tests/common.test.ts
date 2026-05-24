@@ -1,4 +1,4 @@
-import { IdSchema } from '@/schemas/common';
+import { IdSchema } from '@schema/resource/common/base';
 
 describe('IdSchema', () => {
   it('正常系', () => {

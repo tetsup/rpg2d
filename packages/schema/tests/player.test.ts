@@ -1,5 +1,5 @@
-import { buildPlayerSchema, NameSchema } from '@/schemas/player';
-import type { StateDefinition } from '@/schemas/playerState';
+import { buildPlayerSchema, NameSchema } from '@schema/resource/player';
+import type { StateDefinition } from '@sharedTypes/variable';
 
 describe('NameSchema', () => {
   it('fixed', () => {

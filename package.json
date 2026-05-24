@@ -16,7 +16,9 @@
     "dev:runtime": "pnpm --filter @tetsup/rpg2d-runtime dev",
     "dev:editor": "pnpm --filter @tetsup/rpg2d-editor dev",
     "dev:play": "concurrently -n api,runtime \"pnpm dev:api\" \"pnpm dev:runtime\"",
-    "dev:edit": "concurrently -n api,runtime,editor \"pnpm dev:api\" \"pnpm dev:runtime\" \"pnpm dev:editor\""
+    "dev:edit": "concurrently -n api,runtime,editor \"pnpm dev:api\" \"pnpm dev:runtime\" \"pnpm dev:editor\"",
+    "test:api":"pnpm --filter @tetsup/rpg2d-api test",
+    "test:engine":"pnpm --filter @tetsup/rpg2d-engine test"
   },
   "dependencies": {
     "zod": "^4.3.6"

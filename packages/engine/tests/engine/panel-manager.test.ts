@@ -1,8 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
-import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
-import { MessagePanel } from '@/engine/panel/message-panel';
-import { PanelManager, type ManagedPanel } from '@/engine/panel/panel-manager';
-import type { RpgKey } from '@/types/engine';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@engine/manager/input/input-engine';
+import { MessagePanel } from '@engine/manager/panel/message-panel';
+import { PanelManager, type ManagedPanel } from '@engine/manager/panel/panel-manager';
+import type { RpgKey } from '@sharedTypes/engine';
 
 const inputKeys = ['left', 'right', 'up', 'down', 'enter', 'esc'] as const satisfies readonly RpgKey[];
 
@@ -20,14 +19,14 @@ function makePanel(id: string): ManagedPanel {
     onClose: vi.fn(),
     onActive: vi.fn(),
     onInactive: vi.fn(),
-  };
+  } as any;
 }
 
 function makeInputPanel(id: string): InputPanel {
   return {
     ...makePanel(id),
     sendKey: vi.fn(),
-  };
+  } as any;
 }
 
 function makeInput() {

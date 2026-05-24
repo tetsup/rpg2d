@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@engine/manager/input/input-engine';
 
 type Key = 'left' | 'right' | 'up' | 'down' | 'enter' | 'esc';
 

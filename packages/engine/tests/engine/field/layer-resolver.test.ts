@@ -18,9 +18,9 @@ import {
   retrieveLayers,
   sortLayers,
   calcViewPort,
-} from '@/engine/field/layer-resolver';
+} from '@engine/manager/field/layer-resolver';
 
-import { Rect } from '@/utils/rect';
+import { Rect } from '@engine/utils/rect';
 
 describe('resolvePlayerLayers', () => {
   const config = {

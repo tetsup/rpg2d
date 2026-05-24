@@ -1,11 +1,10 @@
-import { describe, expect, it, vi } from 'vitest';
-import { DEFAULT_RPG_KEYS, InputEngine } from '@/engine/input/input-engine';
-import { MessagePanel, type Message } from '@/engine/panel/message-panel';
-import { PanelManager, type ManagedPanel } from '@/engine/panel/panel-manager';
-import type { GameContext } from '@/resource/core/game-context';
-import type { Panel } from '@/resource/domain/panel/panel';
-import type { MessageConfig } from '@/schemas/manifest';
-import type { RpgKey } from '@/types/engine';
+import { DEFAULT_RPG_KEYS, InputEngine } from '@engine/manager/input/input-engine';
+import { MessagePanel, type Message } from '@engine/manager/panel/message-panel';
+import { PanelManager, type ManagedPanel } from '@engine/manager/panel/panel-manager';
+import type { GameContext } from '@engine/resource/core/game-context';
+import type { Panel } from '@engine/resource/domain/panel/panel';
+import type { RpgKey } from '@sharedTypes/engine';
+import type { MessageConfig } from '@sharedTypes/resource/manifest';
 
 function makeMessages(message = 'hello'): Message[] {
   return [{ type: 'simple', message }];
@@ -20,7 +19,9 @@ function makePanelResource(): Panel {
   } as unknown as Panel;
 }
 
-function makeContext(overrides: { getPanel?: ReturnType<typeof vi.fn>; messageConfig?: MessageConfig } = {}): GameContext {
+function makeContext(
+  overrides: { getPanel?: ReturnType<typeof vi.fn>; messageConfig?: MessageConfig } = {}
+): GameContext {
   const messageConfig = overrides.messageConfig ?? {
     speedMs: 1,
     margin: { left: 0, right: 0, top: 0, bottom: 0 },
@@ -43,8 +44,10 @@ function makeManagedPanel(id: string): ManagedPanel & { sendKey: ReturnType<type
     id,
     active: false,
     tick: vi.fn(),
+    render: vi.fn(),
+    resolveLayers: vi.fn(),
     sendKey: vi.fn(),
-  };
+  } as any;
 }
 
 function makeInput() {

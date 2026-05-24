@@ -33,33 +33,34 @@
  */
 
 import type { GameRenderer } from '@tetsup/web2d';
-import { RpgCore } from '@/engine/core';
-import { EntityInstance } from '@/engine/entity';
-import { FieldEngine } from '@/engine/field/field-core';
-import { FieldPos } from '@/engine/field/field-pos';
-import { Texture } from '@/resource/domain/texture';
-import { Skin } from '@/resource/domain/skin';
-import { Entity } from '@/resource/domain/entity';
-import { Field } from '@/resource/domain/field';
-import { Tile } from '@/resource/domain/tile';
-import { Player } from '@/resource/domain/player';
-import { ResourceFactory } from '@/resource/core/resource-factory';
-import { ResourceStore } from '@/resource/core/resource-store';
-import { AssetCache } from '@/resource/core/asset-cache';
-import { GameContext } from '@/resource/core/game-context';
-import type { Manifest } from '@/schemas/manifest';
-import type { RpgKey, FieldState } from '@/types/engine';
-import { Queue } from '@/utils/queue';
-import { Rect } from '@/utils/rect';
-import { ResourceConfig } from '@/schemas/resource-config';
-import { ActionSchema } from '@/schemas/action/action';
-import { InputEngine, DEFAULT_RPG_KEYS } from '@/engine/input/input-engine';
+import { RpgCore } from '@engine/index';
+import { EntityInstance } from '@engine/manager/entity';
+import { FieldEngine } from '@engine/manager/field/field-core';
+import { FieldPos } from '@engine/manager/field/field-pos';
+import { Texture } from '@engine/resource/domain/texture';
+import { Skin } from '@engine/resource/domain/skin';
+import { Entity } from '@engine/resource/domain/entity';
+import { Field } from '@engine/resource/domain/field';
+import { Tile } from '@engine/resource/domain/tile';
+import { Player } from '@engine/resource/domain/player';
+import { ResourceFactory } from '@engine/resource/core/resource-factory';
+import { ResourceStore } from '@engine/resource/core/resource-store';
+import { AssetCache } from '@engine/resource/core/asset-cache';
+import { GameContext } from '@engine/resource/core/game-context';
+import type { ManifestData } from '@sharedTypes/resource/manifest';
+import type { RpgKey, FieldState } from '@sharedTypes/engine';
+import { Queue } from '@engine/utils/queue';
+import { Rect } from '@engine/utils/rect';
+import { InputEngine, DEFAULT_RPG_KEYS } from '@engine/manager/input/input-engine';
+import type { ResourceConfig } from '@sharedTypes/config';
+import { ActionManager } from '@engine/manager/action/action-manager';
+import { ActionSchema } from '@schema/resource/action';
 
 // ---------------------------------------------------------------------------
 // Test-fixture helpers
 // ---------------------------------------------------------------------------
 
-function makeManifest(): Manifest {
+function makeManifest(): ManifestData {
   return {
     initialState: {
       core: { players: [], variables: new Map(), mode: 'field' },
@@ -74,11 +75,11 @@ function makeManifest(): Manifest {
       defaultMessagePanel: 'message',
       messageConfig: { speedMs: 100, margin: { left: 2, right: 2, top: 1, bottom: 1 } },
     },
-  };
+  } as any;
 }
 
 function makeConfig(): ResourceConfig {
-  return { resourceUri: '/api/resource', imageUri: '/api/image' };
+  return { resourceUri: '/api/resource' };
 }
 
 function makeRenderer(): GameRenderer {
@@ -110,7 +111,7 @@ function makeInput() {
   };
 }
 
-function makeContext(manifest?: Manifest, config?: ResourceConfig): GameContext {
+function makeContext(manifest?: ManifestData, config?: ResourceConfig): GameContext {
   return new GameContext(manifest ?? makeManifest(), config ?? makeConfig());
 }
 
@@ -618,14 +619,16 @@ describe('AssetCache: unbound call must not throw', () => {
   });
 
   it('keeps this binding in cache — unbound call must not throw', async () => {
-    const assetCache = new AssetCache(makeConfig());
+    const store = new ResourceStore(makeContext());
+    const assetCache = new AssetCache(store);
     assetCache.setRenderer(makeRenderer());
     const cache = assetCache.cache;
     await expect(cache('img.test')).resolves.not.toThrow();
   });
 
   it('keeps this binding in get — unbound call must not throw', () => {
-    const assetCache = new AssetCache(makeConfig());
+    const store = new ResourceStore(makeContext());
+    const assetCache = new AssetCache(store);
     assetCache.setRenderer(makeRenderer());
     const get = assetCache.get;
     expect(() => get('img.test')).not.toThrow();

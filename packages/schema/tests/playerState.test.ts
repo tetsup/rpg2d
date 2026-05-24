@@ -1,4 +1,5 @@
-import { StateDefinitionSchema, buildStateSchema } from '@/schemas/playerState';
+import { StateDefinitionSchema } from '@schema/resource/variable/definition';
+import { buildStateSchema } from '@schema/resource/variable/player-state';
 
 describe('StateDefinitionSchema', () => {
   it('ネスト構造が通る', () => {
