@@ -5,10 +5,8 @@ import { useEngineStats } from '@runtime/hooks/stats';
 import { useRuntimeUiStateStore } from '../stores/ui-state';
 
 export function RuntimeToolbar({ appRef }: { appRef: RefObject<GameApp<RpgKey> | null> }) {
-  const layoutMode = useRuntimeUiStateStore((s) => s.layoutMode);
   const showHud = useRuntimeUiStateStore((s) => s.showHud);
   const showSoftPad = useRuntimeUiStateStore((s) => s.showSoftPad);
-  const setLayoutMode = useRuntimeUiStateStore((s) => s.setLayoutMode);
   const toggleHud = useRuntimeUiStateStore((s) => s.toggleHud);
   const toggleSoftPad = useRuntimeUiStateStore((s) => s.toggleSoftPad);
 
@@ -16,17 +14,6 @@ export function RuntimeToolbar({ appRef }: { appRef: RefObject<GameApp<RpgKey> |
 
   return (
     <div className="runtime-toolbar">
-      <div className="runtime-toolbar-group">
-        <button data-active={layoutMode === 'auto'} onClick={() => setLayoutMode('auto')}>
-          AUTO
-        </button>
-        <button data-active={layoutMode === 'portrait'} onClick={() => setLayoutMode('portrait')}>
-          PORTRAIT
-        </button>
-        <button data-active={layoutMode === 'landscape'} onClick={() => setLayoutMode('landscape')}>
-          LANDSCAPE
-        </button>
-      </div>
       <div className="runtime-toolbar-group">
         <button data-active={showHud} onClick={toggleHud}>
           HUD

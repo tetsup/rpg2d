@@ -93,32 +93,39 @@ body,
   font-size: 18px;
 }
 
-.runtime-shell[data-layout="landscape"]
-  .softpad-left {
+.softpad-leftside {
   left: 24px;
   bottom: 24px;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(3, 56px);
+  gap: 8px;
 }
 
-.runtime-shell[data-layout="landscape"]
-  .softpad-right {
+.softpad-rightside {
   right: 24px;
-  bottom: 24px;
-  flex-direction: column;
-}
-
-.runtime-shell[data-layout="portrait"]
-  .softpad-left {
-  left: 24px;
-  bottom: 24px;
+  bottom: 88px;
   flex-direction: row;
 }
 
-.runtime-shell[data-layout="portrait"]
-  .softpad-right {
-  right: 24px;
-  bottom: 24px;
-  flex-direction: row;
+.softpad-up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.softpad-left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.softpad-right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.softpad-down {
+  grid-column: 2;
+  grid-row: 3;
 }
 
 .runtime-toolbar {
