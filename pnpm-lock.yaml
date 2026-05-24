@@ -156,8 +156,8 @@ importers:
   apps/runtime:
     dependencies:
       '@tetsup/web2d':
-        specifier: ^0.0.14
-        version: 0.0.14
+        specifier: ^0.0.17
+        version: 0.0.17
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
@@ -202,8 +202,8 @@ importers:
   packages/engine:
     dependencies:
       '@tetsup/web2d':
-        specifier: ^0.0.14
-        version: 0.0.14
+        specifier: ^0.0.17
+        version: 0.0.17
 
   packages/schema: {}
 
@@ -2011,8 +2011,8 @@ packages:
   '@tanstack/virtual-core@3.14.0':
     resolution: {integrity: sha512-JLANqGy/D6k4Ujmh8Tr25lGimuOXNiaVyXaCAZS0W+1390sADdGnyUdSWNIfd49gebtIxGMij4IktRVzrdr12Q==}
 
-  '@tetsup/web2d@0.0.14':
-    resolution: {integrity: sha512-ivmN6na/jq7YdRTYJ+g1VgxrcuRGmbR4L3P07RgH7HjUm6tGhmi62AL9A3niFGBEbd4zroFZ7EU3N/2p8PHTRQ==}
+  '@tetsup/web2d@0.0.17':
+    resolution: {integrity: sha512-Y4ShhebNet1pjpSKbMnBIa0GWhjhb5OT0eTKDUSp24ZMV+CpQa+MejfNRfeI+hWR+XOe5DtCWWWcoohISujVrw==}
     engines: {node: '>=24'}
 
   '@ts-morph/common@0.27.0':
@@ -5779,7 +5779,7 @@ snapshots:
 
   '@tanstack/virtual-core@3.14.0': {}
 
-  '@tetsup/web2d@0.0.14': {}
+  '@tetsup/web2d@0.0.17': {}
 
   '@ts-morph/common@0.27.0':
     dependencies:

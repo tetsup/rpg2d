@@ -1,6 +1,5 @@
 import { RefObject } from 'react';
 import type { GameApp } from '@tetsup/web2d';
-import { RpgCore } from '@engine/index';
 import type { RpgKey } from '@sharedTypes/engine';
 import { useRuntimeLayout } from '../hooks/layout';
 import { useRuntimeUiStateStore } from '../stores/ui-state';
@@ -12,11 +11,9 @@ import '../styles/layout.css';
 
 export function RuntimeShell({
   appRef,
-  engineRef,
   canvasRef,
 }: {
   appRef: RefObject<GameApp<RpgKey> | null>;
-  engineRef: RefObject<RpgCore | null>;
   canvasRef: RefObject<HTMLCanvasElement | null>;
 }) {
   const { layout } = useRuntimeLayout();
@@ -26,8 +23,8 @@ export function RuntimeShell({
   return (
     <div className="runtime-shell" data-layout={layout}>
       <RuntimeViewport canvasRef={canvasRef} />
-      {showHud && <RuntimeHud engineRef={engineRef} />}
-      <RuntimeToolbar appRef={appRef} engineRef={engineRef} />
+      {showHud && <RuntimeHud appRef={appRef} />}
+      <RuntimeToolbar appRef={appRef} />
       {showSoftPad && <SoftPad />}
     </div>
   );

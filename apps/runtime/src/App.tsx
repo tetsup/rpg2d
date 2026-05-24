@@ -74,9 +74,8 @@ function applyEditorOverrides(manifest: ManifestData, config: RuntimeConfig): Ma
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const appRef = useRef<GameApp<RpgKey> | null>(null);
-  const engineRef = useRef<RpgCore | null>(null);
 
-  const [_, setReady] = useState(false);
+  const [_, setReady] = useState(0);
   const assignPad = useAssignPad();
   const runtimeConfig = useMemo(() => {
     return getSearchParams();
@@ -101,8 +100,8 @@ export default function App() {
       const coreConfig = {
         resourceUri,
       };
-      engineRef.current = new RpgCore(resolvedManifest, coreConfig);
-      const app = new GameApp(canvasRef.current!, engineRef.current, {
+      const engine = new RpgCore(resolvedManifest, coreConfig);
+      const app = new GameApp(canvasRef.current!, engine, {
         maxObjects: 10000,
         rectSize: {
           width: resolvedManifest.config.screen.width,
@@ -118,7 +117,7 @@ export default function App() {
         return;
       }
       appRef.current = app;
-      setReady(true);
+      setReady((current) => current + 1);
     }
 
     bootstrap();
@@ -129,5 +128,5 @@ export default function App() {
     };
   }, [runtimeConfig]);
 
-  return <RuntimeShell appRef={appRef} engineRef={engineRef} canvasRef={canvasRef} />;
+  return <RuntimeShell appRef={appRef} canvasRef={canvasRef} />;
 }

@@ -1,18 +1,26 @@
 import type { RefObject } from 'react';
-import type { RpgCore } from '@engine/index';
+import type { GameApp } from '@tetsup/web2d';
+import type { RpgKey } from '@sharedTypes/engine';
 import { useEngineStats } from '../hooks/stats';
 
-export function RuntimeHud({ engineRef }: { engineRef: RefObject<RpgCore | null> }) {
-  const stats = useEngineStats(engineRef);
+const toRoundedString = (v?: number) => (v != null ? `${Math.floor(v)}.${Math.floor((v * 100) % 100)}` : '-');
+
+export function RuntimeHud({ appRef }: { appRef: RefObject<GameApp<RpgKey> | null> }) {
+  const stats = useEngineStats(appRef);
+  console.log(stats);
   return (
     <div className="runtime-hud">
-      <div>STATUS: {stats?.isRunning ? 'RUNNING' : stats?.isReady ? 'STANDBY' : 'NOT READY'}</div>
       <div>
-        TPS: {stats?.intervalTps ?? '-'} / {stats?.tps ?? '-'}
+        SCREEN SIZE: {stats?.screenSize.width} x {stats?.screenSize.height}
+      </div>
+      <div>STATUS: {stats?.clock.phase}</div>
+      <div>
+        FPS: {toRoundedString(stats?.intervalFps)} / {toRoundedString(stats?.fps)}
       </div>
       <div>
-        FPS: {stats?.intervalFps ?? '-'} / {stats?.fps ?? '-'}
+        BUFFER: {stats?.intervalMaxObjects} / {stats?.maxObjects} / {stats?.reservedObjects}
       </div>
+      <div>SPEED: x{toRoundedString(stats?.clock.speed)}</div>
     </div>
   );
 }

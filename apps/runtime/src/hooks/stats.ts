@@ -1,13 +1,14 @@
 import { type RefObject, useSyncExternalStore } from 'react';
-import type { RpgCore } from '@engine/index';
+import type { GameApp } from '@tetsup/web2d';
+import type { RpgKey } from '@sharedTypes/engine';
 
 const emptySubscribe = () => () => {};
 
 const emptySnapshot = () => undefined;
 
-export function useEngineStats(engineRef: RefObject<RpgCore | null>) {
+export function useEngineStats(appRef: RefObject<GameApp<RpgKey> | null>) {
   return useSyncExternalStore(
-    engineRef.current?.stat.subscribe ?? emptySubscribe,
-    engineRef.current?.stat.getSnapshot ?? emptySnapshot
+    appRef.current?.stat.subscribe ?? emptySubscribe,
+    appRef.current?.stat.getSnapshot ?? emptySnapshot
   );
 }

@@ -1,17 +1,10 @@
 import { RefObject } from 'react';
-import { GameApp } from '@tetsup/web2d';
-import { RpgKey } from '@sharedTypes/engine';
-import { RpgCore } from '@engine/index';
+import type { GameApp } from '@tetsup/web2d';
+import type { RpgKey } from '@sharedTypes/engine';
 import { useEngineStats } from '@runtime/hooks/stats';
 import { useRuntimeUiStateStore } from '../stores/ui-state';
 
-export function RuntimeToolbar({
-  appRef,
-  engineRef,
-}: {
-  appRef: RefObject<GameApp<RpgKey> | null>;
-  engineRef: RefObject<RpgCore | null>;
-}) {
+export function RuntimeToolbar({ appRef }: { appRef: RefObject<GameApp<RpgKey> | null> }) {
   const layoutMode = useRuntimeUiStateStore((s) => s.layoutMode);
   const showHud = useRuntimeUiStateStore((s) => s.showHud);
   const showSoftPad = useRuntimeUiStateStore((s) => s.showSoftPad);
@@ -19,7 +12,7 @@ export function RuntimeToolbar({
   const toggleHud = useRuntimeUiStateStore((s) => s.toggleHud);
   const toggleSoftPad = useRuntimeUiStateStore((s) => s.toggleSoftPad);
 
-  const stats = useEngineStats(engineRef);
+  const stats = useEngineStats(appRef);
 
   return (
     <div className="runtime-toolbar">
@@ -43,14 +36,21 @@ export function RuntimeToolbar({
         </button>
       </div>
       <div className="runtime-toolbar-group">
-        {stats?.isRunning ? (
+        {stats?.clock.phase === 'running' ? (
           <button onClick={() => appRef.current?.pause()}>PAUSE</button>
         ) : (
-          <button onClick={() => appRef.current?.start()}>START</button>
+          <button
+            data-active={stats?.clock.phase === 'ready'}
+            onClick={() => {
+              appRef.current?.start();
+            }}
+          >
+            START
+          </button>
         )}
       </div>
       <div className="runtime-toolbar-slider">
-        <span>x{stats?.speed.toFixed(1)}</span>
+        <span>x{stats?.clock.speed.toFixed(1)}</span>
         <input
           type="range"
           min={0.25}
