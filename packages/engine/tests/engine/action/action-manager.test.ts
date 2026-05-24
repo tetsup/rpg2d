@@ -1,7 +1,7 @@
 import { ActionManager } from '@engine/manager/action/action-manager';
 import { Sequence } from '@engine/manager/action/sequence';
 
-vi.mock('@/engine/action/sequence', () => {
+vi.mock('@engine/manager/action/sequence', () => {
   class MockSequence {
     status: 'init' | 'running' | 'done' = 'running';
     blockingPlayerInput = false;
@@ -65,8 +65,8 @@ describe('ActionManager', () => {
 
   describe('tick()', () => {
     it('done でない Sequence に tick する', () => {
-      manager.start(createAction() as any);
-      manager.start(createAction() as any);
+      manager.start(createAction([{ command: 'dummy' }]) as any);
+      manager.start(createAction([{ command: 'dummy' }]) as any);
 
       const [a, b] = getSequences();
 

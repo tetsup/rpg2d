@@ -2,12 +2,12 @@ import { IdSchema } from '@schema/resource/common/base';
 
 describe('IdSchema', () => {
   it('正常系', () => {
-    expect(IdSchema.parse('status.poison')).toBe('status.poison');
+    expect(IdSchema.parse('test/variable/status.poison')).toBe('test/variable/status.poison');
   });
 
   it('異常系', () => {
-    expect(() => IdSchema.parse('.invalid')).toThrow();
-    expect(() => IdSchema.parse('invalid.')).toThrow();
-    expect(() => IdSchema.parse('a..b')).toThrow();
+    expect(() => IdSchema.parse('test/variable/.invalid')).toThrow();
+    expect(() => IdSchema.parse('test/variable/invalid.')).toThrow();
+    expect(() => IdSchema.parse('test/variable/a..b')).toThrow();
   });
 });

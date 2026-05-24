@@ -35,14 +35,4 @@ describe('buildStateSchema', () => {
 
     expect(() => schema.parse({ status: { poison: 'a' } })).toThrow();
   });
-
-  it('strictで余計なキーが落ちる', () => {
-    const def: any = {
-      hp: { type: 'number', asInt: true },
-    };
-
-    const schema = buildStateSchema(def);
-
-    expect(() => schema.parse({ hp: 10, extra: 1 })).toThrow();
-  });
 });

@@ -1,5 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-
 import { AssetCache } from '@engine/resource/core/asset-cache';
 import { ResourceStore } from '@engine/resource/core/resource-store';
 import { ImageLoader } from '@engine/resource/domain/imageLoader';
@@ -74,7 +72,8 @@ describe('assetCache', () => {
       registerImage: vi.fn(),
     } as any);
 
-    cache.cache('a');
+    const promise = cache.cache('a');
+    await Promise.resolve();
 
     const result = cache.get('a');
 
@@ -82,7 +81,7 @@ describe('assetCache', () => {
 
     resolveBitmap(mockBitmap);
 
-    await Promise.resolve();
+    await promise;
   });
 
   it('同一IDは1回しかloadされない', () => {
@@ -142,6 +141,7 @@ describe('assetCache', () => {
     expect(cache.images.has('a')).toBe(false);
 
     cache.get('a');
+    await Promise.resolve();
 
     expect(loader.toBitmap).toHaveBeenCalledTimes(2);
   });

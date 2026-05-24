@@ -47,18 +47,30 @@ import { ResourceFactory } from '@engine/resource/core/resource-factory';
 import { ResourceStore } from '@engine/resource/core/resource-store';
 import { AssetCache } from '@engine/resource/core/asset-cache';
 import { GameContext } from '@engine/resource/core/game-context';
+import { ActionSchema } from '@schema/resource/action';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
+import type { ResourceConfig } from '@sharedTypes/config';
 import type { RpgKey, FieldState } from '@sharedTypes/engine';
 import { Queue } from '@engine/utils/queue';
 import { Rect } from '@engine/utils/rect';
 import { InputEngine, DEFAULT_RPG_KEYS } from '@engine/manager/input/input-engine';
-import type { ResourceConfig } from '@sharedTypes/config';
-import { ActionManager } from '@engine/manager/action/action-manager';
-import { ActionSchema } from '@schema/resource/action';
+import { ImageLoader } from '@engine/resource/domain/imageLoader';
 
 // ---------------------------------------------------------------------------
 // Test-fixture helpers
 // ---------------------------------------------------------------------------
+
+const mockBitmap = {} as ImageBitmap;
+
+const makeImageLoader = (): ImageLoader =>
+  ({
+    toBitmap: vi.fn().mockResolvedValue(mockBitmap),
+  }) as unknown as ImageLoader;
+
+const makeStore = (): ResourceStore =>
+  ({
+    get: vi.fn().mockResolvedValue(makeImageLoader()),
+  }) as unknown as ResourceStore;
 
 function makeManifest(): ManifestData {
   return {
@@ -606,32 +618,35 @@ describe('EntityInstance: unbound call must not throw', () => {
 // ---------------------------------------------------------------------------
 // AssetCache — cache, get
 // ---------------------------------------------------------------------------
-
 describe('AssetCache: unbound call must not throw', () => {
   beforeEach(() => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        blob: vi.fn().mockResolvedValue(new Blob()),
-      })
-    );
-    vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue({} as ImageBitmap));
+    vi.resetAllMocks();
   });
 
   it('keeps this binding in cache — unbound call must not throw', async () => {
-    const store = new ResourceStore(makeContext());
+    const store = makeStore();
+
     const assetCache = new AssetCache(store);
+
     assetCache.setRenderer(makeRenderer());
+
     const cache = assetCache.cache;
-    await expect(cache('img.test')).resolves.not.toThrow();
+
+    await expect(cache('test/image/sample')).resolves.toBeUndefined();
   });
 
   it('keeps this binding in get — unbound call must not throw', () => {
-    const store = new ResourceStore(makeContext());
+    const store = makeStore();
+
     const assetCache = new AssetCache(store);
+
     assetCache.setRenderer(makeRenderer());
+
+    vi.spyOn(assetCache, 'cache').mockResolvedValue();
+
     const get = assetCache.get;
-    expect(() => get('img.test')).not.toThrow();
+
+    expect(() => get('test/image/sample')).not.toThrow();
   });
 });
 
@@ -643,7 +658,7 @@ describe('ResourceFactory: unbound call must not throw', () => {
   it('keeps this binding in create — unbound call must not throw', async () => {
     const factory = new ResourceFactory(makeContext());
     const create = factory.create;
-    const actionData = { id: 'action.test', type: 'action', sequence: [] };
+    const actionData = { id: 'test/action/sample', type: 'action', sequence: [] };
     await expect(create(actionData, 'action')).resolves.not.toThrow();
   });
 });
@@ -656,34 +671,34 @@ describe('ResourceStore: unbound call must not throw', () => {
   it('keeps this binding in fetch — unbound call must not throw', async () => {
     const store = new ResourceStore(makeContext());
     vi.spyOn(store, 'fetch').mockResolvedValue({
-      id: 'action.test',
+      id: 'test/action/sample',
       type: 'action',
       sequence: [],
     });
     const fetchMethod = store.fetch;
-    await expect(fetchMethod('action.test', ActionSchema)).resolves.not.toThrow();
+    await expect(fetchMethod('test/action/sample', ActionSchema)).resolves.not.toThrow();
   });
 
   it('keeps this binding in get — unbound call must not throw', async () => {
     const store = new ResourceStore(makeContext());
     vi.spyOn(store, 'fetch').mockResolvedValue({
-      id: 'action.test',
+      id: 'test/action/sample',
       type: 'action',
       sequence: [],
     });
     const get = store.get;
-    await expect(get('action.test', 'action')).resolves.not.toThrow();
+    await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
   });
 
   it('get called multiple times unbound must not throw', async () => {
     const store = new ResourceStore(makeContext());
     vi.spyOn(store, 'fetch').mockResolvedValue({
-      id: 'action.test',
+      id: 'test/action/sample',
       type: 'action',
       sequence: [],
     });
     const get = store.get;
-    await expect(get('action.test', 'action')).resolves.not.toThrow();
-    await expect(get('action.test', 'action')).resolves.not.toThrow();
+    await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
+    await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
   });
 });

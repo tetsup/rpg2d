@@ -3,24 +3,24 @@ import { EntitySchema } from '@schema/resource/entity';
 describe('EntitySchema', () => {
   it('正常にパースできる', () => {
     const result = EntitySchema.parse({
-      id: 'npc1',
+      id: 'test/entity/npc1',
       type: 'entity',
       visual: 'skin',
-      skin: 'dummyskin',
+      skin: 'test/skin/dummyskin',
       allowOverwrap: true,
       actions: {},
     });
 
-    expect(result.visual === 'skin' && result.skin).toBe('dummyskin');
+    expect(result.visual === 'skin' && result.skin).toBe('test/skin/dummyskin');
   });
 
   it('type不正は落ちる', () => {
     expect(() =>
       EntitySchema.parse({
-        id: 'npc1',
+        id: 'test/entity/npc1',
         type: 'notaentity',
         visual: 'skin',
-        skin: 'dummyskin',
+        skin: 'test/skin/dummyskin',
         allowOverwrap: true,
         actions: {},
       })

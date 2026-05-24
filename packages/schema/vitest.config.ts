@@ -16,9 +16,8 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@engine': path.resolve(__dirname, 'src'),
+      '@schema': path.resolve(__dirname, 'src'),
       '@tests': path.resolve(__dirname, 'tests'),
-      '@schema': path.resolve(__dirname, '../schema/src'),
       '@sharedTypes': path.resolve(__dirname, '../../types'),
     },
   },

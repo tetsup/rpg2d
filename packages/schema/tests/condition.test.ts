@@ -72,7 +72,7 @@ describe('ConditionSchema', () => {
   it('正常系', () => {
     expect(
       SingleConditionSchema.parse({
-        path: 'hp',
+        path: 'test/variable/hp',
         operator: '>',
         value: 10,
       })
@@ -82,7 +82,7 @@ describe('ConditionSchema', () => {
   it('数値比較にstringはNG', () => {
     expect(() =>
       SingleConditionSchema.parse({
-        path: 'hp',
+        path: 'test/variable/hp',
         operator: '>',
         value: '10',
       })
@@ -94,7 +94,7 @@ describe('ConditionGroupSchema', () => {
   it('単体条件', () => {
     expect(
       ConditionSchema.parse({
-        path: 'hp',
+        path: 'test/variable/hp',
         operator: '==',
         value: 10,
       })
@@ -105,8 +105,8 @@ describe('ConditionGroupSchema', () => {
     expect(
       ConditionSchema.parse({
         all: [
-          { path: 'hp', operator: '>', value: 5 },
-          { path: 'mp', operator: '>', value: 1 },
+          { path: 'test/variable/hp', operator: '>', value: 5 },
+          { path: 'test/variable/mp', operator: '>', value: 1 },
         ],
       })
     ).toBeTruthy();
@@ -117,7 +117,7 @@ describe('ConditionGroupSchema', () => {
       ConditionSchema.parse({
         any: [
           {
-            all: [{ path: 'hp', operator: '>', value: 5 }],
+            all: [{ path: 'test/variable/hp', operator: '>', value: 5 }],
           },
         ],
       })

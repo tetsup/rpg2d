@@ -37,14 +37,14 @@ describe('PlayerSchema', () => {
 
   it('正常にパースできる', () => {
     const result: any = schema.parse({
-      id: 'hero',
+      id: 'test/player/hero',
       type: 'player',
       name: { type: 'fixed', value: 'Hero' },
       initialState: {
         hp: 10,
         status: { poison: 0 },
       },
-      initialSkin: 'dummyskin',
+      initialSkin: 'test/skin/dummyskin',
     });
 
     expect(result.initialState.hp).toBe(10);
