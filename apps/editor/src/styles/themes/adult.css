@@ -1,0 +1,20 @@
+[data-theme="adult"] {
+    --app-font-sans:
+        "Inter Variable", sans-serif;
+
+    --app-font-heading:
+        "Inter Variable", sans-serif;
+
+    --radius: 0.5rem;
+
+    --touch-size: 40px;
+
+    --page-padding: 16px;
+
+    --section-gap: 16px;
+
+    --card-shadow:
+        0 1px 2px rgb(0 0 0 / 0.08);
+
+    --content-width: 960px;
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@tetsup/rpg2d-schema",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  }
+}

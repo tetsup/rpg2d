@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "moduleResolution": "bundler",
-    "types": ["vite/client"],
-    "lib": ["ES2022", "DOM"]
-  },
-  "include": ["dev", "src"]
-}

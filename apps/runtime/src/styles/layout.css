@@ -1,0 +1,156 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.runtime-shell {
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: black;
+}
+
+.runtime-viewport {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.runtime-canvas {
+  aspect-ratio: 4 / 3;
+  width: min(
+    100vw,
+    calc(100dvh * 4 / 3)
+  );
+  height: min(
+    100dvh,
+    calc(100vw * 3 / 4)
+  );
+  background: #222;
+  image-rendering: pixelated;
+}
+
+.runtime-hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 12px;
+  background:
+    rgb(0 0 0 / 0.6);
+  color: white;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.runtime-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.runtime-toolbar button {
+  border: none;
+  border-radius: 5px;
+  padding:
+    8px 12px;
+  background: #444;
+  color: white;
+}
+
+.runtime-toolbar button[data-active="true"] {
+  background: #60a5fa;
+}
+
+.softpad {
+  position: absolute;
+  display: flex;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.softpad button {
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 999px;
+  background:
+    rgb(255 255 255 / 0.15);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-size: 18px;
+}
+
+.softpad-leftside {
+  left: 24px;
+  bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(3, 56px);
+  gap: 8px;
+}
+
+.softpad-rightside {
+  right: 24px;
+  bottom: 88px;
+  flex-direction: row;
+}
+
+.softpad-up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.softpad-left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.softpad-right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.softpad-down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.runtime-toolbar {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.runtime-toolbar-group {
+  display: flex;
+  gap: 8px;
+}
+
+.runtime-toolbar-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding:
+    8px 12px;
+  border-radius: 999px;
+  background:
+    rgb(0 0 0 / 0.5);
+  color: white;
+  backdrop-filter: blur(8px);
+}
+
+.runtime-toolbar-slider input {
+  width: 120px;
+}

@@ -18,8 +18,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
-      '@dev': resolve(__dirname, 'dev'),
+      '@engine': resolve(__dirname, 'packages/engine/src'),
+      '@schema': resolve(__dirname, 'packages/schema/src'),
     },
   },
   plugins: [

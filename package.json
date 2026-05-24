@@ -1,65 +1,44 @@
 {
-  "name": "@tetsup/rpg2d",
+  "name": "@tetsup/rpg2d-workspace",
   "version": "0.0.0",
   "license": "MIT",
   "author": "tetsup",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
+    "type": "git",
     "url": "https://github.com/tetsup/rpg2d"
   },
-  "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "engines": {
     "node": ">=24"
   },
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
-    "lint": "oxlint",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit"
+    "dev:api": "pnpm --filter @tetsup/rpg2d-api dev",
+    "dev:runtime": "pnpm --filter @tetsup/rpg2d-runtime dev",
+    "dev:editor": "pnpm --filter @tetsup/rpg2d-editor dev",
+    "dev:play": "concurrently -n api,runtime \"pnpm dev:api\" \"pnpm dev:runtime\"",
+    "dev:edit": "concurrently -n api,runtime,editor \"pnpm dev:api\" \"pnpm dev:runtime\" \"pnpm dev:editor\"",
+    "lint": "eslint",
+    "typecheck": "tsc -b",
+    "test:schema":"pnpm --filter @tetsup/rpg2d-schema test",
+    "test:engine":"pnpm --filter @tetsup/rpg2d-engine test",
+    "test:api":"pnpm --filter @tetsup/rpg2d-api test",
+    "test": "pnpm test:schema && pnpm test:engine && pnpm test:api"
   },
   "dependencies": {
-    "@tetsup/web2d": "^0.0.12",
-    "yaml": "^2.8.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@playwright/test": "^1.59.1",
-    "@types/node": "^25.6.0",
-    "@types/pngjs": "^6.0.5",
-    "@typescript-eslint/eslint-plugin": "^8.59.1",
-    "@typescript-eslint/parser": "^8.59.1",
-    "@vitest/browser-playwright": "4.1.2",
-    "@vitest/coverage-v8": "4.1.2",
-    "eslint": "^10.2.1",
-    "msw": "^2.14.0",
-    "oxlint": "^1.62.0",
-    "playwright": "^1.59.1",
-    "pngjs": "^7.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.8.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
     "prettier": "^3.8.3",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vite": "^8.0.10",
-    "vitest": "4.1.2",
-    "zocker": "^3.0.0"
-  },
-  "msw": {
-    "workerDirectory":
-      "public"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.13",
+    "vitest": "4.1.2"
   }
 }

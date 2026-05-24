@@ -1,0 +1,33 @@
+@keyframes pop-in {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@layer utilities {
+    .animate-pop-in {
+        animation: pop-in 140ms ease-out;
+    }
+
+    .animate-slide-up {
+        animation: slide-up 180ms ease-out;
+    }
+}

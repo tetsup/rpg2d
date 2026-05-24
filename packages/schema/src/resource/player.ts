@@ -1,0 +1,33 @@
+import z from 'zod';
+import type { StateDefinition } from '@sharedTypes/variable';
+import { IdSchema, ResourceSchemaBase } from './common/base';
+import { buildStateSchema } from './variable/player-state';
+
+export const NameSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('fixed'),
+    value: z.string(),
+  }),
+  z.object({
+    type: z.literal('input'),
+    input: z.object({
+      default: z.string().optional(),
+      maxLength: z.number().optional(),
+      regex: z.string().optional(),
+    }),
+  }),
+  z.object({
+    type: z.literal('reference'),
+    ref: z.string(),
+  }),
+]);
+
+export function buildPlayerSchema<T extends StateDefinition = any>(def: T) {
+  return ResourceSchemaBase('player', {
+    name: NameSchema,
+    initialSkin: IdSchema,
+    initialState: buildStateSchema(def),
+  });
+}
+
+export const PlayerSchema = buildPlayerSchema({});

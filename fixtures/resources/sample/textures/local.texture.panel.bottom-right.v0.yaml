@@ -1,0 +1,6 @@
+id: sample/texture/panel.bottom-right.v0
+type: texture
+layers:
+  - priority: 15
+    images:
+      - sample/image/panel.bottom-right.v0

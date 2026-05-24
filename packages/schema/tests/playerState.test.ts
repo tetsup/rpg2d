@@ -1,0 +1,38 @@
+import { StateDefinitionSchema } from '@schema/resource/variable/definition';
+import { buildStateSchema } from '@schema/resource/variable/player-state';
+
+describe('StateDefinitionSchema', () => {
+  it('ネスト構造が通る', () => {
+    const def = {
+      status: {
+        poison: { type: 'number', asInt: true },
+      },
+    };
+
+    expect(StateDefinitionSchema.parse(def)).toBeTruthy();
+  });
+
+  it('不正構造は落ちる', () => {
+    expect(() =>
+      StateDefinitionSchema.parse({
+        status: { poison: { invalid: true } },
+      })
+    ).toThrow();
+  });
+});
+
+describe('buildStateSchema', () => {
+  it('ネストstateが動作する', () => {
+    const def: any = {
+      status: {
+        poison: { type: 'number', asInt: true },
+      },
+    };
+
+    const schema = buildStateSchema(def);
+
+    expect(schema.parse({ status: { poison: 1 } })).toEqual({ status: { poison: 1 } });
+
+    expect(() => schema.parse({ status: { poison: 'a' } })).toThrow();
+  });
+});

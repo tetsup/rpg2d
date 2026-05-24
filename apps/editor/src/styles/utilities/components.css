@@ -1,0 +1,33 @@
+@layer components {
+    .app-page {
+        width: 100%;
+        max-width: var(--content-width);
+        margin-inline: auto;
+        padding: var(--page-padding);
+    }
+
+    .page-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--section-gap);
+    }
+
+    .game-card {
+        @apply rounded-3xl border bg-card;
+        box-shadow: var(--card-shadow);
+    }
+
+    .game-section {
+        @apply rounded-3xl border bg-card p-4;
+        box-shadow: var(--card-shadow);
+    }
+
+    .game-button {
+        @apply rounded-3xl px-5 py-3 font-bold;
+        box-shadow: var(--card-shadow);
+    }
+
+    .game-list-item {
+        @apply flex items-center gap-3 rounded-3xl p-3;
+    }
+}

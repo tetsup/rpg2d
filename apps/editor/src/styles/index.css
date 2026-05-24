@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/nunito";
+
+@import "@fontsource/m-plus-rounded-1c/700.css";
+
+@import "./tokens.css";
+@import "./base.css";
+
+@import "./themes/adult.css";
+@import "./themes/kids.css";
+
+@import "./modes/light.css";
+@import "./modes/dark.css";
+
+@import "./utilities/animations.css";
+@import "./utilities/components.css";
+@import "./utilities/resources.css";@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/nunito";
+
+@import "@fontsource/m-plus-rounded-1c/700.css";
+
+@import "./tokens.css";
+@import "./base.css";
+
+@import "./themes/adult.css";
+@import "./themes/kids.css";
+
+@import "./modes/light.css";
+@import "./modes/dark.css";
+
+@import "./utilities/animations.css";
+@import "./utilities/components.css";
+@import "./utilities/resources.css";
