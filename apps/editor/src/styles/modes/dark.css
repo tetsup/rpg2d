@@ -1,0 +1,55 @@
+.dark {
+    --background: oklch(0.22 0.03 260);
+
+    --foreground: oklch(0.96 0.01 255);
+
+    --card: oklch(0.28 0.03 260);
+
+    --card-foreground:
+        oklch(0.96 0.01 255);
+
+    --popover: oklch(0.28 0.03 260);
+
+    --popover-foreground:
+        oklch(0.96 0.01 255);
+
+    --primary: oklch(0.82 0.18 255);
+
+    --primary-foreground:
+        oklch(0.22 0.03 260);
+
+    --secondary: oklch(0.35 0.03 260);
+
+    --secondary-foreground:
+        oklch(0.96 0.01 255);
+
+    --muted: oklch(0.32 0.03 260);
+
+    --muted-foreground:
+        oklch(0.8 0.02 255);
+
+    --accent: oklch(0.42 0.09 140);
+
+    --accent-foreground:
+        oklch(0.96 0.01 255);
+
+    --destructive: oklch(0.75 0.18 20);
+
+    --border: oklch(1 0 0 / 10%);
+
+    --input: oklch(1 0 0 / 15%);
+
+    --ring: oklch(0.82 0.18 255);
+
+    /* resource accents */
+
+    --player: oklch(0.8 0.18 250);
+
+    --skill: oklch(0.78 0.2 320);
+
+    --enemy: oklch(0.78 0.2 20);
+
+    --map: oklch(0.76 0.18 145);
+
+    --item: oklch(0.86 0.18 85);
+}

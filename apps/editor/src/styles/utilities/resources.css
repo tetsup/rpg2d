@@ -1,0 +1,24 @@
+@utility resource-player {
+    background-color: var(--player);
+    color: white;
+}
+
+@utility resource-skill {
+    background-color: var(--skill);
+    color: white;
+}
+
+@utility resource-enemy {
+    background-color: var(--enemy);
+    color: white;
+}
+
+@utility resource-map {
+    background-color: var(--map);
+    color: white;
+}
+
+@utility resource-item {
+    background-color: var(--item);
+    color: white;
+}
