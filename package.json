@@ -17,17 +17,24 @@
     "dev:editor": "pnpm --filter @tetsup/rpg2d-editor dev",
     "dev:play": "concurrently -n api,runtime \"pnpm dev:api\" \"pnpm dev:runtime\"",
     "dev:edit": "concurrently -n api,runtime,editor \"pnpm dev:api\" \"pnpm dev:runtime\" \"pnpm dev:editor\"",
-    "test:api":"pnpm --filter @tetsup/rpg2d-api test",
+    "lint": "eslint",
+    "typecheck": "tsc -b",
+    "test:schema":"pnpm --filter @tetsup/rpg2d-schema test",
     "test:engine":"pnpm --filter @tetsup/rpg2d-engine test",
-    "test:schema":"pnpm --filter @tetsup/rpg2d-schema test"
+    "test:api":"pnpm --filter @tetsup/rpg2d-api test",
+    "test": "pnpm test:schema && pnpm test:engine && pnpm test:api"
   },
   "dependencies": {
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.8.0",
     "concurrently": "^9.2.1",
     "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
     "prettier": "^3.8.3",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.59.2",
