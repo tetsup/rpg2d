@@ -1,7 +1,16 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .runtime-shell {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: black;
 }
@@ -18,10 +27,10 @@
   aspect-ratio: 4 / 3;
   width: min(
     100vw,
-    calc(100vh * 4 / 3)
+    calc(100dvh * 4 / 3)
   );
   height: min(
-    100vh,
+    100dvh,
     calc(100vw * 3 / 4)
   );
   background: #222;
