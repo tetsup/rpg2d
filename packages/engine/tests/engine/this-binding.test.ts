@@ -153,9 +153,13 @@ function makeSkin(ctx?: GameContext) {
   return new Skin(
     ctx ?? makeContext(),
     {
-      id: 'skin.test',
-      type: 'skin' as const,
-      textures: { left: 'tex.l', right: 'tex.r', up: 'tex.u', down: 'tex.d' },
+      id: 'sample/skin/test',
+      textures: {
+        left: 'sample/texture/test.l',
+        right: 'sample/texture/test.r',
+        up: 'sample/texture/test.u',
+        down: 'sample/texture/test.d',
+      },
     },
     { textures: { left: texture, right: texture, up: texture, down: texture } }
   );
@@ -166,10 +170,9 @@ function makeEntity(ctx?: GameContext) {
   return new Entity(
     ctx ?? makeContext(),
     {
-      id: 'entity.test',
-      type: 'entity' as const,
+      id: 'sample/entity/test',
       visual: 'texture',
-      texture: 'texture.test',
+      texture: 'sample/texture/test',
       allowOverwrap: false,
       actions: {},
     },
@@ -183,10 +186,9 @@ function makeField(ctx?: GameContext) {
   return new Field(
     c,
     {
-      id: 'field.test',
-      type: 'field' as const,
+      id: 'sample/field/test',
       name: 'F',
-      tiles: { '.': 'tile.grass' },
+      tiles: { '.': 'sample/tile/grass' },
       map: [
         ['.', '.'],
         ['.', '.'],
@@ -222,7 +224,7 @@ function makeTile(ctx?: GameContext) {
   const texture = makeTexture(ctx ?? makeContext());
   return new Tile(
     ctx ?? makeContext(),
-    { id: 'tile.test', type: 'tile' as const, texture: 'texture.test', allowOverwrap: true, actions: {} as any },
+    { id: 'sample/tile/test', texture: 'sample/texture/test', allowOverwrap: true, actions: {} as any },
     { texture, actions: {} }
   );
 }
@@ -232,10 +234,9 @@ function makePlayer(ctx?: GameContext) {
   return new Player(
     ctx ?? makeContext(),
     {
-      id: 'player.test',
-      type: 'player' as const,
+      id: 'sample/player/test',
       name: { type: 'fixed', value: 'Hero' },
-      initialSkin: 'skin.test',
+      initialSkin: 'sample/skin/test',
       initialState: {},
     },
     { initialSkin: skin }
@@ -261,7 +262,7 @@ describe('RpgCore: unbound call must not throw', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
-        json: vi.fn().mockResolvedValue({ id: 'action.test', type: 'action' }),
+        json: vi.fn().mockResolvedValue({ id: 'sample/action/test' }),
         blob: vi.fn().mockResolvedValue(new Blob()),
       })
     );
@@ -658,7 +659,7 @@ describe('ResourceFactory: unbound call must not throw', () => {
   it('keeps this binding in create — unbound call must not throw', async () => {
     const factory = new ResourceFactory(makeContext());
     const create = factory.create;
-    const actionData = { id: 'test/action/sample', type: 'action', sequence: [] };
+    const actionData = { id: 'test/action/sample', sequence: [] };
     await expect(create(actionData, 'action')).resolves.not.toThrow();
   });
 });
@@ -672,7 +673,6 @@ describe('ResourceStore: unbound call must not throw', () => {
     const store = new ResourceStore(makeContext());
     vi.spyOn(store, 'fetch').mockResolvedValue({
       id: 'test/action/sample',
-      type: 'action',
       sequence: [],
     });
     const fetchMethod = store.fetch;
@@ -683,7 +683,6 @@ describe('ResourceStore: unbound call must not throw', () => {
     const store = new ResourceStore(makeContext());
     vi.spyOn(store, 'fetch').mockResolvedValue({
       id: 'test/action/sample',
-      type: 'action',
       sequence: [],
     });
     const get = store.get;
@@ -694,7 +693,6 @@ describe('ResourceStore: unbound call must not throw', () => {
     const store = new ResourceStore(makeContext());
     vi.spyOn(store, 'fetch').mockResolvedValue({
       id: 'test/action/sample',
-      type: 'action',
       sequence: [],
     });
     const get = store.get;

@@ -14,6 +14,7 @@ export const resources = [
   'skin',
   'texture',
   'tile',
+  'variable',
 ] as const;
 
 const namespacePattern = '[a-z][a-z0-9]{2,}';

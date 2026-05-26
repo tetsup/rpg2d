@@ -38,7 +38,6 @@ describe('PlayerSchema', () => {
   it('正常にパースできる', () => {
     const result: any = schema.parse({
       id: 'test/player/hero',
-      type: 'player',
       name: { type: 'fixed', value: 'Hero' },
       initialState: {
         hp: 10,
@@ -54,7 +53,6 @@ describe('PlayerSchema', () => {
     expect(() =>
       schema.parse({
         id: 'hero',
-        type: 'player',
         name: { type: 'fixed', value: 'Hero' },
         initialState: {
           status: { poison: 0 },
