@@ -16,20 +16,35 @@ export const resources = [
   'tile',
 ] as const;
 
-export const IdSchema = z
-  .string()
-  .regex(
-    /^[a-z][a-z0-9]*\/[a-z-]+\/[a-z][a-z0-9]*([.-][a-z][a-z0-9]*)*$/,
-    "idは 'namespace/type/name' 形式で、小英文字、数字、ハイフンと単一ドットのみ使用できます"
-  );
+const namespacePattern = '[a-z][a-z0-9]{2,}';
+
+const resourceNamePattern = '[a-z][a-z0-9]*([.-][a-z][a-z0-9]*)*';
+
+const resourceTypePattern = resources.join('|');
+
+export const NamespaceSchema = z.string().regex(new RegExp(`^${namespacePattern}$`));
+
+export const ResourceNameSchema = z.string().regex(new RegExp(`^${resourceNamePattern}$`));
+
+export const ResourceTypeSchema = z.enum(resources);
+
+export const IdSchemaFromTypePattern = (typePattern: string) =>
+  z
+    .string()
+    .regex(
+      new RegExp(`^${namespacePattern}/(${typePattern})/${resourceNamePattern}$`),
+      "idは 'namespace/type/name' 形式で、小英文字、数字、ハイフンと単一ドットのみ使用できます"
+    );
+
+export const IdSchemaFromType = (type: ResourceType) => IdSchemaFromTypePattern(type);
+
+export const IdSchema = IdSchemaFromTypePattern(resourceTypePattern);
 
 export const ResourceSchema = <T extends ResourceType>(resourceType: T) =>
-  z
-    .object({
-      id: IdSchema,
-      type: z.literal(resourceType),
-    })
-    .refine((v) => v.type === v.id.split('/')[1]);
+  z.object({
+    id: IdSchemaFromType(resourceType),
+    type: z.literal(resourceType),
+  });
 
 export const ResourceSchemaBase = <T extends z.ZodRawShape>(resourceType: ResourceType, data: T) =>
   z.object({ ...ResourceSchema(resourceType).shape, ...data }).strict();
