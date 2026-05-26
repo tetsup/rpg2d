@@ -1,5 +1,4 @@
 id: sample/panel-skin/message.v0
-type: panel-skin
 plane: sample/texture/panel.plane.v0
 top: sample/texture/panel.top.v0
 bottom: sample/texture/panel.bottom.v0

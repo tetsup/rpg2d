@@ -1,5 +1,4 @@
 id: sample/panel/message.v0
-type: panel
 skin: sample/panel-skin/message.v0
 layout:
   anchorType: screen

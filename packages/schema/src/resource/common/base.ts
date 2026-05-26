@@ -43,7 +43,6 @@ export const IdSchema = IdSchemaFromTypePattern(resourceTypePattern);
 export const ResourceSchema = <T extends ResourceType>(resourceType: T) =>
   z.object({
     id: IdSchemaFromType(resourceType),
-    type: z.literal(resourceType),
   });
 
 export const ResourceSchemaBase = <T extends z.ZodRawShape>(resourceType: ResourceType, data: T) =>

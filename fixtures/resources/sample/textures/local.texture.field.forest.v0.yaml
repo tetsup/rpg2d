@@ -1,5 +1,4 @@
 id: sample/texture/field.forest.v0
-type: texture
 layers:
   - priority: 0
     images:

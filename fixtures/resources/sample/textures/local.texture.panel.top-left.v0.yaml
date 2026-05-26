@@ -1,5 +1,4 @@
 id: sample/texture/panel.top-left.v0
-type: texture
 layers:
   - priority: 15
     images:

@@ -1,4 +1,3 @@
 id: sample/tile/grass.v0
-type: tile
 texture: sample/texture/field.grass.v0
 allowOverwrap: true

@@ -1,5 +1,4 @@
 id: sample/font/simple.v0
-type: font
 format: simple
 
 glyphWidth: 8

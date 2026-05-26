@@ -1,5 +1,4 @@
 id: sample/action/welcome.v0
-type: action
 sequence:
   - command: sendMessage
     messages:

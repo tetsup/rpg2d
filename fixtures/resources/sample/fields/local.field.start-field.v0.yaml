@@ -1,5 +1,4 @@
 id: sample/field/start-field.v0
-type: field
 name: はじまりのしま
 tiles:
   gr: sample/tile/grass.v0

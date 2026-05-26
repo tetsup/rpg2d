@@ -1,4 +1,3 @@
 id: sample/tile/mountain.v0
-type: tile
 texture: sample/texture/field.mountain.v0
 allowOverwrap: false

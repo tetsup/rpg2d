@@ -1,5 +1,4 @@
 id: sample/skin/hero.v0
-type: skin
 textures:
   left: sample/texture/hero.left.v0
   right: sample/texture/hero.right.v0

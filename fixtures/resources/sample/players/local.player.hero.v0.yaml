@@ -1,5 +1,4 @@
 id: sample/player/hero.v0
-type: player
 name: 
   type: fixed
   value: hero

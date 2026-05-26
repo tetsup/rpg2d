@@ -1,5 +1,4 @@
 id: sample/texture/hero.left.v0
-type: texture
 layers:
   - priority: 8
     images:

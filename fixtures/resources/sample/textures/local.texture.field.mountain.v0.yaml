@@ -1,5 +1,4 @@
 id: sample/texture/field.mountain.v0
-type: texture
 layers:
   - priority: 0
     images:

@@ -1,4 +1,3 @@
 id: sample/tile/forest.v0
-type: tile
 texture: sample/texture/field.forest.v0
 allowOverwrap: true

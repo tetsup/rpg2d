@@ -1,5 +1,4 @@
 id: sample/manifest/v0
-type: manifest
 initialState: 
   core: 
     variables: {}
