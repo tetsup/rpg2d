@@ -1,5 +1,5 @@
 import z from 'zod';
-import { IdSchema, ResourceSchemaBase } from './common/base';
+import { IdSchema, IdSchemaFromType } from './common/base';
 import { DirectionSchema, PositionSchema, SizeSchema } from './common/coordinate';
 import { PrimitiveValueSchema } from './variable/condition';
 import { StateDefinitionSchema } from './variable/definition';
@@ -51,7 +51,8 @@ export const ConfigSchema = z.object({
   messageConfig: MessageConfigSchema,
 });
 
-export const ManifestSchema = ResourceSchemaBase('manifest', {
+export const ManifestSchema = z.object({
+  id: IdSchemaFromType('manifest'),
   initialState: InitialStateSchema,
   schemas: DslSchema,
   config: ConfigSchema,

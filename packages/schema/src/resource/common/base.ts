@@ -14,7 +14,6 @@ export const resources = [
   'skin',
   'texture',
   'tile',
-  'variable',
 ] as const;
 
 const namespacePattern = '[a-z][a-z0-9]{2,}';
@@ -41,10 +40,7 @@ export const IdSchemaFromType = (type: ResourceType) => IdSchemaFromTypePattern(
 
 export const IdSchema = IdSchemaFromTypePattern(resourceTypePattern);
 
-export const ResourceSchema = <T extends ResourceType>(resourceType: T) =>
-  z.object({
-    id: IdSchemaFromType(resourceType),
-  });
-
-export const ResourceSchemaBase = <T extends z.ZodRawShape>(resourceType: ResourceType, data: T) =>
-  z.object({ ...ResourceSchema(resourceType).shape, ...data }).strict();
+export const splitId = IdSchema.transform((id) => {
+  const [namespace, type, name] = id.split('/');
+  return { namespace, type, name };
+});
