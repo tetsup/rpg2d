@@ -1,5 +1,6 @@
 import { MongoMemoryReplSet } from 'mongodb-memory-server';
 import { beforeAll, afterAll } from 'vitest';
+import { migrate } from '../../migration/migrate';
 
 let mongoServer: MongoMemoryReplSet;
 
@@ -12,6 +13,7 @@ export async function setupMongo() {
   });
   const uri = mongoServer.getUri();
   process.env.MONGO_URL = uri;
+  await migrate();
 }
 
 export async function teardownMongo() {

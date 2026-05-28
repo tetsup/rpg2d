@@ -5,7 +5,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:migrate": "tsx ./sctipts/migrate.ts"
   },
   "dependencies": {
     "mongodb": "^6.16.0"
