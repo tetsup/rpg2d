@@ -1,11 +1,11 @@
+import { IdSchema } from '@schema/resource/common/base';
+
 export function extractResourceRefs(value: unknown): string[] {
   const refs = new Set<string>();
 
   function walk(current: unknown) {
-    if (typeof current === 'string') {
-      if (current.includes('/')) {
-        refs.add(current);
-      }
+    if (typeof current === 'string' && IdSchema.safeParse(current).success) {
+      refs.add(current);
       return;
     }
 
@@ -15,7 +15,9 @@ export function extractResourceRefs(value: unknown): string[] {
     }
 
     if (current && typeof current === 'object') {
-      Object.values(current).forEach(walk);
+      Object.entries(current)
+        .filter(([key, _]) => key !== 'id')
+        .forEach(([_, value]) => walk(value));
     }
   }
   walk(value);
