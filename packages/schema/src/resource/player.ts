@@ -31,4 +31,6 @@ export function buildPlayerSchema<T extends StateDefinition = any>(def: T) {
   });
 }
 
-export const PlayerSchema = buildPlayerSchema({});
+export const PlayerSchema = buildPlayerSchema({}).extend({
+  initialState: z.record(z.string(), z.unknown()).optional().nullish(),
+});
