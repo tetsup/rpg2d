@@ -43,7 +43,7 @@ const OperatorSchema = z.enum(['==', '!=', '<', '<=', '>', '>=']);
 
 export const SingleConditionSchema = z
   .object({
-    path: IdSchema,
+    path: z.string(), //暫定
     operator: OperatorSchema,
     value: PrimitiveValueSchema,
   })
