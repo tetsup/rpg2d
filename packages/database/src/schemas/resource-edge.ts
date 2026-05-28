@@ -5,5 +5,3 @@ export const ResourceEdgeDocumentSchema = z.object({
   to: z.string(),
   type: z.string(),
 });
-
-export type ResourceEdgeDocument = z.infer<typeof ResourceEdgeDocumentSchema>;

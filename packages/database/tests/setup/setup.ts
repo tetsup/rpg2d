@@ -1,11 +1,17 @@
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongoMemoryReplSet } from 'mongodb-memory-server';
 import { beforeAll, afterAll } from 'vitest';
 
-let mongoServer: MongoMemoryServer;
+let mongoServer: MongoMemoryReplSet;
 
 export async function setupMongo() {
-  mongoServer = await MongoMemoryServer.create();
-  process.env.MONGO_URL = mongoServer.getUri();
+  mongoServer = await MongoMemoryReplSet.create({
+    replSet: {
+      count: 1,
+      storageEngine: 'wiredTiger',
+    },
+  });
+  const uri = mongoServer.getUri();
+  process.env.MONGO_URL = uri;
 }
 
 export async function teardownMongo() {

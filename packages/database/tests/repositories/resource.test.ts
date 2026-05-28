@@ -1,19 +1,25 @@
-import { saveResource, findResourceById } from '@database/repositories/resource';
+import { resourcesCollection } from '@database/collections/resources';
+import { execute } from '@database/client/mongo-client';
+import { createResource, updateResource, getResource, deleteResource } from '@database/repositories/resource';
 
 describe('resource repository', () => {
-  it('saves resource', async () => {
-    await saveResource({
-      id: 'sample/player/hero.v0',
-
-      data: {
-        hp: 100,
-      },
+  describe('getResource', () => {
+    beforeEach(async () => {
+      await execute(async (tx) => {
+        await resourcesCollection(tx).insertOne({
+          id: 'sample/player/hero.v0',
+          data: {
+            hp: 100,
+          },
+        } as any);
+      });
     });
-    console.log('saved');
-    const resource = await findResourceById('sample/player/hero.v0');
-    expect(resource).toBeTruthy();
-    expect(resource?.data).toEqual({
-      hp: 100,
+    it('returns correct data', async () => {
+      const result = await getResource('sample/player/hero.v0');
+      expect(result.ok).toBeTruthy();
+      expect(result.ok && result.data).toEqual({
+        hp: 100,
+      });
     });
   });
 });

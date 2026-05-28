@@ -1,14 +1,14 @@
 import { z } from 'zod';
+import type { ResourceType } from '@sharedTypes/resource/common';
+import { IdSchema, IdSchemaFromType, NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
+import { resolveResourceSchema } from '@schema/resource/common/resolver';
 
-export const ResourceDocumentSchema = z.object({
-  id: z.string(),
-  namespace: z.string(),
-  type: z.string(),
-  name: z.string(),
-  refs: z.array(z.string()),
-  data: z.unknown(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-});
-
-export type ResourceDocument = z.infer<typeof ResourceDocumentSchema>;
+export const createResourceDocumentSchema = (type: ResourceType) =>
+  z.object({
+    id: IdSchemaFromType(type),
+    namespace: NamespaceSchema,
+    type: z.literal(type),
+    name: ResourceNameSchema,
+    refs: z.array(IdSchema),
+    data: resolveResourceSchema(type),
+  });

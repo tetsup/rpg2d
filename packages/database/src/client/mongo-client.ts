@@ -1,25 +1,61 @@
-import { Db, MongoClient } from 'mongodb';
+import { ClientSession, Db, MongoClient } from 'mongodb';
 
-let db: Db | null = null;
+const dbName = process.env.MONGO_DB ?? 'rpg2d';
+
 let client: MongoClient | null = null;
+let db: Db | null = null;
 
-export async function connectMongo() {
-  if (db) return db;
+export type ConnectionSet = {
+  client: MongoClient;
+  db: Db;
+};
 
-  const url = process.env.MONGO_URL ?? 'mongodb://localhost:27017';
-  const dbName = process.env.MONGO_DB ?? 'rpg_editor';
-  client = new MongoClient(url);
+export type TxContext = {
+  db: Db;
+  session?: ClientSession;
+};
+
+async function createMongoClient(): Promise<ConnectionSet> {
+  const url = process.env.MONGO_URL!;
+  const client = new MongoClient(url);
   await client.connect();
-  db = client.db(dbName);
-  return db;
+  return {
+    client,
+    db: client.db(dbName),
+  };
 }
 
-export async function getMongoDb() {
-  return connectMongo();
-}
-
-export async function disconnectMongo() {
-  await client?.close();
+async function forceCloseConnection() {
+  try {
+    await client?.close();
+  } catch {
+    // ignore
+  }
   client = null;
   db = null;
+}
+
+async function ensureConnection(): Promise<ConnectionSet> {
+  try {
+    if (client && db) {
+      await db.command({ ping: 1 });
+      return { client, db };
+    }
+  } catch {
+    await forceCloseConnection();
+  }
+  const connection = await createMongoClient();
+  client = connection.client;
+  db = connection.db;
+  return connection;
+}
+
+export async function execute<T>(func: (ctx: TxContext) => Promise<T>): Promise<T> {
+  const { db } = await ensureConnection();
+  return await func({ db });
+}
+
+export async function withTransaction<T>(func: (ctx: TxContext) => Promise<T>): Promise<T> {
+  const { client, db } = await ensureConnection();
+  return client.withSession((session) => session.withTransaction(async () => await func({ db, session })));
 }
