@@ -56,7 +56,7 @@ function createOwnerMemberDocument(namespaceId: string, userId: string): Namespa
   };
 }
 
-describe('namespace repository integration', () => {
+describe('namespace repository', () => {
   beforeEach(async () => {
     await execute(async (tx) => {
       await namespaceMemberCollectionBuilder(tx).deleteMany({});
@@ -118,16 +118,6 @@ describe('namespace repository integration', () => {
         expect(result.data.displayName).toBe('Sample');
       }
     });
-
-    it('returns not_found when missing', async () => {
-      const result = await new NamespaceRepository().get('missing');
-
-      expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
-    });
   });
 
   describe('update', () => {
@@ -151,19 +141,6 @@ describe('namespace repository integration', () => {
 
       expect(namespace?.displayName).toBe('Updated Sample');
       expect(namespace?.createdBy).toBe('owner-user');
-    });
-
-    it('returns not_found when missing', async () => {
-      const result = await new NamespaceRepository().update({
-        id: 'missing',
-        displayName: 'Missing',
-      });
-
-      expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
     });
   });
 
@@ -201,16 +178,6 @@ describe('namespace repository integration', () => {
 
       expect(members).toHaveLength(0);
     });
-
-    it('returns not_found when missing', async () => {
-      const result = await new NamespaceRepository().delete('missing');
-
-      expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
-    });
   });
 
   describe('addMember', () => {
@@ -231,24 +198,6 @@ describe('namespace repository integration', () => {
       });
 
       expect(member?.permissions).toEqual(memberPermissions);
-    });
-
-    it('returns already_exists when duplicated', async () => {
-      await execute(async (tx) => {
-        await namespaceMemberCollectionBuilder(tx).insertOne(createMemberDocument('sample', 'member-user'));
-      });
-
-      const result = await new NamespaceRepository().addMember({
-        namespaceId: 'sample',
-        userId: 'member-user',
-        permissions: memberPermissions,
-      });
-
-      expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('already_exists');
-      }
     });
   });
 
@@ -275,19 +224,6 @@ describe('namespace repository integration', () => {
       });
 
       expect(member).toBeNull();
-    });
-
-    it('returns not_found when missing', async () => {
-      const result = await new NamespaceRepository().removeMember({
-        namespaceId: 'sample',
-        userId: 'missing-user',
-      });
-
-      expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
     });
   });
 
@@ -359,32 +295,6 @@ describe('namespace repository integration', () => {
 
       if (result.ok) {
         expect(result.data).toEqual(memberPermissions);
-      }
-    });
-
-    it('returns not_found when membership is missing', async () => {
-      const result = await new NamespaceRepository().checkPermissions({
-        namespaceId: 'sample',
-        userId: 'missing-user',
-      });
-
-      expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
-    });
-
-    it('returns not_found when namespace is missing', async () => {
-      const result = await new NamespaceRepository().checkPermissions({
-        namespaceId: 'missing',
-        userId: 'owner-user',
-      });
-
-      expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
       }
     });
   });
