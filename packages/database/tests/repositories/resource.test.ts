@@ -1,14 +1,7 @@
 import { execute } from '@database/client/mongo-client';
-import { resourcesCollection } from '@database/collections/resources';
-import { resourceEdgesCollection } from '@database/collections/resource-edges';
-import {
-  createResource,
-  updateResource,
-  getResource,
-  findResources,
-  findIncomingReferences,
-  deleteResource,
-} from '@database/repositories/resource';
+import { resourceCollectionBuilder } from '@database/collections/resources';
+import { resourceEdgeCollectionBuilder } from '@database/collections/resource-edges';
+import { ResourceRepository } from '@database/repositories/resource';
 
 const validResource = {
   id: 'sample/player/hero.v0',
@@ -26,15 +19,15 @@ const validResource = {
 describe('resource repository integration', () => {
   beforeEach(async () => {
     await execute(async (tx) => {
-      await resourcesCollection(tx).deleteMany({});
-      await resourceEdgesCollection(tx).deleteMany({});
+      await resourceCollectionBuilder(tx).deleteMany({});
+      await resourceEdgeCollectionBuilder(tx).deleteMany({});
     });
   });
 
   describe('getResource', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await resourcesCollection(tx).insertOne({
+        await resourceCollectionBuilder(tx).insertOne({
           id: validResource.id,
           data: {
             hp: 100,
@@ -44,7 +37,7 @@ describe('resource repository integration', () => {
     });
 
     it('returns existing resource', async () => {
-      const result = await getResource(validResource.id);
+      const result = await new ResourceRepository().get(validResource.id);
 
       expect(result.ok).toBeTruthy();
 
@@ -56,7 +49,7 @@ describe('resource repository integration', () => {
     });
 
     it('returns not_found when missing', async () => {
-      const result = await getResource('sample/player/missing.v0');
+      const result = await new ResourceRepository().get('sample/player/missing.v0');
 
       expect(result.ok).toBeFalsy();
 
@@ -67,11 +60,11 @@ describe('resource repository integration', () => {
 
     it('does not mutate database', async () => {
       const before = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
-      await getResource(validResource.id);
+      await new ResourceRepository().get(validResource.id);
       const after = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
       expect(after).toBe(before);
@@ -80,12 +73,12 @@ describe('resource repository integration', () => {
 
   describe('createResource', () => {
     it('creates resource', async () => {
-      const result = await createResource(validResource);
+      const result = await new ResourceRepository().create(validResource);
 
       expect(result.ok).toBeTruthy();
 
       const inserted = await execute(async (tx) => {
-        return resourcesCollection(tx).findOne({
+        return resourceCollectionBuilder(tx).findOne({
           id: validResource.id,
         });
       });
@@ -94,12 +87,12 @@ describe('resource repository integration', () => {
     });
 
     it('creates reference edges', async () => {
-      const result = await createResource(validResource);
+      const result = await new ResourceRepository().create(validResource);
 
       expect(result.ok).toBeTruthy();
 
       const edges = await execute(async (tx) => {
-        return resourceEdgesCollection(tx)
+        return resourceEdgeCollectionBuilder(tx)
           .find({
             from: validResource.id,
           })
@@ -111,12 +104,12 @@ describe('resource repository integration', () => {
 
     it('returns already_exists on duplicate id', async () => {
       await execute(async (tx) => {
-        await resourcesCollection(tx).insertOne({
+        await resourceCollectionBuilder(tx).insertOne({
           id: validResource.id,
         } as any);
       });
 
-      const result = await createResource(validResource);
+      const result = await new ResourceRepository().create(validResource);
 
       expect(result.ok).toBeFalsy();
 
@@ -127,19 +120,19 @@ describe('resource repository integration', () => {
 
     it('does not partially insert on failure', async () => {
       await execute(async (tx) => {
-        await resourcesCollection(tx).insertOne({
+        await resourceCollectionBuilder(tx).insertOne({
           id: validResource.id,
         } as any);
       });
 
       const before = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
-      await createResource(validResource);
+      await new ResourceRepository().create(validResource);
 
       const after = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
       expect(after).toBe(before);
@@ -149,7 +142,7 @@ describe('resource repository integration', () => {
   describe('updateResource', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await resourcesCollection(tx).insertOne({
+        await resourceCollectionBuilder(tx).insertOne({
           id: validResource.id,
           data: {
             ...validResource,
@@ -159,7 +152,7 @@ describe('resource repository integration', () => {
           },
         } as any);
 
-        await resourceEdgesCollection(tx).insertOne({
+        await resourceEdgeCollectionBuilder(tx).insertOne({
           from: validResource.id,
           to: 'sample/skin/old.v0',
           type: 'reference',
@@ -168,7 +161,7 @@ describe('resource repository integration', () => {
     });
 
     it('updates resource', async () => {
-      const result = await updateResource({
+      const result = await new ResourceRepository().update({
         ...validResource,
         initialState: {
           hp: 200,
@@ -178,7 +171,7 @@ describe('resource repository integration', () => {
       expect(result.ok).toBeTruthy();
 
       const updated = (await execute(async (tx) => {
-        return resourcesCollection(tx).findOne({
+        return resourceCollectionBuilder(tx).findOne({
           id: validResource.id,
         });
       })) as any;
@@ -187,13 +180,13 @@ describe('resource repository integration', () => {
     });
 
     it('replaces reference edges', async () => {
-      await updateResource({
+      await new ResourceRepository().update({
         ...validResource,
         initialSkin: 'sample/skin/new.v0',
       });
 
       const edges = await execute(async (tx) => {
-        return resourceEdgesCollection(tx)
+        return resourceEdgeCollectionBuilder(tx)
           .find({
             from: validResource.id,
           })
@@ -206,7 +199,7 @@ describe('resource repository integration', () => {
     });
 
     it('returns not_found when missing', async () => {
-      const result = await updateResource({
+      const result = await new ResourceRepository().update({
         ...validResource,
         id: 'sample/player/missing.v0',
       });
@@ -220,16 +213,16 @@ describe('resource repository integration', () => {
 
     it('does not mutate missing resource', async () => {
       const before = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
-      await updateResource({
+      await new ResourceRepository().update({
         ...validResource,
         id: 'sample/player/missing.v0',
       });
 
       const after = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
       expect(after).toBe(before);
@@ -239,7 +232,7 @@ describe('resource repository integration', () => {
   describe('findResources', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await resourcesCollection(tx).insertMany([
+        await resourceCollectionBuilder(tx).insertMany([
           {
             id: 'sample/player/hero.v0',
             namespace: 'sample',
@@ -269,7 +262,7 @@ describe('resource repository integration', () => {
     });
 
     it('returns all resources', async () => {
-      const result = await findResources({});
+      const result = await new ResourceRepository().find({});
 
       expect(result.ok).toBeTruthy();
 
@@ -279,7 +272,7 @@ describe('resource repository integration', () => {
     });
 
     it('filters by type', async () => {
-      const result = await findResources({
+      const result = await new ResourceRepository().find({
         type: 'player',
       });
 
@@ -291,7 +284,7 @@ describe('resource repository integration', () => {
     });
 
     it('filters by namespace', async () => {
-      const result = await findResources({
+      const result = await new ResourceRepository().find({
         namespace: 'other',
       });
 
@@ -303,7 +296,7 @@ describe('resource repository integration', () => {
     });
 
     it('filters by query', async () => {
-      const result = await findResources({
+      const result = await new ResourceRepository().find({
         query: 'hero',
       });
 
@@ -315,7 +308,7 @@ describe('resource repository integration', () => {
     });
 
     it('supports cursor pagination', async () => {
-      const result = await findResources({
+      const result = await new ResourceRepository().find({
         cursor: 'sample/player/hero.v0',
       });
 
@@ -327,7 +320,7 @@ describe('resource repository integration', () => {
     });
 
     it('supports limit pagination', async () => {
-      const result = await findResources({
+      const result = await new ResourceRepository().find({
         limit: 1,
       });
 
@@ -343,7 +336,7 @@ describe('resource repository integration', () => {
     });
 
     it('returns empty result normally', async () => {
-      const result = await findResources({
+      const result = await new ResourceRepository().find({
         query: 'missing',
       });
 
@@ -356,27 +349,23 @@ describe('resource repository integration', () => {
 
     it('does not mutate database', async () => {
       const before = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
-      await findResources({});
+      await new ResourceRepository().find({});
 
       const after = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
       expect(after).toBe(before);
     });
   });
 
-  //
-  // findIncomingReferences
-  //
-
   describe('findIncomingReferences', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await resourceEdgesCollection(tx).insertOne({
+        await resourceEdgeCollectionBuilder(tx).insertOne({
           from: 'sample/map/test.v0',
           to: validResource.id,
           type: 'reference',
@@ -385,7 +374,7 @@ describe('resource repository integration', () => {
     });
 
     it('returns incoming references', async () => {
-      const result = await findIncomingReferences(validResource.id);
+      const result = await new ResourceRepository().findIncomingReferences(validResource.id);
 
       expect(result.ok).toBeTruthy();
 
@@ -395,7 +384,7 @@ describe('resource repository integration', () => {
     });
 
     it('returns empty array normally', async () => {
-      const result = await findIncomingReferences('sample/player/missing.v0');
+      const result = await new ResourceRepository().findIncomingReferences('sample/player/missing.v0');
 
       expect(result.ok).toBeTruthy();
 
@@ -406,31 +395,27 @@ describe('resource repository integration', () => {
 
     it('does not mutate database', async () => {
       const before = await execute(async (tx) => {
-        return resourceEdgesCollection(tx).countDocuments();
+        return resourceEdgeCollectionBuilder(tx).countDocuments();
       });
 
-      await findIncomingReferences(validResource.id);
+      await new ResourceRepository().findIncomingReferences(validResource.id);
 
       const after = await execute(async (tx) => {
-        return resourceEdgesCollection(tx).countDocuments();
+        return resourceEdgeCollectionBuilder(tx).countDocuments();
       });
 
       expect(after).toBe(before);
     });
   });
 
-  //
-  // deleteResource
-  //
-
   describe('deleteResource', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await resourcesCollection(tx).insertOne({
+        await resourceCollectionBuilder(tx).insertOne({
           id: validResource.id,
         } as any);
 
-        await resourceEdgesCollection(tx).insertMany([
+        await resourceEdgeCollectionBuilder(tx).insertMany([
           {
             from: validResource.id,
             to: 'a',
@@ -446,12 +431,12 @@ describe('resource repository integration', () => {
     });
 
     it('deletes resource', async () => {
-      const result = await deleteResource(validResource.id);
+      const result = await new ResourceRepository().delete(validResource.id);
 
       expect(result.ok).toBeTruthy();
 
       const resource = await execute(async (tx) => {
-        return resourcesCollection(tx).findOne({
+        return resourceCollectionBuilder(tx).findOne({
           id: validResource.id,
         });
       });
@@ -460,17 +445,17 @@ describe('resource repository integration', () => {
     });
 
     it('deletes related edges', async () => {
-      await deleteResource(validResource.id);
+      await new ResourceRepository().delete(validResource.id);
 
       const edges = await execute(async (tx) => {
-        return resourceEdgesCollection(tx).find({}).toArray();
+        return resourceEdgeCollectionBuilder(tx).find({}).toArray();
       });
 
       expect(edges).toHaveLength(0);
     });
 
     it('returns not_found when missing', async () => {
-      const result = await deleteResource('sample/player/missing.v0');
+      const result = await new ResourceRepository().delete('sample/player/missing.v0');
 
       expect(result.ok).toBeFalsy();
 
@@ -481,13 +466,13 @@ describe('resource repository integration', () => {
 
     it('does not mutate database when missing', async () => {
       const before = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
-      await deleteResource('sample/player/missing.v0');
+      await new ResourceRepository().delete('sample/player/missing.v0');
 
       const after = await execute(async (tx) => {
-        return resourcesCollection(tx).countDocuments();
+        return resourceCollectionBuilder(tx).countDocuments();
       });
 
       expect(after).toBe(before);

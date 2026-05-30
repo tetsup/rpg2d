@@ -2,10 +2,7 @@ import { MongoServerError, MongoNetworkError, MongoServerSelectionError, MongoTo
 import { ZodError } from 'zod';
 
 export type RepositoryResult<T> =
-  | {
-      ok: true;
-      data: T;
-    }
+  | { ok: true; data: T }
   | {
       ok: false;
       reason: 'not_found' | 'already_exists' | 'validation_failed' | 'database_error' | 'network_error' | 'unknown';
@@ -22,72 +19,34 @@ export class RepositoryNotFoundError extends Error {
 export async function repositorySafe<T>(callback: () => Promise<T>): Promise<RepositoryResult<T>> {
   try {
     const data = await callback();
-
-    return {
-      ok: true,
-      data,
-    };
+    return { ok: true, data };
   } catch (error) {
     return normalizeRepositoryError(error);
   }
 }
 
 function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
-  //
   // application/domain
-  //
-
   if (error instanceof RepositoryNotFoundError) {
-    return {
-      ok: false,
-      reason: 'not_found',
-      error,
-    };
+    return { ok: false, reason: 'not_found', error };
   }
 
-  if (error instanceof ZodError) {
-    return {
-      ok: false,
-      reason: 'validation_failed',
-      error,
-    };
-  }
+  if (error instanceof ZodError) return { ok: false, reason: 'validation_failed', error };
 
-  //
   // network
-  //
-
   if (
     error instanceof MongoNetworkError ||
     error instanceof MongoServerSelectionError ||
     error instanceof MongoTopologyClosedError
-  ) {
-    return {
-      ok: false,
-      reason: 'network_error',
-      error,
-    };
-  }
+  )
+    return { ok: false, reason: 'network_error', error };
 
-  //
   // mongodb server
-  //
-
   if (error instanceof MongoServerError) {
     switch (error.code) {
-      //
-      // duplicate key
-      //
       case 11000:
-        return {
-          ok: false,
-          reason: 'already_exists',
-          error,
-        };
-
-      //
+        return { ok: false, reason: 'already_exists', error };
       // known database-side errors
-      //
       case 6: // HostUnreachable
       case 7: // HostNotFound
       case 50: // ExceededTimeLimit
@@ -99,21 +58,10 @@ function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
       case 13435: // NotPrimaryNoSecondaryOk
       case 13436: // NotPrimaryOrSecondary
       case 13: // Unauthorized
-        return {
-          ok: false,
-          reason: 'database_error',
-          error,
-        };
+        return { ok: false, reason: 'database_error', error };
     }
   }
 
-  //
   // fallback
-  //
-
-  return {
-    ok: false,
-    reason: 'unknown',
-    error,
-  };
+  return { ok: false, reason: 'unknown', error };
 }

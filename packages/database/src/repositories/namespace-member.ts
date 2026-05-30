@@ -1,5 +1,8 @@
-import { execute } from '@database/client/mongo-client';
-import { namespaceMembersCollection } from '../collections/namespace-members';
+import { Collection } from 'mongodb';
+import { execute, TxContext } from '@database/client/mongo-client';
+import { NamespaceMemberDocument } from '@database/types/collection';
+import { NamespaceMemberDocumentSchema } from '@database/schemas/namespace-member';
+import { namespaceMemberCollectionBuilder } from '../collections/namespace-members';
 
 type FindNamespaceMemberParams = { namespaceId: string; userId: string };
 
@@ -14,37 +17,37 @@ type UpsertNamespaceMemberParams = {
   };
 };
 
-export async function findNamespaceMember({ namespaceId, userId }: FindNamespaceMemberParams) {
-  return await execute(async (tx) => {
-    const members = namespaceMembersCollection(tx);
-    return members.findOne({
-      namespaceId,
-      userId,
-    });
-  });
-}
+type NamespaceMemberRepositoryOptions = {
+  mockCollectionBuilder?: (tx: TxContext) => Collection<NamespaceMemberDocument>;
+  mockDocumentSchema?: typeof NamespaceMemberDocumentSchema;
+};
 
-export async function upsertNamespaceMember({ namespaceId, userId, permissions }: UpsertNamespaceMemberParams) {
-  return await execute(async (tx) => {
-    const members = namespaceMembersCollection(tx);
-    const now = new Date();
-    return await members.updateOne(
-      {
-        namespaceId,
-        userId,
-      },
-      {
-        $set: {
-          permissions,
-          updatedAt: now,
-        },
-        $setOnInsert: {
-          createdAt: now,
-        },
-      },
-      {
-        upsert: true,
-      }
-    );
-  });
+export class NamespaceMemberRepository {
+  private collectionBuilder: (tx: TxContext) => Collection<NamespaceMemberDocument>;
+  private documentSchema: typeof NamespaceMemberDocumentSchema;
+
+  constructor({ mockCollectionBuilder, mockDocumentSchema }: NamespaceMemberRepositoryOptions = {}) {
+    this.collectionBuilder = mockCollectionBuilder ?? namespaceMemberCollectionBuilder;
+    this.documentSchema = mockDocumentSchema ?? NamespaceMemberDocumentSchema;
+  }
+
+  async get({ namespaceId, userId }: FindNamespaceMemberParams) {
+    return await execute(async (tx) => {
+      const members = this.collectionBuilder(tx);
+      return members.findOne({ namespaceId, userId });
+    });
+  }
+
+  async upsert({ namespaceId, userId, permissions }: UpsertNamespaceMemberParams) {
+    return await execute(async (tx) => {
+      const members = this.collectionBuilder(tx);
+      const now = new Date();
+      this.documentSchema.parse({ namespaceId, userId, permissions });
+      return await members.updateOne(
+        { namespaceId, userId },
+        { $set: { permissions, updatedAt: now }, $setOnInsert: { createdAt: now } },
+        { upsert: true }
+      );
+    });
+  }
 }
