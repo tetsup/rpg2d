@@ -1,5 +1,5 @@
 import z from 'zod';
-import { IdSchema, IdSchemaFromType } from './common/base';
+import { IdSchema } from './common/base';
 import { DirectionSchema, PositionSchema, SizeSchema } from './common/coordinate';
 import { PrimitiveValueSchema } from './variable/condition';
 import { StateDefinitionSchema } from './variable/definition';
@@ -52,7 +52,6 @@ export const ConfigSchema = z.object({
 });
 
 export const ManifestSchema = z.object({
-  id: IdSchemaFromType('manifest'),
   initialState: InitialStateSchema,
   schemas: DslSchema,
   config: ConfigSchema,

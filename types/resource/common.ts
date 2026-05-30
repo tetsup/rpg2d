@@ -8,3 +8,8 @@ export type ResourceType = (typeof resources)[number];
 export type ResourceId = z.infer<typeof IdSchema>;
 export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
 export type Position = z.infer<typeof PositionSchema>;
+export type ResourcePath = {
+  namespace: string;
+  type: ResourceType;
+  name: string;
+};

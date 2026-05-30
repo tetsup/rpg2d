@@ -1,6 +1,6 @@
 import z from 'zod';
 import type { StateDefinition } from '@sharedTypes/variable';
-import { IdSchema, IdSchemaFromType } from './common/base';
+import { IdSchema } from './common/base';
 import { buildStateSchema } from './variable/player-state';
 
 export const NameSchema = z.discriminatedUnion('type', [
@@ -24,7 +24,6 @@ export const NameSchema = z.discriminatedUnion('type', [
 
 export function buildPlayerSchema<T extends StateDefinition = any>(def: T) {
   return z.object({
-    id: IdSchemaFromType('player'),
     name: NameSchema,
     initialSkin: IdSchema,
     initialState: buildStateSchema(def),

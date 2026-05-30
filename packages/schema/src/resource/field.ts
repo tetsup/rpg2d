@@ -1,5 +1,5 @@
 import z from 'zod';
-import { IdSchema, IdSchemaFromType } from './common/base';
+import { IdSchema } from './common/base';
 import { PositionSchema, DirectionSchema } from './common/coordinate';
 
 export const TileCodeSchema = z.string().min(1);
@@ -17,7 +17,6 @@ export const EntityMappingSchema = z.record(
 
 export const FieldSchema = z
   .object({
-    id: IdSchemaFromType('field'),
     name: z.string(),
     tiles: z.record(TileCodeSchema, IdSchema),
     map: z.array(z.array(TileCodeSchema)),

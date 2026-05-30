@@ -1,7 +1,8 @@
+import { IdSchema } from '@schema/resource/common/base';
 import { z } from 'zod';
 
 export const ResourceEdgeDocumentSchema = z.object({
-  from: z.string(),
-  to: z.string(),
-  type: z.string(),
+  from: IdSchema,
+  to: IdSchema,
+  type: z.literal('reference'),
 });

@@ -1,5 +1,5 @@
 import z from 'zod';
-import { IdSchema, IdSchemaFromType } from './common/base';
+import { IdSchema } from './common/base';
 
 export const TexturePlaybackSchema = z.object({ tickMs: z.number().positive(), repeat: z.boolean() });
 
@@ -10,6 +10,5 @@ export const AnimationLayerSchema = z.object({
 });
 
 export const TextureSchema = z.object({
-  id: IdSchemaFromType('texture'),
   layers: z.array(AnimationLayerSchema),
 });

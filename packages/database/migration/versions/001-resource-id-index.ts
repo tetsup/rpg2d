@@ -15,10 +15,11 @@ export const migration001: Migration = {
   async up(tx) {
     const resources = resourceCollectionBuilder(tx);
     await resources.createIndexes([
-      { key: { id: 1 }, unique: true },
-      { key: { namespace: 1, type: 1 } },
+      { key: { namespace: 1, type: 1, name: 1 }, unique: true },
+      { key: { namespace: 1 } },
+      { key: { type: 1 } },
+      { key: { name: 1 } },
       { key: { updatedAt: -1 } },
-      { key: { refs: 1 } },
     ]);
 
     const edges = resourceEdgeCollectionBuilder(tx);
@@ -37,20 +38,24 @@ export const migration001: Migration = {
   async verify(tx) {
     const resourceIndexes = await resourceCollectionBuilder(tx).indexes();
 
-    if (!hasIndex(resourceIndexes, { id: 1 }, { unique: true })) {
-      throw new Error('resources.id unique index missing');
+    if (!hasIndex(resourceIndexes, { namespace: 1, type: 1, name: 1 }, { unique: true })) {
+      throw new Error('resources unique index missing');
     }
 
-    if (!hasIndex(resourceIndexes, { namespace: 1, type: 1 })) {
-      throw new Error('resources.namespace_type index missing');
+    if (!hasIndex(resourceIndexes, { namespace: 1 })) {
+      throw new Error('resources.namespace index missing');
+    }
+
+    if (!hasIndex(resourceIndexes, { type: 1 })) {
+      throw new Error('resources.type index missing');
+    }
+
+    if (!hasIndex(resourceIndexes, { name: 1 })) {
+      throw new Error('resources.name index missing');
     }
 
     if (!hasIndex(resourceIndexes, { updatedAt: -1 })) {
       throw new Error('resources.updatedAt index missing');
-    }
-
-    if (!hasIndex(resourceIndexes, { refs: 1 })) {
-      throw new Error('resources.refs index missing');
     }
 
     const edgeIndexes = await resourceEdgeCollectionBuilder(tx).indexes();

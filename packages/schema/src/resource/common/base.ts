@@ -1,5 +1,5 @@
 import z from 'zod';
-import type { ResourceType } from '@sharedTypes/resource/common';
+import type { ResourcePath, ResourceType } from '@sharedTypes/resource/common';
 
 export const resources = [
   'action',
@@ -42,5 +42,5 @@ export const IdSchema = IdSchemaFromTypePattern(resourceTypePattern);
 
 export const splitId = IdSchema.transform((id) => {
   const [namespace, type, name] = id.split('/');
-  return { namespace, type, name };
+  return { namespace, type, name } as ResourcePath;
 });

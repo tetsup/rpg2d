@@ -1,5 +1,5 @@
 import z from 'zod';
-import { IdSchema, IdSchemaFromType } from './common/base';
+import { IdSchema } from './common/base';
 
 export const EntityActionTriggerSchema = z.enum([
   'onEnter',
@@ -15,7 +15,6 @@ export const EntityActionsSchema = z.partialRecord(EntityActionTriggerSchema, Id
 
 export const EntitySchema = z.discriminatedUnion('visual', [
   z.object({
-    id: IdSchemaFromType('entity'),
     visual: z.literal('skin'),
     skin: IdSchema,
     allowOverwrap: z.boolean(),
@@ -23,7 +22,6 @@ export const EntitySchema = z.discriminatedUnion('visual', [
     actions: EntityActionsSchema,
   }),
   z.object({
-    id: IdSchemaFromType('entity'),
     visual: z.literal('texture'),
     texture: IdSchema,
     allowOverwrap: z.boolean(),
@@ -31,7 +29,6 @@ export const EntitySchema = z.discriminatedUnion('visual', [
     actions: EntityActionsSchema,
   }),
   z.object({
-    id: IdSchemaFromType('entity'),
     visual: z.literal('none'),
     allowOverwrap: z.boolean(),
     moveDurationMs: z.number().int().optional(),

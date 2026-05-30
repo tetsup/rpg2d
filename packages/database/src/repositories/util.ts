@@ -21,6 +21,7 @@ export async function repositorySafe<T>(callback: () => Promise<T>): Promise<Rep
     const data = await callback();
     return { ok: true, data };
   } catch (error) {
+    console.error(error);
     return normalizeRepositoryError(error);
   }
 }

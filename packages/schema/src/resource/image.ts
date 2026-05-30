@@ -1,6 +1,5 @@
 import z from 'zod';
 import { SizeSchema } from './common/coordinate';
-import { IdSchemaFromType } from './common/base';
 
 export const RgbaSchema = z
   .array(z.number().int().min(0).max(255))
@@ -22,7 +21,6 @@ export const ImageRowSchema = z
 
 export const ImageSchema = z
   .object({
-    id: IdSchemaFromType('image'),
     size: SizeSchema,
     palette: ImagePaletteSchema,
     pixels: z.array(ImageRowSchema),

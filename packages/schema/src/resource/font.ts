@@ -1,10 +1,8 @@
 import z from 'zod';
-import { IdSchemaFromType } from './common/base';
 
 const GlyphHexSchema = z.string().regex(/^[0-9A-Fa-f]{16}$/);
 
 export const FontSchema = z.object({
-  id: IdSchemaFromType('font'),
   format: z.literal('simple'),
   glyphWidth: z.literal(8),
   glyphHeight: z.literal(8),
