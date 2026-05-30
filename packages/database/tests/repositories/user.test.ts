@@ -11,14 +11,90 @@ const validUser: Omit<UserDocument, 'createdAt' | 'updatedAt'> = {
   roles: ['player'],
 };
 
-describe('user repository', () => {
+function createUserDocument(
+  overrides: Partial<Omit<UserDocument, 'createdAt' | 'updatedAt'>> = {}
+): UserDocument {
+  const now = new Date();
+
+  return {
+    ...validUser,
+    ...overrides,
+    createdAt: now,
+    updatedAt: now,
+  };
+}
+
+describe('user repository integration', () => {
   beforeEach(async () => {
     await execute(async (tx) => {
       await userCollectionBuilder(tx).deleteMany({});
     });
   });
 
+  describe('get', () => {
+    beforeEach(async () => {
+      await execute(async (tx) => {
+        await userCollectionBuilder(tx).insertOne(createUserDocument());
+      });
+    });
+
+    it('returns existing user', async () => {
+      const result = await new UserRepository().get(validUser.sub);
+
+      expect(result.ok).toBeTruthy();
+
+      if (result.ok) {
+        expect(result.data?.presenceName).toBe('Test User');
+        expect(result.data?.roles).toEqual(['player']);
+      }
+    });
+  });
+
+  describe('update', () => {
+    beforeEach(async () => {
+      await execute(async (tx) => {
+        await userCollectionBuilder(tx).insertOne(createUserDocument());
+      });
+    });
+
+    it('updates user', async () => {
+      const result = await new UserRepository().update({
+        ...validUser,
+        presenceName: 'Updated User',
+        roles: ['admin'],
+      });
+
+      expect(result.ok).toBeTruthy();
+
+      const user = await execute(async (tx) => {
+        return await userCollectionBuilder(tx).findOne({ sub: validUser.sub });
+      });
+
+      expect(user?.presenceName).toBe('Updated User');
+      expect(user?.roles).toEqual(['admin']);
+    });
+  });
+
   describe('upsert', () => {
+    it('updates existing user', async () => {
+      await execute(async (tx) => {
+        await userCollectionBuilder(tx).insertOne(createUserDocument());
+      });
+
+      const result = await new UserRepository().upsert({
+        ...validUser,
+        presenceName: 'Upserted User',
+      });
+
+      expect(result.ok).toBeTruthy();
+
+      const user = await execute(async (tx) => {
+        return await userCollectionBuilder(tx).findOne({ sub: validUser.sub });
+      });
+
+      expect(user?.presenceName).toBe('Upserted User');
+    });
+
     it('creates new user', async () => {
       const result = await new UserRepository().upsert(validUser);
 
