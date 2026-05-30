@@ -217,7 +217,8 @@ function makeFieldEngine(ctx?: GameContext) {
     checkReachable: vi.fn().mockReturnValue(true),
     resolveLayers: vi.fn().mockReturnValue([]),
   };
-  return new FieldEngine(c, mockField, state);
+  const actions = {} as any;
+  return new FieldEngine(c, mockField, state, actions);
 }
 
 function makeTile(ctx?: GameContext) {
