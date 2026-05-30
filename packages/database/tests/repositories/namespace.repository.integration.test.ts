@@ -44,6 +44,18 @@ function createMemberDocument(namespaceId: string, userId: string): NamespaceMem
   };
 }
 
+function createOwnerMemberDocument(namespaceId: string, userId: string): NamespaceMemberDocument {
+  const now = new Date();
+
+  return {
+    namespaceId,
+    userId,
+    permissions: ownerPermissions,
+    createdAt: now,
+    updatedAt: now,
+  };
+}
+
 describe('namespace repository integration', () => {
   beforeEach(async () => {
     await execute(async (tx) => {
@@ -309,6 +321,70 @@ describe('namespace repository integration', () => {
 
       if (result.ok) {
         expect(result.data).toBe(false);
+      }
+    });
+  });
+
+  describe('checkPermissions', () => {
+    beforeEach(async () => {
+      await execute(async (tx) => {
+        await namespaceCollectionBuilder(tx).insertOne(createNamespaceDocument('sample', 'Sample'));
+        await namespaceMemberCollectionBuilder(tx).insertMany([
+          createOwnerMemberDocument('sample', 'owner-user'),
+          createMemberDocument('sample', 'member-user'),
+        ]);
+      });
+    });
+
+    it('returns owner permissions', async () => {
+      const result = await new NamespaceRepository().checkPermissions({
+        namespaceId: 'sample',
+        userId: 'owner-user',
+      });
+
+      expect(result.ok).toBeTruthy();
+
+      if (result.ok) {
+        expect(result.data).toEqual(ownerPermissions);
+      }
+    });
+
+    it('returns member permissions', async () => {
+      const result = await new NamespaceRepository().checkPermissions({
+        namespaceId: 'sample',
+        userId: 'member-user',
+      });
+
+      expect(result.ok).toBeTruthy();
+
+      if (result.ok) {
+        expect(result.data).toEqual(memberPermissions);
+      }
+    });
+
+    it('returns not_found when membership is missing', async () => {
+      const result = await new NamespaceRepository().checkPermissions({
+        namespaceId: 'sample',
+        userId: 'missing-user',
+      });
+
+      expect(result.ok).toBeFalsy();
+
+      if (!result.ok) {
+        expect(result.reason).toBe('not_found');
+      }
+    });
+
+    it('returns not_found when namespace is missing', async () => {
+      const result = await new NamespaceRepository().checkPermissions({
+        namespaceId: 'missing',
+        userId: 'owner-user',
+      });
+
+      expect(result.ok).toBeFalsy();
+
+      if (!result.ok) {
+        expect(result.reason).toBe('not_found');
       }
     });
   });
