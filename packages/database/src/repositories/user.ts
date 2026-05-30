@@ -37,12 +37,12 @@ export class UserRepository {
         const users = this.collectionBuilder(tx);
         const now = new Date();
         const user = this.documentSchema.parse({ ...data, createdAt: now, updatedAt: now });
-        return users.updateOne({ sub: user.sub }, { $set: user, $setOnInsert: { createdAt: now } }, { upsert });
+        return await users.updateOne({ sub: user.sub }, { $set: user, $setOnInsert: { createdAt: now } }, { upsert });
       });
     });
   }
 
   async upsert(data: any) {
-    return await this.update(data);
+    return await this.update(data, true);
   }
 }
