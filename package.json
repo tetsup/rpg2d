@@ -18,7 +18,7 @@
     "dev:play": "concurrently -n api,runtime \"pnpm dev:api\" \"pnpm dev:runtime\"",
     "dev:edit": "concurrently -n api,runtime,editor \"pnpm dev:api\" \"pnpm dev:runtime\" \"pnpm dev:editor\"",
     "lint": "eslint",
-    "typecheck": "tsc -b",
+    "typecheck": "pnpm -r typecheck",
     "test:schema":"pnpm --filter @tetsup/rpg2d-schema test",
     "test:engine":"pnpm --filter @tetsup/rpg2d-engine test",
     "test:database":"pnpm --filter @tetsup/rpg2d-database test",

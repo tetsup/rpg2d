@@ -4,6 +4,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:migrate": "tsx ./sctipts/migrate.ts"
