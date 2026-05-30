@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { resourceRoute } from './routes/resource';
 import { authRoute } from './routes/auth';
-import { resolveUserMiddleware } from './auth/resolve-user';
+import { resolveUserMiddleware } from './auth/middlewares/resolve-user';
 
 const app = new Hono();
 

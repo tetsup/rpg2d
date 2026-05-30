@@ -1,73 +1,90 @@
 import { Hono } from 'hono';
 import { setCookie } from 'hono/cookie';
-import { sessionStore } from '@api/auth/session';
-import { authMiddleware } from '@api/auth/middleware';
-import type { Auth0TokenResponse, Auth0User, Variables } from 'apps/api/types/auth';
+import { UserRepository } from '@database/repositories/user';
+import type { Auth0UserInfo, SessionTokenResponse, Variables } from '@api/types/auth';
+import { sessionStore } from '@api/auth/stores/session';
+import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
+import { UnauthorizedError } from '@api/errors/http-error';
 
 const authRoute = new Hono<{ Variables: Variables }>();
+const domain = process.env.AUTH_DOMAIN!;
+const clientId = process.env.AUTH_CLIENT_ID!;
+const clientSecret = process.env.AUTH_CLIENT_SECRET;
+const redirectUri = process.env.AUTH_CALLBACK_URL!;
+const auth0Url =
+  `https://${domain}/authorize` +
+  `?response_type=code` +
+  `&client_id=${clientId}` +
+  `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+  `&scope=openid profile email`;
+const isDev = process.env.NODE_ENV !== 'production';
+const secure = !isDev;
 
-authRoute.get('/login', (c) => {
-  const domain = process.env.AUTH0_DOMAIN!;
-  const clientId = process.env.AUTH0_CLIENT_ID!;
-  const redirectUri = process.env.AUTH0_CALLBACK_URL!;
+authRoute.get('/login', async (c) => {
+  const devUser = c.req.query('dev_user');
+  if (isDev && devUser) {
+    const mockEmail = `${devUser}@example.com`;
+    await new UserRepository().upsert({
+      sub: `dev|${devUser}`,
+      name: devUser,
+      email: mockEmail,
+      roles: devUser === 'admin' ? ['admin'] : ['user'],
+    });
 
-  const url =
-    `https://${domain}/authorize` +
-    `?response_type=code` +
-    `&client_id=${clientId}` +
-    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-    `&scope=openid profile email`;
+    const sessionId = crypto.randomUUID();
+    sessionStore.set(sessionId, { sub: `dev|${devUser}` });
+    setCookie(c, 'session', sessionId, { httpOnly: true, sameSite: 'Lax', secure });
 
-  return c.redirect(url);
+    return c.redirect('/');
+  }
+
+  return c.redirect(auth0Url);
 });
 
 authRoute.get('/callback', async (c) => {
   const code = c.req.query('code');
-
-  const tokenRes = await fetch(`https://${process.env.AUTH0_DOMAIN}/oauth/token`, {
+  const tokenRes = await fetch(`https://${domain}/oauth/token`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       grant_type: 'authorization_code',
-      client_id: process.env.AUTH0_CLIENT_ID,
-      client_secret: process.env.AUTH0_CLIENT_SECRET,
+      client_id: clientId,
+      client_secret: clientSecret,
       code,
-      redirect_uri: process.env.AUTH0_CALLBACK_URL,
+      redirect_uri: redirectUri,
     }),
   });
-
-  const token = (await tokenRes.json()) as Auth0TokenResponse;
-
-  const userRes = await fetch(`https://${process.env.AUTH0_DOMAIN}/userinfo`, {
+  const token = (await tokenRes.json()) as SessionTokenResponse;
+  const userRes = await fetch(`https://${domain}/userinfo`, {
     headers: {
       Authorization: `Bearer ${token.access_token}`,
     },
   });
-
-  const user = (await userRes.json()) as Auth0User;
-
+  const user = (await userRes.json()) as Auth0UserInfo;
+  await new UserRepository().upsert({
+    sub: user.sub,
+    email: user.email,
+    email_verified: user.email_verified,
+  });
   const sessionId = crypto.randomUUID();
 
   sessionStore.set(sessionId, {
-    id: user.sub,
-    email: user.email,
-    name: user.name,
-    roles: [],
+    sub: user.sub,
   });
 
   setCookie(c, 'session', sessionId, {
     httpOnly: true,
     sameSite: 'Lax',
-    secure: false, // prodでtrue
+    secure,
   });
 
   return c.redirect('/');
 });
 
-authRoute.get('/me', authMiddleware, (c) => {
-  return c.json({
-    user: c.get('user'),
-  });
+authRoute.get('/me', resolveUserMiddleware, (c) => {
+  const authUser = c.get('user');
+  if (authUser == null) throw new UnauthorizedError();
+  return c.json(authUser);
 });
 
 export { authRoute };

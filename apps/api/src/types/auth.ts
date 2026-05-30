@@ -1,22 +1,22 @@
-export type User = {
-  id: string;
-  email?: string;
-  name?: string;
-  roles: string[];
+import { UserDocument } from '@database/types/collection';
+
+export type Auth0UserInfo = {
+  sub: string;
+  name: string;
+  email: string;
+  email_verified: boolean;
 };
 
 export type Variables = {
-  user?: User;
+  user?: UserDocument;
 };
 
-export type Auth0TokenResponse = {
+export type SessionTokenResponse = {
   access_token: string;
   id_token: string;
   expires_in: number;
 };
 
-export type Auth0User = {
+export type SessionUser = {
   sub: string;
-  email?: string;
-  name?: string;
 };

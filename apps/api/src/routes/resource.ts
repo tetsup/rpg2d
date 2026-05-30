@@ -1,40 +1,63 @@
 import { Hono } from 'hono';
-import { zValidator } from '@hono/zod-validator';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { ResourceSearchReqSchema } from '@api/schemas/resources/search/get-schema';
-import { ResourceGetReqSchema } from '@api/schemas/resources/by-id/get-schema';
-import { resourceRepository } from '@api/db/search-resources';
-import { LocalLoader } from '../loaders/local-loader';
+import { ResourceRepository } from '@database/repositories/resource';
+import { ResourceSearchReqParamsSchema } from '@api/schemas/resources/search-params';
+import { ResourceByIdReqSchema } from '@api/schemas/resources/by-id';
+import { authorizeResourceMiddleware } from '@api/auth/middlewares/authorize-resource';
+import { Action } from '@api/utils/authorize';
 import { handle } from '../utils/handle';
 import { parseParams } from '../utils/params';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const resourceDir = path.resolve(__dirname, '../../../../fixtures/resources/sample');
-
-const resourceLoader = new LocalLoader(resourceDir);
+import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 
 const resourceRoute = new Hono();
+resourceRoute.use('*', resolveUserMiddleware);
 
 resourceRoute.get(
-  '/:namespace/:type/:id',
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.READ),
   handle(async (c) => {
-    const { namespace, type, id } = parseParams(ResourceGetReqSchema, c.req.param());
-    const resource = resourceLoader.readResource(namespace, type, id);
-    return resource;
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().get(pathParams);
   })
 );
 
-resourceRoute.get('/search/', zValidator('query', ResourceSearchReqSchema), async (c) => {
-  const query = c.req.valid('query');
-  const result = await resourceRepository.list({
-    query: query.q,
-    type: query.type,
-    cursor: query.cursor,
-    limit: query.limit,
-  });
-  return c.json(result);
-});
+resourceRoute.post(
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.CREATE),
+  handle(async (c) => {
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().create(pathParams, await c.req.json());
+  })
+);
+
+resourceRoute.put(
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.UPDATE),
+  handle(async (c) => {
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().update(pathParams, await c.req.json());
+  })
+);
+
+resourceRoute.delete(
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.DELETE),
+  handle(async (c) => {
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().delete(pathParams);
+  })
+);
+
+resourceRoute.get(
+  '/search',
+  handle(async (c) => {
+    const query = ResourceSearchReqParamsSchema.parse(c.req.query());
+    return await new ResourceRepository().find({
+      query: query.q,
+      type: query.type,
+      cursor: query.cursor,
+      limit: query.limit,
+    });
+  })
+);
 
 export { resourceRoute };

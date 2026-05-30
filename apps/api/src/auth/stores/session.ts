@@ -1,9 +1,9 @@
-import { User } from 'apps/api/types/auth';
+import type { SessionUser } from '@api/types/auth';
 
-const store = new Map<string, User>();
+const store = new Map<string, SessionUser>();
 
 export const sessionStore = {
-  set(id: string, user: User) {
+  set(id: string, user: SessionUser) {
     store.set(id, user);
   },
   get(id: string) {

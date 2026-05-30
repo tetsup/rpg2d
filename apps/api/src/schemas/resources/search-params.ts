@@ -1,7 +1,7 @@
 import z from 'zod';
 import { resources } from '@schema/resource/common/base';
 
-export const ResourceSearchReqSchema = z.object({
+export const ResourceSearchReqParamsSchema = z.object({
   q: z.string().default(''),
   type: z.enum(resources).optional(),
   cursor: z.string().optional(),
