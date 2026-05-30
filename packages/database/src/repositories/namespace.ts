@@ -1,8 +1,11 @@
 import { execute, TxContext } from '@database/client/mongo-client';
 import { namespaceCollectionBuilder } from '../collections/namespaces';
 import { Collection } from 'mongodb';
-import { NamespaceDocument } from '@database/types/collection';
+import { NamespaceDocument, NamespaceMemberDocument } from '@database/types/collection';
 import { NamespaceDocumentSchema } from '@database/schemas/namespace';
+import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
+import { NamespaceMemberDocumentSchema } from '@database/schemas/namespace-member';
+import { repositorySafe } from './util';
 
 type CreateNamespaceParams = {
   id: string;
@@ -12,33 +15,48 @@ type CreateNamespaceParams = {
 
 type NamespaceRepositoryOptions = {
   mockCollectionBuilder?: (tx: TxContext) => Collection<NamespaceDocument>;
+  mockMemberCollectionBuilder?: (tx: TxContext) => Collection<NamespaceMemberDocument>;
   mockDocumentSchema?: typeof NamespaceDocumentSchema;
+  mockMemberDocumentSchema?: typeof NamespaceMemberDocumentSchema;
 };
 
 export class NamespaceRepository {
   private collectionBuilder: (tx: TxContext) => Collection<NamespaceDocument>;
+  private memberCollectionBuilder: (tx: TxContext) => Collection<NamespaceMemberDocument>;
   private documentSchema: typeof NamespaceDocumentSchema;
+  private memberDocumentSchema: typeof NamespaceMemberDocumentSchema;
 
-  constructor({ mockCollectionBuilder, mockDocumentSchema }: NamespaceRepositoryOptions = {}) {
+  constructor({
+    mockCollectionBuilder,
+    mockMemberCollectionBuilder,
+    mockDocumentSchema,
+    mockMemberDocumentSchema,
+  }: NamespaceRepositoryOptions = {}) {
     this.collectionBuilder = mockCollectionBuilder ?? namespaceCollectionBuilder;
+    this.memberCollectionBuilder = mockMemberCollectionBuilder ?? namespaceMemberCollectionBuilder;
     this.documentSchema = mockDocumentSchema ?? NamespaceDocumentSchema;
+    this.memberDocumentSchema = mockMemberDocumentSchema ?? NamespaceMemberDocumentSchema;
   }
 
-  async findNamespaceById(id: string) {
+  async get(id: string) {
     return await execute(async (tx) => {
-      const namespaces = this.collectionBuilder(tx);
-      return await namespaces.findOne({
-        id,
+      return await repositorySafe(async () => {
+        const namespaces = this.collectionBuilder(tx);
+        return await namespaces.findOne({
+          id,
+        });
       });
     });
   }
 
-  async createNamespace({ id, displayName, createdBy }: CreateNamespaceParams) {
+  async create({ id, displayName, createdBy }: CreateNamespaceParams) {
     return await execute(async (tx) => {
-      const namespaces = this.collectionBuilder(tx);
-      const document = this.documentSchema.parse({ id, displayName, createdBy });
-      const now = new Date();
-      return await namespaces.insertOne({ ...document, createdAt: now, updatedAt: now });
+      return await repositorySafe(async () => {
+        const namespaces = this.collectionBuilder(tx);
+        const document = this.documentSchema.parse({ id, displayName, createdBy });
+        const now = new Date();
+        return await namespaces.insertOne({ ...document, createdAt: now, updatedAt: now });
+      });
     });
   }
 }
