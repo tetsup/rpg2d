@@ -128,7 +128,6 @@ export class ResourceRepository {
         if (namespace) filter.namespace = namespace;
         if (query) filter.id = { $regex: query, $options: 'i' };
         if (cursor) filter.id = { ...(filter.id ?? {}), $gt: cursor };
-        console.log(resources.find);
         const items = await resources
           .find(filter)
           .sort({ id: 1 })
