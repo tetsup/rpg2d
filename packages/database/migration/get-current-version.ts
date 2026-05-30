@@ -1,4 +1,4 @@
-import { execute } from '@database/index';
+import { execute } from '@database/client/mongo-client';
 import { MIGRATION_COLLECTION, MIGRATION_DOCUMENT_ID } from './migration-state';
 
 export async function getCurrentVersion() {
