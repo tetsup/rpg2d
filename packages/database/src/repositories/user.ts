@@ -3,6 +3,7 @@ import { UserDocumentSchema } from '@database/schemas/user';
 import { execute, TxContext } from '@database/client/mongo-client';
 import { UserDocument } from '@database/types/collection';
 import { userCollectionBuilder } from '@database/collections/users';
+import { RepositoryNotFoundError, repositorySafe } from './util';
 
 type UserRepositoryOptions = {
   mockCollectionBuilder?: (tx: TxContext) => Collection<UserDocument>;
@@ -18,19 +19,30 @@ export class UserRepository {
     this.documentSchema = mockDocumentSchema ?? UserDocumentSchema;
   }
 
-  async getUser(sub: string) {
-    return await execute(async (tx) => {
-      const users = this.collectionBuilder(tx);
-      return users.findOne({ sub });
+  async get(sub: string) {
+    return await repositorySafe(async () => {
+      return await execute(async (tx) => {
+        const users = this.collectionBuilder(tx);
+        const user = users.findOne({ sub });
+        if (!user) throw new RepositoryNotFoundError();
+
+        return user;
+      });
     });
   }
 
-  async upsertUser(data: any) {
-    return await execute(async (tx) => {
-      const users = this.collectionBuilder(tx);
-      const now = new Date();
-      const user = this.documentSchema.parse({ ...data, createdAt: now, updatedAt: now });
-      return users.updateOne({ sub: user.sub }, { $set: user, $setOnInsert: { createdAt: now } }, { upsert: true });
+  async update(data: any, upsert: boolean = false) {
+    return await repositorySafe(async () => {
+      return await execute(async (tx) => {
+        const users = this.collectionBuilder(tx);
+        const now = new Date();
+        const user = this.documentSchema.parse({ ...data, createdAt: now, updatedAt: now });
+        return users.updateOne({ sub: user.sub }, { $set: user, $setOnInsert: { createdAt: now } }, { upsert });
+      });
     });
+  }
+
+  async upsert(data: any) {
+    return await this.update(data);
   }
 }

@@ -29,6 +29,11 @@ type AddNamespaceMemberParams = NamespaceMemberParams & {
   permissions: NamespaceMemberPermissions;
 };
 
+type CheckPermissionsParmas = {
+  namespaceId: string;
+  userId: string;
+};
+
 type NamespaceRepositoryOptions = {
   mockCollectionBuilder?: (tx: TxContext) => Collection<NamespaceDocument>;
   mockMemberCollectionBuilder?: (tx: TxContext) => Collection<NamespaceMemberDocument>;
@@ -177,7 +182,21 @@ export class NamespaceRepository {
 
         if (namespaceIds.length === 0) return [];
 
-        return await namespaces.find({ id: { $in: namespaceIds } }, options).sort({ id: 1 }).toArray();
+        return await namespaces
+          .find({ id: { $in: namespaceIds } }, options)
+          .sort({ id: 1 })
+          .toArray();
+      });
+    });
+  }
+
+  async checkPermissions({ namespaceId, userId }: CheckPermissionsParmas) {
+    return await repositorySafe(async () => {
+      return await execute(async (tx) => {
+        const members = this.memberCollectionBuilder(tx);
+        const member = await members.findOne({ namespaceId, userId });
+        if (!member) throw new RepositoryNotFoundError();
+        return member.permissions;
       });
     });
   }
@@ -188,6 +207,7 @@ export class NamespaceRepository {
       create: true,
       update: true,
       delete: true,
+      admin: true,
     };
   }
 

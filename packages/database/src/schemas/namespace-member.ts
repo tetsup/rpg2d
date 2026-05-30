@@ -8,5 +8,6 @@ export const NamespaceMemberDocumentSchema = z.object({
     create: z.boolean(),
     update: z.boolean(),
     delete: z.boolean(),
+    admin: z.boolean(),
   }),
 });
