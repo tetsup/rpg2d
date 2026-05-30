@@ -9,6 +9,7 @@ const ownerPermissions = {
   create: true,
   update: true,
   delete: true,
+  admin: true,
 };
 
 const memberPermissions = {
@@ -16,6 +17,7 @@ const memberPermissions = {
   create: false,
   update: false,
   delete: false,
+  admin: false,
 };
 
 function createNamespaceDocument(id: string, displayName = id, createdBy = 'owner-user'): NamespaceDocument {
