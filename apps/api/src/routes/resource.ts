@@ -52,7 +52,8 @@ resourceRoute.get(
   handle(async (c) => {
     const query = ResourceSearchReqParamsSchema.parse(c.req.query());
     return await new ResourceRepository().find({
-      query: query.q,
+      name: query.q,
+      namespace: query.namespace,
       type: query.type,
       cursor: query.cursor,
       limit: query.limit,
