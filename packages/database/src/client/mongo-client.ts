@@ -1,6 +1,8 @@
 import { ClientSession, Db, MongoClient } from 'mongodb';
 
-const dbName = process.env.MONGO_DB ?? 'rpg2d';
+function resolveDbName() {
+  return process.env.MONGO_DB ?? 'rpg2d';
+}
 
 let client: MongoClient | null = null;
 let db: Db | null = null;
@@ -19,6 +21,8 @@ async function createMongoClient(): Promise<ConnectionSet> {
   const url = process.env.MONGO_URL!;
   const client = new MongoClient(url);
   await client.connect();
+  const dbName = resolveDbName();
+  console.log(dbName);
   return {
     client,
     db: client.db(dbName),
@@ -58,4 +62,8 @@ export async function execute<T>(func: (ctx: TxContext) => Promise<T>): Promise<
 export async function withTransaction<T>(func: (ctx: TxContext) => Promise<T>): Promise<T> {
   const { client, db } = await ensureConnection();
   return client.withSession((session) => session.withTransaction(async () => await func({ db, session })));
+}
+
+export async function shutdownMongo() {
+  await forceCloseConnection();
 }

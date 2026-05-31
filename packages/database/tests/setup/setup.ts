@@ -1,29 +1,11 @@
-import { MongoMemoryReplSet } from 'mongodb-memory-server';
-import { beforeAll, afterAll } from 'vitest';
 import { migrate } from '../../migration/migrate';
-
-let mongoServer: MongoMemoryReplSet;
-
-export async function setupMongo() {
-  mongoServer = await MongoMemoryReplSet.create({
-    replSet: {
-      count: 1,
-      storageEngine: 'wiredTiger',
-    },
-  });
-  const uri = mongoServer.getUri();
-  process.env.MONGO_URL = uri;
-  await migrate();
-}
-
-export async function teardownMongo() {
-  await mongoServer.stop();
-}
+import { shutdownMongo } from '@database/client/mongo-client';
 
 beforeAll(async () => {
-  await setupMongo();
+  process.env.MONGO_DB = `test_${process.env.VITEST_POOL_ID}`;
+  await migrate();
 });
 
 afterAll(async () => {
-  await teardownMongo();
+  await shutdownMongo();
 });
