@@ -1,11 +1,13 @@
 import z from 'zod';
 import { HttpError, ParseError } from './error';
 
-export async function fetchWithThrow<T>(
-  req: RequestInfo,
-  parser: (res: Response) => Promise<T>,
-  init?: RequestInit
-): Promise<T> {
+export type FetchWithThrowParams<T> = {
+  req: RequestInfo;
+  parser: (res: Response) => Promise<T>;
+  init?: RequestInit;
+};
+
+export async function fetchWithThrow<T>({ req, parser, init }: FetchWithThrowParams<T>): Promise<T> {
   const res = await fetch(req, init);
   if (!res.ok) {
     let message = 'Request failed';
@@ -41,11 +43,16 @@ async function parseJson(res: Response) {
   }
 }
 
-export async function fetchJson<T>(req: RequestInfo, schema: z.ZodType<T>, init?: RequestInit) {
+export async function fetchJson<T>(
+  req: RequestInfo,
+  fetchFunc: (params: FetchWithThrowParams<T>) => Promise<T>,
+  schema: z.ZodType<T>,
+  init?: RequestInit
+) {
   const parser = async (res: Response) => {
     const obj = await parseJson(res);
     const parsed = await schema.parseAsync(obj);
     return parsed;
   };
-  return await fetchWithThrow(req, parser, init);
+  return await fetchFunc({ req, parser, init });
 }
