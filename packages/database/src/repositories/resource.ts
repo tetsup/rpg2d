@@ -51,9 +51,9 @@ export class ResourceRepository {
     mockEdgeCollectionBuilder,
     mockResourceSchema,
   }: ResourceRepositoryOptions = {}) {
-    ((this.collectionBuilder = mockCollectionBuilder ?? resourceCollectionBuilder),
-      (this.edgeCollectionBuilder = mockEdgeCollectionBuilder ?? resourceEdgeCollectionBuilder),
-      (this.resourceSchema = mockResourceSchema ?? resolveResourceSchema));
+    this.collectionBuilder = mockCollectionBuilder ?? resourceCollectionBuilder;
+    this.edgeCollectionBuilder = mockEdgeCollectionBuilder ?? resourceEdgeCollectionBuilder;
+    this.resourceSchema = mockResourceSchema ?? resolveResourceSchema;
   }
 
   async create(path: ResourcePath, data: object): Promise<RepositoryResult<void>> {

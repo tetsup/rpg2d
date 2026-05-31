@@ -1,5 +1,4 @@
 import z from 'zod';
-import { IdSchema } from '../common/base';
 
 export const PrimitiveValueSchema = z.union([z.string(), z.number()]);
 

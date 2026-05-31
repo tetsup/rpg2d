@@ -1,5 +1,4 @@
 import z from 'zod';
-import type { ObjectId } from 'mongodb';
 import { NamespaceDocumentSchema } from '@database/schemas/namespace';
 import { NamespaceMemberDocumentSchema } from '@database/schemas/namespace-member';
 import { createResourceDocumentSchema } from '@database/schemas/resource';
