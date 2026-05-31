@@ -74,9 +74,7 @@ describe('ResourceStore + ResourceFactory resource fetch integration', () => {
   });
 
   it('namespaceがない場合は失敗する', async () => {
-    await expect(
-      createStore(withoutField('namespace')).get('sample/action/greet', 'action')
-    ).rejects.toThrow();
+    await expect(createStore(withoutField('namespace')).get('sample/action/greet', 'action')).rejects.toThrow();
   });
 
   it('typeがない場合は失敗する', async () => {
