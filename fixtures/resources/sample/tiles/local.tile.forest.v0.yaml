@@ -1,3 +1,9 @@
-id: sample/tile/forest.v0
-texture: sample/texture/field.forest.v0
-allowOverwrap: true
+namespace: sample
+type: tile
+name: forest.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  texture: sample/texture/field.forest.v0
+  allowOverwrap: true

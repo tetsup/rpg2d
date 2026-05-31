@@ -1,9 +1,15 @@
-id: sample/texture/hero.right.v0
-layers:
-  - priority: 8
-    images:
-      - sample/image/hero.right1.v0
-      - sample/image/hero.right2.v0
-    playback: 
-      repeat: true
-      tickMs: 500
+namespace: sample
+type: texture
+name: hero.right.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  layers:
+    - priority: 8
+      images:
+        - sample/image/hero.right1.v0
+        - sample/image/hero.right2.v0
+      playback:
+        repeat: true
+        tickMs: 500

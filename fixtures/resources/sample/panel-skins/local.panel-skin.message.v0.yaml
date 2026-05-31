@@ -1,16 +1,22 @@
-id: sample/panel-skin/message.v0
-plane: sample/texture/panel.plane.v0
-top: sample/texture/panel.top.v0
-bottom: sample/texture/panel.bottom.v0
-left: sample/texture/panel.left.v0
-right: sample/texture/panel.right.v0
-topLeft: sample/texture/panel.top-left.v0
-topRight: sample/texture/panel.top-right.v0
-bottomLeft: sample/texture/panel.bottom-left.v0
-bottomRight: sample/texture/panel.bottom-right.v0
-defaultFont: sample/font/simple.v0
-defaultTextColor:
-  r: 255
-  g: 255
-  b: 255
-  a: 255
+namespace: sample
+type: panel-skin
+name: message.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  plane: sample/texture/panel.plane.v0
+  top: sample/texture/panel.top.v0
+  bottom: sample/texture/panel.bottom.v0
+  left: sample/texture/panel.left.v0
+  right: sample/texture/panel.right.v0
+  topLeft: sample/texture/panel.top-left.v0
+  topRight: sample/texture/panel.top-right.v0
+  bottomLeft: sample/texture/panel.bottom-left.v0
+  bottomRight: sample/texture/panel.bottom-right.v0
+  defaultFont: sample/font/simple.v0
+  defaultTextColor:
+    r: 255
+    g: 255
+    b: 255
+    a: 255

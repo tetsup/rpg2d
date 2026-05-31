@@ -1,3 +1,9 @@
-id: sample/tile/water.v0
-texture: sample/texture/field.water.v0
-allowOverwrap: false
+namespace: sample
+type: tile
+name: water.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  texture: sample/texture/field.water.v0
+  allowOverwrap: false

@@ -1,6 +1,12 @@
-id: sample/action/welcome.v0
-sequence:
-  - command: sendMessage
-    messages:
-      - ようこそ、あたらしいせかいへ
-      - いっしょにつくりましょう！
+namespace: sample
+type: action
+name: welcome.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  sequence:
+    - command: sendMessage
+      messages:
+        - ようこそ、あたらしいせかいへ
+        - いっしょにつくりましょう！
