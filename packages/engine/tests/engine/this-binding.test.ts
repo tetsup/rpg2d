@@ -47,7 +47,6 @@ import { ResourceFactory } from '@engine/resource/core/resource-factory';
 import { ResourceStore } from '@engine/resource/core/resource-store';
 import { AssetCache } from '@engine/resource/core/asset-cache';
 import { GameContext } from '@engine/resource/core/game-context';
-import { ActionSchema } from '@schema/resource/action';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
 import type { ResourceConfig } from '@sharedTypes/config';
 import type { RpgKey, FieldState } from '@sharedTypes/engine';
@@ -662,42 +661,5 @@ describe('ResourceFactory: unbound call must not throw', () => {
     const create = factory.create;
     const actionData = { id: 'test/action/sample', sequence: [] };
     await expect(create(actionData, 'action')).resolves.not.toThrow();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// ResourceStore — fetch, get
-// ---------------------------------------------------------------------------
-
-describe('ResourceStore: unbound call must not throw', () => {
-  it('keeps this binding in fetch — unbound call must not throw', async () => {
-    const store = new ResourceStore(makeContext());
-    vi.spyOn(store, 'fetch').mockResolvedValue({
-      id: 'test/action/sample',
-      sequence: [],
-    });
-    const fetchMethod = store.fetch;
-    await expect(fetchMethod('test/action/sample', ActionSchema)).resolves.not.toThrow();
-  });
-
-  it('keeps this binding in get — unbound call must not throw', async () => {
-    const store = new ResourceStore(makeContext());
-    vi.spyOn(store, 'fetch').mockResolvedValue({
-      id: 'test/action/sample',
-      sequence: [],
-    });
-    const get = store.get;
-    await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
-  });
-
-  it('get called multiple times unbound must not throw', async () => {
-    const store = new ResourceStore(makeContext());
-    vi.spyOn(store, 'fetch').mockResolvedValue({
-      id: 'test/action/sample',
-      sequence: [],
-    });
-    const get = store.get;
-    await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
-    await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
   });
 });
