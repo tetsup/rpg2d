@@ -1,7 +1,13 @@
-id: sample/player/hero.v0
-name: 
-  type: fixed
-  value: hero
-initialSkin: sample/skin/hero.v0
-initialState:
-  hp: 10
+namespace: sample
+type: player
+name: hero.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  name:
+    type: fixed
+    value: hero
+  initialSkin: sample/skin/hero.v0
+  initialState:
+    hp: 10

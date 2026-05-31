@@ -1,5 +1,11 @@
-id: sample/texture/panel.bottom.v0
-layers:
-  - priority: 15
-    images:
-      - sample/image/panel.bottom.v0
+namespace: sample
+type: texture
+name: panel.bottom.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  layers:
+    - priority: 15
+      images:
+        - sample/image/panel.bottom.v0

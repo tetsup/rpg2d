@@ -1,6 +1,12 @@
-id: sample/entity/welcome.v0
-visual: skin
-skin: sample/skin/hero.v0
-allowOverwrap: false
-actions:
-  onCheck: sample/action/welcome.v0
+namespace: sample
+type: entity
+name: welcome.v0
+version: 0
+createdAt: 2026-05-31T02:38:38.467Z
+updatedAt: 2026-05-31T02:38:38.467Z
+data:
+  visual: skin
+  skin: sample/skin/hero.v0
+  allowOverwrap: false
+  actions:
+    onCheck: sample/action/welcome.v0
