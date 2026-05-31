@@ -5,7 +5,7 @@ import yaml from 'yaml';
 import { GameContext } from '@engine/resource/core/game-context';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
 import type { ResourceConfig } from '@sharedTypes/config';
-import { server } from '@tests/setup/setup';
+import { server } from '../../setup/setup';
 
 export const resourceUri = 'https://resources.example.test/resources';
 
