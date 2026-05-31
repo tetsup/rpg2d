@@ -1,6 +1,6 @@
 import z from 'zod';
 import type { ResourceId, ResourceType } from '@sharedTypes/resource/common';
-import { resources } from '@schema/resource/common/base';
+import { NamespaceSchema, ResourceNameSchema, resources } from '@schema/resource/common/base';
 import { fetchJson } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
@@ -8,6 +8,14 @@ import type { GameContext } from './game-context';
 type Resources = {
   [K in ResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
 };
+
+const createFetchedResourceSchema = <K extends ResourceType, T>(type: K, dataSchema: z.ZodType<T>) =>
+  z.object({
+    namespace: NamespaceSchema,
+    type: z.literal(type),
+    name: ResourceNameSchema,
+    data: dataSchema,
+  });
 
 export class ResourceStore {
   private resources: Resources;
@@ -20,9 +28,9 @@ export class ResourceStore {
   };
 
   private async resolve<K extends ResourceType>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> {
-    const schema = this.ctx.schemas.get(type);
-    const data = await this.fetch(id, schema);
-    return await this.ctx.factory.create(data, type);
+    const dataSchema = this.ctx.schemas.get(type);
+    const resource = await this.fetch(id, createFetchedResourceSchema(type, dataSchema));
+    return await this.ctx.factory.create(resource.data, type);
   }
 
   get = async <K extends ResourceType>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> => {
