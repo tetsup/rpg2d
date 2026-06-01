@@ -4,7 +4,6 @@ import { NamespaceSchema, ResourceNameSchema, resources, splitId } from '@schema
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
-import { version } from 'zod/v4/core';
 
 type Resources = {
   [K in ResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
