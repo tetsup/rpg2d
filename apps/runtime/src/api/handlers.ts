@@ -16,7 +16,7 @@ class ResourceLoader {
         })
       )
         .map((resource) => yaml.parse(resource))
-        .map((resource) => [resource.id, resource])
+        .map((resource) => [`${resource.namespace}/${resource.type}/${resource.name}`, resource])
     );
   }
 

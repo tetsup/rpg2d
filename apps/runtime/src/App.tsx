@@ -51,7 +51,7 @@ async function loadManifest(manifestId: string, resourceUri: string): Promise<Ma
   if (!response.ok) {
     throw new Error(`Failed to load manifest: ${manifestId}`);
   }
-  return await response.json();
+  return (await response.json()).data;
 }
 
 function applyEditorOverrides(manifest: ManifestData, config: RuntimeConfig): ManifestData {
