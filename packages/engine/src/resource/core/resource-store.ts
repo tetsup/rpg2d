@@ -1,9 +1,10 @@
 import z from 'zod';
 import type { ResourceId, ResourceType } from '@sharedTypes/resource/common';
-import { NamespaceSchema, ResourceNameSchema, resources } from '@schema/resource/common/base';
+import { NamespaceSchema, ResourceNameSchema, resources, splitId } from '@schema/resource/common/base';
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
+import { version } from 'zod/v4/core';
 
 type Resources = {
   [K in ResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
@@ -18,27 +19,34 @@ export class ResourceStore {
     this.resources = Object.fromEntries(resources.map((name) => [name, new Map()])) as Resources;
   }
 
-  fetch = async <T>(id: ResourceId, schema: z.ZodType<T>): Promise<T> => {
-    return await fetchJson(`${this.ctx.config.resourceUri}/${id}`, this.fetchFunc, schema);
+  fetch = async <T>(namespace: string, type: string, name: string, schema: z.ZodType<T>): Promise<T> => {
+    return await fetchJson(`${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`, this.fetchFunc, schema);
   };
 
-  private async resolve<K extends ResourceType>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> {
+  private async resolve<K extends ResourceType>(
+    namespace: string,
+    type: K,
+    name: string
+  ): Promise<InstanceType<ResourceClass<K>>> {
     const schema = this.ctx.schemas.get(type);
     const responseSchema = z.object({
-      namespace: NamespaceSchema,
+      namespace: NamespaceSchema.refine((v) => v === namespace),
       type: z.literal(type),
-      name: ResourceNameSchema,
+      name: ResourceNameSchema.refine((v) => v === name),
+      version: z.literal(0),
       data: schema,
     });
-    const resource = await this.fetch(id, responseSchema);
+    const resource = await this.fetch(namespace, type, name, responseSchema);
     return await this.ctx.factory.create(resource.data, type);
   }
 
-  get = async <K extends ResourceType>(id: ResourceId, type: K): Promise<InstanceType<ResourceClass<K>>> => {
-    const resource = this.resources[type].get(id);
+  get = async <K extends ResourceType>(id: ResourceId, expectedType: K): Promise<InstanceType<ResourceClass<K>>> => {
+    const { namespace, type, name } = splitId.parse(id);
+    if (type !== expectedType) throw new Error('mismatch id and type');
+    const resource = this.resources[expectedType].get(id);
     if (resource !== undefined) return resource;
-    const createdResource = await this.resolve(id, type);
-    this.resources[type].set(id, createdResource);
+    const createdResource = await this.resolve(namespace, type, name);
+    this.resources[expectedType].set(id, createdResource);
     return createdResource;
   };
 }

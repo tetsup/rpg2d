@@ -64,7 +64,7 @@ const createStore = (body: unknown): ResourceStore => {
 const createStoreWithFetchMock = (body: unknown) => {
   const ctx = new GameContext(createManifest(), createConfig());
   const fetchMock = vi.fn(createFetchFunc(body));
-  const store = new ResourceStore(ctx, fetchMock);
+  const store = new ResourceStore(ctx, fetchMock as any);
 
   ctx.resources = store;
 
@@ -161,5 +161,18 @@ describe('ResourceStore + ResourceFactory resource fetch integration', () => {
     ctx.resources = store;
 
     await expect(store.get('sample/action/greet', 'action')).rejects.toThrow('fetch failed');
+  });
+
+  it('data配下のsequenceを読み取れる', async () => {
+    const store = createStore(actionDocument);
+
+    const action = await store.get('sample/action/greet', 'action');
+
+    expect(action.getSequence()).toEqual([
+      {
+        command: 'sendMessage',
+        messages: ['hello'],
+      },
+    ]);
   });
 });
