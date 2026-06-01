@@ -11,6 +11,9 @@ const actionDocument = {
   namespace: 'sample',
   type: 'action',
   name: 'greet',
+  version: 0,
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
   data: {
     sequence: [{ command: 'sendMessage', messages: ['hello'] }],
   },
@@ -58,6 +61,16 @@ const createStore = (body: unknown): ResourceStore => {
   return store;
 };
 
+const createStoreWithFetchMock = (body: unknown) => {
+  const ctx = new GameContext(createManifest(), createConfig());
+  const fetchMock = vi.fn(createFetchFunc(body));
+  const store = new ResourceStore(ctx, fetchMock);
+
+  ctx.resources = store;
+
+  return { store, fetchMock };
+};
+
 const withoutField = (field: keyof typeof actionDocument): Record<string, unknown> => {
   const body: Record<string, unknown> = { ...actionDocument };
   delete body[field];
@@ -87,6 +100,56 @@ describe('ResourceStore + ResourceFactory resource fetch integration', () => {
 
   it('dataがない場合は失敗する', async () => {
     await expect(createStore(withoutField('data')).get('sample/action/greet', 'action')).rejects.toThrow();
+  });
+
+  it('versionがない場合は失敗する', async () => {
+    await expect(createStore(withoutField('version')).get('sample/action/greet', 'action')).rejects.toThrow();
+  });
+
+  it('versionが1の場合は失敗する', async () => {
+    await expect(createStore({ ...actionDocument, version: 1 }).get('sample/action/greet', 'action')).rejects.toThrow();
+  });
+
+  it('versionが文字列の場合は失敗する', async () => {
+    await expect(
+      createStore({ ...actionDocument, version: '0' }).get('sample/action/greet', 'action')
+    ).rejects.toThrow();
+  });
+
+  it('namespaceが要求したResourceIdと一致しない場合は失敗する', async () => {
+    await expect(
+      createStore({ ...actionDocument, namespace: 'other' }).get('sample/action/greet', 'action')
+    ).rejects.toThrow();
+  });
+
+  it('typeが要求したResourceIdと一致しない場合は失敗する', async () => {
+    await expect(
+      createStore({ ...actionDocument, type: 'player' }).get('sample/action/greet', 'action')
+    ).rejects.toThrow();
+  });
+
+  it('nameが要求したResourceIdと一致しない場合は失敗する', async () => {
+    await expect(
+      createStore({ ...actionDocument, name: 'other' }).get('sample/action/greet', 'action')
+    ).rejects.toThrow();
+  });
+
+  it('同じResourceIdを取得すると同じインスタンスを返す', async () => {
+    const store = createStore(actionDocument);
+
+    const a = await store.get('sample/action/greet', 'action');
+    const b = await store.get('sample/action/greet', 'action');
+
+    expect(a).toBe(b);
+  });
+
+  it('同じResourceIdを2回取得してもfetchFuncは1回だけ呼ばれる', async () => {
+    const { store, fetchMock } = createStoreWithFetchMock(actionDocument);
+
+    await store.get('sample/action/greet', 'action');
+    await store.get('sample/action/greet', 'action');
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('fetchFuncが例外を投げる場合は失敗する', async () => {
