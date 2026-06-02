@@ -7,7 +7,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:migrate": "tsx ./sctipts/migrate.ts"
+    "db:migrate": "tsx ./scripts/migrate.ts"
   },
   "dependencies": {
     "mongodb": "^6.16.0"

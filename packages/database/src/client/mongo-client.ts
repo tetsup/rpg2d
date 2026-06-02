@@ -18,7 +18,7 @@ export type TxContext = {
 };
 
 async function createMongoClient(): Promise<ConnectionSet> {
-  const url = process.env.MONGO_URL!;
+  const url = process.env.MONGO_URL ?? 'mongodb://localhost:27017/?directConnection=true';
   const client = new MongoClient(url);
   await client.connect();
   const dbName = resolveDbName();

@@ -24,7 +24,8 @@
     "test:database":"pnpm --filter @tetsup/rpg2d-database test",
     "test:api":"pnpm --filter @tetsup/rpg2d-api test",
     "test": "pnpm test:schema && pnpm test:engine && pnpm test:database && pnpm test:api",
-    "build:runtime": "pnpm --filter @tetsup/rpg2d-runtime build"
+    "build:runtime": "pnpm --filter @tetsup/rpg2d-runtime build",
+    "db:migrate": "pnpm --filter @tetsup/rpg2d-database db:migrate"
   },
   "dependencies": {
     "zod": "^4.3.6"

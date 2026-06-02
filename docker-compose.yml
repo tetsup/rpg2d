@@ -1,0 +1,46 @@
+services:
+  mongo:
+    image: mongo:latest
+    hostname: mongo
+    restart: unless-stopped
+    ports: 
+      - "127.0.0.1:27017:27017"
+    command:
+      - mongod
+      - --replSet
+      - rs0
+      - --bind_ip_all
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: >
+        mongosh --quiet --eval "
+          try {
+            rs.status();
+            quit(0);
+          } catch(e) {
+            try {
+              rs.initiate({
+                _id:'rs0',
+                members:[{_id:0,host:'mongo:27017'}]
+              });
+              quit(0);
+            } catch(e2) {
+              quit(1);
+            }
+          }
+        "
+      interval: 10s
+      timeout: 10s
+      retries: 30
+  express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - "127.0.0.1:8081:8081"
+    environment:
+      ME_CONFIG_BASICAUTH: "false"
+      ME_CONFIG_MONGODB_SERVER: mongo
+
+volumes:
+  mongo_data:
