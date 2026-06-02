@@ -20,12 +20,12 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build for Pages
-        run: pnpm build
+        run: pnpm build:runtime
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dev/dist
+          path: runtime/dist
 
   deploy:
     needs: build
