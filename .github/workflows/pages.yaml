@@ -20,7 +20,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build for Pages
-        run: pnpm build:runtime
+        run: pnpm build:runtime --base=/rpg2d/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
