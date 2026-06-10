@@ -1,13 +1,13 @@
 import { type ClientSession, type Collection, type DeleteResult, type Filter, ObjectId } from 'mongodb';
+import type { ResourceDocument, ResourceEdgeDocument, ResourceMeta } from '@sharedTypes/database/collection';
 import type { ResourceId, ResourcePath } from '@sharedTypes/resource/common';
-import { resolveResourceSchema } from '@schema/resource/common/resolver';
 import { splitId } from '@schema/resource/common/base';
-import { buildDocument, buildId, extractResourceRefs } from '@database/utils/resource';
+import { buildId, extractResourceRefs } from '@database/utils/resource';
 import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
-import { execute, TxContext, withTransaction } from '@database/client/mongo-client';
-import { ResourceDocument, ResourceEdgeDocument } from '@database/types/collection';
+import { execute, withTransaction, type TxContext } from '@database/client/mongo-client';
 import { resourceCollectionBuilder } from '@database/collections/resources';
 import { resourceEdgeCollectionBuilder } from '@database/collections/resource-edges';
+import { createResourceDocumentSchema } from '@database/schemas/resource';
 
 type FindParams = {
   name?: string;
@@ -20,7 +20,7 @@ type FindParams = {
 type ResourceRepositoryOptions = {
   mockCollectionBuilder?: (tx: TxContext) => Collection<ResourceDocument>;
   mockEdgeCollectionBuilder?: (tx: TxContext) => Collection<ResourceEdgeDocument>;
-  mockResourceSchema?: typeof resolveResourceSchema;
+  mockResourceDocumentSchema?: typeof createResourceDocumentSchema;
   mockSplitIdSchema?: typeof splitId;
 };
 
@@ -41,29 +41,34 @@ async function updateRefs(
   );
 }
 
+function getPath(meta: ResourceMeta) {
+  return { namespace: meta.namespace, type: meta.type, name: meta.name };
+}
 export class ResourceRepository {
   private collectionBuilder: (tx: TxContext) => Collection<ResourceDocument>;
   private edgeCollectionBuilder: (tx: TxContext) => Collection<ResourceEdgeDocument>;
-  private resourceSchema: typeof resolveResourceSchema;
+  private resourceDocumentSchema: typeof createResourceDocumentSchema;
 
   constructor({
     mockCollectionBuilder,
     mockEdgeCollectionBuilder,
-    mockResourceSchema,
+    mockResourceDocumentSchema,
   }: ResourceRepositoryOptions = {}) {
     this.collectionBuilder = mockCollectionBuilder ?? resourceCollectionBuilder;
     this.edgeCollectionBuilder = mockEdgeCollectionBuilder ?? resourceEdgeCollectionBuilder;
-    this.resourceSchema = mockResourceSchema ?? resolveResourceSchema;
+    this.resourceDocumentSchema = mockResourceDocumentSchema ?? createResourceDocumentSchema;
   }
 
   async create(path: ResourcePath, data: object): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
-      const doc = buildDocument(path, data, this.resourceSchema);
+      const parsed = this.resourceDocumentSchema(path.type).parse(data);
+      if (parsed.namespace !== path.namespace) throw new Error('cannot change namespace');
+      if (parsed.type !== path.type) throw new Error('cannot change type');
       const now = new Date();
       return await withTransaction(async (tx) => {
         const resources = this.collectionBuilder(tx);
         const edges = this.edgeCollectionBuilder(tx);
-        await resources.insertOne({ ...doc, createdAt: now, updatedAt: now }, { session: tx.session });
+        await resources.insertOne({ ...parsed, createdAt: now, updatedAt: now }, { session: tx.session });
         await updateRefs(path, extractResourceRefs(data), edges, tx.session);
       });
     });
@@ -71,15 +76,22 @@ export class ResourceRepository {
 
   async update(path: ResourcePath, data: object): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
-      const doc = buildDocument(path, data, this.resourceSchema);
+      const parsed = this.resourceDocumentSchema(path.type).parse(data);
+      if (parsed.namespace !== path.namespace) throw new Error('cannot change namespace');
+      if (parsed.type !== path.type) throw new Error('cannot change type');
       const now = new Date();
+      const newPath = getPath(parsed);
       return await withTransaction(async (tx) => {
         const resources = this.collectionBuilder(tx);
         const edges = this.edgeCollectionBuilder(tx);
-        const result = await resources.updateOne(path, { $set: { ...doc, updatedAt: now } }, { session: tx.session });
+        const result = await resources.updateOne(
+          path,
+          { $set: { ...parsed, updatedAt: now } },
+          { session: tx.session }
+        );
         if (result.matchedCount == 0) throw new RepositoryNotFoundError();
         await cleanRefs(path, edges, tx.session);
-        await updateRefs(path, extractResourceRefs(data), edges, tx.session);
+        await updateRefs(newPath, extractResourceRefs(data), edges, tx.session);
       });
     });
   }

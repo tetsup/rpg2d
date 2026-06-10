@@ -1,15 +1,22 @@
 import { MongoNetworkError, MongoServerError, MongoServerSelectionError } from 'mongodb';
 import { ZodError } from 'zod';
 import type { ResourcePath } from '@sharedTypes/resource/common';
-import { execute } from '@database/client/mongo-client';
+import type { ResourceMeta } from '@sharedTypes/database/collection';
 import { ResourceRepository } from '@database/repositories/resource';
-import { resourceCollectionBuilder } from '@database/collections/resources';
 
 const validPath = {
   namespace: 'sample',
   type: 'player',
   name: 'hero',
 } as ResourcePath;
+
+const validMetadata = {
+  ...validPath,
+  version: 0,
+  isReadOnly: false,
+  isValid: true,
+  description: 'this is resource',
+} as ResourceMeta;
 
 const validData = {
   name: {
@@ -21,13 +28,6 @@ const validData = {
     hp: 100,
   },
 } as const;
-
-const validDocument = {
-  ...validPath,
-  data: validData,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
 
 describe('resource repository error mapping', () => {
   beforeEach(() => {
@@ -80,9 +80,9 @@ describe('resource repository error mapping', () => {
   describe('create', () => {
     it('maps validation_failed', async () => {
       const resources = new ResourceRepository({
-        mockResourceSchema: () => ({ parse: vi.fn().mockThrow(new ZodError([])) }) as any,
+        mockResourceDocumentSchema: () => ({ parse: vi.fn().mockThrow(new ZodError([])) }) as any,
       });
-      const result = await resources.create(validPath, { invalidKey: 'invalidValue' } as any);
+      const result = await resources.create(validMetadata, { invalidKey: 'invalidValue' } as any);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('validation_failed');
@@ -100,7 +100,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(error),
           }) as any,
       });
-      const result = await resources.create(validPath, validData);
+      const result = await resources.create(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('already_exists');
@@ -118,7 +118,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(error),
           }) as any,
       });
-      const result = await resources.create(validPath, validData);
+      const result = await resources.create(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');
@@ -136,7 +136,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(error),
           }) as any,
       });
-      const result = await resources.create(validPath, validData);
+      const result = await resources.create(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');
@@ -150,7 +150,7 @@ describe('resource repository error mapping', () => {
           }) as any,
       });
 
-      const result = await resources.create(validPath, validData);
+      const result = await resources.create(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('network_error');
@@ -163,7 +163,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(new Error('unknown')),
           }) as any,
       });
-      const result = await resources.create(validPath, validData);
+      const result = await resources.create(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('unknown');
@@ -173,9 +173,9 @@ describe('resource repository error mapping', () => {
   describe('update', () => {
     it('maps validation_failed', async () => {
       const resources = new ResourceRepository({
-        mockResourceSchema: () => ({ parse: vi.fn().mockThrow(new ZodError([])) }) as any,
+        mockResourceDocumentSchema: () => ({ parse: vi.fn().mockThrow(new ZodError([])) }) as any,
       });
-      const result = await resources.update(validPath, {} as any);
+      const result = await resources.update(validMetadata, {} as any);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('validation_failed');
@@ -190,7 +190,7 @@ describe('resource repository error mapping', () => {
       const resources = new ResourceRepository({
         mockCollectionBuilder: () => ({ updateOne: vi.fn().mockRejectedValue(error) }) as any,
       });
-      const result = await resources.update(validPath, validData);
+      const result = await resources.update(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');
@@ -206,7 +206,7 @@ describe('resource repository error mapping', () => {
         mockCollectionBuilder: () => ({ updateOne: vi.fn().mockRejectedValue(error) }) as any,
       });
 
-      const result = await resources.update(validPath, validData);
+      const result = await resources.update(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');

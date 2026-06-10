@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { execute } from '@database/client/mongo-client';
 import type { ResourcePath } from '@sharedTypes/resource/common';
+import type { ResourceMeta } from '@sharedTypes/database/collection';
 import { resourceCollectionBuilder } from '@database/collections/resources';
 import { resourceEdgeCollectionBuilder } from '@database/collections/resource-edges';
 import { ResourceRepository } from '@database/repositories/resource';
@@ -11,6 +12,14 @@ const validPath = {
   type: 'player',
   name: 'hero',
 } as ResourcePath;
+
+const validMetadata = {
+  ...validPath,
+  version: 0,
+  isReadOnly: false,
+  isValid: true,
+  description: 'this is resource',
+} as ResourceMeta;
 
 const validData = {
   name: {
@@ -24,7 +33,7 @@ const validData = {
 } as const;
 
 const validDocument = {
-  ...validPath,
+  ...validMetadata,
   data: validData,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -80,7 +89,7 @@ describe('ResourceRepository', () => {
 
   describe('create', () => {
     it('creates resource', async () => {
-      const result = await new ResourceRepository().create(validPath, validData);
+      const result = await new ResourceRepository().create(validMetadata, validData);
 
       expect(result.ok).toBeTruthy();
 
@@ -92,7 +101,7 @@ describe('ResourceRepository', () => {
     });
 
     it('creates reference edges', async () => {
-      const result = await new ResourceRepository().create(validPath, validData);
+      const result = await new ResourceRepository().create(validMetadata, validData);
 
       expect(result.ok).toBeTruthy();
 
@@ -112,7 +121,7 @@ describe('ResourceRepository', () => {
         await resourceCollectionBuilder(tx).insertOne(validDocument);
       });
 
-      const result = await new ResourceRepository().create(validPath, validData);
+      const result = await new ResourceRepository().create(validMetadata, validData);
 
       expect(result.ok).toBeFalsy();
 
@@ -130,7 +139,7 @@ describe('ResourceRepository', () => {
         return resourceCollectionBuilder(tx).countDocuments();
       });
 
-      await new ResourceRepository().create(validPath, validData);
+      await new ResourceRepository().create(validMetadata, validData);
 
       const after = await execute(async (tx) => {
         return resourceCollectionBuilder(tx).countDocuments();
@@ -162,7 +171,7 @@ describe('ResourceRepository', () => {
     });
 
     it('updates resource', async () => {
-      const result = await new ResourceRepository().update(validPath, { ...validData, initialState: { hp: 200 } });
+      const result = await new ResourceRepository().update(validMetadata, { ...validData, initialState: { hp: 200 } });
 
       expect(result.ok).toBeTruthy();
 
@@ -174,7 +183,7 @@ describe('ResourceRepository', () => {
     });
 
     it('replaces reference edges', async () => {
-      await new ResourceRepository().update(validPath, { ...validData, initialSkin: 'sample/skin/new.v0' });
+      await new ResourceRepository().update(validMetadata, { ...validData, initialSkin: 'sample/skin/new.v0' });
       const edges = await execute(async (tx) => {
         return resourceEdgeCollectionBuilder(tx)
           .find({ from: buildId(validPath) })
@@ -186,7 +195,7 @@ describe('ResourceRepository', () => {
     });
 
     it('returns not_found when missing', async () => {
-      const result = await new ResourceRepository().update({ ...validPath, name: 'missing' }, validData);
+      const result = await new ResourceRepository().update({ ...validMetadata, name: 'missing' }, validData);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('not_found');
@@ -196,7 +205,7 @@ describe('ResourceRepository', () => {
       const before = await execute(async (tx) => {
         return resourceCollectionBuilder(tx).countDocuments();
       });
-      await new ResourceRepository().update({ ...validPath, name: 'missing' }, validData);
+      await new ResourceRepository().update({ ...validMetadata, name: 'missing' }, validData);
       const after = await execute(async (tx) => {
         return resourceCollectionBuilder(tx).countDocuments();
       });

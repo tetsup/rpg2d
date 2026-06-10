@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import type { NamespaceMemberDocument } from '@database/types/collection';
+import type { NamespaceMemberDocument } from '@sharedTypes/database/collection';
 import type { TxContext } from '@database/client/mongo-client';
 
 export function namespaceMemberCollectionBuilder(tx: TxContext): Collection<NamespaceMemberDocument> {

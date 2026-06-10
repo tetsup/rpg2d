@@ -1,12 +1,12 @@
 import type { Collection } from 'mongodb';
 import { MongoNetworkError, MongoServerError } from 'mongodb';
 import { ZodError } from 'zod';
+import type { UserDocument } from '@sharedTypes/database/collection';
 import { UserRepository } from '@database/repositories/user';
 import { UserDocumentSchema } from '@database/schemas/user';
-import type { UserDocument } from '@database/types/collection';
 
 const validUser: Omit<UserDocument, 'createdAt' | 'updatedAt'> = {
-  sub: 'auth0|user',
+  id: 'auth0|user',
   presenceName: 'Test User',
   email: 'user@example.com',
   avatar: 'https://example.com/avatar.png',
@@ -27,7 +27,7 @@ describe('user repository error mapping', () => {
           }) as unknown as Collection<UserDocument>,
       });
 
-      const result = await users.get(validUser.sub);
+      const result = await users.get(validUser.id);
 
       expect(result.ok).toBeFalsy();
 
@@ -44,7 +44,7 @@ describe('user repository error mapping', () => {
           }) as unknown as Collection<UserDocument>,
       });
 
-      const result = await users.get(validUser.sub);
+      const result = await users.get(validUser.id);
 
       expect(result.ok).toBeFalsy();
 

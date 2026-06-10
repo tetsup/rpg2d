@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
+import type { UserDocument } from '@sharedTypes/database/collection';
 import { UserDocumentSchema } from '@database/schemas/user';
 import { execute, TxContext } from '@database/client/mongo-client';
-import { UserDocument } from '@database/types/collection';
 import { userCollectionBuilder } from '@database/collections/users';
 import { RepositoryNotFoundError, repositorySafe } from './util';
 
@@ -19,11 +19,11 @@ export class UserRepository {
     this.documentSchema = mockDocumentSchema ?? UserDocumentSchema;
   }
 
-  async get(sub: string) {
+  async get(id: string) {
     return await repositorySafe(async () => {
       return await execute(async (tx) => {
         const users = this.collectionBuilder(tx);
-        const user = users.findOne({ sub });
+        const user = users.findOne({ id });
         if (!user) throw new RepositoryNotFoundError();
 
         return user;
@@ -37,7 +37,7 @@ export class UserRepository {
         const users = this.collectionBuilder(tx);
         const now = new Date();
         const user = this.documentSchema.parse({ ...data, createdAt: now, updatedAt: now });
-        return await users.updateOne({ sub: user.sub }, { $set: user, $setOnInsert: { createdAt: now } }, { upsert });
+        return await users.updateOne({ id: user.id }, { $set: user, $setOnInsert: { createdAt: now } }, { upsert });
       });
     });
   }

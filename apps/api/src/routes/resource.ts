@@ -3,10 +3,10 @@ import { ResourceRepository } from '@database/repositories/resource';
 import { ResourceSearchReqParamsSchema } from '@api/schemas/resources/search-params';
 import { ResourceByIdReqSchema } from '@api/schemas/resources/by-id';
 import { authorizeResourceMiddleware } from '@api/auth/middlewares/authorize-resource';
-import { Action } from '@api/utils/authorize';
+import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
+import { Action } from '../utils/authorize';
 import { handle } from '../utils/handle';
 import { parseParams } from '../utils/params';
-import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 
 const resourceRoute = new Hono();
 resourceRoute.use('*', resolveUserMiddleware);

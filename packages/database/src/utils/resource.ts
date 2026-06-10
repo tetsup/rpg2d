@@ -1,14 +1,10 @@
 import type { ResourcePath } from '@sharedTypes/resource/common';
+import type { ResourceMeta } from '@sharedTypes/database/collection';
 import { IdSchema } from '@schema/resource/common/base';
-import type { resolveResourceSchema } from '@schema/resource/common/resolver';
+import type { createResourceDocumentSchema } from '@database/schemas/resource';
 
-export function buildDocument(path: ResourcePath, data: object, schema: typeof resolveResourceSchema) {
-  const parsed = schema(path.type).parse(data);
-
-  return {
-    ...path,
-    data: parsed,
-  };
+export function buildDocument(metadata: ResourceMeta, data: object, schema: typeof createResourceDocumentSchema) {
+  return schema(metadata.type).parse({ ...metadata, data });
 }
 
 export function buildId(path: ResourcePath) {

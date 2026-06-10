@@ -4,7 +4,7 @@ import { execute } from '@database/client/mongo-client';
 import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
 import { namespaceCollectionBuilder } from '@database/collections/namespaces';
 import { NamespaceRepository } from '@database/repositories/namespace';
-import type { NamespaceDocument, NamespaceMemberDocument } from '@database/types/collection';
+import type { NamespaceDocument, NamespaceMemberDocument } from '@sharedTypes/database/collection';
 
 const memberPermissions = {
   read: true,

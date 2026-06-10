@@ -1,19 +1,17 @@
+import type { UserDocument } from '@sharedTypes/database/collection';
 import { execute } from '@database/client/mongo-client';
 import { userCollectionBuilder } from '@database/collections/users';
 import { UserRepository } from '@database/repositories/user';
-import type { UserDocument } from '@database/types/collection';
 
 const validUser: Omit<UserDocument, 'createdAt' | 'updatedAt'> = {
-  sub: 'auth0|user',
+  id: 'auth0|user',
   presenceName: 'Test User',
   email: 'user@example.com',
   avatar: 'https://example.com/avatar.png',
   roles: ['player'],
 };
 
-function createUserDocument(
-  overrides: Partial<Omit<UserDocument, 'createdAt' | 'updatedAt'>> = {}
-): UserDocument {
+function createUserDocument(overrides: Partial<Omit<UserDocument, 'createdAt' | 'updatedAt'>> = {}): UserDocument {
   const now = new Date();
 
   return {
@@ -39,7 +37,7 @@ describe('user repository integration', () => {
     });
 
     it('returns existing user', async () => {
-      const result = await new UserRepository().get(validUser.sub);
+      const result = await new UserRepository().get(validUser.id);
 
       expect(result.ok).toBeTruthy();
 
@@ -67,7 +65,7 @@ describe('user repository integration', () => {
       expect(result.ok).toBeTruthy();
 
       const user = await execute(async (tx) => {
-        return await userCollectionBuilder(tx).findOne({ sub: validUser.sub });
+        return await userCollectionBuilder(tx).findOne({ id: validUser.id });
       });
 
       expect(user?.presenceName).toBe('Updated User');
@@ -89,7 +87,7 @@ describe('user repository integration', () => {
       expect(result.ok).toBeTruthy();
 
       const user = await execute(async (tx) => {
-        return await userCollectionBuilder(tx).findOne({ sub: validUser.sub });
+        return await userCollectionBuilder(tx).findOne({ id: validUser.id });
       });
 
       expect(user?.presenceName).toBe('Upserted User');
@@ -101,7 +99,7 @@ describe('user repository integration', () => {
       expect(result.ok).toBeTruthy();
 
       const user = await execute(async (tx) => {
-        return await userCollectionBuilder(tx).findOne({ sub: validUser.sub });
+        return await userCollectionBuilder(tx).findOne({ id: validUser.id });
       });
 
       expect(user?.presenceName).toBe('Test User');

@@ -28,10 +28,10 @@ export const resourceTypes = [
   'tile',
 ] as const;
 
-export const ResourceGetParamsSchema = z.object({
+export const ResourcePathParamsSchema = z.object({
   namespace: z.string().min(1),
   type: z.enum(resourceTypes),
-  id: z.string().min(1),
+  name: z.string().min(1),
 });
 
 export const parseResource = (data: Record<string, any>, playerStateDefinition: StateDefinition = {}) => {

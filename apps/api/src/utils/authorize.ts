@@ -1,5 +1,5 @@
 import { NamespaceRepository } from '@database/repositories/namespace';
-import type { UserDocument } from '@database/types/collection';
+import type { UserDocument } from '@sharedTypes/database/collection';
 import { ForbiddenError } from '../errors/http-error';
 
 export enum Action {
@@ -19,7 +19,7 @@ export async function authorize(user: UserDocument, namespace: string, action: A
 
   const permissions = await new NamespaceRepository().checkPermissions({
     namespaceId: namespace,
-    userId: user.sub,
+    userId: user.id,
   });
   if (!permissions.ok) throw new ForbiddenError();
 

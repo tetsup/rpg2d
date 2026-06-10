@@ -1,4 +1,4 @@
-import { UserDocument } from '@database/types/collection';
+import type { UserDocument } from '@sharedTypes/database/collection';
 
 export type Auth0UserInfo = {
   sub: string;
