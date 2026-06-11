@@ -11,7 +11,9 @@ export function LayoutShell({ children, titleBarProps }: LayoutShellProps) {
   return (
     <>
       <TitleBar {...titleBarProps} />
-      <main>{children}</main>
+      <main>
+        <div className="space-y-4 p-4">{children}</div>
+      </main>
       <BottomMenu />
     </>
   );

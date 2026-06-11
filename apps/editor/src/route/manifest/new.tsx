@@ -1,0 +1,37 @@
+import { useTranslation } from 'react-i18next';
+import { createResourceDocumentSchema } from '@database/schemas/resource';
+import { LayoutShell } from '@editor/components/features/layout/layout-shell';
+import { FormTemplete } from '@editor/components/features/form/form-templete';
+import { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';
+
+export function NewManifestPage() {
+  const { t } = useTranslation();
+  const fields: FieldGroupTemplateProps[] = [
+    {
+      title: t('プロジェクト概要'),
+      items: [
+        { name: 'namespace', label: t('グループ'), type: 'select-namespace', permission: 'create' },
+        { name: 'name', label: t('プロジェクト名'), type: 'text' },
+        { name: 'description', label: t('プロジェクトの説明'), type: 'text' },
+      ],
+    },
+    {
+      title: t('初期状態'),
+      items: [
+        { name: 'initialState.field', label: t('フィールド'), type: 'select-resource', resourceType: 'field' },
+        {
+          name: 'initialState.playerPos',
+          label: t('プレイヤー位置'),
+          type: 'plck-field-position',
+          refField: 'initialState.field',
+        },
+      ],
+    },
+  ];
+
+  return (
+    <LayoutShell titleBarProps={{ title: t('プロジェクト設定') }}>
+      <FormTemplete fieldGroups={fields} schema={createResourceDocumentSchema('manifest')} />
+    </LayoutShell>
+  );
+}
