@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { createResourceDocumentSchema } from '@database/schemas/resource';
+import { createResourceDocumentSchema } from '@schema/database/resource';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';

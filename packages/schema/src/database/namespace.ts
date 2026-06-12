@@ -4,6 +4,6 @@ export const NamespaceDocumentSchema = z.object({
   id: z.string(),
   displayName: z.string(),
   description: z.string(),
-  private: z.boolean(),
+  isPrivate: z.boolean(),
   createdBy: z.string(),
 });

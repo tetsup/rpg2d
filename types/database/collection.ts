@@ -1,9 +1,9 @@
 import z from 'zod';
-import type { NamespaceDocumentSchema } from '@database/schemas/namespace';
-import type { NamespaceMemberDocumentSchema } from '@database/schemas/namespace-member';
-import type { createResourceDocumentSchema, createResourceMetaSchema } from '@database/schemas/resource';
-import type { ResourceEdgeDocumentSchema } from '@database/schemas/resource-edge';
-import type { UserDocumentSchema } from '@database/schemas/user';
+import type { NamespaceDocumentSchema } from '@schema/database/namespace';
+import type { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
+import type { createResourceDocumentSchema, createResourceMetaSchema } from '@schema/database/resource';
+import type { ResourceEdgeDocumentSchema } from '@schema/database/resource-edge';
+import type { UserDocumentSchema } from '@schema/database/user';
 
 export type CollectionName = 'namespace' | 'user' | 'resource';
 

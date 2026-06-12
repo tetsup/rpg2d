@@ -1,8 +1,3 @@
-import z from 'zod';
+import { NamespaceDocumentSchema } from '@schema/database/namespace';
 
-export const NamespacePostParamsSchema = z.object({
-  id: z.string(),
-  displayName: z.string(),
-  description: z.string(),
-  private: z.boolean(),
-});
+export const NamespacePostParamsSchema = NamespaceDocumentSchema.omit({ createdBy: true });

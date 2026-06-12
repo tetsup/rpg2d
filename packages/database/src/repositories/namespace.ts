@@ -1,9 +1,9 @@
 import { Collection } from 'mongodb';
 import type { NamespaceDocument, NamespaceMemberDocument } from '@sharedTypes/database/collection';
+import { NamespaceDocumentSchema } from '@schema/database/namespace';
+import { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
 import { execute, TxContext, withTransaction } from '@database/client/mongo-client';
-import { NamespaceDocumentSchema } from '@database/schemas/namespace';
 import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
-import { NamespaceMemberDocumentSchema } from '@database/schemas/namespace-member';
 import { namespaceCollectionBuilder } from '../collections/namespaces';
 import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
 

@@ -6,7 +6,6 @@ import { Select } from '@editor/components/ui/select';
 import { ControlSection } from '@editor/components/forms/control-section';
 import { ResourcePicker } from '@editor/components/parts/resource-picker';
 import { Switch } from '@editor/components/ui/switch';
-import { fi } from 'zod/v4/locales';
 
 type InputProps = {
   name: string;
@@ -53,7 +52,7 @@ export type FieldGroupTemplateProps = {
 };
 
 function Control(props: ControlProps) {
-  const { register, control, setValue } = useFormContext();
+  const { register, control } = useFormContext();
 
   switch (props.type) {
     case 'text':

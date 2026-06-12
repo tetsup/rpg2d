@@ -2,12 +2,12 @@ import { type ClientSession, type Collection, type DeleteResult, type Filter, Ob
 import type { ResourceDocument, ResourceEdgeDocument, ResourceMeta } from '@sharedTypes/database/collection';
 import type { ResourceId, ResourcePath } from '@sharedTypes/resource/common';
 import { splitId } from '@schema/resource/common/base';
+import { createResourceDocumentSchema } from '@schema/database/resource';
 import { buildId, extractResourceRefs } from '@database/utils/resource';
 import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
 import { execute, withTransaction, type TxContext } from '@database/client/mongo-client';
 import { resourceCollectionBuilder } from '@database/collections/resources';
 import { resourceEdgeCollectionBuilder } from '@database/collections/resource-edges';
-import { createResourceDocumentSchema } from '@database/schemas/resource';
 
 type FindParams = {
   name?: string;

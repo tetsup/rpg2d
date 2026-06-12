@@ -1,7 +1,7 @@
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import type { ResourceMeta } from '@sharedTypes/database/collection';
 import { IdSchema } from '@schema/resource/common/base';
-import type { createResourceDocumentSchema } from '@database/schemas/resource';
+import type { createResourceDocumentSchema } from '@schema/database/resource';
 
 export function buildDocument(metadata: ResourceMeta, data: object, schema: typeof createResourceDocumentSchema) {
   return schema(metadata.type).parse({ ...metadata, data });

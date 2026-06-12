@@ -14,12 +14,20 @@ const memberPermissions = {
   admin: false,
 };
 
-function createNamespaceDocument(id: string, displayName = id, createdBy = 'owner-user'): NamespaceDocument {
+function createNamespaceDocument(
+  id: string,
+  displayName = id,
+  description = '',
+  isPrivate = false,
+  createdBy = 'owner-user'
+): NamespaceDocument {
   const now = new Date();
 
   return {
     id,
     displayName,
+    description,
+    isPrivate,
     createdBy,
     createdAt: now,
     updatedAt: now,

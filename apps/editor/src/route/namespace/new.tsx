@@ -26,7 +26,7 @@ export function NewNamespacePage() {
     id: '',
     displayName: '',
     description: '',
-    private: false,
+    isPrivate: false,
   };
 
   const onSubmit = (values: Values) => {

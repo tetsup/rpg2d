@@ -1,10 +1,8 @@
 import { createMiddleware } from 'hono/factory';
-import { splitId } from '@schema/resource/common/base';
 import { BadRequestError, UnauthorizedError } from '@api/errors/http-error';
 import type { Variables } from '@api/types/auth';
 import { authorize, type Action } from '@api/utils/authorize';
 import { ResourcePathParamsSchema } from '@schema/api/resource';
-import { createResourceDocumentSchema } from '@database/schemas/resource';
 
 type AuthorizeResourceMiddlewareOptions = {
   authorize: typeof authorize;

@@ -2,8 +2,8 @@ import type { Collection } from 'mongodb';
 import { MongoNetworkError, MongoServerError } from 'mongodb';
 import { ZodError } from 'zod';
 import type { UserDocument } from '@sharedTypes/database/collection';
+import { UserDocumentSchema } from '@schema/database/user';
 import { UserRepository } from '@database/repositories/user';
-import { UserDocumentSchema } from '@database/schemas/user';
 
 const validUser: Omit<UserDocument, 'createdAt' | 'updatedAt'> = {
   id: 'auth0|user',

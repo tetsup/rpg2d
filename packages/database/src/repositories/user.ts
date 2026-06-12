@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb';
 import type { UserDocument } from '@sharedTypes/database/collection';
-import { UserDocumentSchema } from '@database/schemas/user';
+import { UserDocumentSchema } from '@schema/database/user';
 import { execute, TxContext } from '@database/client/mongo-client';
 import { userCollectionBuilder } from '@database/collections/users';
 import { RepositoryNotFoundError, repositorySafe } from './util';
