@@ -11,7 +11,7 @@ type MenuBarProps = {
   align: 'top' | 'bottom';
 };
 
-export function MenuBar({ items, align }: MenuBarProps) {
+function MenuBarBody({ items, align }: MenuBarProps) {
   return (
     <nav className={`fixed ${align}-0 left-0 right-0 border-t bg-background`}>
       <div className="flex">
@@ -36,4 +36,21 @@ export function MenuBar({ items, align }: MenuBarProps) {
       </div>
     </nav>
   );
+}
+
+export function MenuBar({ items, align }: MenuBarProps) {
+  if (align === 'top')
+    return (
+      <>
+        <div className="h-16" />
+        <MenuBarBody items={items} align={align} />
+      </>
+    );
+  else
+    return (
+      <>
+        <MenuBarBody items={items} align={align} />
+        <div className="h-16" />
+      </>
+    );
 }
