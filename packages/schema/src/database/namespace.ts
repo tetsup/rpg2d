@@ -1,9 +1,11 @@
 import { z } from 'zod';
+import { NamespaceSchema } from '@schema/resource/common/base';
+import { SingleLineSchema } from '@schema/common/string';
 
 export const NamespaceDocumentSchema = z.object({
-  id: z.string(),
-  displayName: z.string(),
-  description: z.string(),
+  id: NamespaceSchema,
+  displayName: SingleLineSchema.min(1).max(30),
+  description: z.string().max(200),
   isPrivate: z.boolean(),
   createdBy: z.string(),
 });
