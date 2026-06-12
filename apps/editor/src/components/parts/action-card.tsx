@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import { CardButton } from './card-button';
 
 type ActionCardProps = {
   icon: LucideIcon;
@@ -39,25 +40,9 @@ export function ActionCard({
   const style = variants[variant];
 
   return (
-    <button
-      onClick={onClick}
-      className={`
-        w-full
-        rounded-2xl
-        border
-        bg-card
-        p-5
-        text-left
-        shadow-sm
-        transition-all
-        active:scale-[0.98]
-        ${style.border}
-      `}
-      disabled={disabled}
-    >
-      <div className="flex items-center gap-4">
-        <div
-          className={`
+    <CardButton onClick={onClick} disabled={disabled} className={style.border}>
+      <div
+        className={`
             flex
             h-14
             w-14
@@ -66,14 +51,13 @@ export function ActionCard({
             rounded-xl
             ${style.icon}
           `}
-        >
-          <Icon className="h-8 w-8" />
-        </div>
-        <div className="flex-1">
-          <div className="font-semibold">{title}</div>
-          <div className="text-sm text-muted-foreground">{description}</div>
-        </div>
+      >
+        <Icon className="h-8 w-8" />
       </div>
-    </button>
+      <div className="flex-1">
+        <div className="font-semibold">{title}</div>
+        <div className="text-sm text-muted-foreground">{description}</div>
+      </div>
+    </CardButton>
   );
 }

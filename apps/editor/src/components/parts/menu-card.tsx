@@ -1,28 +1,19 @@
 import type { LucideIcon } from 'lucide-react';
+import { CardButton } from './card-button';
 
 type MenuCardProps = {
   icon: LucideIcon;
   title: string;
   description?: string;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
-export function MenuCard({ icon: Icon, title, description, onClick }: MenuCardProps) {
+export function MenuCard({ icon: Icon, title, description, onClick, disabled }: MenuCardProps) {
   return (
-    <button
-      onClick={onClick}
-      className="
-        w-full
-        rounded-2xl
-        border
-        bg-card
-        p-5
-        text-left
-      "
-    >
-      <div className="flex items-center gap-4">
-        <div
-          className="
+    <CardButton onClick={onClick} disabled={disabled}>
+      <div
+        className="
             flex
             h-14
             w-14
@@ -32,16 +23,14 @@ export function MenuCard({ icon: Icon, title, description, onClick }: MenuCardPr
             bg-primary/10
             text-primary
           "
-        >
-          <Icon size={28} strokeWidth={2} />
-        </div>
-
-        <div className="flex-1">
-          <div className="font-semibold">{title}</div>
-
-          <div className="text-sm text-muted-foreground">{description}</div>
-        </div>
+      >
+        <Icon size={28} strokeWidth={2} />
       </div>
-    </button>
+      <div className="flex-1">
+        <div className="font-semibold">{title}</div>
+
+        <div className="text-sm text-muted-foreground">{description}</div>
+      </div>
+    </CardButton>
   );
 }
