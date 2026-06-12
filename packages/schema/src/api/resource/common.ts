@@ -1,17 +1,17 @@
 import z from 'zod';
-import { StateDefinition } from '../../../../types/variable';
-import { ActionSchema } from '../resource/action';
-import { EntitySchema } from '../resource/entity';
-import { FontSchema } from '../resource/font';
-import { FieldSchema } from '../resource/field';
-import { ImageSchema } from '../resource/image';
-import { ManifestSchema } from '../resource/manifest';
-import { PanelSchema } from '../resource/panel';
-import { PanelSkinSchema } from '../resource/panel-skin';
-import { buildPlayerSchema } from '../resource/player';
-import { SkinSchema } from '../resource/skin';
-import { TextureSchema } from '../resource/texture';
-import { TileSchema } from '../resource/tile';
+import { StateDefinition } from '@sharedTypes/variable';
+import { ActionSchema } from '../../resource/action';
+import { EntitySchema } from '../../resource/entity';
+import { FontSchema } from '../../resource/font';
+import { FieldSchema } from '../../resource/field';
+import { ImageSchema } from '../../resource/image';
+import { ManifestSchema } from '../../resource/manifest';
+import { PanelSchema } from '../../resource/panel';
+import { PanelSkinSchema } from '../../resource/panel-skin';
+import { buildPlayerSchema } from '../../resource/player';
+import { SkinSchema } from '../../resource/skin';
+import { TextureSchema } from '../../resource/texture';
+import { TileSchema } from '../../resource/tile';
 
 export const resourceTypes = [
   'action',

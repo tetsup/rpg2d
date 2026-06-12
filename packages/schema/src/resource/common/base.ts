@@ -16,7 +16,7 @@ export const resources = [
   'tile',
 ] as const;
 
-const namespacePattern = '[a-z][a-z0-9]{2,}';
+const namespacePattern = '[a-z][a-z0-9]*([.-][a-z][a-z0-9]*)*';
 
 const resourceNamePattern = '[a-z][a-z0-9]*([.-][a-z][a-z0-9]*)*';
 

@@ -1,4 +1,4 @@
-import { ResourceSearchReqParamsSchema } from '@api/schemas/resources/search-params';
+import { ResourceSearchReqParamsSchema } from '@schema/api/resource/search';
 
 describe('ResourceSearchReqSchema', () => {
   describe('success', () => {

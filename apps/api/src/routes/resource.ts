@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { ResourceRepository } from '@database/repositories/resource';
-import { ResourceSearchReqParamsSchema } from '@api/schemas/resources/search-params';
-import { ResourceByIdReqSchema } from '@api/schemas/resources/by-id';
+import { ResourceSearchReqParamsSchema } from '@schema/api/resource/search';
+import { ResourceByIdReqSchema } from '@schema/api/resource/by-id';
 import { authorizeResourceMiddleware } from '@api/auth/middlewares/authorize-resource';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 import { Action } from '../utils/authorize';

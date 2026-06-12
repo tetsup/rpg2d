@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { ResourceByIdReqSchema } from '@api/schemas/resources/by-id';
+import { ResourceByIdReqSchema } from '@schema/api/resource/by-id';
 
 describe('ResourceGetReqSchema', () => {
   describe('success', () => {

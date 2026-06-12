@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import z from 'zod';
-import { NamespacePostParamsSchema } from '@schema/api/namespace';
+import { NamespacePostParamsSchema } from '@schema/api/namespace/post';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';

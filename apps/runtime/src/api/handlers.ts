@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import yaml from 'yaml';
+import { ResourcePathParamsSchema } from '@schema/api/resource/common';
 import { BadRequestError, execWithHandleError, NotFoundError } from './errors';
-import { ResourceGetParamsSchema } from '@schema/api/resource';
 
 class ResourceLoader {
   private resources: Map<string, string>;
@@ -32,11 +32,11 @@ const resourceLoader = new ResourceLoader();
 
 export const handlers = [
   http.get(
-    '/api/resource/:namespace/:type/:id',
+    '/api/resource/:namespace/:type/:name',
     async ({ params }) =>
       await execWithHandleError(async () => {
-        const { namespace, type, id } = ResourceGetParamsSchema.parse(params);
-        const resource = await resourceLoader.readResource(`${namespace}/${type}/${id}`);
+        const { namespace, type, name } = ResourcePathParamsSchema.parse(params);
+        const resource = await resourceLoader.readResource(`${namespace}/${type}/${name}`);
         if (resource == null) throw new NotFoundError();
         return HttpResponse.json(resource);
       })
