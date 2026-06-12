@@ -1,12 +1,16 @@
 import { useTranslation } from 'react-i18next';
+import { DefaultValues } from 'react-hook-form';
+import z from 'zod';
 import { createResourceDocumentSchema } from '@schema/database/resource';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';
 
+type Values = z.infer<typeof ManifestPostParamsSchema>;
+
 export function NewManifestPage() {
   const { t } = useTranslation();
-  const fields: FieldGroupTemplateProps[] = [
+  const fields: FieldGroupTemplateProps<Values>[] = [
     {
       title: t('プロジェクト概要'),
       items: [
@@ -28,10 +32,16 @@ export function NewManifestPage() {
       ],
     },
   ];
+  const defaultValues: DefaultValues<Values> = {};
 
   return (
     <LayoutShell titleBarProps={{ title: t('プロジェクト設定') }}>
-      <FormTemplete fieldGroups={fields} schema={createResourceDocumentSchema('manifest')} />
+      <FormTemplete
+        fieldGroups={fields}
+        schema={createResourceDocumentSchema('manifest')}
+        defaultValues={defaultValues}
+        onSubmit={onSubmit}
+      />
     </LayoutShell>
   );
 }

@@ -10,14 +10,14 @@ type Values = z.infer<typeof NamespacePostParamsSchema>;
 
 export function NewNamespacePage() {
   const { t } = useTranslation();
-  const fields: FieldGroupTemplateProps[] = [
+  const fields: FieldGroupTemplateProps<Values>[] = [
     {
       title: t('グループ設定'),
       items: [
         { name: 'id', label: t('ID'), type: 'text' },
         { name: 'displayName', label: t('グループ名'), type: 'text' },
         { name: 'description', label: t('グループの説明'), type: 'text' },
-        { name: 'private', label: t('非公開'), type: 'switch' },
+        { name: 'isPrivate', label: t('非公開'), type: 'switch', labelOn: t('公開しない'), labelOff: t('公開する') },
       ],
     },
   ];

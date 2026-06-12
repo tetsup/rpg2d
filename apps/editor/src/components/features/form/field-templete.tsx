@@ -1,11 +1,11 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 import { ResourceType } from '@sharedTypes/resource/common';
 import { ControlField } from '@editor/components/forms/control-field';
-import { Input } from '@editor/components/ui/input';
-import { Select } from '@editor/components/ui/select';
 import { ControlSection } from '@editor/components/forms/control-section';
 import { ResourcePicker } from '@editor/components/parts/resource-picker';
-import { Switch } from '@editor/components/ui/switch';
+import { Input } from '@editor/components/ui/input';
+import { Select } from '@editor/components/ui/select';
+import { SwitchField } from '@editor/components/parts/switch-field';
 
 type InputProps = {
   name: string;
@@ -26,6 +26,8 @@ type SelectProps = {
 type SwitchProps = {
   name: string;
   type: 'switch';
+  labelOn?: string;
+  labelOff?: string;
 };
 
 type ResourcePickerProps = {
@@ -42,13 +44,14 @@ type NamespacePickerProps = {
 
 type ControlProps = InputProps | SelectProps | SwitchProps | ResourcePickerProps | NamespacePickerProps;
 
-type FieldTempleteProps = ControlProps & {
+type FieldTemplateProps<TValues extends FieldValues> = {
+  name: FieldPath<TValues>;
   label: string;
-};
+} & ControlProps;
 
-export type FieldGroupTemplateProps = {
+export type FieldGroupTemplateProps<TValues extends FieldValues> = {
   title: string;
-  items: FieldTempleteProps[];
+  items: FieldTemplateProps<TValues>[];
 };
 
 function Control(props: ControlProps) {
@@ -70,7 +73,14 @@ function Control(props: ControlProps) {
         <Controller
           name={props.name}
           control={control}
-          render={({ field }) => <Switch checked={field.value} onCheckedChange={field.onChange} />}
+          render={({ field }) => (
+            <SwitchField
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              labelOn={props.labelOn}
+              labelOff={props.labelOff}
+            />
+          )}
         />
       );
     case 'select-resource':
@@ -88,7 +98,7 @@ function Control(props: ControlProps) {
   }
 }
 
-function FieldTemplate({ label, ...props }: FieldTempleteProps) {
+function FieldTemplate({ label, ...props }: FieldTemplateProps<any>) {
   return (
     <ControlField label={label}>
       <Control {...props} />
@@ -96,7 +106,7 @@ function FieldTemplate({ label, ...props }: FieldTempleteProps) {
   );
 }
 
-export function FieldGroupTemplate({ title, items }: FieldGroupTemplateProps) {
+export function FieldGroupTemplate({ title, items }: FieldGroupTemplateProps<any>) {
   return (
     <ControlSection title={title}>
       {items.map((item) => (

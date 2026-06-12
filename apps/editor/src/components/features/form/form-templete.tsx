@@ -1,18 +1,18 @@
 import type z from 'zod';
-import { FieldValues, FormProvider, useForm } from 'react-hook-form';
+import { DefaultValues, FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitCard } from '@editor/components/parts/submit-card';
 import { CancelCard } from '@editor/components/parts/cancel-card';
 import { FieldGroupTemplate, FieldGroupTemplateProps } from './field-templete';
 
-type FormTempleteProps<T extends FieldValues> = {
-  fieldGroups: FieldGroupTemplateProps[];
-  schema: z.ZodType<unknown, T>;
-  onSubmit: (data: T) => void;
-  defaultValues: T;
+type FormTemplateProps<TValues extends FieldValues> = {
+  fieldGroups: FieldGroupTemplateProps<TValues>[];
+  schema: z.ZodType<unknown, TValues>;
+  defaultValues: DefaultValues<TValues>;
+  onSubmit: (values: TValues) => void;
 };
 
-export function FormTemplete({ fieldGroups, schema, onSubmit, defaultValues }: FormTempleteProps<any>) {
+export function FormTemplete({ fieldGroups, schema, onSubmit, defaultValues }: FormTemplateProps<any>) {
   const form = useForm({ resolver: zodResolver(schema), mode: 'onChange', defaultValues: defaultValues });
 
   return (
