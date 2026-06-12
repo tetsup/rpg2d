@@ -1,11 +1,10 @@
 import { Save } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useFormContext, useFormState } from 'react-hook-form';
+import { useFormState } from 'react-hook-form';
 import { ActionCard } from './action-card';
 
 export function SubmitCard() {
   const { t } = useTranslation();
-  const { watch } = useFormContext();
   const { isDirty, isValid } = useFormState();
 
   return (
@@ -17,9 +16,6 @@ export function SubmitCard() {
         variant={isDirty ? (isValid ? 'success' : 'error') : 'disabled'}
         disabled={!isValid || !isDirty}
       />
-      <pre>{JSON.stringify(watch())}</pre>
-      <pre>{String(isValid)}</pre>
-      <pre>{String(isDirty)}</pre>
     </>
   );
 }
