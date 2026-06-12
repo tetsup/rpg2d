@@ -1,4 +1,4 @@
-import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, FieldPath, FieldValues, useFormContext, useFormState } from 'react-hook-form';
 import { ResourceType } from '@sharedTypes/resource/common';
 import { ControlField } from '@editor/components/forms/control-field';
 import { ControlSection } from '@editor/components/forms/control-section';
@@ -47,6 +47,7 @@ type ControlProps = InputProps | SelectProps | SwitchProps | ResourcePickerProps
 type FieldTemplateProps<TValues extends FieldValues> = {
   name: FieldPath<TValues>;
   label: string;
+  hint?: string;
 } & ControlProps;
 
 export type FieldGroupTemplateProps<TValues extends FieldValues> = {
@@ -98,10 +99,10 @@ function Control(props: ControlProps) {
   }
 }
 
-function FieldTemplate({ label, ...props }: FieldTemplateProps<any>) {
+function FieldTemplate({ label, hint, name, ...props }: FieldTemplateProps<any>) {
   return (
-    <ControlField label={label}>
-      <Control {...props} />
+    <ControlField name={name} label={label} hint={hint}>
+      <Control name={name} {...props} />
     </ControlField>
   );
 }
