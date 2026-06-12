@@ -1,9 +1,8 @@
-import { z } from 'zod';
+import z from 'zod';
 
-export const NamespaceDocumentSchema = z.object({
+export const NamespacePostParamsSchema = z.object({
   id: z.string(),
   displayName: z.string(),
   description: z.string(),
   private: z.boolean(),
-  createdBy: z.string(),
 });

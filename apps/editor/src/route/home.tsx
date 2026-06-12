@@ -4,6 +4,7 @@ import { FolderUp, Settings2, Sparkles } from 'lucide-react';
 import { MenuCard } from '@editor/components/parts/menu-card';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { useWorkspaceStore } from '@editor/stores/workspace';
+import { ControlSection } from '@editor/components/forms/control-section';
 
 export function HomePage() {
   const { t } = useTranslation();
@@ -12,19 +13,31 @@ export function HomePage() {
 
   return (
     <LayoutShell titleBarProps={{ title: t('ホーム') }}>
-      <MenuCard
-        onClick={() => {
-          navigate('/manifest/new');
-        }}
-        icon={Sparkles}
-        title={t('新規作成')}
-        description={t('新しいゲームを作成')}
-      />
+      <ControlSection title={t('プロジェクト管理')}>
+        <MenuCard
+          onClick={() => {
+            navigate('/manifest/new');
+          }}
+          icon={Sparkles}
+          title={t('新規作成')}
+          description={t('新しいゲームを作成')}
+        />
 
-      <MenuCard icon={FolderUp} title={t('ロード')} description={t('過去に作ったゲームを開く')} />
-      {workspace.manifestId != null && (
-        <MenuCard icon={Settings2} title={t('コンフィグ')} description={t('初期設定を変更')} />
-      )}
+        <MenuCard icon={FolderUp} title={t('ロード')} description={t('過去に作ったゲームを開く')} />
+        {workspace.manifestId != null && (
+          <MenuCard icon={Settings2} title={t('コンフィグ')} description={t('初期設定を変更')} />
+        )}
+      </ControlSection>
+      <ControlSection title={t('グループ管理')}>
+        <MenuCard
+          onClick={() => {
+            navigate('/namespace/new');
+          }}
+          icon={Sparkles}
+          title={t('新規作成')}
+          description={t('新しいグループを作成')}
+        />
+      </ControlSection>
     </LayoutShell>
   );
 }

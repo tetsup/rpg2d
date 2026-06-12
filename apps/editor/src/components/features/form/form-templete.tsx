@@ -5,16 +5,18 @@ import { SubmitCard } from '@editor/components/parts/submit-card';
 import { CancelCard } from '@editor/components/parts/cancel-card';
 import { FieldGroupTemplate, FieldGroupTemplateProps } from './field-templete';
 
-type FormTempleteProps = {
+type FormTempleteProps<T extends FieldValues> = {
   fieldGroups: FieldGroupTemplateProps[];
-  schema: z.ZodType<unknown, FieldValues>;
+  schema: z.ZodType<unknown, T>;
+  onSubmit: (data: T) => void;
+  defaultValues: T;
 };
 
-export function FormTemplete({ fieldGroups, schema }: FormTempleteProps) {
-  const form = useForm({ resolver: zodResolver(schema) });
+export function FormTemplete({ fieldGroups, schema, onSubmit, defaultValues }: FormTempleteProps<any>) {
+  const form = useForm({ resolver: zodResolver(schema), mode: 'onChange', defaultValues: defaultValues });
 
   return (
-    <form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <FormProvider {...form}>
         <div className="space-y-4">
           {fieldGroups.map((fieldGroup) => (
