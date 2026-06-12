@@ -1,17 +1,17 @@
 import { Collection } from 'mongodb';
-import type { UserDocument } from '@sharedTypes/database/collection';
+import type { UserDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import { UserDocumentSchema } from '@schema/database/user';
 import { execute, TxContext } from '@database/client/mongo-client';
 import { userCollectionBuilder } from '@database/collections/users';
 import { RepositoryNotFoundError, repositorySafe } from './util';
 
 type UserRepositoryOptions = {
-  mockCollectionBuilder?: (tx: TxContext) => Collection<UserDocument>;
+  mockCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<UserDocument>>;
   mockDocumentSchema?: typeof UserDocumentSchema;
 };
 
 export class UserRepository {
-  private collectionBuilder: (tx: TxContext) => Collection<UserDocument>;
+  private collectionBuilder: (tx: TxContext) => Collection<WithTimestamp<UserDocument>>;
   private documentSchema: typeof UserDocumentSchema;
 
   constructor({ mockCollectionBuilder, mockDocumentSchema }: UserRepositoryOptions = {}) {

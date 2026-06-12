@@ -1,7 +1,7 @@
 import type { Collection } from 'mongodb';
 import { MongoNetworkError, MongoServerError } from 'mongodb';
 import { ZodError } from 'zod';
-import type { UserDocument } from '@sharedTypes/database/collection';
+import type { UserDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import { UserDocumentSchema } from '@schema/database/user';
 import { UserRepository } from '@database/repositories/user';
 
@@ -24,7 +24,7 @@ describe('user repository error mapping', () => {
         mockCollectionBuilder: () =>
           ({
             findOne: vi.fn().mockRejectedValue(new MongoNetworkError('network')),
-          }) as unknown as Collection<UserDocument>,
+          }) as unknown as Collection<WithTimestamp<UserDocument>>,
       });
 
       const result = await users.get(validUser.id);
@@ -41,7 +41,7 @@ describe('user repository error mapping', () => {
         mockCollectionBuilder: () =>
           ({
             findOne: vi.fn().mockRejectedValue(new Error('unknown')),
-          }) as unknown as Collection<UserDocument>,
+          }) as unknown as Collection<WithTimestamp<UserDocument>>,
       });
 
       const result = await users.get(validUser.id);
@@ -82,7 +82,7 @@ describe('user repository error mapping', () => {
         mockCollectionBuilder: () =>
           ({
             updateOne: vi.fn().mockRejectedValue(error),
-          }) as unknown as Collection<UserDocument>,
+          }) as unknown as Collection<WithTimestamp<UserDocument>>,
       });
 
       const result = await users.update(validUser);
@@ -103,7 +103,7 @@ describe('user repository error mapping', () => {
         mockCollectionBuilder: () =>
           ({
             updateOne: vi.fn().mockRejectedValue(error),
-          }) as unknown as Collection<UserDocument>,
+          }) as unknown as Collection<WithTimestamp<UserDocument>>,
       });
 
       const result = await users.update(validUser);
@@ -120,7 +120,7 @@ describe('user repository error mapping', () => {
         mockCollectionBuilder: () =>
           ({
             updateOne: vi.fn().mockRejectedValue(new MongoNetworkError('network')),
-          }) as unknown as Collection<UserDocument>,
+          }) as unknown as Collection<WithTimestamp<UserDocument>>,
       });
 
       const result = await users.update(validUser);

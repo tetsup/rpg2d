@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import type { NamespaceDocument, NamespaceMemberDocument } from '@sharedTypes/database/collection';
+import type { NamespaceDocument, NamespaceMemberDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import { NamespaceDocumentSchema } from '@schema/database/namespace';
 import { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
 import { execute, TxContext, withTransaction } from '@database/client/mongo-client';
@@ -7,15 +7,9 @@ import { namespaceMemberCollectionBuilder } from '@database/collections/namespac
 import { namespaceCollectionBuilder } from '../collections/namespaces';
 import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
 
-type CreateNamespaceParams = {
-  id: string;
-  displayName: string;
-  createdBy: string;
-};
-
 type UpdateNamespaceParams = {
   id: string;
-  displayName: string;
+  newDocument: NamespaceDocument;
 };
 
 type NamespaceMemberPermissions = NamespaceMemberDocument['permissions'];
@@ -35,15 +29,15 @@ type CheckPermissionsParmas = {
 };
 
 type NamespaceRepositoryOptions = {
-  mockCollectionBuilder?: (tx: TxContext) => Collection<NamespaceDocument>;
-  mockMemberCollectionBuilder?: (tx: TxContext) => Collection<NamespaceMemberDocument>;
+  mockCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<NamespaceDocument>>;
+  mockMemberCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<NamespaceMemberDocument>>;
   mockDocumentSchema?: typeof NamespaceDocumentSchema;
   mockMemberDocumentSchema?: typeof NamespaceMemberDocumentSchema;
 };
 
 export class NamespaceRepository {
-  private collectionBuilder: (tx: TxContext) => Collection<NamespaceDocument>;
-  private memberCollectionBuilder: (tx: TxContext) => Collection<NamespaceMemberDocument>;
+  private collectionBuilder: (tx: TxContext) => Collection<WithTimestamp<NamespaceDocument>>;
+  private memberCollectionBuilder: (tx: TxContext) => Collection<WithTimestamp<NamespaceMemberDocument>>;
   private documentSchema: typeof NamespaceDocumentSchema;
   private memberDocumentSchema: typeof NamespaceMemberDocumentSchema;
 
@@ -71,18 +65,18 @@ export class NamespaceRepository {
     });
   }
 
-  async create({ id, displayName, createdBy }: CreateNamespaceParams): Promise<RepositoryResult<void>> {
+  async create(namespace: NamespaceDocument): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
+      const document = this.documentSchema.parse(namespace);
+      const member = this.memberDocumentSchema.parse({
+        namespaceId: namespace.id,
+        userId: namespace.createdBy,
+        permissions: this.createOwnerPermissions(),
+      });
+      const now = new Date();
       return await withTransaction(async (tx) => {
         const namespaces = this.collectionBuilder(tx);
         const members = this.memberCollectionBuilder(tx);
-        const document = this.documentSchema.parse({ id, displayName, createdBy });
-        const member = this.memberDocumentSchema.parse({
-          namespaceId: id,
-          userId: createdBy,
-          permissions: this.createOwnerPermissions(),
-        });
-        const now = new Date();
         const options = this.getOperationOptions(tx);
 
         await namespaces.insertOne({ ...document, createdAt: now, updatedAt: now }, options);
@@ -91,25 +85,21 @@ export class NamespaceRepository {
     });
   }
 
-  async update({ id, displayName }: UpdateNamespaceParams): Promise<RepositoryResult<void>> {
+  async update(id: string, namespace: NamespaceDocument): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
       return await execute(async (tx) => {
         const namespaces = this.collectionBuilder(tx);
         const options = this.getOperationOptions(tx);
-        const current = await namespaces.findOne({ id }, options);
-        if (!current) throw new RepositoryNotFoundError();
 
-        const document = this.documentSchema.parse({
-          id,
-          displayName,
-          createdBy: current.createdBy,
-        });
+        const parsedDocument = this.documentSchema.parse(namespace);
         const result = await namespaces.updateOne(
           { id },
-          { $set: { displayName: document.displayName, updatedAt: new Date() } },
+          { $set: { ...parsedDocument, updatedAt: new Date() } },
           options
         );
         if (result.matchedCount === 0) throw new RepositoryNotFoundError();
+        const members = this.memberCollectionBuilder(tx);
+        await members.updateMany({ namespaceId: id }, { $set: { namespaceId: parsedDocument.id } }, options);
       });
     });
   }

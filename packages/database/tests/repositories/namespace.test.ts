@@ -1,4 +1,4 @@
-import type { NamespaceDocument, NamespaceMemberDocument } from '@sharedTypes/database/collection';
+import type { NamespaceDocument, NamespaceMemberDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import { execute } from '@database/client/mongo-client';
 import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
 import { namespaceCollectionBuilder } from '@database/collections/namespaces';
@@ -20,27 +20,27 @@ const memberPermissions = {
   admin: false,
 };
 
-function createNamespaceDocument(
-  id: string,
-  displayName = id,
-  description = '',
-  isPrivate = false,
-  createdBy = 'owner-user'
-): NamespaceDocument {
+function createNamespaceDocument({
+  id,
+  displayName,
+  description,
+  isPrivate,
+  createdBy,
+}: Partial<NamespaceDocument>): WithTimestamp<NamespaceDocument> {
   const now = new Date();
 
   return {
-    id,
-    displayName,
-    description,
-    isPrivate,
-    createdBy,
+    id: id ?? 'sample',
+    displayName: displayName ?? 'Sample',
+    description: description ?? '',
+    isPrivate: isPrivate ?? false,
+    createdBy: createdBy ?? 'dummy-user',
     createdAt: now,
     updatedAt: now,
   };
 }
 
-function createMemberDocument(namespaceId: string, userId: string): NamespaceMemberDocument {
+function createMemberDocument(namespaceId: string, userId: string): WithTimestamp<NamespaceMemberDocument> {
   const now = new Date();
 
   return {
@@ -52,7 +52,7 @@ function createMemberDocument(namespaceId: string, userId: string): NamespaceMem
   };
 }
 
-function createOwnerMemberDocument(namespaceId: string, userId: string): NamespaceMemberDocument {
+function createOwnerMemberDocument(namespaceId: string, userId: string): WithTimestamp<NamespaceMemberDocument> {
   const now = new Date();
 
   return {
@@ -77,7 +77,9 @@ describe('namespace repository', () => {
       const result = await new NamespaceRepository().create({
         id: 'sample',
         displayName: 'Sample',
+        description: '',
         createdBy: 'owner-user',
+        isPrivate: true,
       });
 
       expect(result.ok).toBeTruthy();
@@ -94,7 +96,9 @@ describe('namespace repository', () => {
       const result = await new NamespaceRepository().create({
         id: 'sample',
         displayName: 'Sample',
+        description: '',
         createdBy: 'owner-user',
+        isPrivate: true,
       });
 
       expect(result.ok).toBeTruthy();
@@ -113,7 +117,9 @@ describe('namespace repository', () => {
   describe('get', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(createNamespaceDocument('sample', 'Sample'));
+        await namespaceCollectionBuilder(tx).insertOne(
+          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
+        );
       });
     });
 
@@ -121,24 +127,26 @@ describe('namespace repository', () => {
       const result = await new NamespaceRepository().get('sample');
 
       expect(result.ok).toBeTruthy();
-
-      if (result.ok) {
-        expect(result.data.displayName).toBe('Sample');
-      }
+      expect(result.ok && result.data.displayName).toBe('Sample');
     });
   });
 
   describe('update', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(createNamespaceDocument('sample', 'Sample'));
+        await namespaceCollectionBuilder(tx).insertOne(
+          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
+        );
       });
     });
 
     it('updates displayName', async () => {
-      const result = await new NamespaceRepository().update({
+      const result = await new NamespaceRepository().update('sample', {
         id: 'sample',
         displayName: 'Updated Sample',
+        description: '',
+        isPrivate: false,
+        createdBy: 'owner-user',
       });
 
       expect(result.ok).toBeTruthy();
@@ -155,7 +163,9 @@ describe('namespace repository', () => {
   describe('delete', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(createNamespaceDocument('sample', 'Sample'));
+        await namespaceCollectionBuilder(tx).insertOne(
+          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
+        );
         await namespaceMemberCollectionBuilder(tx).insertMany([
           createMemberDocument('sample', 'owner-user'),
           createMemberDocument('sample', 'member-user'),
@@ -249,10 +259,7 @@ describe('namespace repository', () => {
       });
 
       expect(result.ok).toBeTruthy();
-
-      if (result.ok) {
-        expect(result.data).toBe(true);
-      }
+      expect(result.ok && result.data).toBe(true);
     });
 
     it('returns false for non-member', async () => {
@@ -262,17 +269,16 @@ describe('namespace repository', () => {
       });
 
       expect(result.ok).toBeTruthy();
-
-      if (result.ok) {
-        expect(result.data).toBe(false);
-      }
+      expect(result.ok && result.data).toBe(false);
     });
   });
 
   describe('checkPermissions', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(createNamespaceDocument('sample', 'Sample'));
+        await namespaceCollectionBuilder(tx).insertOne(
+          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
+        );
         await namespaceMemberCollectionBuilder(tx).insertMany([
           createOwnerMemberDocument('sample', 'owner-user'),
           createMemberDocument('sample', 'member-user'),
@@ -287,10 +293,7 @@ describe('namespace repository', () => {
       });
 
       expect(result.ok).toBeTruthy();
-
-      if (result.ok) {
-        expect(result.data).toEqual(ownerPermissions);
-      }
+      expect(result.ok && result.data).toEqual(ownerPermissions);
     });
 
     it('returns member permissions', async () => {
@@ -300,10 +303,7 @@ describe('namespace repository', () => {
       });
 
       expect(result.ok).toBeTruthy();
-
-      if (result.ok) {
-        expect(result.data).toEqual(memberPermissions);
-      }
+      expect(result.ok && result.data).toEqual(memberPermissions);
     });
   });
 
@@ -322,10 +322,7 @@ describe('namespace repository', () => {
       const result = await new NamespaceRepository().findMembers('sample');
 
       expect(result.ok).toBeTruthy();
-
-      if (result.ok) {
-        expect(result.data.map((member) => member.userId)).toEqual(['user-a', 'user-b']);
-      }
+      expect(result.ok && result.data.map((member) => member.userId)).toEqual(['user-a', 'user-b']);
     });
   });
 
@@ -333,9 +330,9 @@ describe('namespace repository', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
         await namespaceCollectionBuilder(tx).insertMany([
-          createNamespaceDocument('namespace-b', 'Namespace B'),
-          createNamespaceDocument('namespace-a', 'Namespace A'),
-          createNamespaceDocument('namespace-c', 'Namespace C'),
+          createNamespaceDocument({ id: 'namespace-b', displayName: 'Namespace B' }),
+          createNamespaceDocument({ id: 'namespace-a', displayName: 'Namespace A' }),
+          createNamespaceDocument({ id: 'namespace-c', displayName: 'Namespace C' }),
         ]);
         await namespaceMemberCollectionBuilder(tx).insertMany([
           createMemberDocument('namespace-b', 'member-user'),
@@ -350,9 +347,7 @@ describe('namespace repository', () => {
 
       expect(result.ok).toBeTruthy();
 
-      if (result.ok) {
-        expect(result.data.map((namespace) => namespace.id)).toEqual(['namespace-a', 'namespace-b']);
-      }
+      expect(result.ok && result.data.map((namespace) => namespace.id)).toEqual(['namespace-a', 'namespace-b']);
     });
   });
 });

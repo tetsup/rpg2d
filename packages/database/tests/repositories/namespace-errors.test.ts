@@ -1,10 +1,9 @@
-import type { Collection } from 'mongodb';
-import { MongoServerError } from 'mongodb';
+import { type Collection, MongoServerError } from 'mongodb';
 import { execute } from '@database/client/mongo-client';
 import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
 import { namespaceCollectionBuilder } from '@database/collections/namespaces';
 import { NamespaceRepository } from '@database/repositories/namespace';
-import type { NamespaceDocument, NamespaceMemberDocument } from '@sharedTypes/database/collection';
+import type { NamespaceDocument, NamespaceMemberDocument, WithTimestamp } from '@sharedTypes/database/collection';
 
 const memberPermissions = {
   read: true,
@@ -14,27 +13,27 @@ const memberPermissions = {
   admin: false,
 };
 
-function createNamespaceDocument(
-  id: string,
-  displayName = id,
-  description = '',
-  isPrivate = false,
-  createdBy = 'owner-user'
-): NamespaceDocument {
+function createNamespaceDocument({
+  id,
+  displayName,
+  description,
+  isPrivate,
+  createdBy,
+}: Partial<NamespaceDocument>): WithTimestamp<NamespaceDocument> {
   const now = new Date();
 
   return {
-    id,
-    displayName,
-    description,
-    isPrivate,
-    createdBy,
+    id: id ?? 'sample',
+    displayName: displayName ?? 'Sample',
+    description: description ?? '',
+    isPrivate: isPrivate ?? false,
+    createdBy: createdBy ?? 'dummy-user',
     createdAt: now,
     updatedAt: now,
   };
 }
 
-function createMemberDocument(namespaceId: string, userId: string): NamespaceMemberDocument {
+function createMemberDocument(namespaceId: string, userId: string): WithTimestamp<NamespaceMemberDocument> {
   const now = new Date();
 
   return {
@@ -68,25 +67,18 @@ describe('namespace repository error mapping', () => {
         mockCollectionBuilder: () =>
           ({
             insertOne: insertNamespace,
-          }) as unknown as Collection<NamespaceDocument>,
+          }) as unknown as Collection<WithTimestamp<NamespaceDocument>>,
         mockMemberCollectionBuilder: () =>
           ({
             insertOne: insertMember,
-          }) as unknown as Collection<NamespaceMemberDocument>,
+          }) as unknown as Collection<WithTimestamp<NamespaceMemberDocument>>,
       });
 
-      const result = await repository.create({
-        id: 'sample',
-        displayName: 'Sample',
-        createdBy: 'owner-user',
-      });
-
+      const result = await repository.create(
+        createNamespaceDocument({ id: 'sample', displayName: 'Sample', createdBy: 'owner-user' }) as any
+      );
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('already_exists');
-      }
-
+      expect(result.ok || result.reason).toBe('already_exists');
       expect(insertMember).not.toHaveBeenCalled();
     });
   });
@@ -94,27 +86,22 @@ describe('namespace repository error mapping', () => {
   describe('get', () => {
     it('returns not_found when missing', async () => {
       const result = await new NamespaceRepository().get('missing');
-
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
+      expect(result.ok || result.reason).toBe('not_found');
     });
   });
 
   describe('update', () => {
     it('returns not_found when missing', async () => {
-      const result = await new NamespaceRepository().update({
+      const result = await new NamespaceRepository().update('missing', {
         id: 'missing',
-        displayName: 'Missing',
+        displayName: 'missing',
+        description: '',
+        isPrivate: false,
+        createdBy: 'dummy-user',
       });
-
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
+      expect(result.ok || result.reason).toBe('not_found');
     });
   });
 
@@ -123,10 +110,7 @@ describe('namespace repository error mapping', () => {
       const result = await new NamespaceRepository().delete('missing');
 
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
+      expect(result.ok || result.reason).toBe('not_found');
     });
   });
 
@@ -143,10 +127,7 @@ describe('namespace repository error mapping', () => {
       });
 
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('already_exists');
-      }
+      expect(result.ok || result.reason).toBe('already_exists');
     });
   });
 
@@ -158,17 +139,16 @@ describe('namespace repository error mapping', () => {
       });
 
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
+      expect(result.ok || result.reason).toBe('not_found');
     });
   });
 
   describe('checkPermissions', () => {
     beforeEach(async () => {
       await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(createNamespaceDocument('sample', 'Sample'));
+        await namespaceCollectionBuilder(tx).insertOne(
+          createNamespaceDocument({ id: 'sample', displayName: 'Sample' }) as any
+        );
       });
     });
 
@@ -179,10 +159,7 @@ describe('namespace repository error mapping', () => {
       });
 
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
+      expect(result.ok || result.reason).toBe('not_found');
     });
 
     it('returns not_found when namespace is missing', async () => {
@@ -192,10 +169,7 @@ describe('namespace repository error mapping', () => {
       });
 
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('not_found');
-      }
+      expect(result.ok || result.reason).toBe('not_found');
     });
   });
 });

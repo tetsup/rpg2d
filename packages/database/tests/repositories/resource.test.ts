@@ -89,7 +89,7 @@ describe('ResourceRepository', () => {
 
   describe('create', () => {
     it('creates resource', async () => {
-      const result = await new ResourceRepository().create(validMetadata, validData);
+      const result = await new ResourceRepository().create(validPath, validDocument);
 
       expect(result.ok).toBeTruthy();
 
@@ -101,7 +101,7 @@ describe('ResourceRepository', () => {
     });
 
     it('creates reference edges', async () => {
-      const result = await new ResourceRepository().create(validMetadata, validData);
+      const result = await new ResourceRepository().create(validPath, validDocument);
 
       expect(result.ok).toBeTruthy();
 
@@ -120,14 +120,10 @@ describe('ResourceRepository', () => {
       await execute(async (tx) => {
         await resourceCollectionBuilder(tx).insertOne(validDocument);
       });
-
-      const result = await new ResourceRepository().create(validMetadata, validData);
+      const result = await new ResourceRepository().create(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
-
-      if (!result.ok) {
-        expect(result.reason).toBe('already_exists');
-      }
+      expect(result.ok || result.reason).toBe('already_exists');
     });
 
     it('does not partially insert on failure', async () => {
@@ -171,7 +167,10 @@ describe('ResourceRepository', () => {
     });
 
     it('updates resource', async () => {
-      const result = await new ResourceRepository().update(validMetadata, { ...validData, initialState: { hp: 200 } });
+      const result = await new ResourceRepository().update(validPath, {
+        ...validDocument,
+        data: { ...validData, initialState: { hp: 200 } },
+      });
 
       expect(result.ok).toBeTruthy();
 
@@ -183,7 +182,10 @@ describe('ResourceRepository', () => {
     });
 
     it('replaces reference edges', async () => {
-      await new ResourceRepository().update(validMetadata, { ...validData, initialSkin: 'sample/skin/new.v0' });
+      await new ResourceRepository().update(validPath, {
+        ...validDocument,
+        data: { ...validData, initialSkin: 'sample/skin/new.v0' },
+      });
       const edges = await execute(async (tx) => {
         return resourceEdgeCollectionBuilder(tx)
           .find({ from: buildId(validPath) })
@@ -195,7 +197,7 @@ describe('ResourceRepository', () => {
     });
 
     it('returns not_found when missing', async () => {
-      const result = await new ResourceRepository().update({ ...validMetadata, name: 'missing' }, validData);
+      const result = await new ResourceRepository().update({ ...validMetadata, name: 'missing' }, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('not_found');

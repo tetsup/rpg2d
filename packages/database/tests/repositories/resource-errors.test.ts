@@ -29,6 +29,13 @@ const validData = {
   },
 } as const;
 
+const validDocument = {
+  ...validMetadata,
+  data: validData,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
 describe('resource repository error mapping', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -82,7 +89,7 @@ describe('resource repository error mapping', () => {
       const resources = new ResourceRepository({
         mockResourceDocumentSchema: () => ({ parse: vi.fn().mockThrow(new ZodError([])) }) as any,
       });
-      const result = await resources.create(validMetadata, { invalidKey: 'invalidValue' } as any);
+      const result = await resources.create(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('validation_failed');
@@ -100,7 +107,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(error),
           }) as any,
       });
-      const result = await resources.create(validMetadata, validData);
+      const result = await resources.create(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('already_exists');
@@ -118,7 +125,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(error),
           }) as any,
       });
-      const result = await resources.create(validMetadata, validData);
+      const result = await resources.create(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');
@@ -136,7 +143,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(error),
           }) as any,
       });
-      const result = await resources.create(validMetadata, validData);
+      const result = await resources.create(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');
@@ -150,7 +157,7 @@ describe('resource repository error mapping', () => {
           }) as any,
       });
 
-      const result = await resources.create(validMetadata, validData);
+      const result = await resources.create(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('network_error');
@@ -163,7 +170,7 @@ describe('resource repository error mapping', () => {
             insertOne: vi.fn().mockRejectedValue(new Error('unknown')),
           }) as any,
       });
-      const result = await resources.create(validMetadata, validData);
+      const result = await resources.create(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('unknown');
@@ -175,7 +182,7 @@ describe('resource repository error mapping', () => {
       const resources = new ResourceRepository({
         mockResourceDocumentSchema: () => ({ parse: vi.fn().mockThrow(new ZodError([])) }) as any,
       });
-      const result = await resources.update(validMetadata, {} as any);
+      const result = await resources.update(validPath, {} as any);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('validation_failed');
@@ -190,7 +197,7 @@ describe('resource repository error mapping', () => {
       const resources = new ResourceRepository({
         mockCollectionBuilder: () => ({ updateOne: vi.fn().mockRejectedValue(error) }) as any,
       });
-      const result = await resources.update(validMetadata, validData);
+      const result = await resources.update(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');
@@ -206,7 +213,7 @@ describe('resource repository error mapping', () => {
         mockCollectionBuilder: () => ({ updateOne: vi.fn().mockRejectedValue(error) }) as any,
       });
 
-      const result = await resources.update(validMetadata, validData);
+      const result = await resources.update(validPath, validDocument);
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');

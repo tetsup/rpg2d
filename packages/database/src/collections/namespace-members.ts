@@ -1,7 +1,6 @@
-import { Collection } from 'mongodb';
-import type { NamespaceMemberDocument } from '@sharedTypes/database/collection';
+import type { NamespaceMemberDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import type { TxContext } from '@database/client/mongo-client';
 
-export function namespaceMemberCollectionBuilder(tx: TxContext): Collection<NamespaceMemberDocument> {
-  return tx.db.collection<NamespaceMemberDocument>('namespace_members');
+export function namespaceMemberCollectionBuilder(tx: TxContext) {
+  return tx.db.collection<WithTimestamp<NamespaceMemberDocument>>('namespace_members');
 }

@@ -1,5 +1,10 @@
 import { type ClientSession, type Collection, type DeleteResult, type Filter, ObjectId } from 'mongodb';
-import type { ResourceDocument, ResourceEdgeDocument, ResourceMeta } from '@sharedTypes/database/collection';
+import type {
+  ResourceDocument,
+  ResourceEdgeDocument,
+  ResourceMeta,
+  WithTimestamp,
+} from '@sharedTypes/database/collection';
 import type { ResourceId, ResourcePath } from '@sharedTypes/resource/common';
 import { splitId } from '@schema/resource/common/base';
 import { createResourceDocumentSchema } from '@schema/database/resource';
@@ -18,7 +23,7 @@ type FindParams = {
 };
 
 type ResourceRepositoryOptions = {
-  mockCollectionBuilder?: (tx: TxContext) => Collection<ResourceDocument>;
+  mockCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<ResourceDocument>>;
   mockEdgeCollectionBuilder?: (tx: TxContext) => Collection<ResourceEdgeDocument>;
   mockResourceDocumentSchema?: typeof createResourceDocumentSchema;
   mockSplitIdSchema?: typeof splitId;
@@ -45,7 +50,7 @@ function getPath(meta: ResourceMeta) {
   return { namespace: meta.namespace, type: meta.type, name: meta.name };
 }
 export class ResourceRepository {
-  private collectionBuilder: (tx: TxContext) => Collection<ResourceDocument>;
+  private collectionBuilder: (tx: TxContext) => Collection<WithTimestamp<ResourceDocument>>;
   private edgeCollectionBuilder: (tx: TxContext) => Collection<ResourceEdgeDocument>;
   private resourceDocumentSchema: typeof createResourceDocumentSchema;
 
@@ -62,8 +67,9 @@ export class ResourceRepository {
   async create(path: ResourcePath, data: object): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
       const parsed = this.resourceDocumentSchema(path.type).parse(data);
-      if (parsed.namespace !== path.namespace) throw new Error('cannot change namespace');
-      if (parsed.type !== path.type) throw new Error('cannot change type');
+      if (parsed.namespace !== path.namespace) throw new Error('namespace does not match');
+      if (parsed.type !== path.type) throw new Error('type does not match');
+      if (parsed.name !== path.name) throw new Error('name does not match');
       const now = new Date();
       return await withTransaction(async (tx) => {
         const resources = this.collectionBuilder(tx);
@@ -158,9 +164,10 @@ export class ResourceRepository {
         if (result.deletedCount === 0) throw new RepositoryNotFoundError();
 
         const id = buildId(path);
-        return await edges.deleteMany({
+        await edges.deleteMany({
           $or: [{ from: id }, { to: id }],
         });
+        return result;
       });
     });
   }
