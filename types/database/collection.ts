@@ -11,7 +11,7 @@ export type WithTimestamp<T> = T & { createdAt: Date; updatedAt: Date };
 
 export type NamespaceMemberDocument = z.infer<typeof NamespaceMemberDocumentSchema>;
 
-export type NamespaceDocument = z.infer<typeof NamespaceDocumentSchema>;
+export type NamespaceDocument = z.infer<typeof NamespaceDocumentSchema> & { createdBy: string };
 
 export type ResourceEdgeDocument = z.infer<typeof ResourceEdgeDocumentSchema>;
 

@@ -5,17 +5,15 @@ import { ActionCard } from './action-card';
 
 export function SubmitCard() {
   const { t } = useTranslation();
-  const { isDirty, isValid } = useFormState();
+  const { isDirty, isValid, isSubmitting } = useFormState();
 
   return (
-    <>
-      <ActionCard
-        icon={Save}
-        title={t('保存')}
-        description={t('変更内容を保存する')}
-        variant={isDirty ? (isValid ? 'success' : 'error') : 'disabled'}
-        disabled={!isValid || !isDirty}
-      />
-    </>
+    <ActionCard
+      icon={Save}
+      title={isSubmitting ? `${t('保存中')}...` : t('保存')}
+      description={t('変更内容を保存する')}
+      variant={isDirty ? (isValid ? 'success' : 'error') : 'disabled'}
+      disabled={!isValid || !isDirty || isSubmitting}
+    />
   );
 }

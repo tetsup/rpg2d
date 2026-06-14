@@ -7,5 +7,4 @@ export const NamespaceDocumentSchema = z.object({
   displayName: SingleLineSchema.min(1).max(30),
   description: z.string().max(200),
   isPrivate: z.boolean(),
-  createdBy: z.string(),
 });

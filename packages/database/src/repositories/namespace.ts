@@ -1,16 +1,12 @@
 import { Collection } from 'mongodb';
 import type { NamespaceDocument, NamespaceMemberDocument, WithTimestamp } from '@sharedTypes/database/collection';
+import type { NamespacePostParams } from '@sharedTypes/api/namespace';
 import { NamespaceDocumentSchema } from '@schema/database/namespace';
 import { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
 import { execute, TxContext, withTransaction } from '@database/client/mongo-client';
 import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
 import { namespaceCollectionBuilder } from '../collections/namespaces';
 import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
-
-type UpdateNamespaceParams = {
-  id: string;
-  newDocument: NamespaceDocument;
-};
 
 type NamespaceMemberPermissions = NamespaceMemberDocument['permissions'];
 
@@ -65,12 +61,11 @@ export class NamespaceRepository {
     });
   }
 
-  async create(namespace: NamespaceDocument): Promise<RepositoryResult<void>> {
+  async create(namespace: NamespacePostParams, userId: string): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
       const document = this.documentSchema.parse(namespace);
       const member = this.memberDocumentSchema.parse({
         namespaceId: namespace.id,
-        userId: namespace.createdBy,
         permissions: this.createOwnerPermissions(),
       });
       const now = new Date();
@@ -79,13 +74,13 @@ export class NamespaceRepository {
         const members = this.memberCollectionBuilder(tx);
         const options = this.getOperationOptions(tx);
 
-        await namespaces.insertOne({ ...document, createdAt: now, updatedAt: now }, options);
+        await namespaces.insertOne({ ...document, createdBy: userId, createdAt: now, updatedAt: now }, options);
         await members.insertOne({ ...member, createdAt: now, updatedAt: now }, options);
       });
     });
   }
 
-  async update(id: string, namespace: NamespaceDocument): Promise<RepositoryResult<void>> {
+  async update(id: string, namespace: NamespacePostParams): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
       return await execute(async (tx) => {
         const namespaces = this.collectionBuilder(tx);

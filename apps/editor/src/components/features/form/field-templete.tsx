@@ -1,4 +1,4 @@
-import { Controller, FieldError, FieldPath, FieldValues, useFormContext, useFormState } from 'react-hook-form';
+import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 import { ResourceType } from '@sharedTypes/resource/common';
 import { ControlField } from '@editor/components/forms/control-field';
 import { ControlSection } from '@editor/components/forms/control-section';
@@ -9,7 +9,7 @@ import { SwitchField } from '@editor/components/parts/switch-field';
 
 type InputProps = {
   name: string;
-  type: 'text';
+  type: 'text' | 'disabled-text';
 };
 
 type SelectItem = {
@@ -60,7 +60,10 @@ function Control(props: ControlProps) {
 
   switch (props.type) {
     case 'text':
-      return <Input {...register(props.name)} className="w-full" type="text" />;
+    case 'disabled-text':
+      return (
+        <Input {...register(props.name)} className="w-full" type="text" disabled={props.type === 'disabled-text'} />
+      );
     case 'select':
       return (
         <Controller

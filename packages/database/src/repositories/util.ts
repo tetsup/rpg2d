@@ -7,6 +7,7 @@ export type RepositoryResult<T> =
       ok: false;
       reason: 'not_found' | 'already_exists' | 'validation_failed' | 'database_error' | 'network_error' | 'unknown';
       error?: unknown;
+      detail?: object;
     };
 
 export class RepositoryNotFoundError extends Error {
@@ -31,7 +32,7 @@ function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
     return { ok: false, reason: 'not_found', error };
   }
 
-  if (error instanceof ZodError) return { ok: false, reason: 'validation_failed', error };
+  if (error instanceof ZodError) return { ok: false, reason: 'validation_failed', error, detail: error.issues };
 
   // network
   if (

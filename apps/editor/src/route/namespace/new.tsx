@@ -1,36 +1,27 @@
 import { useTranslation } from 'react-i18next';
-import z from 'zod';
+import { useNavigate } from 'react-router-dom';
+import { NamespacePostParams } from '@sharedTypes/api/namespace';
 import { NamespacePostParamsSchema } from '@schema/api/namespace/post';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
-import { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';
 import { fetchPostApi } from '@editor/lib/api/post';
-
-type Values = z.infer<typeof NamespacePostParamsSchema>;
+import { NamespaceFields } from '@editor/forms/namespace';
 
 export function NewNamespacePage() {
   const { t } = useTranslation();
-  const fields: FieldGroupTemplateProps<Values>[] = [
-    {
-      title: t('グループ設定'),
-      items: [
-        { name: 'id', label: t('ID'), type: 'text' },
-        { name: 'displayName', label: t('グループ名'), type: 'text' },
-        { name: 'description', label: t('グループの説明'), type: 'text' },
-        { name: 'isPrivate', label: t('非公開'), type: 'switch', labelOn: t('公開しない'), labelOff: t('公開する') },
-      ],
-    },
-  ];
+  const navigate = useNavigate();
+  const fields = NamespaceFields({ mode: 'create' });
 
-  const defaultValues: Values = {
+  const defaultValues: NamespacePostParams = {
     id: '',
     displayName: '',
     description: '',
     isPrivate: false,
   };
 
-  const onSubmit = (values: Values) => {
-    fetchPostApi('/api/namespace', values);
+  const onSubmit = async (values: NamespacePostParams) => {
+    await fetchPostApi('/api/namespace', values);
+    navigate(`/namespace/${values.id}`);
   };
 
   return (

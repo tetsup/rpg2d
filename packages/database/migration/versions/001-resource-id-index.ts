@@ -26,7 +26,7 @@ export const migration001: Migration = {
     await edges.createIndexes([{ key: { from: 1 } }, { key: { to: 1 } }]);
 
     const users = userCollectionBuilder(tx);
-    await users.createIndexes([{ key: { auth0Id: 1 }, unique: true }]);
+    await users.createIndexes([{ key: { id: 1 }, unique: true }]);
 
     const namespaces = namespaceCollectionBuilder(tx);
     await namespaces.createIndexes([{ key: { id: 1 }, unique: true }]);
