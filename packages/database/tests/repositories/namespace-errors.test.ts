@@ -75,7 +75,8 @@ describe('namespace repository error mapping', () => {
       });
 
       const result = await repository.create(
-        createNamespaceDocument({ id: 'sample', displayName: 'Sample', createdBy: 'owner-user' }) as any
+        { id: 'sample', displayName: 'Sample', description: '', isPrivate: true },
+        'dummy-user'
       );
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('already_exists');

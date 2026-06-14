@@ -1,7 +1,11 @@
 import { Collection } from 'mongodb';
-import type { NamespaceDocument, NamespaceMemberDocument, WithTimestamp } from '@sharedTypes/database/collection';
-import type { NamespacePostParams } from '@sharedTypes/api/namespace';
-import { NamespaceDocumentSchema } from '@schema/database/namespace';
+import type {
+  NamespaceDocument,
+  NamespaceInput,
+  NamespaceMemberDocument,
+  WithTimestamp,
+} from '@sharedTypes/database/collection';
+import { NamespaceInputSchema } from '@schema/database/namespace';
 import { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
 import { execute, TxContext, withTransaction } from '@database/client/mongo-client';
 import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
@@ -27,14 +31,14 @@ type CheckPermissionsParmas = {
 type NamespaceRepositoryOptions = {
   mockCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<NamespaceDocument>>;
   mockMemberCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<NamespaceMemberDocument>>;
-  mockDocumentSchema?: typeof NamespaceDocumentSchema;
+  mockDocumentSchema?: typeof NamespaceInputSchema;
   mockMemberDocumentSchema?: typeof NamespaceMemberDocumentSchema;
 };
 
 export class NamespaceRepository {
   private collectionBuilder: (tx: TxContext) => Collection<WithTimestamp<NamespaceDocument>>;
   private memberCollectionBuilder: (tx: TxContext) => Collection<WithTimestamp<NamespaceMemberDocument>>;
-  private documentSchema: typeof NamespaceDocumentSchema;
+  private documentSchema: typeof NamespaceInputSchema;
   private memberDocumentSchema: typeof NamespaceMemberDocumentSchema;
 
   constructor({
@@ -45,7 +49,7 @@ export class NamespaceRepository {
   }: NamespaceRepositoryOptions = {}) {
     this.collectionBuilder = mockCollectionBuilder ?? namespaceCollectionBuilder;
     this.memberCollectionBuilder = mockMemberCollectionBuilder ?? namespaceMemberCollectionBuilder;
-    this.documentSchema = mockDocumentSchema ?? NamespaceDocumentSchema;
+    this.documentSchema = mockDocumentSchema ?? NamespaceInputSchema;
     this.memberDocumentSchema = mockMemberDocumentSchema ?? NamespaceMemberDocumentSchema;
   }
 
@@ -61,10 +65,11 @@ export class NamespaceRepository {
     });
   }
 
-  async create(namespace: NamespacePostParams, userId: string): Promise<RepositoryResult<void>> {
+  async create(namespace: NamespaceInput, userId: string): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
       const document = this.documentSchema.parse(namespace);
       const member = this.memberDocumentSchema.parse({
+        userId,
         namespaceId: namespace.id,
         permissions: this.createOwnerPermissions(),
       });
@@ -80,7 +85,7 @@ export class NamespaceRepository {
     });
   }
 
-  async update(id: string, namespace: NamespacePostParams): Promise<RepositoryResult<void>> {
+  async update(id: string, namespace: NamespaceInput): Promise<RepositoryResult<void>> {
     return await repositorySafe(async () => {
       return await execute(async (tx) => {
         const namespaces = this.collectionBuilder(tx);

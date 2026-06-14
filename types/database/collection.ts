@@ -1,5 +1,5 @@
 import z from 'zod';
-import type { NamespaceDocumentSchema } from '@schema/database/namespace';
+import type { NamespaceInputSchema } from '@schema/database/namespace';
 import type { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
 import type { createResourceDocumentSchema, createResourceMetaSchema } from '@schema/database/resource';
 import type { ResourceEdgeDocumentSchema } from '@schema/database/resource-edge';
@@ -11,7 +11,9 @@ export type WithTimestamp<T> = T & { createdAt: Date; updatedAt: Date };
 
 export type NamespaceMemberDocument = z.infer<typeof NamespaceMemberDocumentSchema>;
 
-export type NamespaceDocument = z.infer<typeof NamespaceDocumentSchema> & { createdBy: string };
+export type NamespaceInput = z.infer<typeof NamespaceInputSchema>;
+
+export type NamespaceDocument = NamespaceInput & { createdBy: string };
 
 export type ResourceEdgeDocument = z.infer<typeof ResourceEdgeDocumentSchema>;
 

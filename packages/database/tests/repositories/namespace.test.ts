@@ -74,13 +74,15 @@ describe('namespace repository', () => {
 
   describe('create', () => {
     it('creates namespace', async () => {
-      const result = await new NamespaceRepository().create({
-        id: 'sample',
-        displayName: 'Sample',
-        description: '',
-        createdBy: 'owner-user',
-        isPrivate: true,
-      });
+      const result = await new NamespaceRepository().create(
+        {
+          id: 'sample',
+          displayName: 'Sample',
+          description: '',
+          isPrivate: true,
+        },
+        'owner-user'
+      );
 
       expect(result.ok).toBeTruthy();
 
@@ -93,13 +95,15 @@ describe('namespace repository', () => {
     });
 
     it('creates owner membership', async () => {
-      const result = await new NamespaceRepository().create({
-        id: 'sample',
-        displayName: 'Sample',
-        description: '',
-        createdBy: 'owner-user',
-        isPrivate: true,
-      });
+      const result = await new NamespaceRepository().create(
+        {
+          id: 'sample',
+          displayName: 'Sample',
+          description: '',
+          isPrivate: true,
+        },
+        'owner-user'
+      );
 
       expect(result.ok).toBeTruthy();
 
@@ -146,7 +150,6 @@ describe('namespace repository', () => {
         displayName: 'Updated Sample',
         description: '',
         isPrivate: false,
-        createdBy: 'owner-user',
       });
 
       expect(result.ok).toBeTruthy();
@@ -156,7 +159,7 @@ describe('namespace repository', () => {
       });
 
       expect(namespace?.displayName).toBe('Updated Sample');
-      expect(namespace?.createdBy).toBe('owner-user');
+      expect(namespace?.createdBy).toBe('dummy-user');
     });
   });
 
