@@ -13,6 +13,7 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.19.3",
     "@hono/zod-validator": "^0.8.0",
+    "dotenv": "^17.4.2",
     "hono": "^4.12.18",
     "mongodb": "^7.2.0",
     "openid-client": "^6.8.4",

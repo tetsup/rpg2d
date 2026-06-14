@@ -1,21 +1,21 @@
+import 'dotenv/config';
 import { Hono } from 'hono';
-import { setCookie } from 'hono/cookie';
+import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { UserRepository } from '@database/repositories/user';
 import type { Auth0UserInfo, SessionTokenResponse, Variables } from '@api/types/auth';
+import { env } from '@api/utils/env';
 import { sessionStore } from '@api/auth/stores/session';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 import { UnauthorizedError } from '@api/errors/http-error';
 
 const authRoute = new Hono<{ Variables: Variables }>();
-const domain = process.env.AUTH_DOMAIN!;
-const clientId = process.env.AUTH_CLIENT_ID!;
-const clientSecret = process.env.AUTH_CLIENT_SECRET;
-const redirectUri = process.env.AUTH_CALLBACK_URL!;
-const auth0Url =
-  `https://${domain}/authorize` +
+const buildCallbackUrl = (base: string) => String(new URL('/api/auth/callback', new URL(base).origin));
+const buildRedirectUrl = (base: string) => String(new URL('/', new URL(base).origin));
+const buildAuth0Url = (base: string) =>
+  `https://${env.AUTH0_DOMAIN}/authorize` +
   `?response_type=code` +
-  `&client_id=${clientId}` +
-  `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+  `&client_id=${env.AUTH0_CLIENT_ID}` +
+  `&redirect_uri=${encodeURIComponent(buildCallbackUrl(base))}` +
   `&scope=openid profile email`;
 const isDev = process.env.NODE_ENV !== 'production';
 const secure = !isDev;
@@ -30,42 +30,53 @@ authRoute.get('/login', async (c) => {
       email: mockEmail,
       roles: devUser === 'admin' ? ['admin'] : ['user'],
     });
-
     const sessionId = crypto.randomUUID();
     sessionStore.set(sessionId, { sub: `dev|${devUser}` });
     setCookie(c, 'session', sessionId, { httpOnly: true, sameSite: 'Lax', secure });
-
-    return c.redirect('/');
+    return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
   }
-
-  return c.redirect(auth0Url);
+  return c.redirect(buildAuth0Url(c.req.url));
 });
 
 authRoute.get('/callback', async (c) => {
   const code = c.req.query('code');
-  const tokenRes = await fetch(`https://${domain}/oauth/token`, {
+  const tokenRes = await fetch(`https://${env.AUTH0_DOMAIN}/oauth/token`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       grant_type: 'authorization_code',
-      client_id: clientId,
-      client_secret: clientSecret,
+      client_id: env.AUTH0_CLIENT_ID,
+      client_secret: env.AUTH0_CLIENT_SECRET,
       code,
-      redirect_uri: redirectUri,
+      redirect_uri: buildCallbackUrl(c.req.url),
     }),
   });
   const token = (await tokenRes.json()) as SessionTokenResponse;
-  const userRes = await fetch(`https://${domain}/userinfo`, {
+  const userRes = await fetch(`https://${env.AUTH0_DOMAIN}/userinfo`, {
     headers: {
       Authorization: `Bearer ${token.access_token}`,
     },
   });
   const user = (await userRes.json()) as Auth0UserInfo;
-  await new UserRepository().upsert({
-    sub: user.sub,
-    email: user.email,
-    email_verified: user.email_verified,
-  });
+
+  let dbUser;
+  try {
+    dbUser = await new UserRepository().upsert({
+      id: user.sub,
+      presenceName: user.name,
+      email: user.email,
+      email_verified: user.email_verified,
+      roles: [],
+    });
+  } catch (e) {
+    console.error('User upsert failed', e);
+    return c.text('Internal Server Error', 500);
+  }
+
+  if (!dbUser.ok) {
+    return c.text('Failed to create user', 500);
+  }
+
   const sessionId = crypto.randomUUID();
 
   sessionStore.set(sessionId, {
@@ -77,8 +88,21 @@ authRoute.get('/callback', async (c) => {
     sameSite: 'Lax',
     secure,
   });
+  console.log('cookie set');
 
-  return c.redirect('/');
+  return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
+});
+
+authRoute.get('/logout', (c) => {
+  const sessionId = getCookie(c, 'session');
+  if (sessionId) sessionStore.delete(sessionId);
+  deleteCookie(c, 'session');
+
+  const url = new URL(`https://${env.AUTH0_DOMAIN}/v2/logout`);
+  url.searchParams.set('client_id', env.AUTH0_CLIENT_ID);
+  url.searchParams.set('returnTo', buildRedirectUrl(c.req.url));
+
+  return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
 });
 
 authRoute.get('/me', resolveUserMiddleware, (c) => {
