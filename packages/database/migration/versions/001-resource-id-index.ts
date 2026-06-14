@@ -70,7 +70,7 @@ export const migration001: Migration = {
 
     const userIndexes = await userCollectionBuilder(tx).indexes();
 
-    if (!hasIndex(userIndexes, { auth0Id: 1 }, { unique: true })) {
+    if (!hasIndex(userIndexes, { id: 1 }, { unique: true })) {
       throw new Error('users.auth0Id unique index missing');
     }
 
