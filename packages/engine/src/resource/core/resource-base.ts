@@ -1,5 +1,4 @@
-import type { ResourceType } from '@sharedTypes/resource/common';
-import type { ResourceData } from '@engine/types/resource';
+import type { ResourceData, ResourceType } from '@sharedTypes/resource/common';
 import type { ResourceDeps } from '@engine/types/resource-deps';
 import type { GameContext } from './game-context';
 

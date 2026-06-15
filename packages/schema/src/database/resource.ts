@@ -3,7 +3,7 @@ import type { ResourceType } from '@sharedTypes/resource/common';
 import { NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
 import { resolveResourceSchema } from '@schema/resource/common/resolver';
 
-export const createResourceMetaSchema = (type: ResourceType, isValid: boolean) =>
+export const createResourceMetaSchema = <T extends ResourceType>(type: T, isValid: boolean) =>
   z.object({
     namespace: NamespaceSchema,
     type: z.literal(type),
@@ -13,6 +13,7 @@ export const createResourceMetaSchema = (type: ResourceType, isValid: boolean) =
     isReadOnly: z.boolean(),
     isValid: z.literal(isValid),
   });
+
 export const createResourceDocumentSchema = (type: ResourceType) =>
   createResourceMetaSchema(type, true)
     .extend({ data: resolveResourceSchema(type) })

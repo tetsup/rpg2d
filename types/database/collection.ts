@@ -1,9 +1,10 @@
 import z from 'zod';
 import type { NamespaceInputSchema } from '@schema/database/namespace';
 import type { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
-import type { createResourceDocumentSchema, createResourceMetaSchema } from '@schema/database/resource';
+import type { createResourceMetaSchema } from '@schema/database/resource';
 import type { ResourceEdgeDocumentSchema } from '@schema/database/resource-edge';
 import type { UserDocumentSchema } from '@schema/database/user';
+import { ResourceData, ResourceType } from '@sharedTypes/resource/common';
 
 export type CollectionName = 'namespace' | 'user' | 'resource';
 
@@ -17,14 +18,13 @@ export type NamespaceDocument = NamespaceInput & { createdBy: string };
 
 export type ResourceEdgeDocument = z.infer<typeof ResourceEdgeDocumentSchema>;
 
-export type ResourceDocument = z.infer<ReturnType<typeof createResourceDocumentSchema>>;
+export type ResourceMeta<T extends ResourceType> = z.infer<ReturnType<typeof createResourceMetaSchema<T>>>;
 
-export type ResourceMeta = z.infer<ReturnType<typeof createResourceMetaSchema>>;
+export type ResourceDocument<T extends ResourceType = any> = ResourceMeta<T> & { data: ResourceData<T> };
 
 export type UserDocument = z.infer<typeof UserDocumentSchema>;
 
 export type DocumentMap = {
   namespace: NamespaceDocument;
-  resource: ResourceDocument;
   user: UserDocument;
 };

@@ -1,12 +1,12 @@
 import z from 'zod';
-import type { ResourceId, ResourceType } from '@sharedTypes/resource/common';
+import type { ExecutableResourceType, ResourceId } from '@sharedTypes/resource/common';
 import { NamespaceSchema, ResourceNameSchema, resources, splitId } from '@schema/resource/common/base';
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
 
 type Resources = {
-  [K in ResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
+  [K in ExecutableResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
 };
 
 export class ResourceStore {
@@ -22,7 +22,7 @@ export class ResourceStore {
     return await fetchJson(`${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`, this.fetchFunc, schema);
   };
 
-  private async resolve<K extends ResourceType>(
+  private async resolve<K extends ExecutableResourceType>(
     namespace: string,
     type: K,
     name: string
@@ -39,7 +39,10 @@ export class ResourceStore {
     return await this.ctx.factory.create(resource.data, type);
   }
 
-  get = async <K extends ResourceType>(id: ResourceId, expectedType: K): Promise<InstanceType<ResourceClass<K>>> => {
+  get = async <K extends ExecutableResourceType>(
+    id: ResourceId,
+    expectedType: K
+  ): Promise<InstanceType<ResourceClass<K>>> => {
     const { namespace, type, name } = splitId.parse(id);
     if (type !== expectedType) throw new Error('mismatch id and type');
     const resource = this.resources[expectedType].get(id);

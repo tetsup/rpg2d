@@ -11,48 +11,20 @@ import { PlayerSchema } from '../player';
 import { SkinSchema } from '../skin';
 import { TextureSchema } from '../texture';
 import { TileSchema } from '../tile';
-import z from 'zod';
 
-export const resolveResourceSchema = (type: ResourceType) => {
-  switch (type) {
-    case 'action':
-      return ActionSchema;
-    case 'entity':
-      return EntitySchema;
-    case 'field':
-      return FieldSchema;
-    case 'font':
-      return FontSchema;
-    case 'image':
-      return ImageSchema;
-    case 'manifest':
-      return ManifestSchema;
-    case 'panel':
-      return PanelSchema;
-    case 'panel-skin':
-      return PanelSkinSchema;
-    case 'player':
-      return PlayerSchema;
-    case 'skin':
-      return SkinSchema;
-    case 'texture':
-      return TextureSchema;
-    case 'tile':
-      return TileSchema;
-  }
+export const ResourceSchemaMap = {
+  action: ActionSchema,
+  entity: EntitySchema,
+  field: FieldSchema,
+  font: FontSchema,
+  image: ImageSchema,
+  manifest: ManifestSchema,
+  panel: PanelSchema,
+  'panel-skin': PanelSkinSchema,
+  player: PlayerSchema,
+  skin: SkinSchema,
+  texture: TextureSchema,
+  tile: TileSchema,
 };
 
-export const ResourceSchemaUnion = z.union([
-  ActionSchema,
-  EntitySchema,
-  FieldSchema,
-  FontSchema,
-  ImageSchema,
-  ManifestSchema,
-  PanelSchema,
-  PanelSkinSchema,
-  PlayerSchema,
-  SkinSchema,
-  TextureSchema,
-  TileSchema,
-]);
+export const resolveResourceSchema = <T extends ResourceType>(type: T) => ResourceSchemaMap[type];
