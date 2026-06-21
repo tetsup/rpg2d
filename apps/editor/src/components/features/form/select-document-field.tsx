@@ -1,0 +1,26 @@
+import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
+import { FieldWrapper } from '@editor/components/forms/field-wrapper';
+import { DocumentPicker } from '@editor/components/parts/document-picker';
+import { CollectionName } from '@sharedTypes/database/collection';
+
+export type SelectDocumentFieldProps<T extends FieldValues> = {
+  collectionName: CollectionName;
+  name: FieldPath<T>;
+  label: string;
+  hint?: string;
+};
+
+export function SelectDocumentField({ collectionName, name, label, hint }: SelectDocumentFieldProps<any>) {
+  const { control } = useFormContext();
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <FieldWrapper name={name} label={label} hint={hint}>
+          <DocumentPicker collectionName={collectionName} id={field.value} onSelect={field.onChange} />
+        </FieldWrapper>
+      )}
+    />
+  );
+}

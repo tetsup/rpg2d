@@ -38,4 +38,13 @@ namespaceRoute.delete(
   })
 );
 
+namespaceRoute.post(
+  '/search',
+  handle(async (c) => {
+    const params = await c.req.json();
+    const userId = c.get('user').id;
+    return await new NamespaceRepository().findWithCursor(params.query, userId, params.cursor);
+  })
+);
+
 export { namespaceRoute };

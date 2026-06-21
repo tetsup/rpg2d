@@ -1,4 +1,5 @@
-import { z } from 'zod';
+import z from 'zod';
+import { createFilterSchema } from '@schema/common/search';
 
 export const UserDocumentSchema = z.object({
   id: z.string().nonempty(),
@@ -7,3 +8,5 @@ export const UserDocumentSchema = z.object({
   avatar: z.url().optional(),
   roles: z.array(z.string()),
 });
+
+export const UserFilterSchema = createFilterSchema(UserDocumentSchema);

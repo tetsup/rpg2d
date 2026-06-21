@@ -22,7 +22,7 @@ const actionDocument = {
 const createManifest = (): ManifestData =>
   ManifestSchema.parse({
     initialState: {
-      core: { players: [], variables: new Map(), mode: 'field' },
+      core: { players: [], variables: {}, mode: 'field' },
       field: {
         fieldId: 'sample/field/main',
         pos: { x: 0, y: 0 },

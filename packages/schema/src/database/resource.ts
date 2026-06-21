@@ -1,7 +1,8 @@
-import { z } from 'zod';
+import z from 'zod';
 import type { ResourceType } from '@sharedTypes/resource/common';
 import { NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
 import { resolveResourceSchema } from '@schema/resource/common/resolver';
+import { createFilterSchema } from '@schema/common/search';
 
 export const createResourceMetaSchema = <T extends ResourceType>(type: T, isValid: boolean) =>
   z.object({
@@ -10,11 +11,17 @@ export const createResourceMetaSchema = <T extends ResourceType>(type: T, isVali
     name: ResourceNameSchema,
     version: z.literal(0),
     description: z.string().max(100).optional(),
-    isReadOnly: z.boolean(),
     isValid: z.literal(isValid),
   });
 
+export const createValidResourceDocumentSchema = (type: ResourceType) =>
+  createResourceMetaSchema(type, true).extend({ data: resolveResourceSchema(type) });
+
+export const createInvalidResourceDocumentSchema = (type: ResourceType) =>
+  createResourceMetaSchema(type, false).extend({ data: z.object() });
+
 export const createResourceDocumentSchema = (type: ResourceType) =>
-  createResourceMetaSchema(type, true)
-    .extend({ data: resolveResourceSchema(type) })
-    .or(createResourceMetaSchema(type, false).extend({ data: z.record(z.string(), z.any()) }));
+  z.union([createValidResourceDocumentSchema(type), createInvalidResourceDocumentSchema(type)]);
+
+export const createResourceFilterSchema = (type: ResourceType) =>
+  createFilterSchema(createValidResourceDocumentSchema(type));

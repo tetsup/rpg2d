@@ -5,10 +5,12 @@ import type {
   NamespaceMemberDocument,
   WithTimestamp,
 } from '@sharedTypes/database/collection';
-import { NamespaceInputSchema } from '@schema/database/namespace';
+import type { GetDocumentListResponse } from '@editor/hooks/api/search';
+import { NamespaceFilterSchema, NamespaceInputSchema } from '@schema/database/namespace';
 import { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
 import { execute, TxContext, withTransaction } from '@database/client/mongo-client';
 import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
+import { resolveLimit } from '@database/utils/params';
 import { namespaceCollectionBuilder } from '../collections/namespaces';
 import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
 
@@ -161,23 +163,37 @@ export class NamespaceRepository {
     });
   }
 
-  async findNamespacesByUser(userId: string): Promise<RepositoryResult<NamespaceDocument[]>> {
+  async find(query: object, userId: string, limit?: number): Promise<RepositoryResult<NamespaceDocument[]>> {
     return await repositorySafe(async () => {
+      const parsedQuery = NamespaceFilterSchema.parse(query);
       return await execute(async (tx) => {
         const members = this.memberCollectionBuilder(tx);
         const namespaces = this.collectionBuilder(tx);
         const options = this.getOperationOptions(tx);
         const memberships = await members.find({ userId }, options).sort({ namespaceId: 1 }).toArray();
         const namespaceIds = memberships.map((membership) => membership.namespaceId);
-
-        if (namespaceIds.length === 0) return [];
-
-        return await namespaces
-          .find({ id: { $in: namespaceIds } }, options)
-          .sort({ id: 1 })
-          .toArray();
+        const filter = { $and: [{ $or: [{ id: { $in: namespaceIds } }, { isPrivate: false }] }, parsedQuery] };
+        const res = await namespaces.find(filter, options).sort({ id: 1 }).limit(resolveLimit(limit, true)).toArray();
+        return res;
       });
     });
+  }
+
+  async findWithCursor(
+    query: object,
+    userId: string,
+    cursor?: string,
+    chunkSize?: number
+  ): Promise<RepositoryResult<GetDocumentListResponse<NamespaceDocument>>> {
+    const limit = resolveLimit(chunkSize);
+    const res = await this.find(cursor ? { ...query, id: { gt: cursor } } : query, userId, limit + 1);
+    if (!res.ok) return res;
+    if (res.data.length > limit)
+      return {
+        ...res,
+        data: { items: res.data.slice(0, limit), hasMore: true, nextCursor: res.data[limit - 1].id },
+      };
+    else return { ...res, data: { items: res.data, hasMore: false } };
   }
 
   async checkPermissions({ namespaceId, userId }: CheckPermissionsParmas) {

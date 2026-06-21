@@ -3,7 +3,7 @@ import { ApiError } from '../errors/http-error';
 import { RepositoryResult } from '@database/repositories/util';
 
 function resolveResponse(res: RepositoryResult<any>, c: Context<any>) {
-  if (res.ok) return c.json(res.data ?? {}, c.req.method === 'POST' ? 201 : 200);
+  if (res.ok) return c.json(res.data ?? {}, 200);
   else {
     switch (res.reason) {
       case 'not_found':

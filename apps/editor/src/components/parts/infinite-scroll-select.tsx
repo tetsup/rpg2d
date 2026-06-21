@@ -1,24 +1,25 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
-import type { ResourceType } from '@sharedTypes/resource/common';
-import type { ResourceDocument } from '@sharedTypes/database/collection';
-import { Command, CommandEmpty, CommandGroup, CommandItem } from '../ui/command';
+import { CollectionName, DocumentMap } from '@sharedTypes/database/collection';
 import { useDocumentList } from '@editor/hooks/api/search';
+import { Command, CommandEmpty, CommandGroup, CommandItem } from '../ui/command';
 
-type InfiniteScrollSelectProps<T> = {
-  onItemSelect: (item: T) => void;
-  query: string;
-  type: ResourceType;
+type InfiniteScrollSelectProps<T extends CollectionName> = {
+  collectionName: T;
+  onItemSelect: (item: DocumentMap[T]) => void;
+  query: object;
+  renderItemLabel: (item: DocumentMap[T]) => string;
 };
 
-export function InfiniteScrollSelect<T extends ResourceDocument>({
+export function InfiniteScrollSelect<T extends CollectionName>({
+  collectionName,
   onItemSelect,
   query,
-  type,
+  renderItemLabel,
 }: InfiniteScrollSelectProps<T>) {
   const { t } = useTranslation();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useDocumentList<'resource'>({ query, type });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useDocumentList({ collectionName, query });
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView && hasNextPage) fetchNextPage();
@@ -26,14 +27,14 @@ export function InfiniteScrollSelect<T extends ResourceDocument>({
   const allItems = data?.pages.flatMap((page) => page.items) || [];
 
   return (
-    <Command>
+    <Command shouldFilter={false}>
       <CommandEmpty>
         <div className="p-4 text-sm text-muted-foreground">{t('見つかりませんでした')}</div>
       </CommandEmpty>
       <CommandGroup>
         {allItems.map((item, index) => (
           <CommandItem key={index} onSelect={() => onItemSelect(item)}>
-            {`${item.namespace}/${item.type}/${item.name}`}
+            {renderItemLabel(item)}
           </CommandItem>
         ))}
         <CommandItem ref={ref}>

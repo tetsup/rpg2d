@@ -27,4 +27,5 @@ export type UserDocument = z.infer<typeof UserDocumentSchema>;
 export type DocumentMap = {
   namespace: NamespaceDocument;
   user: UserDocument;
+  resource: ResourceDocument;
 };

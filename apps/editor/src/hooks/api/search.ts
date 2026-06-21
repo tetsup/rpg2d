@@ -1,46 +1,8 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import type { CollectionName, DocumentMap } from '@sharedTypes/database/collection';
-import { ResourceType } from '@sharedTypes/resource/common';
+import type { DocumentFilterInput } from '@sharedTypes/database/repository';
 import { fetchPostApi } from '@editor/lib/api/post';
 import { documentKey } from './by-id';
-
-type Permission = 'read' | 'create' | 'update' | 'delete' | 'admin';
-
-type ResourceListReqParams = {
-  collectionName: 'resource';
-  resourceType?: ResourceType;
-  query: string;
-};
-
-type NamespaceListReqParams = {
-  collectionName: 'namespace';
-  permission?: Permission;
-  query: string;
-};
-
-type UserListReqParams = {
-  collectionName: 'user';
-  query: string;
-};
-
-type DocumentListReqParams = {
-  resource: ResourceListReqParams;
-  namespace: NamespaceListReqParams;
-  user: UserListReqParams;
-};
-
-function generateListQueryKey(params: DocumentListReqParams[CollectionName]) {
-  switch (params.collectionName) {
-    case 'namespace':
-      return ['namespace-search', params.permission ?? 'all', params.query];
-    case 'resource':
-      return ['resource-search', params.resourceType ?? 'all', params.query];
-    case 'user':
-      return ['user-search', params.query];
-    default:
-      throw new Error('invalid collection name');
-  }
-}
 
 const idExtractors: { [K in CollectionName]: (item: DocumentMap[K]) => string } = {
   namespace: (item) => item.id,
@@ -52,38 +14,35 @@ function getIdFromDocument<K extends CollectionName>(collectionName: K, item: Do
   const extractor = idExtractors[collectionName];
   return extractor(item);
 }
-
-type GetDocumentListParams<K extends CollectionName> = DocumentListReqParams[K] & { cursor?: string };
-
-export type GetDocumentListResponse<T> = {
-  items: T[];
-  nextCursor?: string;
-  hasMore: boolean;
+type FilterInput<K extends CollectionName> = {
+  collectionName: K;
+  query: DocumentFilterInput[K];
+  cursor?: string;
 };
+
+export type GetDocumentListResponse<T> =
+  | {
+      items: T[];
+      hasMore: true;
+      nextCursor: string;
+    }
+  | { items: T[]; hasMore: false };
 
 export async function getDocumentList<
   K extends CollectionName,
-  Req extends GetDocumentListParams<K>,
-  Res extends DocumentMap[K],
+  Req extends FilterInput<K> = any,
+  Res extends DocumentMap[K] = any,
 >(req: Req) {
-  return await fetchPostApi<Req, GetDocumentListResponse<Res>>(`/api/${req.collectionName}/search`, {
-    ...req,
-    limit: '40',
-  });
+  return await fetchPostApi<Req, GetDocumentListResponse<Res>>(`/api/${req.collectionName}/search`, req);
 }
 
-export function useDocumentList<
-  K extends CollectionName,
-  Req extends GetDocumentListParams<K> = any,
-  Res extends GetDocumentListResponse<DocumentMap[K]> = any,
->(params: Req) {
-  const queryKey = generateListQueryKey(params);
+export function useDocumentList<K extends CollectionName, Req extends FilterInput<K>>(params: Req) {
   const queryClient = useQueryClient();
   return useInfiniteQuery({
-    queryKey,
+    queryKey: [params.collectionName, params.query],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
-      const response = await getDocumentList({
+      const response = await getDocumentList<K>({
         ...params,
         cursor: pageParam,
       });
@@ -93,7 +52,7 @@ export function useDocumentList<
           item
         );
       }
-      return response as Res;
+      return response;
     },
     getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextCursor : undefined),
     maxPages: 5,

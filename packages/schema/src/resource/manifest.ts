@@ -6,7 +6,7 @@ import { StateDefinitionSchema } from './variable/definition';
 
 export const ModeSchema = z.enum(['menu', 'field', 'battle']);
 
-export const VariableStateSchema = z.map(IdSchema, PrimitiveValueSchema);
+export const VariableStateSchema = z.record(IdSchema, PrimitiveValueSchema);
 
 export const InitialPlayersSchema = z.array(IdSchema);
 

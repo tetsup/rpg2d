@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { NamespacePostParams } from '@sharedTypes/api/namespace';
-import { NamespacePostParamsSchema } from '@schema/api/namespace/post';
+import { NamespaceInput } from '@sharedTypes/database/collection';
+import { NamespaceInputSchema } from '@schema/database/namespace';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { fetchPostApi } from '@editor/lib/api/post';
@@ -12,14 +12,14 @@ export function NewNamespacePage() {
   const navigate = useNavigate();
   const fields = NamespaceFields({ mode: 'create' });
 
-  const defaultValues: NamespacePostParams = {
+  const defaultValues: NamespaceInput = {
     id: '',
     displayName: '',
     description: '',
     isPrivate: false,
   };
 
-  const onSubmit = async (values: NamespacePostParams) => {
+  const onSubmit = async (values: NamespaceInput) => {
     await fetchPostApi('/api/namespace', values);
     navigate(`/namespace/${values.id}`);
   };
@@ -28,7 +28,7 @@ export function NewNamespacePage() {
     <LayoutShell titleBarProps={{ title: t('グループ作成') }}>
       <FormTemplete
         fieldGroups={fields}
-        schema={NamespacePostParamsSchema}
+        schema={NamespaceInputSchema}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
       />

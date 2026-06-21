@@ -1,16 +1,18 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { CollectionName, DocumentMap } from '@sharedTypes/database/collection';
 import { Button } from '@editor/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from '@editor/components/ui/dialog';
+import { SelectDocument } from './select-document';
 
-type DocumentPickerProps<T> = {
+type DocumentPickerProps<T extends CollectionName> = {
+  collectionName: T;
   id?: string;
-  onSelect: (document: T) => void;
+  onSelect: (document: DocumentMap[T]) => void;
   onCreate?: () => void;
-  renderSelect: ({ onSelect }: { onSelect: (document: T) => void }) => ReactNode;
 };
 
-export function DocumentPicker({ id, onSelect, onCreate, renderSelect }: DocumentPickerProps<any>) {
+export function DocumentPicker({ collectionName, id, onSelect, onCreate }: DocumentPickerProps<any>) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -27,7 +29,7 @@ export function DocumentPicker({ id, onSelect, onCreate, renderSelect }: Documen
         <DialogHeader className="p-4">
           <DialogTitle>{t('選択するか、新規作成してください')}</DialogTitle>
         </DialogHeader>
-        {renderSelect({ onSelect })}
+        <SelectDocument collectionName={collectionName} onItemSelect={onSelect} />
         {onCreate && (
           <div className="p-2 border-t">
             <Button

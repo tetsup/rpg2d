@@ -9,10 +9,10 @@ import type { ResourceId, ResourcePath } from '@sharedTypes/resource/common';
 import { splitId } from '@schema/resource/common/base';
 import { createResourceDocumentSchema } from '@schema/database/resource';
 import { buildId, extractResourceRefs } from '@database/utils/resource';
-import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
 import { execute, withTransaction, type TxContext } from '@database/client/mongo-client';
 import { resourceCollectionBuilder } from '@database/collections/resources';
 import { resourceEdgeCollectionBuilder } from '@database/collections/resource-edges';
+import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
 
 type FindParams = {
   name?: string;
@@ -46,9 +46,10 @@ async function updateRefs(
   );
 }
 
-function getPath(meta: ResourceMeta) {
+function getPath(meta: ResourceMeta<any>) {
   return { namespace: meta.namespace, type: meta.type, name: meta.name };
 }
+
 export class ResourceRepository {
   private collectionBuilder: (tx: TxContext) => Collection<WithTimestamp<ResourceDocument>>;
   private edgeCollectionBuilder: (tx: TxContext) => Collection<ResourceEdgeDocument>;

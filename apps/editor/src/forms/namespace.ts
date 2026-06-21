@@ -1,20 +1,37 @@
 import { useTranslation } from 'react-i18next';
-import type { NamespacePostParams } from '@sharedTypes/api/namespace';
+import { NamespaceInput } from '@sharedTypes/database/collection';
 import { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';
 
 type NamespaceFieldParams = { mode: 'create' | 'update' };
 
-export function NamespaceFields({ mode }: NamespaceFieldParams): FieldGroupTemplateProps<NamespacePostParams>[] {
+export function NamespaceFields({ mode }: NamespaceFieldParams): FieldGroupTemplateProps<NamespaceInput>[] {
   const { t } = useTranslation();
 
   return [
     {
       title: t('グループ設定'),
       items: [
-        { name: 'id', label: t('ID'), type: mode === 'create' ? 'text' : 'disabled-text' },
-        { name: 'displayName', label: t('グループ名'), type: 'text' },
-        { name: 'description', label: t('グループの説明'), type: 'text' },
-        { name: 'isPrivate', label: t('非公開'), type: 'switch', labelOn: t('公開しない'), labelOff: t('公開する') },
+        {
+          type: 'text',
+          params: { name: 'id', label: t('ID'), disabled: mode === 'update' },
+        },
+        {
+          type: 'text',
+          params: { name: 'displayName', label: t('グループ名') },
+        },
+        {
+          type: 'text',
+          params: { name: 'description', label: t('グループの説明') },
+        },
+        {
+          type: 'switch',
+          params: {
+            name: 'isPrivate',
+            label: t('非公開'),
+            labelOn: t('公開しない'),
+            labelOff: t('公開する'),
+          },
+        },
       ],
     },
   ];

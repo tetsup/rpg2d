@@ -14,22 +14,31 @@ export const migration001: Migration = {
 
   async up(tx) {
     const resources = resourceCollectionBuilder(tx);
-    await resources.createIndexes([
-      { key: { namespace: 1, type: 1, name: 1 }, unique: true },
-      { key: { namespace: 1 } },
-      { key: { type: 1 } },
-      { key: { name: 1 } },
-      { key: { updatedAt: -1 } },
-    ]);
+    await resources.createIndexes(
+      [
+        { key: { namespace: 1, type: 1, name: 1 }, unique: true },
+        { key: { namespace: 1 } },
+        { key: { type: 1 } },
+        { key: { name: 1 } },
+        { key: { name: 'text', description: 'text' } },
+        { key: { updatedAt: -1 } },
+      ],
+      { default_language: 'none' }
+    );
 
     const edges = resourceEdgeCollectionBuilder(tx);
     await edges.createIndexes([{ key: { from: 1 } }, { key: { to: 1 } }]);
 
     const users = userCollectionBuilder(tx);
-    await users.createIndexes([{ key: { id: 1 }, unique: true }]);
+    await users.createIndexes([{ key: { id: 1 }, unique: true }, { key: { presenceName: 'text', email: 'text' } }], {
+      default_language: 'none',
+    });
 
     const namespaces = namespaceCollectionBuilder(tx);
-    await namespaces.createIndexes([{ key: { id: 1 }, unique: true }]);
+    await namespaces.createIndexes(
+      [{ key: { id: 1 }, unique: true }, { key: { id: 'text', displayName: 'text', description: 'text' } }],
+      { default_language: 'none' }
+    );
 
     const members = namespaceMemberCollectionBuilder(tx);
     await members.createIndexes([{ key: { namespaceId: 1, userId: 1 }, unique: true }, { key: { userId: 1 } }]);

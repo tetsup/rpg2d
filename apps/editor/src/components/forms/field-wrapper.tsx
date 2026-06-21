@@ -1,13 +1,13 @@
 import { type FieldName, useController } from 'react-hook-form';
 
-type ControlFieldProps<T extends FieldName<any>> = {
+type FieldWrapperProps<T extends FieldName<any>> = {
   name: T;
   label: string;
   hint?: string;
   children: React.ReactNode;
 };
 
-export function ControlField({ name, label, hint, children }: ControlFieldProps<any>) {
+export function FieldWrapper({ name, label, hint, children }: FieldWrapperProps<any>) {
   const {
     fieldState: { error },
   } = useController({ name });
