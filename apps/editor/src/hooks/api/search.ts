@@ -1,22 +1,11 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import type { CollectionName, DocumentMap } from '@sharedTypes/database/collection';
-import type { DocumentFilterInput } from '@sharedTypes/database/repository';
+import type { Database } from '@sharedTypes/database/collection';
+import type { FilterMap } from '@sharedTypes/database/filter';
 import { fetchPostApi } from '@editor/lib/api/post';
-import { documentKey } from './by-id';
 
-const idExtractors: { [K in CollectionName]: (item: DocumentMap[K]) => string } = {
-  namespace: (item) => item.id,
-  resource: (item) => `${item.namespace}/${item.type}/${item.name}`,
-  user: (item) => item.id,
-};
-
-function getIdFromDocument<K extends CollectionName>(collectionName: K, item: DocumentMap[K]): string {
-  const extractor = idExtractors[collectionName];
-  return extractor(item);
-}
-type FilterInput<K extends CollectionName> = {
+type FilterInput<K extends keyof FilterMap> = {
   collectionName: K;
-  query: DocumentFilterInput[K];
+  query: FilterMap[K];
   cursor?: string;
 };
 
@@ -29,14 +18,14 @@ export type GetDocumentListResponse<T> =
   | { items: T[]; hasMore: false };
 
 export async function getDocumentList<
-  K extends CollectionName,
+  K extends keyof FilterMap,
   Req extends FilterInput<K> = any,
-  Res extends DocumentMap[K] = any,
+  Res extends Database[K] = any,
 >(req: Req) {
   return await fetchPostApi<Req, GetDocumentListResponse<Res>>(`/api/${req.collectionName}/search`, req);
 }
 
-export function useDocumentList<K extends CollectionName, Req extends FilterInput<K>>(params: Req) {
+export function useDocumentList<K extends keyof FilterMap, Req extends FilterInput<K>>(params: Req) {
   const queryClient = useQueryClient();
   return useInfiniteQuery({
     queryKey: [params.collectionName, params.query],
@@ -47,10 +36,7 @@ export function useDocumentList<K extends CollectionName, Req extends FilterInpu
         cursor: pageParam,
       });
       for (const item of response.items) {
-        queryClient.setQueryData(
-          documentKey(params.collectionName, getIdFromDocument(params.collectionName, item)),
-          item
-        );
+        queryClient.setQueryData(item.id, item);
       }
       return response;
     },

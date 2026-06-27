@@ -1,11 +1,37 @@
-import { migrate } from '../../migration/migrate';
-import { shutdownMongo } from '@database/client/mongo-client';
+import { Client } from 'pg';
+import crypto from 'node:crypto';
+import { runner } from 'node-pg-migrate';
+
+let schemaName: string;
+let client: Client;
+
+function createSchemaName() {
+  const id = crypto.randomBytes(6).toString('hex');
+  return `test_${id}`;
+}
 
 beforeAll(async () => {
-  process.env.MONGO_DB = `test_${process.env.VITEST_POOL_ID}`;
-  await migrate();
+  const connectionString = process.env.DATABASE_URL!;
+  client = new Client({ connectionString });
+  await client.connect();
+  schemaName = createSchemaName();
+  await client.query(`CREATE SCHEMA IF NOT EXISTS ${schemaName}`);
+  await client.query(`SET search_path TO ${schemaName}`);
+  await runMigrations(connectionString);
 });
 
 afterAll(async () => {
-  await shutdownMongo();
+  if (!client) return;
+
+  await client.query(`DROP SCHEMA IF EXISTS ${schemaName} CASCADE`);
+  await client.end();
 });
+
+async function runMigrations(connectionString: string) {
+  await runner({
+    databaseUrl: connectionString,
+    dir: 'migrations',
+    direction: 'up',
+    migrationsTable: 'pgmigrations',
+  });
+}

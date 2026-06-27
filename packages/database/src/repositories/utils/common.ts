@@ -1,4 +1,4 @@
-import { MongoServerError, MongoNetworkError, MongoServerSelectionError, MongoTopologyClosedError } from 'mongodb';
+import { DatabaseError } from 'pg';
 import { ZodError } from 'zod';
 
 export type RepositoryResult<T> =
@@ -34,35 +34,44 @@ function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
 
   if (error instanceof ZodError) return { ok: false, reason: 'validation_failed', error, detail: error.issues };
 
-  // network
-  if (
-    error instanceof MongoNetworkError ||
-    error instanceof MongoServerSelectionError ||
-    error instanceof MongoTopologyClosedError
-  )
-    return { ok: false, reason: 'network_error', error };
-
-  // mongodb server
-  if (error instanceof MongoServerError) {
+  if (error instanceof DatabaseError) {
     switch (error.code) {
-      case 11000:
-        return { ok: false, reason: 'already_exists', error };
-      // known database-side errors
-      case 6: // HostUnreachable
-      case 7: // HostNotFound
-      case 50: // ExceededTimeLimit
-      case 89: // NetworkTimeout
-      case 91: // ShutdownInProgress
-      case 112: // WriteConflict
-      case 11600: // InterruptedAtShutdown
-      case 11602: // InterruptedDueToReplStateChange
-      case 13435: // NotPrimaryNoSecondaryOk
-      case 13436: // NotPrimaryOrSecondary
-      case 13: // Unauthorized
-        return { ok: false, reason: 'database_error', error };
+      case '23505':
+        return {
+          ok: false,
+          reason: 'already_exists',
+          error,
+        };
+
+      case '23503':
+      case '23502':
+      case '23514':
+        return {
+          ok: false,
+          reason: 'validation_failed',
+          error,
+        };
+
+      case '40001':
+      case '40P01':
+        return {
+          ok: false,
+          reason: 'database_error',
+          error,
+        };
     }
+
+    return {
+      ok: false,
+      reason: 'database_error',
+      error,
+    };
   }
 
   // fallback
   return { ok: false, reason: 'unknown', error };
+}
+
+export function calcLimit(limit?: number) {
+  return Math.max(Math.min(Math.floor(limit ?? 100), 1000), 10);
 }

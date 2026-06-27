@@ -1,29 +1,30 @@
-import { Collection } from 'mongodb';
-import type { UserDocument, WithTimestamp } from '@sharedTypes/database/collection';
+import type { Kysely } from 'kysely';
+import type { Database } from '@sharedTypes/database/collection';
+import { execute } from '@database/client/pg-client';
 import { UserDocumentSchema } from '@schema/database/user';
-import { execute, TxContext } from '@database/client/mongo-client';
-import { userCollectionBuilder } from '@database/collections/users';
-import { RepositoryNotFoundError, repositorySafe } from './util';
+import { calcLimit, RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { UserFilterSchema } from '@schema/filter/domain';
+import { applyUserFilter } from '@database/filters/user';
 
 type UserRepositoryOptions = {
-  mockCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<UserDocument>>;
-  mockDocumentSchema?: typeof UserDocumentSchema;
+  mockDb?: Kysely<Database>;
+  mockSchema?: typeof UserDocumentSchema;
 };
 
 export class UserRepository {
-  private collectionBuilder: (tx: TxContext) => Collection<WithTimestamp<UserDocument>>;
-  private documentSchema: typeof UserDocumentSchema;
+  private dbFactory: (real: Kysely<Database>) => Kysely<Database>;
+  private schema: typeof UserDocumentSchema;
 
-  constructor({ mockCollectionBuilder, mockDocumentSchema }: UserRepositoryOptions = {}) {
-    this.collectionBuilder = mockCollectionBuilder ?? userCollectionBuilder;
-    this.documentSchema = mockDocumentSchema ?? UserDocumentSchema;
+  constructor({ mockDb, mockSchema }: UserRepositoryOptions = {}) {
+    this.dbFactory = mockDb ? () => mockDb : (db) => db;
+    this.schema = mockSchema ?? UserDocumentSchema;
   }
 
   async get(id: string) {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const users = this.collectionBuilder(tx);
-        const user = users.findOne({ id });
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const user = await conn.selectFrom('users').selectAll().where('id', '=', id).executeTakeFirst();
         if (!user) throw new RepositoryNotFoundError();
 
         return user;
@@ -31,18 +32,43 @@ export class UserRepository {
     });
   }
 
-  async update(data: any, upsert: boolean = false) {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const users = this.collectionBuilder(tx);
+  async update(data: any, upsert = false) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
         const now = new Date();
-        const user = this.documentSchema.parse({ ...data, createdAt: now, updatedAt: now });
-        return await users.updateOne({ id: user.id }, { $set: user, $setOnInsert: { createdAt: now } }, { upsert });
+        const user = this.schema.parse(data);
+        if (upsert) {
+          await conn
+            .insertInto('users')
+            .values({ ...user, createdAt: now, updatedAt: now })
+            .onConflict((oc) => oc.column('id').doUpdateSet({ ...user, updatedAt: now }))
+            .execute();
+        } else {
+          await conn
+            .updateTable('users')
+            .set({ ...user, updatedAt: now })
+            .where('id', '=', user.id)
+            .execute();
+        }
       });
     });
   }
 
   async upsert(data: any) {
-    return await this.update(data, true);
+    return this.update(data, true);
+  }
+
+  async find(query: any, _: string, sortKey: string, limit?: number) {
+    return repositorySafe(async () => {
+      const parsed = UserFilterSchema.parse(query);
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        return await applyUserFilter(conn.selectFrom('users').selectAll(), parsed)
+          .orderBy(sortKey)
+          .limit(calcLimit(limit))
+          .execute();
+      });
+    });
   }
 }

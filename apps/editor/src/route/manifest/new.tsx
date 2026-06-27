@@ -13,6 +13,7 @@ export function NewManifestPage() {
   const fields = ManifestForm({ mode: 'create' });
 
   const defaultValues: ResourceDocument<'manifest'> = {
+    id: '',
     namespace: '',
     type: 'manifest',
     name: '',

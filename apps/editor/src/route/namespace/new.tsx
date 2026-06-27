@@ -14,7 +14,7 @@ export function NewNamespacePage() {
 
   const defaultValues: NamespaceInput = {
     id: '',
-    displayName: '',
+    presenceName: '',
     description: '',
     isPrivate: false,
   };

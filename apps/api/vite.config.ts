@@ -1,18 +1,22 @@
-import { defineConfig, UserConfig } from 'vite';
+import { defineConfig, loadEnv, UserConfig } from 'vite';
 import devServer from '@hono/vite-dev-server';
 
-export default defineConfig({
-  resolve: {
-    tsconfigPaths: true,
-  },
-  plugins: [
-    devServer({
-      entry: 'src/index.ts',
-    }),
-  ],
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, '../../', '');
 
-  server: {
-    port: 3000,
-    strictPort: true,
-  },
-} as UserConfig);
+  return {
+    resolve: {
+      tsconfigPaths: true,
+    },
+    plugins: [
+      devServer({
+        entry: 'src/index.ts',
+      }),
+    ],
+    server: {
+      port: 3000,
+      strictPort: true,
+    },
+    define: mode === 'development' || mode === 'test' ? { 'process.env': { ...process.env, ...env } } : {},
+  } as UserConfig;
+});

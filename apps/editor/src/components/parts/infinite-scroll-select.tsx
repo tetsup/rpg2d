@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
-import { CollectionName, DocumentMap } from '@sharedTypes/database/collection';
+import { Database } from '@sharedTypes/database/collection';
 import { useDocumentList } from '@editor/hooks/api/search';
 import { Command, CommandEmpty, CommandGroup, CommandItem } from '../ui/command';
+import { FilterMap } from '@sharedTypes/database/filter';
 
-type InfiniteScrollSelectProps<T extends CollectionName> = {
+type InfiniteScrollSelectProps<T extends keyof FilterMap> = {
   collectionName: T;
-  onItemSelect: (item: DocumentMap[T]) => void;
-  query: object;
-  renderItemLabel: (item: DocumentMap[T]) => string;
+  onItemSelect: (item: Database[T]) => void;
+  query: FilterMap[T];
+  renderItemLabel: (item: Database[T]) => string;
 };
 
-export function InfiniteScrollSelect<T extends CollectionName>({
+export function InfiniteScrollSelect<T extends keyof FilterMap>({
   collectionName,
   onItemSelect,
   query,

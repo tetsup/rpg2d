@@ -1,239 +1,177 @@
-import z from 'zod';
-import { createFilterSchema } from '@schema/common/search';
+import { NamespaceFilterSchema } from '@schema/filter/domain';
 
-describe('createFilterSchema', () => {
-  const schema = createFilterSchema(
-    z.object({
-      name: z.string(),
-      level: z.number(),
-      enabled: z.boolean(),
-      role: z.enum(['admin', 'user']),
-      nested: z.object({
-        power: z.number(),
-        title: z.string(),
-      }),
-    })
-  );
-
-  it('parses empty filter', () => {
-    expect(schema.parse({})).toEqual({});
+describe('NamespaceFilterSchema', () => {
+  it('accepts empty filter', () => {
+    expect(NamespaceFilterSchema.parse([])).toEqual([]);
   });
 
-  it('converts root text search', () => {
+  it('accepts free text search', () => {
     expect(
-      schema.parse({
-        q: 'fire',
-      })
-    ).toEqual({
-      $text: {
-        $search: 'fire',
+      NamespaceFilterSchema.parse([
+        {
+          name: 'q',
+          value: 'fire',
+        },
+      ])
+    ).toEqual([
+      {
+        name: 'q',
+        value: 'fire',
       },
-    });
+    ]);
   });
 
-  it('converts string eq', () => {
+  it('accepts id equality filter', () => {
     expect(
-      schema.parse({
-        name: {
-          eq: 'fire',
+      NamespaceFilterSchema.parse([
+        {
+          name: 'id',
+          op: 'eq',
+          value: 'namespace1',
         },
-      })
-    ).toEqual({
-      name: 'fire',
-    });
-  });
-
-  it('converts string ne', () => {
-    expect(
-      schema.parse({
-        name: {
-          ne: 'fire',
-        },
-      })
-    ).toEqual({
-      name: {
-        $ne: 'fire',
+      ])
+    ).toEqual([
+      {
+        name: 'id',
+        op: 'eq',
+        value: 'namespace1',
       },
-    });
+    ]);
   });
 
-  it('converts number eq', () => {
+  it('accepts description contains filter', () => {
     expect(
-      schema.parse({
-        level: {
-          eq: 10,
+      NamespaceFilterSchema.parse([
+        {
+          name: 'description',
+          op: 'contains',
+          value: 'fire',
         },
-      })
-    ).toEqual({
-      level: 10,
-    });
-  });
-
-  it('converts number comparison operators', () => {
-    expect(
-      schema.parse({
-        level: {
-          ne: 1,
-          gt: 10,
-          gte: 11,
-          lt: 100,
-          lte: 99,
-        },
-      })
-    ).toEqual({
-      level: {
-        $ne: 1,
-        $gt: 10,
-        $gte: 11,
-        $lt: 100,
-        $lte: 99,
+      ])
+    ).toEqual([
+      {
+        name: 'description',
+        op: 'contains',
+        value: 'fire',
       },
-    });
+    ]);
   });
 
-  it('passes boolean through', () => {
-    expect(
-      schema.parse({
-        enabled: true,
-      })
-    ).toEqual({
-      enabled: true,
-    });
-  });
+  it('accepts createdAt comparison filter', () => {
+    const date = new Date();
 
-  it('converts enum eq', () => {
     expect(
-      schema.parse({
-        role: {
-          eq: 'admin',
+      NamespaceFilterSchema.parse([
+        {
+          name: 'createdAt',
+          op: 'gt',
+          value: date,
         },
-      })
-    ).toEqual({
-      role: 'admin',
-    });
-  });
-
-  it('converts enum ne', () => {
-    expect(
-      schema.parse({
-        role: {
-          ne: 'admin',
-        },
-      })
-    ).toEqual({
-      role: {
-        $ne: 'admin',
+      ])
+    ).toEqual([
+      {
+        name: 'createdAt',
+        op: 'gt',
+        value: date,
       },
-    });
+    ]);
   });
 
-  it('flattens nested object', () => {
+  it('accepts multiple filters', () => {
     expect(
-      schema.parse({
-        nested: {
-          power: {
-            gte: 10,
-          },
+      NamespaceFilterSchema.parse([
+        {
+          name: 'id',
+          op: 'eq',
+          value: 'namespace1',
         },
-      })
-    ).toEqual({
-      'nested.power': {
-        $gte: 10,
-      },
-    });
-  });
-
-  it('flattens nested string', () => {
-    expect(
-      schema.parse({
-        nested: {
-          title: {
-            eq: 'fire',
-          },
+        {
+          name: 'description',
+          op: 'contains',
+          value: 'fire',
         },
-      })
-    ).toEqual({
-      'nested.title': 'fire',
-    });
-  });
-
-  it('supports multiple filters', () => {
-    expect(
-      schema.parse({
-        q: 'fire',
-        name: {
-          eq: 'Fireball',
-        },
-        level: {
-          gte: 10,
-        },
-        nested: {
-          power: {
-            lt: 100,
-          },
-        },
-      })
-    ).toEqual({
-      $text: {
-        $search: 'fire',
-      },
-      name: 'Fireball',
-      level: {
-        $gte: 10,
-      },
-      'nested.power': {
-        $lt: 100,
-      },
-    });
-  });
-
-  it('rejects invalid enum value', () => {
-    expect(() =>
-      schema.parse({
-        role: {
-          eq: 'super-admin',
-        },
-      })
-    ).toThrow();
-  });
-
-  it('rejects string in number filter', () => {
-    expect(() =>
-      schema.parse({
-        level: {
-          gt: '10',
-        },
-      })
-    ).toThrow();
+      ])
+    ).toHaveLength(2);
   });
 
   it('rejects unknown field', () => {
     expect(() =>
-      schema.parse({
-        unknown: {
-          eq: 'test',
+      NamespaceFilterSchema.parse([
+        {
+          name: 'unknown',
+          op: 'eq',
+          value: 'test',
         },
-      })
+      ])
     ).toThrow();
   });
 
-  it('rejects empty text search', () => {
+  it('rejects invalid operator for id', () => {
     expect(() =>
-      schema.parse({
-        $text: '',
-      })
+      NamespaceFilterSchema.parse([
+        {
+          name: 'id',
+          op: 'contains',
+          value: 'test',
+        },
+      ])
     ).toThrow();
   });
 
-  it('rejects invalid nested field', () => {
+  it('rejects invalid operator for description', () => {
     expect(() =>
-      schema.parse({
-        nested: {
-          unknown: {
-            eq: 'test',
-          },
+      NamespaceFilterSchema.parse([
+        {
+          name: 'description',
+          op: 'gt',
+          value: 'test',
         },
-      })
+      ])
+    ).toThrow();
+  });
+
+  it('rejects invalid value type for createdAt', () => {
+    expect(() =>
+      NamespaceFilterSchema.parse([
+        {
+          name: 'createdAt',
+          op: 'gt',
+          value: '2025-01-01',
+        },
+      ])
+    ).toThrow();
+  });
+
+  it('rejects free text longer than 50 characters', () => {
+    expect(() =>
+      NamespaceFilterSchema.parse([
+        {
+          name: 'q',
+          value: 'a'.repeat(51),
+        },
+      ])
+    ).toThrow();
+  });
+
+  it('rejects missing op for indexed field', () => {
+    expect(() =>
+      NamespaceFilterSchema.parse([
+        {
+          name: 'id',
+          value: 'namespace1',
+        },
+      ])
+    ).toThrow();
+  });
+
+  it('rejects missing value', () => {
+    expect(() =>
+      NamespaceFilterSchema.parse([
+        {
+          name: 'id',
+          op: 'eq',
+        },
+      ])
     ).toThrow();
   });
 });

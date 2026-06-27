@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { CollectionName, DocumentMap } from '@sharedTypes/database/collection';
+import type { CollectionName, Database } from '@sharedTypes/database/collection';
 import { Button } from '@editor/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from '@editor/components/ui/dialog';
 import { SelectDocument } from './select-document';
@@ -8,7 +8,7 @@ import { SelectDocument } from './select-document';
 type DocumentPickerProps<T extends CollectionName> = {
   collectionName: T;
   id?: string;
-  onSelect: (document: DocumentMap[T]) => void;
+  onSelect: (document: Database[T]) => void;
   onCreate?: () => void;
 };
 

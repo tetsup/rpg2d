@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { ResourceRepository } from '@database/repositories/resource';
+import { findWithCursor } from '@database/repositories/utils/filter';
 import { ResourceSearchReqParamsSchema } from '@schema/api/resource/search';
 import { ResourceByIdReqSchema } from '@schema/api/resource/by-id';
 import { authorizeResourceMiddleware } from '@api/auth/middlewares/authorize-resource';
@@ -7,6 +8,7 @@ import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 import { Action } from '../utils/authorize';
 import { handle } from '../utils/handle';
 import { parseParams } from '../utils/params';
+import { ResourceFilterSchema } from '@schema/filter/domain';
 
 const resourceRoute = new Hono();
 resourceRoute.use('*', resolveUserMiddleware);
@@ -47,16 +49,18 @@ resourceRoute.delete(
   })
 );
 
-resourceRoute.get(
+resourceRoute.post(
   '/search',
   handle(async (c) => {
-    const query = ResourceSearchReqParamsSchema.parse(c.req.query());
-    return await new ResourceRepository().find({
-      name: query.q,
-      namespace: query.namespace,
-      type: query.type,
-      cursor: query.cursor,
-      limit: query.limit,
+    const { query, cursor } = await c.req.json();
+    const userId = c.get('user').id;
+    return await findWithCursor({
+      repository: new ResourceRepository(),
+      query,
+      userId,
+      cursor,
+      sortKey: 'id',
+      chunkSize: 50,
     });
   })
 );

@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { CollectionName, DocumentMap } from '@sharedTypes/database/collection';
+import type { CollectionName, Database } from '@sharedTypes/database/collection';
 import { Input } from '../ui/input';
 import { InfiniteScrollSelect } from './infinite-scroll-select';
+import { FilterMap } from '@sharedTypes/database/filter';
 
 type SelectDocumentProps<T extends CollectionName> = {
   collectionName: T;
-  onItemSelect: (item: DocumentMap[T]) => void;
+  onItemSelect: (item: Database[T]) => void;
 };
 
 const renderItemLabels = {
-  namespace: (item: DocumentMap['namespace']) => `${item.id}: ${item.displayName}`,
-  resource: (item: DocumentMap['resource']) => `${item.name}: ${item.description}`,
-  user: (item: DocumentMap['user']) => `${item.presenceName}(${item.email})`,
+  namespaces: (item: Database['namespaces']) => `${item.id}: ${item.presenceName}`,
+  resources: (item: Database['resources']) => `${item.name}: ${item.description}`,
+  users: (item: Database['users']) => `${item.presenceName}(${item.email})`,
 };
 
-export function SelectDocument<T extends CollectionName>({ collectionName, onItemSelect }: SelectDocumentProps<T>) {
+export function SelectDocument<T extends keyof FilterMap>({ collectionName, onItemSelect }: SelectDocumentProps<T>) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   return (
@@ -26,8 +27,8 @@ export function SelectDocument<T extends CollectionName>({ collectionName, onIte
       <InfiniteScrollSelect
         collectionName={collectionName}
         onItemSelect={onItemSelect}
-        query={{ q: query }}
-        renderItemLabel={renderItemLabels[collectionName] as (item: DocumentMap[T]) => string}
+        query={{ name: 'q', value: query }}
+        renderItemLabel={renderItemLabels[collectionName] as (item: Database[T]) => string}
       />
     </>
   );

@@ -1,223 +1,207 @@
-import { Collection } from 'mongodb';
-import type {
-  NamespaceDocument,
-  NamespaceInput,
-  NamespaceMemberDocument,
-  WithTimestamp,
-} from '@sharedTypes/database/collection';
-import type { GetDocumentListResponse } from '@editor/hooks/api/search';
-import { NamespaceFilterSchema, NamespaceInputSchema } from '@schema/database/namespace';
-import { NamespaceMemberDocumentSchema } from '@schema/database/namespace-member';
-import { execute, TxContext, withTransaction } from '@database/client/mongo-client';
-import { namespaceMemberCollectionBuilder } from '@database/collections/namespace-members';
-import { resolveLimit } from '@database/utils/params';
-import { namespaceCollectionBuilder } from '../collections/namespaces';
-import { RepositoryNotFoundError, RepositoryResult, repositorySafe } from './util';
-
-type NamespaceMemberPermissions = NamespaceMemberDocument['permissions'];
-
-type NamespaceMemberParams = {
-  namespaceId: string;
-  userId: string;
-};
-
-type AddNamespaceMemberParams = NamespaceMemberParams & {
-  permissions: NamespaceMemberPermissions;
-};
-
-type CheckPermissionsParmas = {
-  namespaceId: string;
-  userId: string;
-};
+import type { Kysely } from 'kysely';
+import type { Database } from '@sharedTypes/database/collection';
+import { NamespaceInputSchema } from '@schema/database/namespace';
+import { NamespacePermissionDocumentSchema } from '@schema/database/namespace-permission';
+import { NamespaceFilterSchema } from '@schema/filter/domain';
+import { execute, withTransaction } from '@database/client/pg-client';
+import { applyNamespaceFilter } from '@database/filters/namespace';
+import { calcLimit, RepositoryNotFoundError, repositorySafe } from './utils/common';
 
 type NamespaceRepositoryOptions = {
-  mockCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<NamespaceDocument>>;
-  mockMemberCollectionBuilder?: (tx: TxContext) => Collection<WithTimestamp<NamespaceMemberDocument>>;
-  mockDocumentSchema?: typeof NamespaceInputSchema;
-  mockMemberDocumentSchema?: typeof NamespaceMemberDocumentSchema;
+  mockDb?: Kysely<Database>;
+  mockNamespaceSchema?: typeof NamespaceInputSchema;
+  mockPermissionSchema?: typeof NamespacePermissionDocumentSchema;
 };
 
 export class NamespaceRepository {
-  private collectionBuilder: (tx: TxContext) => Collection<WithTimestamp<NamespaceDocument>>;
-  private memberCollectionBuilder: (tx: TxContext) => Collection<WithTimestamp<NamespaceMemberDocument>>;
-  private documentSchema: typeof NamespaceInputSchema;
-  private memberDocumentSchema: typeof NamespaceMemberDocumentSchema;
+  private dbFactory: (real: Kysely<Database>) => Kysely<Database>;
+  private namespaceSchema: typeof NamespaceInputSchema;
+  private permissionSchema: typeof NamespacePermissionDocumentSchema;
 
-  constructor({
-    mockCollectionBuilder,
-    mockMemberCollectionBuilder,
-    mockDocumentSchema,
-    mockMemberDocumentSchema,
-  }: NamespaceRepositoryOptions = {}) {
-    this.collectionBuilder = mockCollectionBuilder ?? namespaceCollectionBuilder;
-    this.memberCollectionBuilder = mockMemberCollectionBuilder ?? namespaceMemberCollectionBuilder;
-    this.documentSchema = mockDocumentSchema ?? NamespaceInputSchema;
-    this.memberDocumentSchema = mockMemberDocumentSchema ?? NamespaceMemberDocumentSchema;
+  constructor({ mockDb, mockNamespaceSchema, mockPermissionSchema }: NamespaceRepositoryOptions = {}) {
+    this.dbFactory = mockDb ? () => mockDb : (db) => db;
+    this.namespaceSchema = mockNamespaceSchema ?? NamespaceInputSchema;
+    this.permissionSchema = mockPermissionSchema ?? NamespacePermissionDocumentSchema;
   }
 
-  async get(id: string): Promise<RepositoryResult<NamespaceDocument>> {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const namespaces = this.collectionBuilder(tx);
-        const namespace = await namespaces.findOne({ id }, this.getOperationOptions(tx));
+  async get(id: string) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const namespace = await conn.selectFrom('namespaces').selectAll().where('id', '=', id).executeTakeFirst();
         if (!namespace) throw new RepositoryNotFoundError();
-
         return namespace;
       });
     });
   }
 
-  async create(namespace: NamespaceInput, userId: string): Promise<RepositoryResult<void>> {
-    return await repositorySafe(async () => {
-      const document = this.documentSchema.parse(namespace);
-      const member = this.memberDocumentSchema.parse({
-        userId,
-        namespaceId: namespace.id,
-        permissions: this.createOwnerPermissions(),
-      });
+  async create(namespace: any, userId: string) {
+    return repositorySafe(async () => {
+      const parsed = this.namespaceSchema.parse(namespace);
       const now = new Date();
-      return await withTransaction(async (tx) => {
-        const namespaces = this.collectionBuilder(tx);
-        const members = this.memberCollectionBuilder(tx);
-        const options = this.getOperationOptions(tx);
-
-        await namespaces.insertOne({ ...document, createdBy: userId, createdAt: now, updatedAt: now }, options);
-        await members.insertOne({ ...member, createdAt: now, updatedAt: now }, options);
+      return withTransaction(async (db) => {
+        const conn = this.dbFactory(db);
+        await conn
+          .insertInto('namespaces')
+          .values({
+            ...parsed,
+            createdBy: userId,
+            createdAt: now,
+            updatedAt: now,
+          })
+          .execute();
+        await conn
+          .insertInto('namespace_permissions')
+          .values({
+            namespaceId: parsed.id,
+            userId,
+            permission: 'owner',
+            createdAt: now,
+            updatedAt: now,
+          })
+          .execute();
       });
     });
   }
 
-  async update(id: string, namespace: NamespaceInput): Promise<RepositoryResult<void>> {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const namespaces = this.collectionBuilder(tx);
-        const options = this.getOperationOptions(tx);
+  async update(id: string, namespace: any) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const parsed = this.namespaceSchema.parse(namespace);
+        const result = await conn
+          .updateTable('namespaces')
+          .set({
+            ...parsed,
+            updatedAt: new Date(),
+          })
+          .where('id', '=', id)
+          .execute();
+        if (result[0].numUpdatedRows === 0n) {
+          throw new RepositoryNotFoundError();
+        }
 
-        const parsedDocument = this.documentSchema.parse(namespace);
-        const result = await namespaces.updateOne(
-          { id },
-          { $set: { ...parsedDocument, updatedAt: new Date() } },
-          options
-        );
-        if (result.matchedCount === 0) throw new RepositoryNotFoundError();
-        const members = this.memberCollectionBuilder(tx);
-        await members.updateMany({ namespaceId: id }, { $set: { namespaceId: parsedDocument.id } }, options);
+        await conn
+          .updateTable('namespace_permissions')
+          .set({
+            namespaceId: parsed.id,
+          })
+          .where('namespaceId', '=', id)
+          .execute();
       });
     });
   }
 
-  async delete(id: string): Promise<RepositoryResult<void>> {
-    return await repositorySafe(async () => {
-      return await withTransaction(async (tx) => {
-        const namespaces = this.collectionBuilder(tx);
-        const members = this.memberCollectionBuilder(tx);
-        const options = this.getOperationOptions(tx);
-        const result = await namespaces.deleteOne({ id }, options);
-        if (result.deletedCount === 0) throw new RepositoryNotFoundError();
-
-        await members.deleteMany({ namespaceId: id }, options);
+  async delete(id: string) {
+    return repositorySafe(async () => {
+      return withTransaction(async (db) => {
+        const conn = this.dbFactory(db);
+        const deleted = await conn.deleteFrom('namespaces').where('id', '=', id).executeTakeFirst();
+        if (!deleted) throw new RepositoryNotFoundError();
+        await conn.deleteFrom('namespace_permissions').where('namespaceId', '=', id).execute();
       });
     });
   }
 
-  async addMember({ namespaceId, userId, permissions }: AddNamespaceMemberParams): Promise<RepositoryResult<void>> {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const members = this.memberCollectionBuilder(tx);
-        const member = this.memberDocumentSchema.parse({ namespaceId, userId, permissions });
+  async addPermission(params: any) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const member = this.permissionSchema.parse(params);
         const now = new Date();
-
-        await members.insertOne({ ...member, createdAt: now, updatedAt: now }, this.getOperationOptions(tx));
+        await conn
+          .insertInto('namespace_permissions')
+          .values({
+            ...member,
+            createdAt: now,
+            updatedAt: now,
+          })
+          .execute();
       });
     });
   }
 
-  async removeMember({ namespaceId, userId }: NamespaceMemberParams): Promise<RepositoryResult<void>> {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const members = this.memberCollectionBuilder(tx);
-        const result = await members.deleteOne({ namespaceId, userId }, this.getOperationOptions(tx));
-        if (result.deletedCount === 0) throw new RepositoryNotFoundError();
+  async removePermission({ namespaceId, userId }: any) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const res = await conn
+          .deleteFrom('namespace_permissions')
+          .where('namespaceId', '=', namespaceId)
+          .where('userId', '=', userId)
+          .execute();
+        if (!res) throw new RepositoryNotFoundError();
       });
     });
   }
 
-  async isMember({ namespaceId, userId }: NamespaceMemberParams): Promise<RepositoryResult<boolean>> {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const members = this.memberCollectionBuilder(tx);
-        const member = await members.findOne({ namespaceId, userId }, this.getOperationOptions(tx));
-
-        return member !== null;
+  async isMember({ namespaceId, userId }: any) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const res = await conn
+          .selectFrom('namespace_permissions')
+          .select('userId')
+          .where('namespaceId', '=', namespaceId)
+          .where('userId', '=', userId)
+          .executeTakeFirst();
+        return !!res;
       });
     });
   }
 
-  async findMembers(namespaceId: string): Promise<RepositoryResult<NamespaceMemberDocument[]>> {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const members = this.memberCollectionBuilder(tx);
-
-        return await members.find({ namespaceId }, this.getOperationOptions(tx)).sort({ userId: 1 }).toArray();
+  async findPermissions(namespaceId: string) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        return conn
+          .selectFrom('namespace_permissions')
+          .selectAll()
+          .where('namespaceId', '=', namespaceId)
+          .orderBy('userId', 'asc')
+          .execute();
       });
     });
   }
 
-  async find(query: object, userId: string, limit?: number): Promise<RepositoryResult<NamespaceDocument[]>> {
-    return await repositorySafe(async () => {
-      const parsedQuery = NamespaceFilterSchema.parse(query);
-      return await execute(async (tx) => {
-        const members = this.memberCollectionBuilder(tx);
-        const namespaces = this.collectionBuilder(tx);
-        const options = this.getOperationOptions(tx);
-        const memberships = await members.find({ userId }, options).sort({ namespaceId: 1 }).toArray();
-        const namespaceIds = memberships.map((membership) => membership.namespaceId);
-        const filter = { $and: [{ $or: [{ id: { $in: namespaceIds } }, { isPrivate: false }] }, parsedQuery] };
-        const res = await namespaces.find(filter, options).sort({ id: 1 }).limit(resolveLimit(limit, true)).toArray();
-        return res;
+  async find(query: any, userId: string, sortKey: string, limit?: number) {
+    return repositorySafe(async () => {
+      const parsed = NamespaceFilterSchema.parse(query);
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const own = conn
+          .selectFrom('namespaces')
+          .selectAll()
+          .where((eb) =>
+            eb.or([
+              eb('isPrivate', '=', false),
+              eb.exists(
+                conn
+                  .selectFrom('namespace_permissions')
+                  .select('userId')
+                  .whereRef('namespace_permissions.namespaceId', '=', eb.ref('namespaces.id'))
+                  .where('userId', '=', userId)
+              ),
+            ])
+          );
+        const rows = applyNamespaceFilter(own, parsed).orderBy(sortKey).limit(calcLimit(limit)).execute();
+        return rows;
       });
     });
   }
 
-  async findWithCursor(
-    query: object,
-    userId: string,
-    cursor?: string,
-    chunkSize?: number
-  ): Promise<RepositoryResult<GetDocumentListResponse<NamespaceDocument>>> {
-    const limit = resolveLimit(chunkSize);
-    const res = await this.find(cursor ? { ...query, id: { gt: cursor } } : query, userId, limit + 1);
-    if (!res.ok) return res;
-    if (res.data.length > limit)
-      return {
-        ...res,
-        data: { items: res.data.slice(0, limit), hasMore: true, nextCursor: res.data[limit - 1].id },
-      };
-    else return { ...res, data: { items: res.data, hasMore: false } };
-  }
-
-  async checkPermissions({ namespaceId, userId }: CheckPermissionsParmas) {
-    return await repositorySafe(async () => {
-      return await execute(async (tx) => {
-        const members = this.memberCollectionBuilder(tx);
-        const member = await members.findOne({ namespaceId, userId });
-        if (!member) throw new RepositoryNotFoundError();
-        return member.permissions;
+  async checkPermissions({ namespaceId, userId }: any) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const permissions = await conn
+          .selectFrom('namespace_permissions')
+          .select('permission')
+          .where('namespaceId', '=', namespaceId)
+          .where('userId', '=', userId)
+          .execute();
+        return permissions.map((permission) => permission.permission);
       });
     });
-  }
-
-  private createOwnerPermissions(): NamespaceMemberPermissions {
-    return {
-      read: true,
-      create: true,
-      update: true,
-      delete: true,
-      admin: true,
-    };
-  }
-
-  private getOperationOptions(tx: TxContext) {
-    return tx.session ? { session: tx.session } : undefined;
   }
 }

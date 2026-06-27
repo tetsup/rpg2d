@@ -1,11 +1,11 @@
 import z from 'zod';
 import type { ResourceType } from '@sharedTypes/resource/common';
-import { NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
+import { IdSchema, NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
 import { resolveResourceSchema } from '@schema/resource/common/resolver';
-import { createFilterSchema } from '@schema/common/search';
 
 export const createResourceMetaSchema = <T extends ResourceType>(type: T, isValid: boolean) =>
   z.object({
+    id: IdSchema,
     namespace: NamespaceSchema,
     type: z.literal(type),
     name: ResourceNameSchema,
@@ -22,6 +22,3 @@ export const createInvalidResourceDocumentSchema = (type: ResourceType) =>
 
 export const createResourceDocumentSchema = (type: ResourceType) =>
   z.union([createValidResourceDocumentSchema(type), createInvalidResourceDocumentSchema(type)]);
-
-export const createResourceFilterSchema = (type: ResourceType) =>
-  createFilterSchema(createValidResourceDocumentSchema(type));

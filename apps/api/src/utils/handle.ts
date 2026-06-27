@@ -1,6 +1,6 @@
 import type { Context, Env } from 'hono';
+import { RepositoryResult } from '@database/repositories/utils/common';
 import { ApiError } from '../errors/http-error';
-import { RepositoryResult } from '@database/repositories/util';
 
 function resolveResponse(res: RepositoryResult<any>, c: Context<any>) {
   if (res.ok) return c.json(res.data ?? {}, 200);
