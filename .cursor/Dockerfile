@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && node --version | grep -q '^v24\.'
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
@@ -53,5 +54,16 @@ RUN id -u ubuntu &>/dev/null || useradd -m -s /bin/bash ubuntu
 RUN groupadd -f docker && usermod -aG docker ubuntu
 RUN usermod -aG sudo ubuntu
 RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu
+
+# Cloud Agents prepend /exec-daemon to PATH at runtime (Node 22). Prefer /usr/bin (Node 24).
+RUN printf '%s\n' \
+    '# Prefer Node.js 24 from nodesource over exec-daemon Node.js 22.' \
+    'export PATH="/usr/bin:$PATH"' \
+    > /etc/profile.d/rpg2d-node-path.sh
+
+RUN printf '%s\n' \
+    '# Prefer Node.js 24 from nodesource over exec-daemon Node.js 22.' \
+    'export PATH="/usr/bin:$PATH"' \
+    >> /home/ubuntu/.bashrc
 
 WORKDIR /workspace

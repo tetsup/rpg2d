@@ -35,7 +35,7 @@ async function runMigrations(connectionString: string, schema: string) {
     dir: 'migrations',
     direction: 'up',
     migrationsTable: 'pgmigrations',
-    schema: [schema, 'public'],
+    schema: [schema],
     noLock: true,
   });
 }

@@ -16,9 +16,13 @@ export function up(pgm: MigrationBuilder) {
   pgm.createIndex('resources', 'namespace');
   pgm.createIndex('resources', 'type');
   pgm.createIndex('resources', 'name');
-  pgm.createIndex('resources', [{ name: 'description', opclass: 'gin_trgm_ops' }], {
-    method: 'gin',
-  });
+  pgm.createIndex(
+    'resources',
+    [{ name: 'description', opclass: { schema: 'public', name: 'gin_trgm_ops' } }],
+    {
+      method: 'gin',
+    }
+  );
   pgm.createIndex('resources', 'data', {
     method: 'gin',
   });
