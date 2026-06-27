@@ -2,7 +2,8 @@ import type { Kysely } from 'kysely';
 import type { Database } from '@sharedTypes/database/collection';
 import { execute } from '@database/client/pg-client';
 import { UserDocumentSchema } from '@schema/database/user';
-import { calcLimit, RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 import { UserFilterSchema } from '@schema/filter/domain';
 import { applyUserFilter } from '@database/filters/user';
 
@@ -59,14 +60,15 @@ export class UserRepository {
     return this.update(data, true);
   }
 
-  async find(query: any, _: string, sortKey: string, limit?: number) {
+  async find(query: any, _: string, sortKey: string, limit?: number, options?: FindOptions) {
     return repositorySafe(async () => {
       const parsed = UserFilterSchema.parse(query);
+      const dbFetchLimit = resolveDbFetchLimit(limit, options);
       return execute(async (db) => {
         const conn = this.dbFactory(db);
         return await applyUserFilter(conn.selectFrom('users').selectAll(), parsed)
           .orderBy(sortKey)
-          .limit(calcLimit(limit))
+          .limit(dbFetchLimit)
           .execute();
       });
     });

@@ -71,7 +71,3 @@ function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
   // fallback
   return { ok: false, reason: 'unknown', error };
 }
-
-export function calcLimit(limit?: number) {
-  return Math.max(Math.min(Math.floor(limit ?? 100), 1000), 10);
-}

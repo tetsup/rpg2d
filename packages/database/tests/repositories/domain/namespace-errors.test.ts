@@ -45,7 +45,6 @@ describe('namespace repository error mapping', () => {
   });
 
   describe('delete', () => {
-    // TODO: Repository delete does not check numDeletedRows yet; it currently succeeds for missing namespaces.
     it('returns not_found when missing', async () => {
       const result = await new NamespaceRepository().delete('missing');
 

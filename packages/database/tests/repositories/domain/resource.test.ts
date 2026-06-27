@@ -199,7 +199,6 @@ describe('ResourceRepository', () => {
   });
 
   describe('find', () => {
-    // TODO: applyResourceFilter currently does not assign the applyFilter return value in production code.
     beforeEach(async () => {
       await seedResourceFindFixtures();
     });
