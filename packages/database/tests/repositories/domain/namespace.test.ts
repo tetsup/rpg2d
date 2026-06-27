@@ -68,6 +68,7 @@ describe('namespace repository', () => {
 
   describe('get', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample', presenceName: 'Sample' });
     });
 
@@ -81,6 +82,7 @@ describe('namespace repository', () => {
 
   describe('update', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample', presenceName: 'Sample' });
     });
 
@@ -105,7 +107,10 @@ describe('namespace repository', () => {
 
   describe('delete', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample', presenceName: 'Sample' });
+      await insertUser({ id: 'owner-user' });
+      await insertUser({ id: 'member-user' });
       await insertPermission('sample', 'owner-user', ownerPermission);
       await insertPermission('sample', 'member-user', memberPermission);
     });
@@ -141,7 +146,9 @@ describe('namespace repository', () => {
 
   describe('addPermission', () => {
     it('adds member', async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
+      await insertUser({ id: 'member-user' });
 
       const result = await new NamespaceRepository().addPermission({
         namespaceId: 'sample',
@@ -166,7 +173,9 @@ describe('namespace repository', () => {
 
   describe('removePermission', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
+      await insertUser({ id: 'member-user' });
       await insertPermission('sample', 'member-user', memberPermission);
     });
 
@@ -193,7 +202,9 @@ describe('namespace repository', () => {
 
   describe('isMember', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
+      await insertUser({ id: 'member-user' });
       await insertPermission('sample', 'member-user', memberPermission);
     });
 
@@ -220,7 +231,10 @@ describe('namespace repository', () => {
 
   describe('checkPermissions', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample', presenceName: 'Sample' });
+      await insertUser({ id: 'owner-user' });
+      await insertUser({ id: 'member-user' });
       await insertPermission('sample', 'owner-user', ownerPermission);
       await insertPermission('sample', 'member-user', memberPermission);
     });
@@ -248,8 +262,12 @@ describe('namespace repository', () => {
 
   describe('findPermissions', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
       await insertNamespace({ id: 'other' });
+      await insertUser({ id: 'user-b' });
+      await insertUser({ id: 'user-a' });
+      await insertUser({ id: 'user-c' });
       await insertPermission('sample', 'user-b', memberPermission);
       await insertPermission('sample', 'user-a', memberPermission);
       await insertPermission('other', 'user-c', memberPermission);
@@ -287,9 +305,9 @@ describe('namespace repository', () => {
         isPrivate: true,
       });
 
-      await insertPermission('namespace-b', 'member-user', memberPermission, { ensureUser: false });
-      await insertPermission('namespace-a', 'other-user', memberPermission, { ensureUser: false });
-      await insertPermission('namespace-c', 'other-user', memberPermission, { ensureUser: false });
+      await insertPermission('namespace-b', 'member-user', memberPermission);
+      await insertPermission('namespace-a', 'other-user', memberPermission);
+      await insertPermission('namespace-c', 'other-user', memberPermission);
     });
 
     it('returns namespaces either for user memberships or public', async () => {

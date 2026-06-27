@@ -52,15 +52,8 @@ export function createNamespaceInput(
   };
 }
 
-export async function insertNamespace(
-  overrides: Partial<NamespaceDocument> = {},
-  options: { ensureCreatedByUser?: boolean } = {}
-) {
+export async function insertNamespace(overrides: Partial<NamespaceDocument> = {}) {
   const namespace = createNamespaceInput(overrides);
-
-  if (options.ensureCreatedByUser !== false) {
-    await insertUser({ id: namespace.createdBy });
-  }
 
   await execute(async (db) => {
     await db
@@ -95,13 +88,8 @@ export function createPermissionInput(
 export async function insertPermission(
   namespaceId: string,
   userId: string,
-  permission: NamespacePermissionDocument['permission'] = memberPermission,
-  options: { ensureUser?: boolean } = {}
+  permission: NamespacePermissionDocument['permission'] = memberPermission
 ) {
-  if (options.ensureUser !== false) {
-    await insertUser({ id: userId });
-  }
-
   const now = new Date();
   const member = createPermissionInput(namespaceId, userId, permission);
 
@@ -152,16 +140,8 @@ export function createPlayerDocument(path: ResourcePath = validPlayerPath, data 
 export async function insertResourceRow(
   path: ResourcePath,
   data: object,
-  options: { ensureNamespace?: boolean; ensurePermissionForUser?: string; description?: string } = {}
+  options: { description?: string } = {}
 ) {
-  if (options.ensureNamespace !== false) {
-    await insertNamespace({ id: path.namespace });
-  }
-
-  if (options.ensurePermissionForUser) {
-    await insertPermission(path.namespace, options.ensurePermissionForUser);
-  }
-
   const now = new Date();
   const id = buildId(path);
 
@@ -185,12 +165,8 @@ export async function insertResourceRow(
   return { id, path, data };
 }
 
-export async function insertResource(
-  path: ResourcePath = validPlayerPath,
-  data = validPlayerData,
-  options: { ensureNamespace?: boolean; ensurePermissionForUser?: string } = {}
-) {
-  return insertResourceRow(path, data, options);
+export async function insertResource(path: ResourcePath = validPlayerPath, data = validPlayerData) {
+  return insertResourceRow(path, data);
 }
 
 const minimalImageData = {
@@ -203,11 +179,7 @@ export async function insertSkinResource(namespace: string, skinName: string, im
   const directions = ['left', 'right', 'up', 'down'] as const;
 
   for (const direction of directions) {
-    await insertResourceRow(
-      { namespace, type: 'image', name: `${imagePrefix}-${direction}` },
-      minimalImageData,
-      { ensureNamespace: false }
-    );
+    await insertResourceRow({ namespace, type: 'image', name: `${imagePrefix}-${direction}` }, minimalImageData);
   }
 
   await insertResourceRow(
@@ -219,8 +191,7 @@ export async function insertSkinResource(namespace: string, skinName: string, im
         up: `${namespace}/image/${imagePrefix}-up`,
         down: `${namespace}/image/${imagePrefix}-down`,
       },
-    },
-    { ensureNamespace: false }
+    }
   );
 }
 
@@ -228,18 +199,9 @@ export async function insertSkinDependencies(namespace = 'sample', skinName = 'h
   await insertSkinResource(namespace, skinName);
 }
 
-export async function insertPlayerWithDependencies(
-  path: ResourcePath = validPlayerPath,
-  options: { ensurePermissionForUser?: string; ensureNamespace?: boolean } = {}
-) {
-  if (options.ensureNamespace !== false) {
-    await insertNamespace({ id: path.namespace });
-  }
+export async function insertPlayerWithDependencies(path: ResourcePath = validPlayerPath) {
   await insertSkinDependencies(path.namespace, 'hero');
-  return insertResource(path, validPlayerData, {
-    ensureNamespace: false,
-    ensurePermissionForUser: options.ensurePermissionForUser,
-  });
+  return insertResource(path, validPlayerData);
 }
 
 export async function insertResourceEdge(from: string, to: string, type = 'reference') {

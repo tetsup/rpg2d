@@ -1,6 +1,6 @@
 import { NamespaceRepository } from '@database/repositories/namespace';
 import { clearTables } from './helpers/db';
-import { insertNamespace, insertPermission, memberPermission } from './helpers/fixtures';
+import { insertNamespace, insertPermission, insertUser, memberPermission } from './helpers/fixtures';
 
 describe('namespace repository error mapping', () => {
   beforeEach(async () => {
@@ -10,6 +10,7 @@ describe('namespace repository error mapping', () => {
 
   describe('create', () => {
     it('maps namespace insert failure', async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
 
       const result = await new NamespaceRepository().create(
@@ -55,7 +56,9 @@ describe('namespace repository error mapping', () => {
 
   describe('addPermission', () => {
     it('returns already_exists when duplicated', async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
+      await insertUser({ id: 'member-user' });
       await insertPermission('sample', 'member-user', memberPermission);
 
       const result = await new NamespaceRepository().addPermission({
@@ -84,6 +87,7 @@ describe('namespace repository error mapping', () => {
 
   describe('checkPermissions', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample', presenceName: 'Sample' });
     });
 
