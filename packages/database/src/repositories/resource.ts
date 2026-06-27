@@ -83,6 +83,7 @@ export class ResourceRepository {
           .updateTable('resources')
           .set({
             name: parsed.name,
+            isValid: parsed.isValid,
             data: parsed,
             updatedAt: now,
           })

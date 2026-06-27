@@ -140,7 +140,7 @@ export function createPlayerDocument(path: ResourcePath = validPlayerPath, data 
 export async function insertResourceRow(
   path: ResourcePath,
   data: object,
-  options: { description?: string } = {}
+  options: { description?: string; isValid?: boolean } = {}
 ) {
   const now = new Date();
   const id = buildId(path);
@@ -155,6 +155,7 @@ export async function insertResourceRow(
         name: path.name,
         version: 0,
         description: options.description ?? '',
+        isValid: options.isValid ?? true,
         data,
         createdAt: now,
         updatedAt: now,

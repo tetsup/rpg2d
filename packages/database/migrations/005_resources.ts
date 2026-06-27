@@ -8,6 +8,7 @@ export function up(pgm: MigrationBuilder) {
     name: { type: 'text', notNull: true },
     version: { type: 'integer', notNull: true },
     description: { type: 'text' },
+    isValid: { type: 'boolean', notNull: true, default: false },
     data: { type: 'jsonb', notNull: true },
     createdAt: { type: 'timestamp', notNull: true },
     updatedAt: { type: 'timestamp', notNull: true },
