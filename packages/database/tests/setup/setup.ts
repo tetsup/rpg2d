@@ -17,21 +17,24 @@ beforeAll(async () => {
   schemaName = createSchemaName();
   await client.query(`CREATE SCHEMA IF NOT EXISTS ${schemaName}`);
   await client.query(`SET search_path TO ${schemaName}`);
-  await runMigrations(connectionString);
+  process.env.DATABASE_SCHEMA = schemaName;
+  await runMigrations(connectionString, schemaName);
 });
 
 afterAll(async () => {
   if (!client) return;
 
+  delete process.env.DATABASE_SCHEMA;
   await client.query(`DROP SCHEMA IF EXISTS ${schemaName} CASCADE`);
   await client.end();
 });
 
-async function runMigrations(connectionString: string) {
+async function runMigrations(connectionString: string, schema: string) {
   await runner({
     databaseUrl: connectionString,
     dir: 'migrations',
     direction: 'up',
     migrationsTable: 'pgmigrations',
+    schema,
   });
 }
