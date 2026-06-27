@@ -46,6 +46,9 @@ Before running database tests:
 # Wait until PostgreSQL is ready
 until pg_isready -h 127.0.0.1 -p 5432; do sleep 1; done
 
+# Enable pg_trgm and apply public-schema migrations (required once per fresh DB volume)
+pnpm db:migrate
+
 # Run database package tests
 pnpm test:database
 ```
@@ -56,19 +59,15 @@ If the `postgres` terminal is not running, start it manually:
 docker compose up postgres
 ```
 
+After `docker compose down -v`, run `pnpm db:migrate` again before tests.
+
 ### How database tests work
 
-- `packages/database/tests/setup/setup.ts` runs migrations before tests.
+- Each test file gets an isolated `test_<random>` schema; `packages/database/tests/setup/setup.ts` runs migrations into that schema before tests.
+- The `pg_trgm` extension is **not** created during test migrations (to avoid parallel races). Migration `001_extensions` only checks that `pg_trgm` exists; run `pnpm db:migrate` on the default (`public`) schema first.
 - Integration tests truncate tables between cases via helpers in `packages/database/tests/repositories/domain/helpers/`.
 - `DATABASE_URL` is read by `pg-client`; do not commit credentials to the repository.
-
-### Parallelism note
-
-Database integration tests share the `public` schema. If tests flake under parallel workers, run:
-
-```bash
-cd packages/database && pnpm vitest run --maxWorkers=1
-```
+- Database integration tests run in parallel by default; no `--maxWorkers=1` workaround is needed when `pg_trgm` is already enabled.
 
 ### Running the apps (dev mode)
 
@@ -84,7 +83,7 @@ CI on `main` is currently red. Before assuming you broke something, verify again
 
 - `pnpm lint` reports pre-existing errors (unused vars, `react-refresh`, `preserve-caught-error`).
 - `pnpm typecheck` fails in `apps/runtime` (TS 6 `baseUrl` deprecation, TS5101); typecheck is not part of CI.
-- `pnpm test:schema` has 1 failing validation test; `pnpm test:database` has multiple failing repository tests (e.g. fixtures inserting a duplicate user) that fail even per-file in isolation. `pnpm test:engine` and `pnpm test:api` pass cleanly.
+- `pnpm test:schema` has 1 failing validation test; `pnpm test:database` has 2 failing test files (5 tests total; e.g. `namespace-errors` removePermission, `resource` create/find). `pnpm test:engine` and `pnpm test:api` pass cleanly.
 
 ### What not to change without explicit request
 
