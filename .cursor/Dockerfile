@@ -47,7 +47,8 @@ RUN update-alternatives --set iptables /usr/sbin/iptables-legacy && \
 # UBUNTU USER (Cursor Cloud Agents recommendation)
 ########################################################
 
-RUN echo 'PasswordAuthentication no\nChallengeResponseAuthentication no\nUsePAM no' > /etc/ssh/sshd_config.d/disable_password_auth.conf
+RUN mkdir -p /etc/ssh/sshd_config.d && \
+    printf '%s\n' 'PasswordAuthentication no' 'ChallengeResponseAuthentication no' 'UsePAM no' > /etc/ssh/sshd_config.d/disable_password_auth.conf
 RUN id -u ubuntu &>/dev/null || useradd -m -s /bin/bash ubuntu
 RUN groupadd -f docker && usermod -aG docker ubuntu
 RUN usermod -aG sudo ubuntu
