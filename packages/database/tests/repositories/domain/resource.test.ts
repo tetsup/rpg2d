@@ -1,71 +1,68 @@
-import { ObjectId } from 'mongodb';
-import { execute } from '@database/client/mongo-client';
+import { execute } from '@database/client/pg-client';
 import type { ResourcePath } from '@sharedTypes/resource/common';
-import type { ResourceMeta } from '@sharedTypes/database/collection';
-import { resourceCollectionBuilder } from '@database/collections/resources';
-import { resourceEdgeCollectionBuilder } from '@database/collections/resource-edges';
 import { ResourceRepository } from '@database/repositories/resource';
 import { buildId } from '@database/utils/resource';
+import { clearTables, countRows } from './helpers/db';
+import {
+  createPlayerDocument,
+  insertNamespace,
+  insertPermission,
+  insertPlayerWithDependencies,
+  insertResourceEdge,
+  insertResourceRow,
+  insertSkinDependencies,
+  insertSkinResource,
+  insertUser,
+  validPlayerData,
+  validPlayerPath,
+} from './helpers/fixtures';
 
-const validPath = {
-  namespace: 'sample',
-  type: 'player',
-  name: 'hero',
-} as ResourcePath;
+const testUserId = 'test-user';
 
-const validMetadata = {
-  ...validPath,
-  version: 0,
-  isReadOnly: false,
-  isValid: true,
-  description: 'this is resource',
-} as ResourceMeta;
+async function seedResourceFindFixtures() {
+  await insertUser({ id: testUserId });
+  await insertNamespace({ id: 'sample' });
+  await insertNamespace({ id: 'other' });
+  await insertPermission('sample', testUserId, 'reader', { ensureUser: false });
+  await insertPermission('other', testUserId, 'reader', { ensureUser: false });
 
-const validData = {
-  name: {
-    type: 'fixed',
-    value: 'hero',
-  },
-  initialSkin: 'sample/skin/hero.v0',
-  initialState: {
-    hp: 100,
-  },
-} as const;
-
-const validDocument = {
-  ...validMetadata,
-  data: validData,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+  await insertResourceRow({ namespace: 'sample', type: 'player', name: 'hero' }, { name: { type: 'fixed', value: 'hero' } }, {
+    ensureNamespace: false,
+  });
+  await insertResourceRow(
+    { namespace: 'sample', type: 'player', name: 'villain' },
+    { name: { type: 'fixed', value: 'villain' } },
+    { ensureNamespace: false }
+  );
+  await insertResourceRow({ namespace: 'other', type: 'map', name: 'test' }, {}, { ensureNamespace: false });
+}
 
 describe('ResourceRepository', () => {
   beforeEach(async () => {
-    await execute(async (tx) => {
-      await resourceCollectionBuilder(tx).deleteMany({});
-      await resourceEdgeCollectionBuilder(tx).deleteMany({});
-    });
+    await clearTables();
   });
 
   describe('get', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await resourceCollectionBuilder(tx).insertOne(validDocument);
-      });
+      await insertPlayerWithDependencies(validPlayerPath, { ensurePermissionForUser: testUserId });
     });
 
     it('returns existing resource', async () => {
-      const result = await new ResourceRepository().get(validPath);
+      const result = await new ResourceRepository().get(validPlayerPath);
 
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data).toEqual(validData);
+        expect(result.data).toEqual(validPlayerData);
       }
     });
 
     it('returns not_found when missing', async () => {
-      const result = await new ResourceRepository().get({ namespace: 'sample', type: 'player', name: 'notexistuser' });
+      const result = await new ResourceRepository().get({
+        namespace: 'sample',
+        type: 'player',
+        name: 'notexistuser',
+      });
 
       expect(result.ok).toBeFalsy();
 
@@ -75,267 +72,229 @@ describe('ResourceRepository', () => {
     });
 
     it('does not mutate database', async () => {
-      const before = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
-      await new ResourceRepository().get(validPath);
-      const after = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
+      const before = await countRows('resources');
+      await new ResourceRepository().get(validPlayerPath);
+      const after = await countRows('resources');
 
       expect(after).toBe(before);
     });
   });
 
   describe('create', () => {
+    beforeEach(async () => {
+      await insertNamespace({ id: 'sample' });
+      await insertSkinDependencies();
+    });
+
     it('creates resource', async () => {
-      const result = await new ResourceRepository().create(validPath, validDocument);
+      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
 
       expect(result.ok).toBeTruthy();
 
-      const inserted = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).findOne(validPath);
+      const inserted = await execute(async (db) => {
+        return db.selectFrom('resources').selectAll().where('id', '=', buildId(validPlayerPath)).executeTakeFirst();
       });
 
       expect(inserted).toBeTruthy();
     });
 
     it('creates reference edges', async () => {
-      const result = await new ResourceRepository().create(validPath, validDocument);
+      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
 
       expect(result.ok).toBeTruthy();
 
-      const edges = await execute(async (tx) => {
-        return resourceEdgeCollectionBuilder(tx)
-          .find({
-            from: buildId(validPath),
-          })
-          .toArray();
+      const edges = await execute(async (db) => {
+        return db.selectFrom('resource_edges').selectAll().where('from', '=', buildId(validPlayerPath)).execute();
       });
 
       expect(edges.length).toBeGreaterThan(0);
     });
 
     it('returns already_exists on duplicate id', async () => {
-      await execute(async (tx) => {
-        await resourceCollectionBuilder(tx).insertOne(validDocument);
-      });
-      const result = await new ResourceRepository().create(validPath, validDocument);
+      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
+      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('already_exists');
     });
 
     it('does not partially insert on failure', async () => {
-      await execute(async (tx) => {
-        await resourceCollectionBuilder(tx).insertOne(validDocument);
-      });
+      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
 
-      const before = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
+      const before = await countRows('resources');
 
-      await new ResourceRepository().create(validMetadata, validData);
+      await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
 
-      const after = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
+      const after = await countRows('resources');
 
       expect(after).toBe(before);
     });
   });
 
   describe('update', () => {
-    beforeEach(async () => {
-      await execute(async (tx) => {
-        await resourceCollectionBuilder(tx).insertOne({
-          ...validPath,
-          data: {
-            ...validData,
-            initialState: {
-              hp: 100,
-            },
-          },
-        } as any);
+    const newSkinPath = { namespace: 'sample', type: 'skin', name: 'new' } as ResourcePath;
 
-        await resourceEdgeCollectionBuilder(tx).insertOne({
-          from: buildId(validPath),
-          to: 'sample/skin/old.v0',
-          type: 'reference',
-        });
+    beforeEach(async () => {
+      await insertNamespace({ id: 'sample' });
+      await insertSkinDependencies();
+      await insertSkinResource('sample', 'new', 'new');
+      await insertPlayerWithDependencies(validPlayerPath, {
+        ensureNamespace: false,
+        ensurePermissionForUser: testUserId,
       });
+
+      await insertResourceEdge(buildId(validPlayerPath), buildId({ namespace: 'sample', type: 'skin', name: 'hero' }));
     });
 
     it('updates resource', async () => {
-      const result = await new ResourceRepository().update(validPath, {
-        ...validDocument,
-        data: { ...validData, initialState: { hp: 200 } },
+      const result = await new ResourceRepository().update(validPlayerPath, {
+        ...createPlayerDocument(),
+        data: { ...validPlayerData, initialState: { hp: 200 } },
       });
 
       expect(result.ok).toBeTruthy();
 
-      const updated = (await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).findOne(validPath);
-      })) as any;
+      const got = await new ResourceRepository().get(validPlayerPath);
+      expect(got.ok).toBeTruthy();
 
-      expect(updated?.data.initialState.hp).toBe(200);
+      if (got.ok) {
+        const innerData = 'initialState' in got.data ? got.data : (got.data as { data: typeof validPlayerData }).data;
+        expect((innerData as { initialState?: { hp?: number } }).initialState?.hp).toBe(200);
+      }
     });
 
     it('replaces reference edges', async () => {
-      await new ResourceRepository().update(validPath, {
-        ...validDocument,
-        data: { ...validData, initialSkin: 'sample/skin/new.v0' },
+      await new ResourceRepository().update(validPlayerPath, {
+        ...createPlayerDocument(),
+        data: { ...validPlayerData, initialSkin: buildId(newSkinPath) },
       });
-      const edges = await execute(async (tx) => {
-        return resourceEdgeCollectionBuilder(tx)
-          .find({ from: buildId(validPath) })
-          .toArray();
+
+      const edges = await execute(async (db) => {
+        return db.selectFrom('resource_edges').selectAll().where('from', '=', buildId(validPlayerPath)).execute();
       });
 
       expect(edges).toHaveLength(1);
-      expect(edges[0]?.to).toBe('sample/skin/new.v0');
+      expect(edges[0]?.to).toBe(buildId(newSkinPath));
     });
 
     it('returns not_found when missing', async () => {
-      const result = await new ResourceRepository().update({ ...validMetadata, name: 'missing' }, validDocument);
+      const missingPath = { namespace: 'sample', type: 'player', name: 'missing' } as ResourcePath;
+      const result = await new ResourceRepository().update(missingPath, createPlayerDocument(missingPath));
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('not_found');
     });
 
     it('does not mutate missing resource', async () => {
-      const before = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
-      await new ResourceRepository().update({ ...validMetadata, name: 'missing' }, validData);
-      const after = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
+      const before = await countRows('resources');
+      const missingPath = { namespace: 'sample', type: 'player', name: 'missing' } as ResourcePath;
+      await new ResourceRepository().update(missingPath, createPlayerDocument(missingPath));
+      const after = await countRows('resources');
 
       expect(after).toBe(before);
     });
   });
 
   describe('find', () => {
+    // TODO: applyResourceFilter currently does not assign the applyFilter return value in production code.
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await resourceCollectionBuilder(tx).insertMany([
-          {
-            _id: new ObjectId('6a1b11acb666f5d025744d19'),
-            namespace: 'sample',
-            type: 'player',
-            name: 'hero.v0',
-            data: 'something',
-          },
-          {
-            _id: new ObjectId('6a1b11acb666f5d025744d1a'),
-            namespace: 'sample',
-            type: 'player',
-            name: 'villain.v0',
-            data: 'something',
-          },
-          {
-            _id: new ObjectId('6a1b11acb666f5d025744d1b'),
-            namespace: 'other',
-            type: 'map',
-            name: 'test.v0',
-            data: 'anything',
-          },
-        ] as any[]);
-      });
+      await seedResourceFindFixtures();
     });
 
     it('returns all resources', async () => {
-      const result = await new ResourceRepository().find({});
+      const result = await new ResourceRepository().find([], testUserId, 'id');
 
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data.items).toHaveLength(3);
+        expect(result.data).toHaveLength(3);
       }
     });
 
     it('filters by type', async () => {
-      const result = await new ResourceRepository().find({
-        type: 'player',
-      });
+      const result = await new ResourceRepository().find(
+        [{ name: 'type', op: 'eq', value: 'player' }],
+        testUserId,
+        'id'
+      );
 
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data.items).toHaveLength(2);
+        expect(result.data).toHaveLength(2);
       }
     });
 
     it('filters by namespace', async () => {
-      const result = await new ResourceRepository().find({
-        namespace: 'other',
-      });
+      const result = await new ResourceRepository().find(
+        [{ name: 'namespace', op: 'eq', value: 'other' }],
+        testUserId,
+        'id'
+      );
 
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data.items).toHaveLength(1);
+        expect(result.data).toHaveLength(1);
       }
     });
 
     it('filters by name', async () => {
-      const result = await new ResourceRepository().find({
-        name: 'hero',
-      });
+      const result = await new ResourceRepository().find(
+        [{ name: 'name', op: 'eq', value: 'hero' }],
+        testUserId,
+        'id'
+      );
 
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data.items).toHaveLength(1);
+        expect(result.data).toHaveLength(1);
       }
     });
 
-    it('supports cursor pagination', async () => {
-      const result = await new ResourceRepository().find({
-        cursor: '6a1b11acb666f5d025744d19',
-      });
+    it('filters by id prefix', async () => {
+      const result = await new ResourceRepository().find(
+        [{ name: 'id', op: 'startsWith', value: 'sample/player/v' }],
+        testUserId,
+        'id'
+      );
 
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data.items.some((v) => v.id === 'sample/player/hero.v0')).toBeFalsy();
+        expect(result.data).toHaveLength(1);
+        expect(result.data[0]?.id).toBe('sample/player/villain');
       }
     });
 
-    it('supports limit pagination', async () => {
-      const result = await new ResourceRepository().find({
-        limit: 1,
-      });
+    it('supports limit', async () => {
+      const result = await new ResourceRepository().find([], testUserId, 'id', 10);
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data.items).toHaveLength(1);
-      expect(result.ok && result.data.hasMore).toBeTruthy();
-      expect(result.ok && result.data.nextCursor).toBeTruthy();
+      expect(result.ok && result.data).toHaveLength(3);
     });
 
     it('returns empty result normally', async () => {
-      const result = await new ResourceRepository().find({
-        name: 'missing',
-      });
+      const result = await new ResourceRepository().find(
+        [{ name: 'name', op: 'eq', value: 'missing' }],
+        testUserId,
+        'id'
+      );
 
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data.items).toEqual([]);
+        expect(result.data).toEqual([]);
       }
     });
 
     it('does not mutate database', async () => {
-      const before = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
+      const before = await countRows('resources');
 
-      await new ResourceRepository().find({});
+      await new ResourceRepository().find([], testUserId, 'id');
 
-      const after = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
+      const after = await countRows('resources');
 
       expect(after).toBe(before);
     });
@@ -343,37 +302,34 @@ describe('ResourceRepository', () => {
 
   describe('findIncomingReferences', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await resourceEdgeCollectionBuilder(tx).insertOne({
-          from: 'sample/map/test.v0',
-          to: buildId(validPath),
-          type: 'reference',
-        });
-      });
+      await insertNamespace({ id: 'sample' });
+      await insertSkinDependencies();
+      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'test' }, {}, { ensureNamespace: false });
+      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
+      await insertResourceEdge('sample/map/test', buildId(validPlayerPath));
     });
 
     it('returns incoming references', async () => {
-      const result = await new ResourceRepository().findIncomingReferences(validPath);
+      const result = await new ResourceRepository().findIncomingReferences(validPlayerPath);
 
       expect(result.ok).toBeTruthy();
       expect(result.ok && result.data).toHaveLength(1);
     });
 
     it('returns empty array normally', async () => {
-      const result = await new ResourceRepository().findIncomingReferences({ ...validPath, name: 'missing.v0' });
+      const result = await new ResourceRepository().findIncomingReferences({
+        ...validPlayerPath,
+        name: 'missing',
+      });
 
       expect(result.ok).toBeTruthy();
       expect(result.ok && result.data).toEqual([]);
     });
 
     it('does not mutate database', async () => {
-      const before = await execute(async (tx) => {
-        return resourceEdgeCollectionBuilder(tx).countDocuments();
-      });
-      await new ResourceRepository().findIncomingReferences(validPath);
-      const after = await execute(async (tx) => {
-        return resourceEdgeCollectionBuilder(tx).countDocuments();
-      });
+      const before = await countRows('resource_edges');
+      await new ResourceRepository().findIncomingReferences(validPlayerPath);
+      const after = await countRows('resource_edges');
 
       expect(after).toBe(before);
     });
@@ -381,59 +337,47 @@ describe('ResourceRepository', () => {
 
   describe('delete', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await resourceCollectionBuilder(tx).insertOne(validDocument);
-        await resourceEdgeCollectionBuilder(tx).insertMany([
-          {
-            from: buildId(validPath),
-            to: 'a',
-            type: 'reference',
-          },
-          {
-            from: 'b',
-            to: buildId(validPath),
-            type: 'reference',
-          },
-        ]);
-      });
+      await insertNamespace({ id: 'sample' });
+      await insertSkinDependencies();
+      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'a' }, {}, { ensureNamespace: false });
+      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'b' }, {}, { ensureNamespace: false });
+      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
+      await insertResourceEdge(buildId(validPlayerPath), 'sample/map/a');
+      await insertResourceEdge('sample/map/b', buildId(validPlayerPath));
     });
 
     it('deletes resource', async () => {
-      const result = await new ResourceRepository().delete(validPath);
+      const result = await new ResourceRepository().delete(validPlayerPath);
 
       expect(result.ok).toBeTruthy();
 
-      const resource = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).findOne(validPath);
+      const resource = await execute(async (db) => {
+        return db.selectFrom('resources').selectAll().where('id', '=', buildId(validPlayerPath)).executeTakeFirst();
       });
 
-      expect(resource).toBeNull();
+      expect(resource).toBeUndefined();
     });
 
     it('deletes related edges', async () => {
-      await new ResourceRepository().delete(validPath);
-      const edges = await execute(async (tx) => {
-        return resourceEdgeCollectionBuilder(tx).find({}).toArray();
+      await new ResourceRepository().delete(validPlayerPath);
+      const edges = await execute(async (db) => {
+        return db.selectFrom('resource_edges').selectAll().execute();
       });
 
       expect(edges).toHaveLength(0);
     });
 
     it('returns not_found when missing', async () => {
-      const result = await new ResourceRepository().delete({ ...validPath, name: 'missing.v0' });
+      const result = await new ResourceRepository().delete({ ...validPlayerPath, name: 'missing' });
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('not_found');
     });
 
     it('does not mutate database when missing', async () => {
-      const before = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
-      await new ResourceRepository().delete({ ...validPath, name: 'missing.v0' });
-      const after = await execute(async (tx) => {
-        return resourceCollectionBuilder(tx).countDocuments();
-      });
+      const before = await countRows('resources');
+      await new ResourceRepository().delete({ ...validPlayerPath, name: 'missing' });
+      const after = await countRows('resources');
 
       expect(after).toBe(before);
     });

@@ -1,39 +1,18 @@
-import type { UserDocument } from '@sharedTypes/database/collection';
-import { execute } from '@database/client/mongo-client';
-import { userCollectionBuilder } from '@database/collections/users';
+import { execute } from '@database/client/pg-client';
 import { UserRepository } from '@database/repositories/user';
+import { clearTables } from './helpers/db';
+import { createUserInput, insertUser } from './helpers/fixtures';
 
-const validUser: Omit<UserDocument, 'createdAt' | 'updatedAt'> = {
-  id: 'auth0|user',
-  presenceName: 'Test User',
-  email: 'user@example.com',
-  avatar: 'https://example.com/avatar.png',
-  roles: ['player'],
-};
-
-function createUserDocument(overrides: Partial<Omit<UserDocument, 'createdAt' | 'updatedAt'>> = {}): UserDocument {
-  const now = new Date();
-
-  return {
-    ...validUser,
-    ...overrides,
-    createdAt: now,
-    updatedAt: now,
-  };
-}
+const validUser = createUserInput();
 
 describe('user repository integration', () => {
   beforeEach(async () => {
-    await execute(async (tx) => {
-      await userCollectionBuilder(tx).deleteMany({});
-    });
+    await clearTables();
   });
 
   describe('get', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await userCollectionBuilder(tx).insertOne(createUserDocument());
-      });
+      await insertUser();
     });
 
     it('returns existing user', async () => {
@@ -43,41 +22,37 @@ describe('user repository integration', () => {
 
       if (result.ok) {
         expect(result.data?.presenceName).toBe('Test User');
-        expect(result.data?.roles).toEqual(['player']);
+        expect(result.data?.isAdmin).toBe(false);
       }
     });
   });
 
   describe('update', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await userCollectionBuilder(tx).insertOne(createUserDocument());
-      });
+      await insertUser();
     });
 
     it('updates user', async () => {
       const result = await new UserRepository().update({
         ...validUser,
         presenceName: 'Updated User',
-        roles: ['admin'],
+        isAdmin: true,
       });
 
       expect(result.ok).toBeTruthy();
 
-      const user = await execute(async (tx) => {
-        return await userCollectionBuilder(tx).findOne({ id: validUser.id });
+      const user = await execute(async (db) => {
+        return await db.selectFrom('users').selectAll().where('id', '=', validUser.id).executeTakeFirst();
       });
 
       expect(user?.presenceName).toBe('Updated User');
-      expect(user?.roles).toEqual(['admin']);
+      expect(user?.isAdmin).toBe(true);
     });
   });
 
   describe('upsert', () => {
     it('updates existing user', async () => {
-      await execute(async (tx) => {
-        await userCollectionBuilder(tx).insertOne(createUserDocument());
-      });
+      await insertUser();
 
       const result = await new UserRepository().upsert({
         ...validUser,
@@ -86,8 +61,8 @@ describe('user repository integration', () => {
 
       expect(result.ok).toBeTruthy();
 
-      const user = await execute(async (tx) => {
-        return await userCollectionBuilder(tx).findOne({ id: validUser.id });
+      const user = await execute(async (db) => {
+        return await db.selectFrom('users').selectAll().where('id', '=', validUser.id).executeTakeFirst();
       });
 
       expect(user?.presenceName).toBe('Upserted User');
@@ -98,12 +73,12 @@ describe('user repository integration', () => {
 
       expect(result.ok).toBeTruthy();
 
-      const user = await execute(async (tx) => {
-        return await userCollectionBuilder(tx).findOne({ id: validUser.id });
+      const user = await execute(async (db) => {
+        return await db.selectFrom('users').selectAll().where('id', '=', validUser.id).executeTakeFirst();
       });
 
       expect(user?.presenceName).toBe('Test User');
-      expect(user?.roles).toEqual(['player']);
+      expect(user?.isAdmin).toBe(false);
     });
   });
 });
