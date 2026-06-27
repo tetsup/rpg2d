@@ -57,6 +57,7 @@ export default defineConfig([
       ],
       'react-hooks/refs': 'off',
       'react-hooks/incompatible-library': 'off',
+      'react-refresh/only-export-components': 'warn',
     },
   },
 ]);
