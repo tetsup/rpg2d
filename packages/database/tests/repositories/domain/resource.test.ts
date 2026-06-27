@@ -8,6 +8,7 @@ import {
   insertNamespace,
   insertPermission,
   insertPlayerWithDependencies,
+  insertResource,
   insertResourceEdge,
   insertResourceRow,
   insertSkinDependencies,
@@ -20,21 +21,19 @@ import {
 const testUserId = 'test-user';
 
 async function seedResourceFindFixtures() {
+  await insertUser({ id: 'dummy-user' });
   await insertUser({ id: testUserId });
   await insertNamespace({ id: 'sample' });
   await insertNamespace({ id: 'other' });
-  await insertPermission('sample', testUserId, 'reader', { ensureUser: false });
-  await insertPermission('other', testUserId, 'reader', { ensureUser: false });
+  await insertPermission('sample', testUserId, 'reader');
+  await insertPermission('other', testUserId, 'reader');
 
-  await insertResourceRow({ namespace: 'sample', type: 'player', name: 'hero' }, { name: { type: 'fixed', value: 'hero' } }, {
-    ensureNamespace: false,
-  });
+  await insertResourceRow({ namespace: 'sample', type: 'player', name: 'hero' }, { name: { type: 'fixed', value: 'hero' } });
   await insertResourceRow(
     { namespace: 'sample', type: 'player', name: 'villain' },
-    { name: { type: 'fixed', value: 'villain' } },
-    { ensureNamespace: false }
+    { name: { type: 'fixed', value: 'villain' } }
   );
-  await insertResourceRow({ namespace: 'other', type: 'map', name: 'test' }, {}, { ensureNamespace: false });
+  await insertResourceRow({ namespace: 'other', type: 'map', name: 'test' }, {});
 }
 
 describe('ResourceRepository', () => {
@@ -44,7 +43,11 @@ describe('ResourceRepository', () => {
 
   describe('get', () => {
     beforeEach(async () => {
-      await insertPlayerWithDependencies(validPlayerPath, { ensurePermissionForUser: testUserId });
+      await insertUser({ id: 'dummy-user' });
+      await insertNamespace({ id: 'sample' });
+      await insertUser({ id: testUserId });
+      await insertPermission('sample', testUserId, 'reader');
+      await insertPlayerWithDependencies(validPlayerPath);
     });
 
     it('returns existing resource', async () => {
@@ -82,6 +85,7 @@ describe('ResourceRepository', () => {
 
   describe('create', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
       await insertSkinDependencies();
     });
@@ -111,7 +115,7 @@ describe('ResourceRepository', () => {
     });
 
     it('returns already_exists on duplicate id', async () => {
-      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
+      await insertResource(validPlayerPath);
       const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
 
       expect(result.ok).toBeFalsy();
@@ -119,7 +123,7 @@ describe('ResourceRepository', () => {
     });
 
     it('does not partially insert on failure', async () => {
-      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
+      await insertResource(validPlayerPath);
 
       const before = await countRows('resources');
 
@@ -135,14 +139,13 @@ describe('ResourceRepository', () => {
     const newSkinPath = { namespace: 'sample', type: 'skin', name: 'new' } as ResourcePath;
 
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
       await insertSkinDependencies();
       await insertSkinResource('sample', 'new', 'new');
-      await insertPlayerWithDependencies(validPlayerPath, {
-        ensureNamespace: false,
-        ensurePermissionForUser: testUserId,
-      });
-
+      await insertUser({ id: testUserId });
+      await insertPermission('sample', testUserId, 'reader');
+      await insertResource(validPlayerPath);
       await insertResourceEdge(buildId(validPlayerPath), buildId({ namespace: 'sample', type: 'skin', name: 'hero' }));
     });
 
@@ -302,10 +305,11 @@ describe('ResourceRepository', () => {
 
   describe('findIncomingReferences', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
       await insertSkinDependencies();
-      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'test' }, {}, { ensureNamespace: false });
-      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
+      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'test' }, {});
+      await insertResource(validPlayerPath);
       await insertResourceEdge('sample/map/test', buildId(validPlayerPath));
     });
 
@@ -337,11 +341,12 @@ describe('ResourceRepository', () => {
 
   describe('delete', () => {
     beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
       await insertSkinDependencies();
-      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'a' }, {}, { ensureNamespace: false });
-      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'b' }, {}, { ensureNamespace: false });
-      await insertPlayerWithDependencies(validPlayerPath, { ensureNamespace: false });
+      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'a' }, {});
+      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'b' }, {});
+      await insertResource(validPlayerPath);
       await insertResourceEdge(buildId(validPlayerPath), 'sample/map/a');
       await insertResourceEdge('sample/map/b', buildId(validPlayerPath));
     });
