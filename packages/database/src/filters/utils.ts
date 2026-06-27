@@ -6,7 +6,7 @@ function escapeLike(value: string) {
 
 export function startsWith(pattern: string) {
   const escaped = escapeLike(pattern);
-  return `%${escaped}`;
+  return `${escaped}%`;
 }
 
 export function contains(pattern: string) {
