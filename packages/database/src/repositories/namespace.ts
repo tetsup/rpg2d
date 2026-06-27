@@ -97,8 +97,8 @@ export class NamespaceRepository {
     return repositorySafe(async () => {
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
-        const deleted = await conn.deleteFrom('namespaces').where('id', '=', id).executeTakeFirst();
-        if (!deleted) throw new RepositoryNotFoundError();
+        const result = await conn.deleteFrom('namespaces').where('id', '=', id).executeTakeFirst();
+        if (Number(result.numDeletedRows) === 0) throw new RepositoryNotFoundError();
         await conn.deleteFrom('namespace_permissions').where('namespaceId', '=', id).execute();
       });
     });
