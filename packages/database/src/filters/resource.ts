@@ -16,7 +16,7 @@ export function applyResourceFilter(
           eb('description', 'like', contains(filter.value)),
         ])
       );
-    else applyFilter(qb, filter);
+    else qb = applyFilter(qb, filter);
   }
   return qb;
 }
