@@ -1,14 +1,12 @@
 import { Hono } from 'hono';
 import { ResourceRepository } from '@database/repositories/resource';
 import { findWithCursor } from '@database/repositories/utils/filter';
-import { ResourceSearchReqParamsSchema } from '@schema/api/resource/search';
 import { ResourceByIdReqSchema } from '@schema/api/resource/by-id';
 import { authorizeResourceMiddleware } from '@api/auth/middlewares/authorize-resource';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 import { Action } from '../utils/authorize';
 import { handle } from '../utils/handle';
 import { parseParams } from '../utils/params';
-import { ResourceFilterSchema } from '@schema/filter/domain';
 
 const resourceRoute = new Hono();
 resourceRoute.use('*', resolveUserMiddleware);
