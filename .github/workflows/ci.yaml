@@ -20,6 +20,22 @@ jobs:
 
   unit:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://rpg2d:rpg2d@localhost:5432/rpg2d
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: rpg2d
+          POSTGRES_USER: rpg2d
+          POSTGRES_PASSWORD: rpg2d
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U rpg2d -d rpg2d"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
