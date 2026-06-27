@@ -1,17 +1,10 @@
-import type { Collection } from 'mongodb';
-import { MongoNetworkError, MongoServerError } from 'mongodb';
 import { ZodError } from 'zod';
-import type { UserDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import { UserDocumentSchema } from '@schema/database/user';
 import { UserRepository } from '@database/repositories/user';
+import { createMockDb, createPgError } from './helpers/mock-db';
+import { createUserInput } from './helpers/fixtures';
 
-const validUser: Omit<UserDocument, 'createdAt' | 'updatedAt'> = {
-  id: 'auth0|user',
-  presenceName: 'Test User',
-  email: 'user@example.com',
-  avatar: 'https://example.com/avatar.png',
-  roles: ['player'],
-};
+const validUser = createUserInput();
 
 describe('user repository error mapping', () => {
   beforeEach(() => {
@@ -19,12 +12,16 @@ describe('user repository error mapping', () => {
   });
 
   describe('get', () => {
-    it('maps network_error', async () => {
+    it('maps database_error', async () => {
+      const chain = {
+        selectAll: vi.fn().mockReturnThis(),
+        where: vi.fn().mockReturnThis(),
+        executeTakeFirst: vi.fn().mockRejectedValue(createPgError('40001')),
+      };
       const users = new UserRepository({
-        mockCollectionBuilder: () =>
-          ({
-            findOne: vi.fn().mockRejectedValue(new MongoNetworkError('network')),
-          }) as unknown as Collection<WithTimestamp<UserDocument>>,
+        mockDb: createMockDb({
+          selectFrom: vi.fn(() => chain),
+        }),
       });
 
       const result = await users.get(validUser.id);
@@ -32,16 +29,20 @@ describe('user repository error mapping', () => {
       expect(result.ok).toBeFalsy();
 
       if (!result.ok) {
-        expect(result.reason).toBe('network_error');
+        expect(result.reason).toBe('database_error');
       }
     });
 
     it('maps unknown', async () => {
+      const chain = {
+        selectAll: vi.fn().mockReturnThis(),
+        where: vi.fn().mockReturnThis(),
+        executeTakeFirst: vi.fn().mockRejectedValue(new Error('unknown')),
+      };
       const users = new UserRepository({
-        mockCollectionBuilder: () =>
-          ({
-            findOne: vi.fn().mockRejectedValue(new Error('unknown')),
-          }) as unknown as Collection<WithTimestamp<UserDocument>>,
+        mockDb: createMockDb({
+          selectFrom: vi.fn(() => chain),
+        }),
       });
 
       const result = await users.get(validUser.id);
@@ -57,7 +58,7 @@ describe('user repository error mapping', () => {
   describe('update', () => {
     it('maps validation_failed', async () => {
       const users = new UserRepository({
-        mockDocumentSchema: {
+        mockSchema: {
           parse: vi.fn(() => {
             throw new ZodError([]);
           }),
@@ -74,15 +75,15 @@ describe('user repository error mapping', () => {
     });
 
     it('maps already_exists', async () => {
-      const error = new MongoServerError({
-        message: 'duplicate',
-      });
-      error.code = 11000;
+      const chain = {
+        set: vi.fn().mockReturnThis(),
+        where: vi.fn().mockReturnThis(),
+        execute: vi.fn().mockRejectedValue(createPgError('23505')),
+      };
       const users = new UserRepository({
-        mockCollectionBuilder: () =>
-          ({
-            updateOne: vi.fn().mockRejectedValue(error),
-          }) as unknown as Collection<WithTimestamp<UserDocument>>,
+        mockDb: createMockDb({
+          updateTable: vi.fn(() => chain),
+        }),
       });
 
       const result = await users.update(validUser);
@@ -95,15 +96,15 @@ describe('user repository error mapping', () => {
     });
 
     it('maps database_error', async () => {
-      const error = new MongoServerError({
-        message: 'timeout',
-      });
-      error.code = 50;
+      const chain = {
+        set: vi.fn().mockReturnThis(),
+        where: vi.fn().mockReturnThis(),
+        execute: vi.fn().mockRejectedValue(createPgError('XX000')),
+      };
       const users = new UserRepository({
-        mockCollectionBuilder: () =>
-          ({
-            updateOne: vi.fn().mockRejectedValue(error),
-          }) as unknown as Collection<WithTimestamp<UserDocument>>,
+        mockDb: createMockDb({
+          updateTable: vi.fn(() => chain),
+        }),
       });
 
       const result = await users.update(validUser);
@@ -115,12 +116,16 @@ describe('user repository error mapping', () => {
       }
     });
 
-    it('maps network_error', async () => {
+    it('maps unknown', async () => {
+      const chain = {
+        set: vi.fn().mockReturnThis(),
+        where: vi.fn().mockReturnThis(),
+        execute: vi.fn().mockRejectedValue(new Error('unknown')),
+      };
       const users = new UserRepository({
-        mockCollectionBuilder: () =>
-          ({
-            updateOne: vi.fn().mockRejectedValue(new MongoNetworkError('network')),
-          }) as unknown as Collection<WithTimestamp<UserDocument>>,
+        mockDb: createMockDb({
+          updateTable: vi.fn(() => chain),
+        }),
       });
 
       const result = await users.update(validUser);
@@ -128,7 +133,7 @@ describe('user repository error mapping', () => {
       expect(result.ok).toBeFalsy();
 
       if (!result.ok) {
-        expect(result.reason).toBe('network_error');
+        expect(result.reason).toBe('unknown');
       }
     });
   });

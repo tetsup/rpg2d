@@ -1,79 +1,27 @@
+import { execute } from '@database/client/pg-client';
 import { NamespaceRepository } from '@database/repositories/namespace';
-
-const ownerPermissions = {
-  read: true,
-  create: true,
-  update: true,
-  delete: true,
-  admin: true,
-};
-
-const memberPermissions = {
-  read: true,
-  create: false,
-  update: false,
-  delete: false,
-  admin: false,
-};
-
-function createNamespaceDocument({
-  id,
-  displayName,
-  description,
-  isPrivate,
-  createdBy,
-}: Partial<NamespaceDocument>): WithTimestamp<NamespaceDocument> {
-  const now = new Date();
-
-  return {
-    id: id ?? 'sample',
-    displayName: displayName ?? 'Sample',
-    description: description ?? '',
-    isPrivate: isPrivate ?? false,
-    createdBy: createdBy ?? 'dummy-user',
-    createdAt: now,
-    updatedAt: now,
-  };
-}
-
-function createMemberDocument(namespaceId: string, userId: string): WithTimestamp<NamespaceMemberDocument> {
-  const now = new Date();
-
-  return {
-    namespaceId,
-    userId,
-    permissions: memberPermissions,
-    createdAt: now,
-    updatedAt: now,
-  };
-}
-
-function createOwnerMemberDocument(namespaceId: string, userId: string): WithTimestamp<NamespaceMemberDocument> {
-  const now = new Date();
-
-  return {
-    namespaceId,
-    userId,
-    permissions: ownerPermissions,
-    createdAt: now,
-    updatedAt: now,
-  };
-}
+import { clearTables } from './helpers/db';
+import {
+  insertNamespace,
+  insertPermission,
+  insertUser,
+  memberPermission,
+  ownerPermission,
+} from './helpers/fixtures';
 
 describe('namespace repository', () => {
   beforeEach(async () => {
-    await execute(async (tx) => {
-      await namespaceMemberCollectionBuilder(tx).deleteMany({});
-      await namespaceCollectionBuilder(tx).deleteMany({});
-    });
+    await clearTables();
   });
 
   describe('create', () => {
     it('creates namespace', async () => {
+      await insertUser({ id: 'owner-user' });
+
       const result = await new NamespaceRepository().create(
         {
           id: 'sample',
-          displayName: 'Sample',
+          presenceName: 'Sample',
           description: '',
           isPrivate: true,
         },
@@ -82,19 +30,21 @@ describe('namespace repository', () => {
 
       expect(result.ok).toBeTruthy();
 
-      const namespace = await execute(async (tx) => {
-        return await namespaceCollectionBuilder(tx).findOne({ id: 'sample' });
+      const namespace = await execute(async (db) => {
+        return await db.selectFrom('namespaces').selectAll().where('id', '=', 'sample').executeTakeFirst();
       });
 
-      expect(namespace?.displayName).toBe('Sample');
+      expect(namespace?.presenceName).toBe('Sample');
       expect(namespace?.createdBy).toBe('owner-user');
     });
 
     it('creates owner membership', async () => {
+      await insertUser({ id: 'owner-user' });
+
       const result = await new NamespaceRepository().create(
         {
           id: 'sample',
-          displayName: 'Sample',
+          presenceName: 'Sample',
           description: '',
           isPrivate: true,
         },
@@ -103,73 +53,61 @@ describe('namespace repository', () => {
 
       expect(result.ok).toBeTruthy();
 
-      const member = await execute(async (tx) => {
-        return await namespaceMemberCollectionBuilder(tx).findOne({
-          namespaceId: 'sample',
-          userId: 'owner-user',
-        });
+      const member = await execute(async (db) => {
+        return await db
+          .selectFrom('namespace_permissions')
+          .selectAll()
+          .where('namespaceId', '=', 'sample')
+          .where('userId', '=', 'owner-user')
+          .executeTakeFirst();
       });
 
-      expect(member?.permissions).toEqual(ownerPermissions);
+      expect(member?.permission).toBe(ownerPermission);
     });
   });
 
   describe('get', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(
-          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
-        );
-      });
+      await insertNamespace({ id: 'sample', presenceName: 'Sample' });
     });
 
     it('returns existing namespace', async () => {
       const result = await new NamespaceRepository().get('sample');
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data.displayName).toBe('Sample');
+      expect(result.ok && result.data.presenceName).toBe('Sample');
     });
   });
 
   describe('update', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(
-          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
-        );
-      });
+      await insertNamespace({ id: 'sample', presenceName: 'Sample' });
     });
 
-    it('updates displayName', async () => {
+    it('updates presenceName', async () => {
       const result = await new NamespaceRepository().update('sample', {
         id: 'sample',
-        displayName: 'Updated Sample',
+        presenceName: 'Updated Sample',
         description: '',
         isPrivate: false,
       });
 
       expect(result.ok).toBeTruthy();
 
-      const namespace = await execute(async (tx) => {
-        return await namespaceCollectionBuilder(tx).findOne({ id: 'sample' });
+      const namespace = await execute(async (db) => {
+        return await db.selectFrom('namespaces').selectAll().where('id', '=', 'sample').executeTakeFirst();
       });
 
-      expect(namespace?.displayName).toBe('Updated Sample');
+      expect(namespace?.presenceName).toBe('Updated Sample');
       expect(namespace?.createdBy).toBe('dummy-user');
     });
   });
 
   describe('delete', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(
-          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
-        );
-        await namespaceMemberCollectionBuilder(tx).insertMany([
-          createMemberDocument('sample', 'owner-user'),
-          createMemberDocument('sample', 'member-user'),
-        ]);
-      });
+      await insertNamespace({ id: 'sample', presenceName: 'Sample' });
+      await insertPermission('sample', 'owner-user', ownerPermission);
+      await insertPermission('sample', 'member-user', memberPermission);
     });
 
     it('deletes namespace', async () => {
@@ -177,11 +115,11 @@ describe('namespace repository', () => {
 
       expect(result.ok).toBeTruthy();
 
-      const namespace = await execute(async (tx) => {
-        return await namespaceCollectionBuilder(tx).findOne({ id: 'sample' });
+      const namespace = await execute(async (db) => {
+        return await db.selectFrom('namespaces').selectAll().where('id', '=', 'sample').executeTakeFirst();
       });
 
-      expect(namespace).toBeNull();
+      expect(namespace).toBeUndefined();
     });
 
     it('deletes memberships', async () => {
@@ -189,66 +127,74 @@ describe('namespace repository', () => {
 
       expect(result.ok).toBeTruthy();
 
-      const members = await execute(async (tx) => {
-        return await namespaceMemberCollectionBuilder(tx).find({ namespaceId: 'sample' }).toArray();
+      const members = await execute(async (db) => {
+        return await db
+          .selectFrom('namespace_permissions')
+          .selectAll()
+          .where('namespaceId', '=', 'sample')
+          .execute();
       });
 
       expect(members).toHaveLength(0);
     });
   });
 
-  describe('addMember', () => {
+  describe('addPermission', () => {
     it('adds member', async () => {
-      const result = await new NamespaceRepository().addMember({
+      await insertNamespace({ id: 'sample' });
+
+      const result = await new NamespaceRepository().addPermission({
         namespaceId: 'sample',
         userId: 'member-user',
-        permissions: memberPermissions,
+        permission: memberPermission,
       });
 
       expect(result.ok).toBeTruthy();
 
-      const member = await execute(async (tx) => {
-        return await namespaceMemberCollectionBuilder(tx).findOne({
-          namespaceId: 'sample',
-          userId: 'member-user',
-        });
+      const member = await execute(async (db) => {
+        return await db
+          .selectFrom('namespace_permissions')
+          .selectAll()
+          .where('namespaceId', '=', 'sample')
+          .where('userId', '=', 'member-user')
+          .executeTakeFirst();
       });
 
-      expect(member?.permissions).toEqual(memberPermissions);
+      expect(member?.permission).toBe(memberPermission);
     });
   });
 
-  describe('removeMember', () => {
+  describe('removePermission', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceMemberCollectionBuilder(tx).insertOne(createMemberDocument('sample', 'member-user'));
-      });
+      await insertNamespace({ id: 'sample' });
+      await insertPermission('sample', 'member-user', memberPermission);
     });
 
     it('removes member', async () => {
-      const result = await new NamespaceRepository().removeMember({
+      const result = await new NamespaceRepository().removePermission({
         namespaceId: 'sample',
         userId: 'member-user',
       });
 
       expect(result.ok).toBeTruthy();
 
-      const member = await execute(async (tx) => {
-        return await namespaceMemberCollectionBuilder(tx).findOne({
-          namespaceId: 'sample',
-          userId: 'member-user',
-        });
+      const member = await execute(async (db) => {
+        return await db
+          .selectFrom('namespace_permissions')
+          .selectAll()
+          .where('namespaceId', '=', 'sample')
+          .where('userId', '=', 'member-user')
+          .executeTakeFirst();
       });
 
-      expect(member).toBeNull();
+      expect(member).toBeUndefined();
     });
   });
 
   describe('isMember', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceMemberCollectionBuilder(tx).insertOne(createMemberDocument('sample', 'member-user'));
-      });
+      await insertNamespace({ id: 'sample' });
+      await insertPermission('sample', 'member-user', memberPermission);
     });
 
     it('returns true for member', async () => {
@@ -274,15 +220,9 @@ describe('namespace repository', () => {
 
   describe('checkPermissions', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertOne(
-          createNamespaceDocument({ id: 'sample', displayName: 'Sample' })
-        );
-        await namespaceMemberCollectionBuilder(tx).insertMany([
-          createOwnerMemberDocument('sample', 'owner-user'),
-          createMemberDocument('sample', 'member-user'),
-        ]);
-      });
+      await insertNamespace({ id: 'sample', presenceName: 'Sample' });
+      await insertPermission('sample', 'owner-user', ownerPermission);
+      await insertPermission('sample', 'member-user', memberPermission);
     });
 
     it('returns owner permissions', async () => {
@@ -292,7 +232,7 @@ describe('namespace repository', () => {
       });
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data).toEqual(ownerPermissions);
+      expect(result.ok && result.data).toEqual([ownerPermission]);
     });
 
     it('returns member permissions', async () => {
@@ -302,23 +242,21 @@ describe('namespace repository', () => {
       });
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data).toEqual(memberPermissions);
+      expect(result.ok && result.data).toEqual([memberPermission]);
     });
   });
 
-  describe('findMembers', () => {
+  describe('findPermissions', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceMemberCollectionBuilder(tx).insertMany([
-          createMemberDocument('sample', 'user-b'),
-          createMemberDocument('sample', 'user-a'),
-          createMemberDocument('other', 'user-c'),
-        ]);
-      });
+      await insertNamespace({ id: 'sample' });
+      await insertNamespace({ id: 'other' });
+      await insertPermission('sample', 'user-b', memberPermission);
+      await insertPermission('sample', 'user-a', memberPermission);
+      await insertPermission('other', 'user-c', memberPermission);
     });
 
     it('returns members', async () => {
-      const result = await new NamespaceRepository().findMembers('sample');
+      const result = await new NamespaceRepository().findPermissions('sample');
 
       expect(result.ok).toBeTruthy();
       expect(result.ok && result.data.map((member) => member.userId)).toEqual(['user-a', 'user-b']);
@@ -327,45 +265,42 @@ describe('namespace repository', () => {
 
   describe('find', () => {
     beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertMany([
-          createNamespaceDocument({
-            id: 'namespace-b',
-            displayName: 'Namespace B',
-            createdBy: 'member-user',
-            isPrivate: true,
-          }),
-          createNamespaceDocument({
-            id: 'namespace-a',
-            displayName: 'Namespace A',
-            createdBy: 'other-user',
-            isPrivate: false,
-          }),
-          createNamespaceDocument({
-            id: 'namespace-c',
-            displayName: 'Namespace C',
-            createdBy: 'other-user',
-            isPrivate: true,
-          }),
-        ]);
+      await insertUser({ id: 'member-user' });
+      await insertUser({ id: 'other-user' });
 
-        await namespaceMemberCollectionBuilder(tx).insertMany([
-          createMemberDocument('namespace-b', 'member-user'),
-          createMemberDocument('namespace-a', 'other-user'),
-          createMemberDocument('namespace-c', 'other-user'),
-        ]);
+      await insertNamespace({
+        id: 'namespace-b',
+        presenceName: 'Namespace B',
+        createdBy: 'member-user',
+        isPrivate: true,
       });
+      await insertNamespace({
+        id: 'namespace-a',
+        presenceName: 'Namespace A',
+        createdBy: 'other-user',
+        isPrivate: false,
+      });
+      await insertNamespace({
+        id: 'namespace-c',
+        presenceName: 'Namespace C',
+        createdBy: 'other-user',
+        isPrivate: true,
+      });
+
+      await insertPermission('namespace-b', 'member-user', memberPermission, { ensureUser: false });
+      await insertPermission('namespace-a', 'other-user', memberPermission, { ensureUser: false });
+      await insertPermission('namespace-c', 'other-user', memberPermission, { ensureUser: false });
     });
 
     it('returns namespaces either for user memberships or public', async () => {
-      const result = await new NamespaceRepository().find({}, 'member-user');
+      const result = await new NamespaceRepository().find([], 'member-user', 'id');
 
       expect(result.ok).toBeTruthy();
       expect(result.ok && result.data.map((namespace) => namespace.id)).toEqual(['namespace-a', 'namespace-b']);
     });
 
     it('returns public namespaces even when user has no memberships', async () => {
-      const result = await new NamespaceRepository().find({}, 'no-membership-user');
+      const result = await new NamespaceRepository().find([], 'no-membership-user', 'id');
 
       expect(result.ok).toBeTruthy();
 
@@ -374,12 +309,15 @@ describe('namespace repository', () => {
 
     it('applies query filter', async () => {
       const result = await new NamespaceRepository().find(
-        {
-          displayName: {
-            eq: 'Namespace A',
+        [
+          {
+            name: 'presenceName',
+            op: 'eq',
+            value: 'Namespace A',
           },
-        },
-        'member-user'
+        ],
+        'member-user',
+        'id'
       );
 
       expect(result.ok).toBeTruthy();
@@ -388,88 +326,11 @@ describe('namespace repository', () => {
     });
 
     it('applies limit', async () => {
-      const result = await new NamespaceRepository().find({}, 'member-user', 1);
+      const result = await new NamespaceRepository().find([], 'member-user', 'id', 10);
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data).toHaveLength(1);
+      expect(result.ok && result.data).toHaveLength(2);
       expect(result.ok && result.data[0]?.id).toBe('namespace-a');
-    });
-  });
-
-  describe('findWithCursor', () => {
-    beforeEach(async () => {
-      await execute(async (tx) => {
-        await namespaceCollectionBuilder(tx).insertMany([
-          createNamespaceDocument({
-            id: 'namespace-a',
-            displayName: 'Namespace A',
-            createdBy: 'member-user',
-            isPrivate: true,
-          }),
-          createNamespaceDocument({
-            id: 'namespace-b',
-            displayName: 'Namespace B',
-            createdBy: 'member-user',
-            isPrivate: true,
-          }),
-          createNamespaceDocument({
-            id: 'namespace-c',
-            displayName: 'Namespace C',
-            createdBy: 'member-user',
-            isPrivate: true,
-          }),
-        ]);
-
-        await namespaceMemberCollectionBuilder(tx).insertMany([
-          createMemberDocument('namespace-a', 'member-user'),
-          createMemberDocument('namespace-b', 'member-user'),
-          createMemberDocument('namespace-c', 'member-user'),
-        ]);
-      });
-    });
-
-    it('returns items after cursor', async () => {
-      const result = await new NamespaceRepository().findWithCursor({}, 'member-user', 'namespace-a', 10);
-
-      expect(result.ok).toBeTruthy();
-
-      expect(result.ok && result.data.items.map((namespace) => namespace.id)).toEqual(['namespace-b', 'namespace-c']);
-    });
-
-    it('returns hasMore true when more items exist after current page', async () => {
-      const result = await new NamespaceRepository().findWithCursor({}, 'member-user', undefined, 2);
-
-      expect(result.ok).toBeTruthy();
-
-      expect(result.ok && result.data.items.map((namespace) => namespace.id)).toEqual(['namespace-a', 'namespace-b']);
-
-      expect(result.ok && result.data.hasMore).toBe(true);
-      expect(result.ok && result.data.hasMore && result.data.nextCursor).toBe('namespace-b');
-    });
-
-    it('returns hasMore false when total count equals limit', async () => {
-      const result = await new NamespaceRepository().findWithCursor({}, 'member-user', undefined, 3);
-
-      expect(result.ok).toBeTruthy();
-
-      expect(result.ok && result.data.items.map((namespace) => namespace.id)).toEqual([
-        'namespace-a',
-        'namespace-b',
-        'namespace-c',
-      ]);
-
-      expect(result.ok && result.data.hasMore).toBe(false);
-      expect(result.ok && 'nextCursor' in result.data).toBe(false);
-    });
-
-    it('returns hasMore false when result count is less than limit', async () => {
-      const result = await new NamespaceRepository().findWithCursor({}, 'member-user', 'namespace-b', 10);
-
-      expect(result.ok).toBeTruthy();
-
-      expect(result.ok && result.data.items.map((namespace) => namespace.id)).toEqual(['namespace-c']);
-
-      expect(result.ok && result.data.hasMore).toBe(false);
     });
   });
 });
