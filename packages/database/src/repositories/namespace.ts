@@ -126,12 +126,12 @@ export class NamespaceRepository {
     return repositorySafe(async () => {
       return execute(async (db) => {
         const conn = this.dbFactory(db);
-        const res = await conn
+        const result = await conn
           .deleteFrom('namespace_permissions')
           .where('namespaceId', '=', namespaceId)
           .where('userId', '=', userId)
-          .execute();
-        if (!res) throw new RepositoryNotFoundError();
+          .executeTakeFirst();
+        if (Number(result.numDeletedRows) === 0) throw new RepositoryNotFoundError();
       });
     });
   }
