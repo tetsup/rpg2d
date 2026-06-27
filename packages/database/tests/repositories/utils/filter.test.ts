@@ -81,7 +81,8 @@ describe('findWithCursor', () => {
       ],
       'user1',
       'id',
-      expect.any(Number)
+      11,
+      { fetchMode: 'cursor_probe' }
     );
   });
 
@@ -125,7 +126,8 @@ describe('findWithCursor', () => {
       ],
       'user1',
       'id',
-      expect.any(Number)
+      11,
+      { fetchMode: 'cursor_probe' }
     );
   });
 

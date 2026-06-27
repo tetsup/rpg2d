@@ -5,7 +5,8 @@ import { NamespacePermissionDocumentSchema } from '@schema/database/namespace-pe
 import { NamespaceFilterSchema } from '@schema/filter/domain';
 import { execute, withTransaction } from '@database/client/pg-client';
 import { applyNamespaceFilter } from '@database/filters/namespace';
-import { calcLimit, RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 
 type NamespaceRepositoryOptions = {
   mockDb?: Kysely<Database>;
@@ -164,9 +165,10 @@ export class NamespaceRepository {
     });
   }
 
-  async find(query: any, userId: string, sortKey: string, limit?: number) {
+  async find(query: any, userId: string, sortKey: string, limit?: number, options?: FindOptions) {
     return repositorySafe(async () => {
       const parsed = NamespaceFilterSchema.parse(query);
+      const dbFetchLimit = resolveDbFetchLimit(limit, options);
       return execute(async (db) => {
         const conn = this.dbFactory(db);
         const own = conn
@@ -184,7 +186,7 @@ export class NamespaceRepository {
               ),
             ])
           );
-        const rows = applyNamespaceFilter(own, parsed).orderBy(sortKey).limit(calcLimit(limit)).execute();
+        const rows = applyNamespaceFilter(own, parsed).orderBy(sortKey).limit(dbFetchLimit).execute();
         return rows;
       });
     });

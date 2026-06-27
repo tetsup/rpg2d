@@ -7,7 +7,8 @@ import { buildId, extractResourceRefs } from '@database/utils/resource';
 import { execute, withTransaction } from '@database/client/pg-client';
 import { contains } from '@database/filters/utils';
 import { applyResourceFilter } from '@database/filters/resource';
-import { calcLimit, RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 
 type FindParams = {
   name?: string;
@@ -122,9 +123,10 @@ export class ResourceRepository {
     });
   }
 
-  async find(query: any, userId: string, sortKey: string, limit?: number) {
+  async find(query: any, userId: string, sortKey: string, limit?: number, options?: FindOptions) {
     return repositorySafe(async () => {
       const parsed = ResourceFilterSchema.parse(query);
+      const dbFetchLimit = resolveDbFetchLimit(limit, options);
       return execute(async (db) => {
         const conn = this.dbFactory(db);
         const rows = applyResourceFilter(conn.selectFrom('resources').selectAll(), parsed)
@@ -138,7 +140,7 @@ export class ResourceRepository {
             )
           )
           .orderBy(sortKey)
-          .limit(calcLimit(limit))
+          .limit(dbFetchLimit)
           .execute();
         return rows;
       });
