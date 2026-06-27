@@ -1,0 +1,15 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "install": "pnpm install",
+  "start": "sudo service docker start",
+  "terminals": [
+    {
+      "name": "postgres",
+      "command": "docker compose up postgres",
+      "description": "PostgreSQL 17 for integration tests on 127.0.0.1:5432"
+    }
+  ]
+}
