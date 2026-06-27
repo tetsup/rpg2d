@@ -1,3 +1,4 @@
+import { describe, it, beforeEach } from '@tests/setup/integration-test';
 import { NamespaceRepository } from '@database/repositories/namespace';
 import { clearTables } from './helpers/db';
 import { insertNamespace, insertPermission, memberPermission } from './helpers/fixtures';

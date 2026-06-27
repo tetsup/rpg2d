@@ -1,3 +1,4 @@
+import { describe, it, beforeEach } from '@tests/setup/integration-test';
 import { execute } from '@database/client/pg-client';
 import { NamespaceRepository } from '@database/repositories/namespace';
 import { clearTables } from './helpers/db';

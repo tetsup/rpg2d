@@ -1,3 +1,4 @@
+import { describe, it, beforeEach } from '@tests/setup/integration-test';
 import { execute } from '@database/client/pg-client';
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import { ResourceRepository } from '@database/repositories/resource';
