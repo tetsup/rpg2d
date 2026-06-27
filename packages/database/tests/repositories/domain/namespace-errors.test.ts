@@ -72,7 +72,6 @@ describe('namespace repository error mapping', () => {
   });
 
   describe('removePermission', () => {
-    // TODO: Repository removePermission does not check affected row count yet.
     it('returns not_found when missing', async () => {
       const result = await new NamespaceRepository().removePermission({
         namespaceId: 'sample',
