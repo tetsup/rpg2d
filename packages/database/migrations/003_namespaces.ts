@@ -13,7 +13,11 @@ export function up(pgm: MigrationBuilder) {
 
   pgm.createIndex('namespaces', 'createdBy');
   pgm.createIndex('namespaces', 'isPrivate');
-  pgm.createIndex('namespaces', [{ name: 'description', opclass: 'gin_trgm_ops' }], { method: 'gin' });
+  pgm.createIndex(
+    'namespaces',
+    [{ name: 'description', opclass: { schema: 'public', name: 'gin_trgm_ops' } }],
+    { method: 'gin' }
+  );
 }
 
 export function down(pgm: MigrationBuilder) {
