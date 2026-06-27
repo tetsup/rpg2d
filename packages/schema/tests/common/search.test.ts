@@ -136,7 +136,7 @@ describe('NamespaceFilterSchema', () => {
         {
           name: 'createdAt',
           op: 'gt',
-          value: '2025-01-01',
+          value: 'not a date',
         },
       ])
     ).toThrow();
