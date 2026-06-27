@@ -43,5 +43,19 @@ jobs:
       - name: Setup project
         uses: ./.github/actions/setup
 
+      - name: Wait for PostgreSQL
+        run: |
+          for i in $(seq 1 30); do
+            if (echo > /dev/tcp/localhost/5432) >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "PostgreSQL did not become ready in time"
+          exit 1
+
+      - name: Run database migrations
+        run: pnpm db:migrate
+
       - name: Run unit tests
         run: pnpm test
