@@ -1,6 +1,7 @@
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 import type { Database } from '@sharedTypes/database/collection';
+import { getPoolOptions } from './schema-config';
 
 let db: Kysely<Database> | null = null;
 
@@ -11,6 +12,7 @@ export function getDb() {
       pool: new Pool({
         connectionString: process.env.DATABASE_URL,
         max: 10,
+        ...getPoolOptions(),
       }),
     }),
   });
