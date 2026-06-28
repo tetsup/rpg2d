@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@sharedTypes/database/collection';
-import type { FilterMap } from '@sharedTypes/database/filter';
 import { documentKey, getDocumentById, type DocumentCollection } from '@editor/hooks/api/by-id';
 
 export function useResolvedDocument<T extends DocumentCollection>(
