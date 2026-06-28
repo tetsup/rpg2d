@@ -10,8 +10,8 @@ import { SelectDocument } from './select-document';
 
 type DocumentPickerProps<T extends keyof FilterMap> = {
   collectionName: T;
-  controlId?: string;
   id?: string;
+  value?: string;
   onSelect: (id: string) => void;
   onCreate?: () => void;
   resourceType?: ResourceType;
@@ -19,26 +19,26 @@ type DocumentPickerProps<T extends keyof FilterMap> = {
 
 export function DocumentPicker<T extends keyof FilterMap>({
   collectionName,
-  controlId,
   id,
+  value,
   onSelect,
   onCreate,
   resourceType,
 }: DocumentPickerProps<T>) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const selectedDocument = useResolvedDocument(collectionName, id);
+  const selectedDocument = useResolvedDocument(collectionName, value);
   const displayLabel = useMemo(() => {
     if (selectedDocument) return renderDocumentLabel(collectionName, selectedDocument);
-    if (id) return id;
+    if (value) return value;
     return t('未選択');
-  }, [collectionName, id, selectedDocument, t]);
+  }, [collectionName, value, selectedDocument, t]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button id={controlId} variant="outline" className="w-full justify-between">
+          <Button id={id} variant="outline" className="w-full justify-between">
             <span>{displayLabel}</span>
           </Button>
         }

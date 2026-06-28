@@ -27,8 +27,8 @@ function SelectDocumentFieldControl<T extends FieldValues>({
       render={({ field }) => (
         <DocumentPicker
           collectionName={collectionName}
-          controlId={controlId}
-          id={field.value}
+          id={controlId}
+          value={field.value}
           onSelect={field.onChange}
           resourceType={resourceType}
         />
