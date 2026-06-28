@@ -10,7 +10,12 @@ export type SelectDocumentFieldProps<T extends FieldValues> = {
   hint?: string;
 };
 
-export function SelectDocumentField({ collectionName, name, label, hint }: SelectDocumentFieldProps<any>) {
+export function SelectDocumentField<T extends FieldValues>({
+  collectionName,
+  name,
+  label,
+  hint,
+}: SelectDocumentFieldProps<T>) {
   const { control } = useFormContext();
   return (
     <Controller

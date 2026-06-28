@@ -17,7 +17,7 @@ export function NamespaceFields({ mode }: NamespaceFieldParams): FieldGroupTempl
         },
         {
           type: 'text',
-          params: { name: 'displayName', label: t('グループ名') },
+          params: { name: 'presenceName', label: t('グループ名') },
         },
         {
           type: 'text',

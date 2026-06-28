@@ -15,7 +15,12 @@ type FormTemplateProps<TValues extends FieldValues> = {
   onSubmit: (values: TValues) => Promise<void>;
 };
 
-export function FormTemplete({ fieldGroups, schema, onSubmit, defaultValues }: FormTemplateProps<any>) {
+export function FormTemplete<TValues extends FieldValues>({
+  fieldGroups,
+  schema,
+  onSubmit,
+  defaultValues,
+}: FormTemplateProps<TValues>) {
   const { t } = useTranslation();
   const form = useForm({ resolver: zodResolver(schema), mode: 'onChange', defaultValues });
 
@@ -37,8 +42,8 @@ export function FormTemplete({ fieldGroups, schema, onSubmit, defaultValues }: F
     >
       <FormProvider {...form}>
         <div className="space-y-4">
-          {fieldGroups.map((fieldGroup) => (
-            <FieldGroupTemplate {...fieldGroup} />
+          {fieldGroups.map((fieldGroup, index) => (
+            <FieldGroupTemplate key={index} {...fieldGroup} />
           ))}
           <SubmitCard />
           <CancelCard />

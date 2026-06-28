@@ -1,15 +1,21 @@
+import type { ReactNode } from 'react';
 import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 import { FieldWrapper } from '@editor/components/forms/field-wrapper';
 import { Select } from '@editor/components/ui/select';
+
+export type SelectFieldOption = {
+  label: ReactNode;
+  value: string;
+};
 
 export type SelectFieldProps<T extends FieldValues> = {
   name: FieldPath<T>;
   label: string;
   hint?: string;
-  items: T[];
+  items: SelectFieldOption[];
 };
 
-export function SelectField({ name, label, hint, items }: SelectFieldProps<any>) {
+export function SelectField<T extends FieldValues>({ name, label, hint, items }: SelectFieldProps<T>) {
   const { control } = useFormContext();
   return (
     <Controller

@@ -11,7 +11,14 @@ export type SwitchFieldProps<T extends FieldValues> = {
   labelOff?: string;
 };
 
-export function SwitchField({ name, label, hint, disabled, labelOn = 'ON', labelOff = 'OFF' }: SwitchFieldProps<any>) {
+export function SwitchField<T extends FieldValues>({
+  name,
+  label,
+  hint,
+  disabled,
+  labelOn = 'ON',
+  labelOff = 'OFF',
+}: SwitchFieldProps<T>) {
   const { control } = useFormContext();
   return (
     <Controller

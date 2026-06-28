@@ -9,7 +9,7 @@ export type InputFieldProps<T extends FieldValues> = {
   disabled?: boolean;
 };
 
-export function InputField({ name, label, hint, disabled }: InputFieldProps<any>) {
+export function InputField<T extends FieldValues>({ name, label, hint, disabled }: InputFieldProps<T>) {
   const { register } = useFormContext();
   return (
     <FieldWrapper name={name} label={label} hint={hint}>

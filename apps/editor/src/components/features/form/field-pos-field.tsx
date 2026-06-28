@@ -9,7 +9,7 @@ export type FieldPosFieldProps<T extends FieldValues> = {
   disabled?: boolean;
 };
 
-export function FieldPosField({ name, label, hint, disabled }: FieldPosFieldProps<any>) {
+export function FieldPosField<T extends FieldValues>({ name, label, hint, disabled }: FieldPosFieldProps<T>) {
   const { register } = useFormContext();
   return (
     <FieldWrapper name={name} label={label} hint={hint}>

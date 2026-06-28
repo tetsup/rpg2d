@@ -14,7 +14,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
         mode === 'create'
           ? {
               type: 'select-document',
-              params: { name: 'namespace', label: t('グループ'), collectionName: 'namespace', permission: 'read' },
+              params: { name: 'namespace', label: t('グループ'), collectionName: 'namespaces' },
             }
           : {
               type: 'text',
@@ -37,8 +37,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           params: {
             name: 'data.initialState.field.fieldId',
             label: t('フィールド'),
-            collectionName: 'resource',
-            resourceType: 'field',
+            collectionName: 'resources',
           },
         },
         {
@@ -46,7 +45,6 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           params: {
             name: 'data.initialState.field.pos',
             label: t('プレイヤー位置'),
-            refField: 'initialState.field.fieldId',
           },
         },
       ],
@@ -59,8 +57,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           params: {
             name: 'data.config.defaultMessagePanel',
             label: t('メッセージパネル'),
-            collectionName: 'resource',
-            resourceType: 'panel',
+            collectionName: 'resources',
           },
         },
       ],
