@@ -4,12 +4,13 @@ import { NamespaceInput } from '@sharedTypes/database/collection';
 import { NamespaceInputSchema } from '@schema/database/namespace';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
-import { fetchPostApi } from '@editor/lib/api/post';
 import { NamespaceFields } from '@editor/forms/namespace';
+import { useCreateDocument } from '@editor/hooks/api/mutations';
 
 export function NewNamespacePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { mutateAsync: createNamespace } = useCreateDocument('namespaces');
   const fields = NamespaceFields({ mode: 'create' });
 
   const defaultValues: NamespaceInput = {
@@ -20,7 +21,7 @@ export function NewNamespacePage() {
   };
 
   const onSubmit = async (values: NamespaceInput) => {
-    await fetchPostApi('/api/namespaces', values);
+    await createNamespace(values);
     navigate(`/namespace/${values.id}`);
   };
 

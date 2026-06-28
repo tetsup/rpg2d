@@ -5,13 +5,15 @@ import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { ManifestForm } from '@editor/forms/manifest';
 import { ResourceInput } from '@sharedTypes/database/collection';
 import { useNavigate } from 'react-router-dom';
-import { fetchPostApi } from '@editor/lib/api/post';
+import { useCreateDocument } from '@editor/hooks/api/mutations';
+import { buildResourceId } from '@editor/hooks/api/resource-id';
 
 const manifestCreateSchema = createInvalidResourceInputSchema('manifest');
 
 export function NewManifestPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { mutateAsync: createResource } = useCreateDocument('resources');
   const fields = ManifestForm({ mode: 'create' });
 
   const defaultValues: ResourceInput<'manifest'> = {
@@ -39,9 +41,8 @@ export function NewManifestPage() {
   };
 
   const onSubmit = async (values: ResourceInput<'manifest'>) => {
-    const { namespace, type, name } = values;
-    await fetchPostApi(`/api/resources/${namespace}/${type}/${name}`, values);
-    navigate(`/resource/${namespace}/${type}/${name}`);
+    await createResource(values);
+    navigate(`/resource/${buildResourceId(values)}`);
   };
   return (
     <LayoutShell titleBarProps={{ title: t('プロジェクト設定') }}>
