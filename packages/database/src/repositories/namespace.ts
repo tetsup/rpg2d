@@ -3,6 +3,7 @@ import type { Database } from '@sharedTypes/database/collection';
 import { NamespaceInputSchema } from '@schema/database/namespace';
 import { NamespacePermissionInputSchema } from '@schema/database/namespace-permission';
 import { NamespaceFilterSchema } from '@schema/filter/domain';
+import { resolveNamespaceCapabilities } from '@schema/database/namespace-capabilities';
 import { execute, withTransaction } from '@database/client/pg-client';
 import { applyNamespaceFilter } from '@database/filters/namespace';
 import { RepositoryNotFoundError, repositorySafe } from './utils/common';
@@ -192,7 +193,7 @@ export class NamespaceRepository {
     });
   }
 
-  async checkPermissions({ namespaceId, userId }: any) {
+  async checkPermissions({ namespaceId, userId }: { namespaceId: string; userId: string }) {
     return repositorySafe(async () => {
       return execute(async (db) => {
         const conn = this.dbFactory(db);
@@ -202,7 +203,7 @@ export class NamespaceRepository {
           .where('namespaceId', '=', namespaceId)
           .where('userId', '=', userId)
           .execute();
-        return permissions.map((permission) => permission.permission);
+        return resolveNamespaceCapabilities(permissions.map((permission) => permission.permission));
       });
     });
   }
