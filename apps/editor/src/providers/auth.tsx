@@ -1,22 +1,17 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import type { UserDocument } from '@sharedTypes/database/collection';
 import { fetchGetApi } from '@editor/lib/api/get';
-
-export type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-};
 
 type AuthContextValue = {
   status: 'loading' | 'authenticated' | 'unauthenticated';
-  user: AuthUser | null;
+  user: UserDocument | null;
   refetch: () => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function fetchMe(): Promise<AuthUser | null> {
+async function fetchMe(): Promise<UserDocument | null> {
   try {
     return await fetchGetApi('/api/auth/me');
   } catch {

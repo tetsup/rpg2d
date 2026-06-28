@@ -3,9 +3,9 @@ import { setupServer } from 'msw/node';
 
 const testUser = {
   id: 'user-test-1',
-  name: 'Test User',
   presenceName: 'Test User',
   email: 'test@example.com',
+  isAdmin: false,
 };
 
 export const server = setupServer(
