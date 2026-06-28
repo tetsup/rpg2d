@@ -10,12 +10,12 @@ type LayoutShellProps = {
 
 export function LayoutShell({ children, titleBarProps }: LayoutShellProps) {
   return (
-    <>
+    <div className="flex h-dvh flex-col">
       <TitleBar {...titleBarProps} rightSlot={<UserMenu />} />
-      <main>
+      <main className="min-h-0 flex-1 overflow-auto">
         <div className="space-y-4 p-4">{children}</div>
       </main>
       <BottomMenu />
-    </>
+    </div>
   );
 }

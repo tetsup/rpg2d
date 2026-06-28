@@ -13,7 +13,7 @@ export function TitleBar({ category, title, subtitle, rightSlot }: TitleBarProps
   const { isDirty } = useLayoutStore((s) => s.editState);
 
   return (
-    <header className="p-1">
+    <header className="shrink-0 p-1">
       <div className="rounded-xl border bg-card px-4 py-3 shadow-sm">
         <div className="flex items-center justify-between">
           <h1 className="mt-1 truncate text-lg font-semibold">{title}</h1>
