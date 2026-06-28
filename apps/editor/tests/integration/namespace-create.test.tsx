@@ -57,7 +57,7 @@ describe('namespace create', () => {
     await user.type(screen.getByLabelText('グループの説明'), 'A test namespace');
     await user.click(screen.getByLabelText('非公開'));
 
-    const saveButton = screen.getByRole('button', { name: /保存/ });
+    const saveButton = screen.getByRole('button', { name: /^保存$/ });
 
     await waitFor(() => {
       expect(saveButton).toBeEnabled();

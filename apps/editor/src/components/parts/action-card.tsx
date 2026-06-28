@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { CardButton } from './card-button';
 
@@ -40,10 +41,20 @@ export function ActionCard({
   type = 'button',
 }: ActionCardProps) {
   const style = variants[variant];
+  const titleId = useId();
+  const descriptionId = useId();
 
   return (
-    <CardButton type={type} onClick={onClick} disabled={disabled} className={style.border}>
+    <CardButton
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={style.border}
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+    >
       <div
+        aria-hidden="true"
         className={`
             flex
             h-14
@@ -57,8 +68,12 @@ export function ActionCard({
         <Icon className="h-8 w-8" />
       </div>
       <div className="flex-1">
-        <div className="font-semibold">{title}</div>
-        <div className="text-sm text-muted-foreground">{description}</div>
+        <span id={titleId} className="block font-semibold">
+          {title}
+        </span>
+        <span id={descriptionId} className="block text-sm text-muted-foreground">
+          {description}
+        </span>
       </div>
     </CardButton>
   );
