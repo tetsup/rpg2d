@@ -10,6 +10,7 @@ import { SelectDocument } from './select-document';
 
 type DocumentPickerProps<T extends keyof FilterMap> = {
   collectionName: T;
+  controlId?: string;
   id?: string;
   onSelect: (id: string) => void;
   onCreate?: () => void;
@@ -18,6 +19,7 @@ type DocumentPickerProps<T extends keyof FilterMap> = {
 
 export function DocumentPicker<T extends keyof FilterMap>({
   collectionName,
+  controlId,
   id,
   onSelect,
   onCreate,
@@ -36,7 +38,7 @@ export function DocumentPicker<T extends keyof FilterMap>({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button variant="outline" className="w-full justify-between">
+          <Button id={controlId} variant="outline" className="w-full justify-between">
             <span>{displayLabel}</span>
           </Button>
         }

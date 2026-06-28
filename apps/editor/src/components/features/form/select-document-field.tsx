@@ -1,5 +1,5 @@
 import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
-import { FieldWrapper } from '@editor/components/forms/field-wrapper';
+import { FieldWrapper, useFieldControlId } from '@editor/components/forms/field-wrapper';
 import { DocumentPicker } from '@editor/components/parts/document-picker';
 import type { FilterMap } from '@sharedTypes/database/filter';
 import type { ResourceType } from '@sharedTypes/resource/common';
@@ -12,6 +12,31 @@ export type SelectDocumentFieldProps<T extends FieldValues> = {
   resourceType?: ResourceType;
 };
 
+function SelectDocumentFieldControl<T extends FieldValues>({
+  collectionName,
+  name,
+  resourceType,
+}: Pick<SelectDocumentFieldProps<T>, 'collectionName' | 'name' | 'resourceType'>) {
+  const controlId = useFieldControlId();
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <DocumentPicker
+          collectionName={collectionName}
+          controlId={controlId}
+          id={field.value}
+          onSelect={field.onChange}
+          resourceType={resourceType}
+        />
+      )}
+    />
+  );
+}
+
 export function SelectDocumentField<T extends FieldValues>({
   collectionName,
   name,
@@ -19,21 +44,9 @@ export function SelectDocumentField<T extends FieldValues>({
   hint,
   resourceType,
 }: SelectDocumentFieldProps<T>) {
-  const { control } = useFormContext();
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <FieldWrapper name={name} label={label} hint={hint}>
-          <DocumentPicker
-            collectionName={collectionName}
-            id={field.value}
-            onSelect={field.onChange}
-            resourceType={resourceType}
-          />
-        </FieldWrapper>
-      )}
-    />
+    <FieldWrapper name={name} label={label} hint={hint}>
+      <SelectDocumentFieldControl collectionName={collectionName} name={name} resourceType={resourceType} />
+    </FieldWrapper>
   );
 }
