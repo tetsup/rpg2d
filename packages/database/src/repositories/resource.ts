@@ -1,7 +1,7 @@
 import { Kysely } from 'kysely';
 import { ResourcePath } from '@sharedTypes/resource/common';
-import { Database, ResourceMeta } from '@sharedTypes/database/collection';
-import { createResourceDocumentSchema } from '@schema/database/resource';
+import { Database, ResourceDocument, ResourceInput } from '@sharedTypes/database/collection';
+import { createResourceInputSchema } from '@schema/database/resource';
 import { ResourceFilterSchema } from '@schema/filter/domain';
 import { buildId, extractResourceRefs } from '@database/utils/resource';
 import { execute, withTransaction } from '@database/client/pg-client';
@@ -20,49 +20,53 @@ type FindParams = {
 
 type ResourceRepositoryOptions = {
   mockDb?: Kysely<Database>;
-  mockResourceDocumentSchema?: typeof createResourceDocumentSchema;
+  mockResourceInputSchema?: typeof createResourceInputSchema;
 };
 
-function getPath(meta: ResourceMeta<any>) {
+function getPath(meta: Pick<ResourceDocument, 'namespace' | 'type' | 'name'>) {
   return { namespace: meta.namespace, type: meta.type, name: meta.name };
+}
+
+function toDocument(path: ResourcePath, input: ResourceInput): ResourceDocument {
+  return { ...input, id: buildId(path) };
 }
 
 export class ResourceRepository {
   private dbFactory: (real: Kysely<Database>) => Kysely<Database>;
-  private resourceDocumentSchema: typeof createResourceDocumentSchema;
+  private resourceInputSchema: typeof createResourceInputSchema;
 
-  constructor({ mockDb, mockResourceDocumentSchema }: ResourceRepositoryOptions = {}) {
+  constructor({ mockDb, mockResourceInputSchema }: ResourceRepositoryOptions = {}) {
     this.dbFactory = mockDb ? () => mockDb : (db) => db;
-    this.resourceDocumentSchema = mockResourceDocumentSchema ?? createResourceDocumentSchema;
+    this.resourceInputSchema = mockResourceInputSchema ?? createResourceInputSchema;
   }
 
   async create(path: ResourcePath, data: object) {
     return repositorySafe(async () => {
-      const parsed = this.resourceDocumentSchema(path.type).parse({
+      const input = this.resourceInputSchema(path.type).parse({
         ...(data as object),
-        id: buildId(path),
         namespace: path.namespace,
         type: path.type,
         name: path.name,
       });
+      const document = toDocument(path, input);
       const now = new Date();
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
         await conn
           .insertInto('resources')
           .values({
-            ...parsed,
+            ...document,
             createdAt: now,
             updatedAt: now,
           })
           .execute();
-        const refs = extractResourceRefs(data);
+        const refs = extractResourceRefs(input.data);
         if (refs.length) {
           await conn
             .insertInto('resource_edges')
             .values(
               refs.map((ref) => ({
-                from: buildId(path),
+                from: document.id,
                 to: ref,
                 type: 'reference',
               }))
@@ -75,26 +79,27 @@ export class ResourceRepository {
 
   async update(path: ResourcePath, data: object) {
     return repositorySafe(async () => {
-      const parsed = this.resourceDocumentSchema(path.type).parse(data);
-      if (parsed.namespace !== path.namespace) throw new Error('cannot change namespace');
-      if (parsed.type !== path.type) throw new Error('cannot change type');
+      const input = this.resourceInputSchema(path.type).parse(data);
+      if (input.namespace !== path.namespace) throw new Error('cannot change namespace');
+      if (input.type !== path.type) throw new Error('cannot change type');
+      const document = toDocument(path, input);
       const now = new Date();
-      const newPath = getPath(parsed);
+      const newPath = getPath(document);
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
         const result = await conn
           .updateTable('resources')
           .set({
-            name: parsed.name,
-            isValid: parsed.isValid,
-            data: parsed,
+            name: document.name,
+            isValid: document.isValid,
+            data: document,
             updatedAt: now,
           })
           .where('id', '=', buildId(path))
           .executeTakeFirst();
         if (Number(result.numUpdatedRows) === 0) throw new RepositoryNotFoundError();
         await conn.deleteFrom('resource_edges').where('from', '=', buildId(path)).execute();
-        const refs = extractResourceRefs(data);
+        const refs = extractResourceRefs(input.data);
         if (refs.length) {
           await conn
             .insertInto('resource_edges')

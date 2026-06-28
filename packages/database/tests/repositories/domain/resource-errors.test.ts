@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { createResourceDocumentSchema } from '@schema/database/resource';
+import { createResourceInputSchema } from '@schema/database/resource';
 import { ResourceRepository } from '@database/repositories/resource';
 import { createMockDb, createPgError } from './helpers/mock-db';
 import { createPlayerDocument, validPlayerPath } from './helpers/fixtures';
@@ -52,12 +52,12 @@ describe('resource repository error mapping', () => {
   describe('create', () => {
     it('maps validation_failed', async () => {
       const resources = new ResourceRepository({
-        mockResourceDocumentSchema: () =>
+        mockResourceInputSchema: () =>
           ({
             parse: vi.fn().mockImplementation(() => {
               throw new ZodError([]);
             }),
-          }) as ReturnType<typeof createResourceDocumentSchema>,
+          }) as ReturnType<typeof createResourceInputSchema>,
       });
       const result = await resources.create(validPlayerPath, validDocument);
 
@@ -117,12 +117,12 @@ describe('resource repository error mapping', () => {
   describe('update', () => {
     it('maps validation_failed', async () => {
       const resources = new ResourceRepository({
-        mockResourceDocumentSchema: () =>
+        mockResourceInputSchema: () =>
           ({
             parse: vi.fn().mockImplementation(() => {
               throw new ZodError([]);
             }),
-          }) as ReturnType<typeof createResourceDocumentSchema>,
+          }) as ReturnType<typeof createResourceInputSchema>,
       });
       const result = await resources.update(validPlayerPath, {} as object);
 

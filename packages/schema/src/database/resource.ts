@@ -1,11 +1,10 @@
 import z from 'zod';
 import type { ResourceType } from '@sharedTypes/resource/common';
-import { IdSchema, NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
+import { NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
 import { resolveResourceSchema } from '@schema/resource/common/resolver';
 
-export const createResourceMetaSchema = <T extends ResourceType>(type: T, isValid: boolean) =>
+export const createResourceMetaInputSchema = <T extends ResourceType>(type: T, isValid: boolean) =>
   z.object({
-    id: IdSchema,
     namespace: NamespaceSchema,
     type: z.literal(type),
     name: ResourceNameSchema,
@@ -14,11 +13,11 @@ export const createResourceMetaSchema = <T extends ResourceType>(type: T, isVali
     isValid: z.literal(isValid),
   });
 
-export const createValidResourceDocumentSchema = (type: ResourceType) =>
-  createResourceMetaSchema(type, true).extend({ data: resolveResourceSchema(type) });
+export const createValidResourceInputSchema = (type: ResourceType) =>
+  createResourceMetaInputSchema(type, true).extend({ data: resolveResourceSchema(type) });
 
-export const createInvalidResourceDocumentSchema = (type: ResourceType) =>
-  createResourceMetaSchema(type, false).extend({ data: z.object() });
+export const createInvalidResourceInputSchema = (type: ResourceType) =>
+  createResourceMetaInputSchema(type, false).extend({ data: z.object() });
 
-export const createResourceDocumentSchema = (type: ResourceType) =>
-  z.union([createValidResourceDocumentSchema(type), createInvalidResourceDocumentSchema(type)]);
+export const createResourceInputSchema = (type: ResourceType) =>
+  z.union([createValidResourceInputSchema(type), createInvalidResourceInputSchema(type)]);

@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { UserDocumentSchema } from '@schema/database/user';
+import { UserInputSchema } from '@schema/database/user';
 import { UserRepository } from '@database/repositories/user';
 import { createMockDb, createPgError } from './helpers/mock-db';
 import { createUserInput } from './helpers/fixtures';
@@ -62,7 +62,7 @@ describe('user repository error mapping', () => {
           parse: vi.fn(() => {
             throw new ZodError([]);
           }),
-        } as unknown as typeof UserDocumentSchema,
+        } as unknown as typeof UserInputSchema,
       });
 
       const result = await users.update(validUser);

@@ -1,16 +1,13 @@
 import { useTranslation } from 'react-i18next';
-import { createInvalidResourceDocumentSchema } from '@schema/database/resource';
+import { createInvalidResourceInputSchema } from '@schema/database/resource';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { ManifestForm } from '@editor/forms/manifest';
 import { ResourceInput } from '@sharedTypes/database/collection';
 import { useNavigate } from 'react-router-dom';
 import { fetchPostApi } from '@editor/lib/api/post';
-import type z from 'zod';
 
-const manifestCreateSchema = createInvalidResourceDocumentSchema('manifest').omit({
-  id: true,
-}) as unknown as z.ZodType<ResourceInput<'manifest'>, ResourceInput<'manifest'>>;
+const manifestCreateSchema = createInvalidResourceInputSchema('manifest');
 
 export function NewManifestPage() {
   const { t } = useTranslation();
