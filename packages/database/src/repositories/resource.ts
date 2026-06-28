@@ -38,10 +38,13 @@ export class ResourceRepository {
 
   async create(path: ResourcePath, data: object) {
     return repositorySafe(async () => {
-      const parsed = this.resourceDocumentSchema(path.type).parse(data);
-      if (parsed.namespace !== path.namespace) throw new Error('namespace does not match');
-      if (parsed.type !== path.type) throw new Error('type does not match');
-      if (parsed.name !== path.name) throw new Error('name does not match');
+      const parsed = this.resourceDocumentSchema(path.type).parse({
+        ...(data as object),
+        id: buildId(path),
+        namespace: path.namespace,
+        type: path.type,
+        name: path.name,
+      });
       const now = new Date();
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);

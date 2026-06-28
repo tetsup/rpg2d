@@ -1,19 +1,23 @@
 import { useTranslation } from 'react-i18next';
-import { createResourceDocumentSchema } from '@schema/database/resource';
+import { createInvalidResourceDocumentSchema } from '@schema/database/resource';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { ManifestForm } from '@editor/forms/manifest';
-import { ResourceDocument } from '@sharedTypes/database/collection';
+import { ResourceInput } from '@sharedTypes/database/collection';
 import { useNavigate } from 'react-router-dom';
 import { fetchPostApi } from '@editor/lib/api/post';
+import type z from 'zod';
+
+const manifestCreateSchema = createInvalidResourceDocumentSchema('manifest').omit({
+  id: true,
+}) as unknown as z.ZodType<ResourceInput<'manifest'>, ResourceInput<'manifest'>>;
 
 export function NewManifestPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const fields = ManifestForm({ mode: 'create' });
 
-  const defaultValues: ResourceDocument<'manifest'> = {
-    id: '',
+  const defaultValues: ResourceInput<'manifest'> = {
     namespace: '',
     type: 'manifest',
     name: '',
@@ -37,15 +41,16 @@ export function NewManifestPage() {
     },
   };
 
-  const onSubmit = async (values: ResourceDocument<'manifest'>) => {
-    await fetchPostApi(`/api/resources/${values.namespace}/${values.type}/${values.name}`, values);
-    navigate(`/resource/${values.namespace}/${values.type}/${values.name}`);
+  const onSubmit = async (values: ResourceInput<'manifest'>) => {
+    const { namespace, type, name } = values;
+    await fetchPostApi(`/api/resources/${namespace}/${type}/${name}`, values);
+    navigate(`/resource/${namespace}/${type}/${name}`);
   };
   return (
     <LayoutShell titleBarProps={{ title: t('プロジェクト設定') }}>
       <FormTemplete
         fieldGroups={fields}
-        schema={createResourceDocumentSchema('manifest')}
+        schema={manifestCreateSchema}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
       />

@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import type { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';
-import { ResourceDocument } from '@sharedTypes/database/collection';
+import { ResourceInput } from '@sharedTypes/database/collection';
 
 type ManifestFieldParams = { mode: 'create' | 'update' };
 
-export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateProps<ResourceDocument<'manifest'>>[] {
+export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateProps<ResourceInput<'manifest'>>[] {
   const { t } = useTranslation();
 
   return [
