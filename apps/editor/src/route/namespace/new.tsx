@@ -20,7 +20,7 @@ export function NewNamespacePage() {
   };
 
   const onSubmit = async (values: NamespaceInput) => {
-    await fetchPostApi('/api/namespace', values);
+    await fetchPostApi('/api/namespaces', values);
     navigate(`/namespace/${values.id}`);
   };
 

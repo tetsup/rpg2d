@@ -38,7 +38,7 @@ export function NewManifestPage() {
   };
 
   const onSubmit = async (values: ResourceDocument<'manifest'>) => {
-    await fetchPostApi('/api/resource', values);
+    await fetchPostApi(`/api/resources/${values.namespace}/${values.type}/${values.name}`, values);
     navigate(`/resource/${values.namespace}/${values.type}/${values.name}`);
   };
   return (

@@ -23,4 +23,36 @@ namespacesRoute.post(
   })
 );
 
+namespacesRoute.get(
+  '/:id',
+  handle(async (c) => {
+    const id = c.req.param('id')!;
+    return await new NamespaceRepository().get(id);
+  })
+);
+
+namespacesRoute.post(
+  '/',
+  handle(async (c) => {
+    const userId = c.get('user').id;
+    return await new NamespaceRepository().create(await c.req.json(), userId);
+  })
+);
+
+namespacesRoute.put(
+  '/:id',
+  handle(async (c) => {
+    const id = c.req.param('id')!;
+    return await new NamespaceRepository().update(id, await c.req.json());
+  })
+);
+
+namespacesRoute.delete(
+  '/:id',
+  handle(async (c) => {
+    const id = c.req.param('id')!;
+    return await new NamespaceRepository().delete(id);
+  })
+);
+
 export { namespacesRoute };

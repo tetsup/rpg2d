@@ -7,7 +7,7 @@ export function documentKey(collectionName: CollectionName, id: string) {
 }
 
 async function getDocumentById<T>(collectionName: CollectionName, id: string) {
-  return (await fetchGetApi(`${collectionName}/${id}`)) as T;
+  return (await fetchGetApi(`/api/${collectionName}/${id}`)) as T;
 }
 
 export function useDocumentById<T>(collectionName: CollectionName, id?: string) {
