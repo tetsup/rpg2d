@@ -1,28 +1,34 @@
 import z from 'zod';
 import type { NamespaceInputSchema } from '@schema/database/namespace';
-import type { NamespacePermissionDocumentSchema } from '@schema/database/namespace-permission';
-import type { createResourceMetaSchema } from '@schema/database/resource';
-import type { ResourceEdgeDocumentSchema } from '@schema/database/resource-edge';
-import type { UserDocumentSchema } from '@schema/database/user';
-import { ResourceData, ResourceType } from '@sharedTypes/resource/common';
+import type { NamespacePermissionInputSchema } from '@schema/database/namespace-permission';
+import type { createResourceInputSchema } from '@schema/database/resource';
+import type { ResourceEdgeInputSchema } from '@schema/database/resource-edge';
+import type { UserInputSchema } from '@schema/database/user';
+import type { ResourceType } from '@sharedTypes/resource/common';
 
 export type WithTimestamp<T> = T & { createdAt: Date; updatedAt: Date };
 
-export type NamespacePermissionDocument = z.infer<typeof NamespacePermissionDocumentSchema>;
-export type NamespacePermissionInput = NamespacePermissionDocument;
+export type NamespacePermissionInput = z.infer<typeof NamespacePermissionInputSchema>;
+export type NamespacePermissionDocument = NamespacePermissionInput;
 
 export type NamespaceInput = z.infer<typeof NamespaceInputSchema>;
 export type NamespaceDocument = NamespaceInput & { createdBy: string };
 
-export type ResourceEdgeDocument = z.infer<typeof ResourceEdgeDocumentSchema>;
-export type ResourceEdgeInput = ResourceEdgeDocument;
+export type ResourceEdgeInput = z.infer<typeof ResourceEdgeInputSchema>;
+export type ResourceEdgeDocument = ResourceEdgeInput;
 
-export type ResourceMeta<T extends ResourceType> = z.infer<ReturnType<typeof createResourceMetaSchema<T>>>;
-export type ResourceDocument<T extends ResourceType = any> = ResourceMeta<T> & { data: ResourceData<T> };
-export type ResourceInput<T extends ResourceType = any> = Omit<ResourceDocument<T>, 'id'>;
+export type ResourceInput<T extends ResourceType = ResourceType> = z.infer<
+  ReturnType<typeof createResourceInputSchema<T>>
+>;
+export type ResourceDocument<T extends ResourceType = ResourceType> = ResourceInput<T> & { id: string };
 
-export type UserDocument = z.infer<typeof UserDocumentSchema>;
-export type UserInput = UserDocument;
+export type ResourceMeta<T extends ResourceType = ResourceType> = Pick<
+  ResourceDocument<T>,
+  'id' | 'namespace' | 'type' | 'name' | 'version' | 'description' | 'isValid'
+>;
+
+export type UserInput = z.infer<typeof UserInputSchema>;
+export type UserDocument = UserInput;
 
 export type DatabaseInput = {
   namespaces: NamespaceInput;

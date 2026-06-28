@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const UserDocumentSchema = z.object({
+export const UserInputSchema = z.object({
   id: z.string().nonempty(),
   presenceName: z.string().nonempty(),
   email: z.email().optional(),

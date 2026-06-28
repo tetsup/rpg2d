@@ -1,36 +1,17 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchGetApi } from '@editor/lib/api/get';
-
-export type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-};
+import type { UserDocument } from '@sharedTypes/database/collection';
+import { useMe } from '@editor/hooks/api/me';
 
 type AuthContextValue = {
   status: 'loading' | 'authenticated' | 'unauthenticated';
-  user: AuthUser | null;
+  user: UserDocument | null;
   refetch: () => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function fetchMe(): Promise<AuthUser | null> {
-  try {
-    return await fetchGetApi('/api/auth/me');
-  } catch {
-    return null;
-  }
-}
-
 export function AuthProvider({ children }: PropsWithChildren) {
-  const query = useQuery({
-    queryKey: ['me'],
-    queryFn: fetchMe,
-    retry: false,
-    staleTime: 5 * 60 * 1000,
-  });
+  const query = useMe();
 
   const value: AuthContextValue = {
     status: query.isPending ? 'loading' : query.data ? 'authenticated' : 'unauthenticated',

@@ -1,7 +1,7 @@
 import type { Kysely } from 'kysely';
 import type { Database } from '@sharedTypes/database/collection';
 import { NamespaceInputSchema } from '@schema/database/namespace';
-import { NamespacePermissionDocumentSchema } from '@schema/database/namespace-permission';
+import { NamespacePermissionInputSchema } from '@schema/database/namespace-permission';
 import { NamespaceFilterSchema } from '@schema/filter/domain';
 import { execute, withTransaction } from '@database/client/pg-client';
 import { applyNamespaceFilter } from '@database/filters/namespace';
@@ -11,18 +11,18 @@ import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 type NamespaceRepositoryOptions = {
   mockDb?: Kysely<Database>;
   mockNamespaceSchema?: typeof NamespaceInputSchema;
-  mockPermissionSchema?: typeof NamespacePermissionDocumentSchema;
+  mockPermissionSchema?: typeof NamespacePermissionInputSchema;
 };
 
 export class NamespaceRepository {
   private dbFactory: (real: Kysely<Database>) => Kysely<Database>;
   private namespaceSchema: typeof NamespaceInputSchema;
-  private permissionSchema: typeof NamespacePermissionDocumentSchema;
+  private permissionSchema: typeof NamespacePermissionInputSchema;
 
   constructor({ mockDb, mockNamespaceSchema, mockPermissionSchema }: NamespaceRepositoryOptions = {}) {
     this.dbFactory = mockDb ? () => mockDb : (db) => db;
     this.namespaceSchema = mockNamespaceSchema ?? NamespaceInputSchema;
-    this.permissionSchema = mockPermissionSchema ?? NamespacePermissionDocumentSchema;
+    this.permissionSchema = mockPermissionSchema ?? NamespacePermissionInputSchema;
   }
 
   async get(id: string) {

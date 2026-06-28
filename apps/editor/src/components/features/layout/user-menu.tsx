@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { LogOut, Settings, Languages } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchGetApi } from '@editor/lib/api/get';
+import { useAuth } from '@editor/providers/auth';
 import { UserMenuSkeleton } from '@editor/components/skeletons/user-menu';
 import {
   DropdownMenu,
@@ -13,17 +12,9 @@ import {
 import { Avatar, AvatarFallback } from '@editor/components/ui/avatar';
 import { Button } from '@editor/components/ui/button';
 
-type User = {
-  presenceName: string;
-  email: string;
-};
-
 export function UserMenu() {
   const { t } = useTranslation();
-  const { data: user } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => fetchGetApi<{}, User>('/api/auth/me'),
-  });
+  const { status, user } = useAuth();
   const onLogout = () => {
     window.location.href = '/api/auth/logout';
   };
@@ -36,7 +27,11 @@ export function UserMenu() {
     .join('')
     .toUpperCase();
 
-  return user ? (
+  if (status === 'loading' || !user) {
+    return <UserMenuSkeleton />;
+  }
+
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render=<Button variant="ghost" className="h-10 px-2 flex items-center gap-2 rounded-md border">
@@ -46,7 +41,7 @@ export function UserMenu() {
 
           <div className="text-left leading-tight">
             <div className="text-xs font-medium">{user.presenceName}</div>
-            <div className="text-[10px] text-muted-foreground">{user?.email}</div>
+            <div className="text-[10px] text-muted-foreground">{user.email}</div>
           </div>
         </Button>
       />
@@ -69,7 +64,5 @@ export function UserMenu() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  ) : (
-    <UserMenuSkeleton />
   );
 }

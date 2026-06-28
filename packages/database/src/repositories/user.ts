@@ -1,7 +1,7 @@
 import type { Kysely } from 'kysely';
 import type { Database } from '@sharedTypes/database/collection';
 import { execute } from '@database/client/pg-client';
-import { UserDocumentSchema } from '@schema/database/user';
+import { UserInputSchema } from '@schema/database/user';
 import { RepositoryNotFoundError, repositorySafe } from './utils/common';
 import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 import { UserFilterSchema } from '@schema/filter/domain';
@@ -9,16 +9,16 @@ import { applyUserFilter } from '@database/filters/user';
 
 type UserRepositoryOptions = {
   mockDb?: Kysely<Database>;
-  mockSchema?: typeof UserDocumentSchema;
+  mockSchema?: typeof UserInputSchema;
 };
 
 export class UserRepository {
   private dbFactory: (real: Kysely<Database>) => Kysely<Database>;
-  private schema: typeof UserDocumentSchema;
+  private schema: typeof UserInputSchema;
 
   constructor({ mockDb, mockSchema }: UserRepositoryOptions = {}) {
     this.dbFactory = mockDb ? () => mockDb : (db) => db;
-    this.schema = mockSchema ?? UserDocumentSchema;
+    this.schema = mockSchema ?? UserInputSchema;
   }
 
   async get(id: string) {

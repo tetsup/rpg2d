@@ -1,9 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@sharedTypes/database/collection';
-import type { FilterMap } from '@sharedTypes/database/filter';
-import { documentKey, getDocumentById } from '@editor/hooks/api/by-id';
+import { documentKey, getDocumentById, type DocumentCollection } from '@editor/hooks/api/by-id';
 
-export function useResolvedDocument<T extends keyof FilterMap>(
+export function useResolvedDocument<T extends DocumentCollection>(
   collectionName: T,
   id?: string
 ): Database[T] | undefined {
@@ -12,7 +11,7 @@ export function useResolvedDocument<T extends keyof FilterMap>(
 
   const { data: fetched } = useQuery({
     queryKey: documentKey(collectionName, id!),
-    queryFn: () => getDocumentById<Database[T]>(collectionName, id!),
+    queryFn: () => getDocumentById(collectionName, id!),
     enabled: id != null && cached == null,
     initialData: cached,
   });
