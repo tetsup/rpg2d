@@ -1,6 +1,6 @@
 import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 import { FieldWrapper, useFieldControlId } from '@editor/components/forms/field-wrapper';
-import { Switch } from '@editor/components/ui/switch';
+import { StyledSwitch } from '@editor/components/parts/styled-switch';
 
 export type SwitchFieldProps<T extends FieldValues> = {
   name: FieldPath<T>;
@@ -26,7 +26,7 @@ function SwitchFieldControl<T extends FieldValues>({
       control={control}
       render={({ field }) => (
         <div className="flex h-10 w-full items-center justify-between gap-4">
-          <Switch
+          <StyledSwitch
             id={controlId}
             size="xl"
             checked={field.value}
