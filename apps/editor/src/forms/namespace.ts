@@ -28,6 +28,7 @@ export function NamespaceFields({ mode }: NamespaceFieldParams): FieldGroupTempl
           params: {
             name: 'isPrivate',
             label: t('非公開'),
+            variant: 'segmented',
             labelOn: t('公開しない'),
             labelOff: t('公開する'),
           },
