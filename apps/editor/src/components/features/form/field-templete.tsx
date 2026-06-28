@@ -1,6 +1,5 @@
 import { FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 import { ControlSection } from '@editor/components/forms/control-section';
-import { Input } from '@editor/components/ui/input';
 import { InputField, type InputFieldProps } from './input-field';
 import { SelectField, type SelectFieldProps } from './select-field';
 import { FieldPosField, type FieldPosFieldProps } from './field-pos-field';
@@ -37,7 +36,7 @@ function FieldTemplate<T extends FieldValues>({ type, params }: FieldItem<T>) {
     case 'text':
       return <InputField {...params} />;
     case 'hidden':
-      return <Input {...register(params.name)} />;
+      return <input type="hidden" {...register(params.name)} />;
     case 'select':
       return <SelectField {...params} />;
     case 'switch':
