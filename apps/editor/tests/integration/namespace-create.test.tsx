@@ -27,6 +27,27 @@ describe('namespace create', () => {
     expect(isPrivateSwitch).not.toBeChecked();
   });
 
+  it('toggles via clicking the switch track', async () => {
+    const user = userEvent.setup();
+    renderEditorRoutes({ initialEntry: '/namespace/new' });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('非公開')).toBeInTheDocument();
+    });
+
+    const isPrivateSwitch = screen.getByRole('switch', { name: '非公開' });
+
+    expect(isPrivateSwitch).not.toBeChecked();
+
+    await user.click(screen.getByText('公開しない'));
+
+    expect(isPrivateSwitch).toBeChecked();
+
+    await user.click(screen.getByText('公開する'));
+
+    expect(isPrivateSwitch).not.toBeChecked();
+  });
+
   it('fills the form, posts to the API, and navigates to the edit page', async () => {
     let postedBody: unknown;
 
