@@ -25,16 +25,15 @@ function SwitchFieldControl<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field }) => (
-        <div className="flex h-10 w-full items-center justify-between gap-4">
-          <StyledSwitch
-            id={controlId}
-            size="xl"
-            checked={field.value}
-            onCheckedChange={field.onChange}
-            disabled={disabled}
-          />
-          <span className="text-muted-foreground text-md whitespace-nowrap">{field.value ? labelOn : labelOff}</span>
-        </div>
+        <StyledSwitch
+          id={controlId}
+          variant="segmented"
+          labelOn={labelOn}
+          labelOff={labelOff}
+          checked={field.value}
+          onCheckedChange={field.onChange}
+          disabled={disabled}
+        />
       )}
     />
   );

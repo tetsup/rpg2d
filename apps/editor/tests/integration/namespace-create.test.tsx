@@ -39,11 +39,11 @@ describe('namespace create', () => {
 
     expect(isPrivateSwitch).not.toBeChecked();
 
-    await user.click(isPrivateSwitch.parentElement!);
+    await user.click(screen.getByText('公開しない'));
 
     expect(isPrivateSwitch).toBeChecked();
 
-    await user.click(isPrivateSwitch.parentElement!);
+    await user.click(screen.getByText('公開する'));
 
     expect(isPrivateSwitch).not.toBeChecked();
   });
