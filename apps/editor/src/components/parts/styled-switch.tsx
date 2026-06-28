@@ -29,7 +29,13 @@ export function StyledSwitch({
   className,
 }: StyledSwitchProps) {
   return (
-    <span className={cn('relative inline-flex shrink-0 items-center', className)}>
+    <label
+      className={cn(
+        'relative inline-flex shrink-0 cursor-pointer items-center',
+        disabled && 'cursor-not-allowed',
+        className
+      )}
+    >
       <input
         type="checkbox"
         role="switch"
@@ -43,15 +49,15 @@ export function StyledSwitch({
       <span
         aria-hidden="true"
         className={cn(
-          'relative inline-flex shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-input transition-colors outline-none',
+          'relative inline-flex shrink-0 items-center rounded-full border border-transparent bg-input transition-colors outline-none',
           'after:pointer-events-none after:block after:rounded-full after:bg-background after:transition-transform',
           'after:translate-x-0 peer-checked:after:translate-x-[calc(100%-2px)]',
           'peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50',
-          'peer-checked:bg-primary peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
+          'peer-checked:bg-primary peer-disabled:opacity-50',
           'dark:bg-input/80 dark:peer-checked:bg-primary dark:peer-checked:after:bg-primary-foreground dark:after:bg-foreground',
           sizeClasses[size]
         )}
       />
-    </span>
+    </label>
   );
 }
