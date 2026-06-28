@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { Database } from '@sharedTypes/database/collection';
 import type { FilterMap } from '@sharedTypes/database/filter';
 import type { ResourceType } from '@sharedTypes/resource/common';
+import { renderDocumentLabel } from '@editor/lib/document-label';
 import { Input } from '../ui/input';
 import { InfiniteScrollSelect } from './infinite-scroll-select';
 
@@ -36,11 +37,7 @@ export function SelectDocument<T extends keyof FilterMap>({
     [collectionName, searchText, resourceType]
   );
 
-  const renderItemLabels = {
-    namespaces: (item: Database['namespaces']) => `${item.id}: ${item.presenceName}`,
-    resources: (item: Database['resources']) => `${item.name}: ${item.description}`,
-    users: (item: Database['users']) => `${item.presenceName}(${item.email})`,
-  };
+  const renderItemLabel = (item: Database[T]) => renderDocumentLabel(collectionName, item);
 
   return (
     <>
@@ -51,7 +48,7 @@ export function SelectDocument<T extends keyof FilterMap>({
         collectionName={collectionName}
         onItemSelect={onItemSelect}
         query={query}
-        renderItemLabel={renderItemLabels[collectionName] as (item: Database[T]) => string}
+        renderItemLabel={renderItemLabel}
       />
     </>
   );

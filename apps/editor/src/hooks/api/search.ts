@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@sharedTypes/database/collection';
 import type { FilterMap } from '@sharedTypes/database/filter';
 import { fetchPostApi } from '@editor/lib/api/post';
+import { documentKey } from '@editor/hooks/api/by-id';
 
 export type SearchRequest<K extends keyof FilterMap> = {
   query: FilterMap[K][];
@@ -42,7 +43,7 @@ export function useDocumentList<K extends keyof FilterMap>(params: SearchParams<
         cursor: pageParam,
       });
       for (const item of response.items) {
-        queryClient.setQueryData([params.collectionName, item.id], item);
+        queryClient.setQueryData(documentKey(params.collectionName, item.id), item);
       }
       return response;
     },

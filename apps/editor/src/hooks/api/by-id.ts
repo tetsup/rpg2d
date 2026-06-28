@@ -6,7 +6,7 @@ export function documentKey(collectionName: CollectionName, id: string) {
   return [collectionName, id];
 }
 
-async function getDocumentById<T>(collectionName: CollectionName, id: string) {
+export async function getDocumentById<T>(collectionName: CollectionName, id: string) {
   return (await fetchGetApi(`/api/${collectionName}/${id}`)) as T;
 }
 
