@@ -8,6 +8,7 @@ type ActionCardProps = {
   onClick?: () => void;
   variant?: 'success' | 'warning' | 'error' | 'disabled';
   disabled?: boolean;
+  type?: React.ComponentProps<'button'>['type'];
 };
 
 const variants = {
@@ -36,11 +37,12 @@ export function ActionCard({
   onClick,
   variant = 'success',
   disabled = false,
+  type = 'button',
 }: ActionCardProps) {
   const style = variants[variant];
 
   return (
-    <CardButton onClick={onClick} disabled={disabled} className={style.border}>
+    <CardButton type={type} onClick={onClick} disabled={disabled} className={style.border}>
       <div
         className={`
             flex
