@@ -1,7 +1,6 @@
 import { Hono } from 'hono';
 import { handle } from '../utils/handle';
 import { NamespaceRepository } from '@database/repositories/namespace';
-import { findWithCursor } from '@database/repositories/utils/filter';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 
 const namespaceRoute = new Hono();
@@ -36,22 +35,6 @@ namespaceRoute.delete(
   handle(async (c) => {
     const id = c.req.param('id')!;
     return await new NamespaceRepository().delete(id);
-  })
-);
-
-namespaceRoute.post(
-  '/search',
-  handle(async (c) => {
-    const { query, cursor } = await c.req.json();
-    const userId = c.get('user').id;
-    return await findWithCursor({
-      repository: new NamespaceRepository(),
-      query,
-      userId,
-      cursor,
-      sortKey: 'id',
-      chunkSize: 50,
-    });
   })
 );
 

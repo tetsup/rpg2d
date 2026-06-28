@@ -1,13 +1,15 @@
 import { Controller, FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 import { FieldWrapper } from '@editor/components/forms/field-wrapper';
 import { DocumentPicker } from '@editor/components/parts/document-picker';
-import { CollectionName } from '@sharedTypes/database/collection';
+import type { FilterMap } from '@sharedTypes/database/filter';
+import type { ResourceType } from '@sharedTypes/resource/common';
 
 export type SelectDocumentFieldProps<T extends FieldValues> = {
-  collectionName: CollectionName;
+  collectionName: keyof FilterMap;
   name: FieldPath<T>;
   label: string;
   hint?: string;
+  resourceType?: ResourceType;
 };
 
 export function SelectDocumentField<T extends FieldValues>({
@@ -15,6 +17,7 @@ export function SelectDocumentField<T extends FieldValues>({
   name,
   label,
   hint,
+  resourceType,
 }: SelectDocumentFieldProps<T>) {
   const { control } = useFormContext();
   return (
@@ -23,7 +26,12 @@ export function SelectDocumentField<T extends FieldValues>({
       control={control}
       render={({ field }) => (
         <FieldWrapper name={name} label={label} hint={hint}>
-          <DocumentPicker collectionName={collectionName} id={field.value} onSelect={field.onChange} />
+          <DocumentPicker
+            collectionName={collectionName}
+            id={field.value}
+            onSelect={field.onChange}
+            resourceType={resourceType}
+          />
         </FieldWrapper>
       )}
     />

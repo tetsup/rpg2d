@@ -38,6 +38,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
             name: 'data.initialState.field.fieldId',
             label: t('フィールド'),
             collectionName: 'resources',
+            resourceType: 'field',
           },
         },
         {
@@ -58,6 +59,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
             name: 'data.config.defaultMessagePanel',
             label: t('メッセージパネル'),
             collectionName: 'resources',
+            resourceType: 'panel',
           },
         },
       ],

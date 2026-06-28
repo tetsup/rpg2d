@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { ResourceRepository } from '@database/repositories/resource';
-import { findWithCursor } from '@database/repositories/utils/filter';
 import { ResourceByIdReqSchema } from '@schema/api/resource/by-id';
 import { authorizeResourceMiddleware } from '@api/auth/middlewares/authorize-resource';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
@@ -44,22 +43,6 @@ resourceRoute.delete(
   handle(async (c) => {
     const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
     return await new ResourceRepository().delete(pathParams);
-  })
-);
-
-resourceRoute.post(
-  '/search',
-  handle(async (c) => {
-    const { query, cursor } = await c.req.json();
-    const userId = c.get('user').id;
-    return await findWithCursor({
-      repository: new ResourceRepository(),
-      query,
-      userId,
-      cursor,
-      sortKey: 'id',
-      chunkSize: 50,
-    });
   })
 );
 
