@@ -40,9 +40,9 @@ async function setupMockIfNeeded(mode: RuntimeMode): Promise<void> {
 function resolveResourceUri(mode: RuntimeMode): string {
   switch (mode) {
     case 'mock':
-      return '/api/resource';
+      return '/api/resources';
     default:
-      return `${getApiBaseUrl()}/api/resource`;
+      return `${getApiBaseUrl()}/api/resources`;
   }
 }
 

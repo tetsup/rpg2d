@@ -91,7 +91,7 @@ function makeManifest(): ManifestData {
 }
 
 function makeConfig(): ResourceConfig {
-  return { resourceUri: '/api/resource' };
+  return { resourceUri: '/api/resources' };
 }
 
 function makeRenderer(): GameRenderer {
