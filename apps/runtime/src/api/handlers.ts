@@ -32,7 +32,7 @@ const resourceLoader = new ResourceLoader();
 
 export const handlers = [
   http.get(
-    '/api/resource/:namespace/:type/:name',
+    '/api/resources/:namespace/:type/:name',
     async ({ params }) =>
       await execWithHandleError(async () => {
         const { namespace, type, name } = ResourcePathParamsSchema.parse(params);

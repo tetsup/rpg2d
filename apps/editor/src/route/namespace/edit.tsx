@@ -15,12 +15,12 @@ export function EditNamespacePage() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useQuery({
     queryKey: ['namespace', id],
-    queryFn: () => fetchGetApi(`/api/namespace/${id}`),
+    queryFn: () => fetchGetApi(`/api/namespaces/${id}`),
   });
   const fields = NamespaceFields({ mode: 'update' });
 
   const onSubmit = async (values: NamespaceInput) => {
-    await fetchPutApi(`/api/namespace/${id}`, values);
+    await fetchPutApi(`/api/namespaces/${id}`, values);
   };
 
   return (

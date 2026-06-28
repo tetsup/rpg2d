@@ -1,5 +1,5 @@
 import { FieldPath, FieldValues, useFormContext } from 'react-hook-form';
-import { FieldWrapper } from '@editor/components/forms/field-wrapper';
+import { FieldWrapper, useFieldControlId } from '@editor/components/forms/field-wrapper';
 import { Input } from '@editor/components/ui/input';
 
 export type FieldPosFieldProps<T extends FieldValues> = {
@@ -9,20 +9,37 @@ export type FieldPosFieldProps<T extends FieldValues> = {
   disabled?: boolean;
 };
 
-export function FieldPosField({ name, label, hint, disabled }: FieldPosFieldProps<any>) {
+function FieldPosFieldControl<T extends FieldValues>({
+  name,
+  disabled,
+}: Pick<FieldPosFieldProps<T>, 'name' | 'disabled'>) {
+  const controlId = useFieldControlId();
   const { register } = useFormContext();
+  const xId = `${controlId}-x`;
+  const yId = `${controlId}-y`;
+
   return (
-    <FieldWrapper name={name} label={label} hint={hint}>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex items-center gap-2">
-          <label className="w-4 text-sm">x</label>
-          <Input {...register(`${name}.x`)} disabled={disabled} />
-        </div>
-        <div className="flex items-center gap-2">
-          <label className="w-4 text-sm">y</label>
-          <Input {...register(`${name}.y`)} disabled={disabled} />
-        </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div className="flex items-center gap-2">
+        <label htmlFor={xId} className="w-4 text-sm">
+          x
+        </label>
+        <Input {...register(`${name}.x`)} id={xId} disabled={disabled} />
       </div>
+      <div className="flex items-center gap-2">
+        <label htmlFor={yId} className="w-4 text-sm">
+          y
+        </label>
+        <Input {...register(`${name}.y`)} id={yId} disabled={disabled} />
+      </div>
+    </div>
+  );
+}
+
+export function FieldPosField<T extends FieldValues>({ name, label, hint, disabled }: FieldPosFieldProps<T>) {
+  return (
+    <FieldWrapper name={name} label={label} hint={hint} labelVariant="group">
+      <FieldPosFieldControl name={name} disabled={disabled} />
     </FieldWrapper>
   );
 }

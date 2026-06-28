@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import type { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';
-import { ResourceDocument } from '@sharedTypes/database/collection';
+import { ResourceInput } from '@sharedTypes/database/collection';
 
 type ManifestFieldParams = { mode: 'create' | 'update' };
 
-export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateProps<ResourceDocument<'manifest'>>[] {
+export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateProps<ResourceInput<'manifest'>>[] {
   const { t } = useTranslation();
 
   return [
@@ -14,7 +14,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
         mode === 'create'
           ? {
               type: 'select-document',
-              params: { name: 'namespace', label: t('グループ'), collectionName: 'namespace', permission: 'read' },
+              params: { name: 'namespace', label: t('グループ'), collectionName: 'namespaces' },
             }
           : {
               type: 'text',
@@ -37,7 +37,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           params: {
             name: 'data.initialState.field.fieldId',
             label: t('フィールド'),
-            collectionName: 'resource',
+            collectionName: 'resources',
             resourceType: 'field',
           },
         },
@@ -46,7 +46,6 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           params: {
             name: 'data.initialState.field.pos',
             label: t('プレイヤー位置'),
-            refField: 'initialState.field.fieldId',
           },
         },
       ],
@@ -59,7 +58,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           params: {
             name: 'data.config.defaultMessagePanel',
             label: t('メッセージパネル'),
-            collectionName: 'resource',
+            collectionName: 'resources',
             resourceType: 'panel',
           },
         },

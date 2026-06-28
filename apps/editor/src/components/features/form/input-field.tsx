@@ -1,5 +1,5 @@
 import { FieldPath, FieldValues, useFormContext } from 'react-hook-form';
-import { FieldWrapper } from '@editor/components/forms/field-wrapper';
+import { FieldWrapper, useFieldControlId } from '@editor/components/forms/field-wrapper';
 import { Input } from '@editor/components/ui/input';
 
 export type InputFieldProps<T extends FieldValues> = {
@@ -9,11 +9,19 @@ export type InputFieldProps<T extends FieldValues> = {
   disabled?: boolean;
 };
 
-export function InputField({ name, label, hint, disabled }: InputFieldProps<any>) {
+function InputFieldControl<T extends FieldValues>({
+  name,
+  disabled,
+}: Pick<InputFieldProps<T>, 'name' | 'disabled'>) {
+  const controlId = useFieldControlId();
   const { register } = useFormContext();
+  return <Input {...register(name)} id={controlId} className="w-full" type="text" disabled={disabled} />;
+}
+
+export function InputField<T extends FieldValues>({ name, label, hint, disabled }: InputFieldProps<T>) {
   return (
     <FieldWrapper name={name} label={label} hint={hint}>
-      <Input {...register(name)} className="w-full" type="text" disabled={disabled} />
+      <InputFieldControl name={name} disabled={disabled} />
     </FieldWrapper>
   );
 }

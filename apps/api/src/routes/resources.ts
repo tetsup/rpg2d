@@ -8,46 +8,10 @@ import { Action } from '../utils/authorize';
 import { handle } from '../utils/handle';
 import { parseParams } from '../utils/params';
 
-const resourceRoute = new Hono();
-resourceRoute.use('*', resolveUserMiddleware);
+const resourcesRoute = new Hono();
+resourcesRoute.use('*', resolveUserMiddleware);
 
-resourceRoute.get(
-  '/:namespace/:type/:name',
-  authorizeResourceMiddleware(Action.READ),
-  handle(async (c) => {
-    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
-    return await new ResourceRepository().get(pathParams);
-  })
-);
-
-resourceRoute.post(
-  '/:namespace/:type/:name',
-  authorizeResourceMiddleware(Action.CREATE),
-  handle(async (c) => {
-    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
-    return await new ResourceRepository().create(pathParams, await c.req.json());
-  })
-);
-
-resourceRoute.put(
-  '/:namespace/:type/:name',
-  authorizeResourceMiddleware(Action.UPDATE),
-  handle(async (c) => {
-    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
-    return await new ResourceRepository().update(pathParams, await c.req.json());
-  })
-);
-
-resourceRoute.delete(
-  '/:namespace/:type/:name',
-  authorizeResourceMiddleware(Action.DELETE),
-  handle(async (c) => {
-    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
-    return await new ResourceRepository().delete(pathParams);
-  })
-);
-
-resourceRoute.post(
+resourcesRoute.post(
   '/search',
   handle(async (c) => {
     const { query, cursor } = await c.req.json();
@@ -63,4 +27,40 @@ resourceRoute.post(
   })
 );
 
-export { resourceRoute };
+resourcesRoute.get(
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.READ),
+  handle(async (c) => {
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().get(pathParams);
+  })
+);
+
+resourcesRoute.post(
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.CREATE),
+  handle(async (c) => {
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().create(pathParams, await c.req.json());
+  })
+);
+
+resourcesRoute.put(
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.UPDATE),
+  handle(async (c) => {
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().update(pathParams, await c.req.json());
+  })
+);
+
+resourcesRoute.delete(
+  '/:namespace/:type/:name',
+  authorizeResourceMiddleware(Action.DELETE),
+  handle(async (c) => {
+    const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
+    return await new ResourceRepository().delete(pathParams);
+  })
+);
+
+export { resourcesRoute };

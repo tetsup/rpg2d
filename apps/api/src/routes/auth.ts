@@ -23,15 +23,19 @@ const secure = !isDev;
 authRoute.get('/login', async (c) => {
   const devUser = c.req.query('dev_user');
   if (isDev && devUser) {
+    const userId = `dev|${devUser}`;
     const mockEmail = `${devUser}@example.com`;
-    await new UserRepository().upsert({
-      sub: `dev|${devUser}`,
-      name: devUser,
+    const dbUser = await new UserRepository().upsert({
+      id: userId,
+      presenceName: devUser,
       email: mockEmail,
-      roles: devUser === 'admin' ? ['admin'] : ['user'],
+      isAdmin: devUser === 'admin',
     });
+    if (!dbUser.ok) {
+      return c.text('Failed to create user', 500);
+    }
     const sessionId = crypto.randomUUID();
-    sessionStore.set(sessionId, { sub: `dev|${devUser}` });
+    sessionStore.set(sessionId, { sub: userId });
     setCookie(c, 'session', sessionId, { httpOnly: true, sameSite: 'Lax', secure });
     return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
   }

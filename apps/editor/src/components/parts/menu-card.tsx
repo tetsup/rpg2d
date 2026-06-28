@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { CardButton } from './card-button';
 
@@ -10,9 +11,18 @@ type MenuCardProps = {
 };
 
 export function MenuCard({ icon: Icon, title, description, onClick, disabled }: MenuCardProps) {
+  const titleId = useId();
+  const descriptionId = useId();
+
   return (
-    <CardButton onClick={onClick} disabled={disabled}>
+    <CardButton
+      onClick={onClick}
+      disabled={disabled}
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
+    >
       <div
+        aria-hidden="true"
         className="
             flex
             h-14
@@ -27,9 +37,14 @@ export function MenuCard({ icon: Icon, title, description, onClick, disabled }: 
         <Icon size={28} strokeWidth={2} />
       </div>
       <div className="flex-1">
-        <div className="font-semibold">{title}</div>
-
-        <div className="text-sm text-muted-foreground">{description}</div>
+        <span id={titleId} className="block font-semibold">
+          {title}
+        </span>
+        {description ? (
+          <span id={descriptionId} className="block text-sm text-muted-foreground">
+            {description}
+          </span>
+        ) : null}
       </div>
     </CardButton>
   );

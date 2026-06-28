@@ -9,6 +9,7 @@ export function SubmitCard() {
 
   return (
     <ActionCard
+      type="submit"
       icon={Save}
       title={isSubmitting ? `${t('保存中')}...` : t('保存')}
       description={t('変更内容を保存する')}

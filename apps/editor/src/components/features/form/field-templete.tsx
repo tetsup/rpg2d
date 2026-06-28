@@ -21,12 +21,16 @@ type FieldTemplateProps<TValues extends FieldValues, TType extends keyof FieldTe
   params: FieldTemplateParamMap<TValues>[TType];
 };
 
+export type FieldItem<T extends FieldValues> = {
+  [K in keyof FieldTemplateParamMap<T>]: FieldTemplateProps<T, K>;
+}[keyof FieldTemplateParamMap<T>];
+
 export type FieldGroupTemplateProps<T extends FieldValues> = {
   title: string;
-  items: FieldTemplateProps<T, any>[];
+  items: FieldItem<T>[];
 };
 
-function FieldTemplate({ type, params }: FieldTemplateProps<any, any>) {
+function FieldTemplate<T extends FieldValues>({ type, params }: FieldItem<T>) {
   const { register } = useFormContext();
 
   switch (type) {
@@ -45,11 +49,11 @@ function FieldTemplate({ type, params }: FieldTemplateProps<any, any>) {
   }
 }
 
-export function FieldGroupTemplate({ title, items }: FieldGroupTemplateProps<any>) {
+export function FieldGroupTemplate<T extends FieldValues>({ title, items }: FieldGroupTemplateProps<T>) {
   return (
     <ControlSection title={title}>
-      {items.map((item) => (
-        <FieldTemplate {...item} />
+      {items.map((item, index) => (
+        <FieldTemplate key={index} {...item} />
       ))}
     </ControlSection>
   );

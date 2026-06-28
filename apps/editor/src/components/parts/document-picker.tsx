@@ -1,27 +1,45 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { CollectionName, Database } from '@sharedTypes/database/collection';
+import type { FilterMap } from '@sharedTypes/database/filter';
+import type { ResourceType } from '@sharedTypes/resource/common';
+import { renderDocumentLabel } from '@editor/lib/document-label';
+import { useResolvedDocument } from '@editor/hooks/api/resolved-document';
 import { Button } from '@editor/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from '@editor/components/ui/dialog';
 import { SelectDocument } from './select-document';
 
-type DocumentPickerProps<T extends CollectionName> = {
+type DocumentPickerProps<T extends keyof FilterMap> = {
   collectionName: T;
   id?: string;
-  onSelect: (document: Database[T]) => void;
+  value?: string;
+  onSelect: (id: string) => void;
   onCreate?: () => void;
+  resourceType?: ResourceType;
 };
 
-export function DocumentPicker({ collectionName, id, onSelect, onCreate }: DocumentPickerProps<any>) {
+export function DocumentPicker<T extends keyof FilterMap>({
+  collectionName,
+  id,
+  value,
+  onSelect,
+  onCreate,
+  resourceType,
+}: DocumentPickerProps<T>) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const selectedDocument = useResolvedDocument(collectionName, value);
+  const displayLabel = useMemo(() => {
+    if (selectedDocument) return renderDocumentLabel(collectionName, selectedDocument);
+    if (value) return value;
+    return t('未選択');
+  }, [collectionName, value, selectedDocument, t]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button variant="outline" className="w-full justify-between">
-            <span>{id ?? t('未選択')}</span>
+          <Button id={id} variant="outline" className="w-full justify-between">
+            <span>{displayLabel}</span>
           </Button>
         }
       />
@@ -29,7 +47,14 @@ export function DocumentPicker({ collectionName, id, onSelect, onCreate }: Docum
         <DialogHeader className="p-4">
           <DialogTitle>{t('選択するか、新規作成してください')}</DialogTitle>
         </DialogHeader>
-        <SelectDocument collectionName={collectionName} onItemSelect={onSelect} />
+        <SelectDocument
+          collectionName={collectionName}
+          onItemSelect={(item) => {
+            onSelect(item.id);
+            setOpen(false);
+          }}
+          resourceType={resourceType}
+        />
         {onCreate && (
           <div className="p-2 border-t">
             <Button

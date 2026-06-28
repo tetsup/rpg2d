@@ -9,7 +9,7 @@ import { FilterMap } from '@sharedTypes/database/filter';
 type InfiniteScrollSelectProps<T extends keyof FilterMap> = {
   collectionName: T;
   onItemSelect: (item: Database[T]) => void;
-  query: FilterMap[T];
+  query: FilterMap[T][];
   renderItemLabel: (item: Database[T]) => string;
 };
 
