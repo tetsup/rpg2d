@@ -7,9 +7,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "migrate:create": "node-pg-migrate --node-options --env-file-if-exists=.env create",
-    "migrate": "node-pg-migrate --node-options --env-file-if-exists=.env up",
-    "migrate:down": "node-pg-migrate --node-options --env-file-if-exists=.env down"
+    "migrate:create": "node-pg-migrate --node-options --env-file-if-exists=../../.env create",
+    "migrate": "node-pg-migrate --node-options --env-file-if-exists=../../.env up",
+    "migrate:down": "node-pg-migrate --node-options --env-file-if-exists=../../.env down"
   },
   "dependencies": {
     "kysely": "^0.29.2",

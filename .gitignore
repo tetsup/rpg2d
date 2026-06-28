@@ -30,6 +30,7 @@ test-results
 # Misc
 .env
 .env.local
+!.env.example
 .cache
 
 # Example
