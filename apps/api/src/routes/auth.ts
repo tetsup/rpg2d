@@ -67,10 +67,9 @@ authRoute.get('/callback', async (c) => {
   try {
     dbUser = await new UserRepository().upsert({
       id: user.sub,
-      presenceName: user.name,
+      presenceName: user.name ?? user.email,
       email: user.email,
-      email_verified: user.email_verified,
-      roles: [],
+      isAdmin: false,
     });
   } catch (e) {
     console.error('User upsert failed', e);
