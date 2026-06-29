@@ -3,7 +3,6 @@ import { createAuthorizeResourceMiddleware } from '@api/auth/middlewares/authori
 import { Action, createAuthorize } from '@api/utils/authorize';
 import { ApiError } from '@api/errors/http-error';
 import type { UserDocument } from '@sharedTypes/database/collection';
-import type { RepositoryResult } from '@database/repositories/utils/common';
 
 const user: UserDocument = {
   id: 'user-a',
@@ -16,7 +15,6 @@ const user: UserDocument = {
 
 function createTestApp(options: {
   createdBy?: string;
-  ownership?: RepositoryResult<string>;
   capabilities: { read: boolean; create: boolean; update: boolean; admin: boolean };
 }) {
   const app = new Hono();
@@ -32,16 +30,15 @@ function createTestApp(options: {
     '/resources/:namespace/:type/:name',
     async (c, next) => {
       c.set('user', user);
+      if (options.createdBy != null) {
+        c.set('resourceCreatedBy', options.createdBy);
+      }
       await next();
     },
     createAuthorizeResourceMiddleware({
       authorize: createAuthorize({
         checkPermissions: async () => ({ ok: true as const, data: options.capabilities }),
       }),
-      getCreatedBy: async () => {
-        if (options.ownership) return options.ownership;
-        return { ok: true as const, data: options.createdBy ?? user.id };
-      },
     })(Action.UPDATE),
     (c) => c.json({ ok: true })
   );
@@ -50,17 +47,6 @@ function createTestApp(options: {
 }
 
 describe('authorizeResourceMiddleware', () => {
-  it('returns 404 when the resource does not exist', async () => {
-    const app = createTestApp({
-      ownership: { ok: false, reason: 'not_found' },
-      capabilities: { read: true, create: true, update: true, admin: false },
-    });
-
-    const response = await app.request('/resources/sample/player/hero', { method: 'PUT' });
-
-    expect(response.status).toBe(404);
-  });
-
   it('returns 403 when a creator updates another users resource', async () => {
     const app = createTestApp({
       createdBy: 'other-user',
@@ -72,17 +58,6 @@ describe('authorizeResourceMiddleware', () => {
     expect(response.status).toBe(403);
   });
 
-  it('returns 503 when ownership lookup fails unexpectedly', async () => {
-    const app = createTestApp({
-      ownership: { ok: false, reason: 'database_error' },
-      capabilities: { read: true, create: true, update: true, admin: false },
-    });
-
-    const response = await app.request('/resources/sample/player/hero', { method: 'PUT' });
-
-    expect(response.status).toBe(503);
-  });
-
   it('allows a creator to update their own resource', async () => {
     const app = createTestApp({
       createdBy: user.id,
@@ -92,5 +67,15 @@ describe('authorizeResourceMiddleware', () => {
     const response = await app.request('/resources/sample/player/hero', { method: 'PUT' });
 
     expect(response.status).toBe(200);
+  });
+
+  it('returns 500 when ownership was not resolved before authorize', async () => {
+    const app = createTestApp({
+      capabilities: { read: true, create: true, update: true, admin: false },
+    });
+
+    const response = await app.request('/resources/sample/player/hero', { method: 'PUT' });
+
+    expect(response.status).toBe(500);
   });
 });

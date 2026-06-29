@@ -9,6 +9,7 @@ export type Auth0UserInfo = {
 
 export type Variables = {
   user?: UserDocument;
+  resourceCreatedBy?: string;
 };
 
 export type SessionTokenResponse = {

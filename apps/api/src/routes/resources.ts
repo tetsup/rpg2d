@@ -3,6 +3,7 @@ import { ResourceRepository } from '@database/repositories/resource';
 import { findWithCursor } from '@database/repositories/utils/filter';
 import { ResourceByIdReqSchema } from '@schema/api/resource/by-id';
 import { authorizeResourceMiddleware } from '@api/auth/middlewares/authorize-resource';
+import { resolveResourceOwnershipMiddleware } from '@api/auth/middlewares/resolve-resource-ownership';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 import { Action } from '../utils/authorize';
 import { handle } from '../utils/handle';
@@ -47,6 +48,7 @@ resourcesRoute.post(
 
 resourcesRoute.put(
   '/:namespace/:type/:name',
+  resolveResourceOwnershipMiddleware,
   authorizeResourceMiddleware(Action.UPDATE),
   handle(async (c) => {
     const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
@@ -56,6 +58,7 @@ resourcesRoute.put(
 
 resourcesRoute.delete(
   '/:namespace/:type/:name',
+  resolveResourceOwnershipMiddleware,
   authorizeResourceMiddleware(Action.DELETE),
   handle(async (c) => {
     const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());

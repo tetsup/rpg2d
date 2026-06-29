@@ -1,21 +1,14 @@
 import { createMiddleware } from 'hono/factory';
 import { ResourcePathParamsSchema } from '@schema/api/resource/common';
-import type { ResourcePath } from '@sharedTypes/resource/common';
-import type { RepositoryResult } from '@database/repositories/utils/common';
-import { ResourceRepository } from '@database/repositories/resource';
-import { ApiError, BadRequestError, NotFoundError, UnauthorizedError } from '@api/errors/http-error';
+import { BadRequestError, UnauthorizedError, ApiError } from '@api/errors/http-error';
 import type { Variables } from '@api/types/auth';
 import { createAuthorize, Action } from '@api/utils/authorize';
 
 type AuthorizeResourceMiddlewareOptions = {
   authorize: ReturnType<typeof createAuthorize>;
-  getCreatedBy: (path: ResourcePath) => Promise<RepositoryResult<string>>;
 };
 
-export function createAuthorizeResourceMiddleware({
-  authorize,
-  getCreatedBy,
-}: AuthorizeResourceMiddlewareOptions) {
+export function createAuthorizeResourceMiddleware({ authorize }: AuthorizeResourceMiddlewareOptions) {
   return (action: Action) =>
     createMiddleware<{
       Variables: Variables;
@@ -25,26 +18,18 @@ export function createAuthorizeResourceMiddleware({
       const parsePathRes = ResourcePathParamsSchema.safeParse(c.req.param());
       if (!parsePathRes.success) throw new BadRequestError(parsePathRes.error.message);
 
-      const path = parsePathRes.data;
-      let resourceCreatedBy: string | undefined;
+      const requiresOwnership = action === Action.UPDATE || action === Action.DELETE;
+      const resourceCreatedBy = requiresOwnership ? c.get('resourceCreatedBy') : undefined;
 
-      if (action === Action.UPDATE || action === Action.DELETE) {
-        const ownership = await getCreatedBy(path);
-        if (!ownership.ok) {
-          if (ownership.reason === 'not_found') throw new NotFoundError();
-          throw new ApiError(503);
-        }
-        resourceCreatedBy = ownership.data;
+      if (requiresOwnership && resourceCreatedBy == null) {
+        throw new ApiError(500, 'resourceCreatedBy must be resolved before authorize');
       }
 
-      await authorize(user, path.namespace, action, resourceCreatedBy);
+      await authorize(user, parsePathRes.data.namespace, action, resourceCreatedBy);
       await next();
     });
 }
 
 export function authorizeResourceMiddleware(action: Action) {
-  return createAuthorizeResourceMiddleware({
-    authorize,
-    getCreatedBy: (path) => new ResourceRepository().getCreatedBy(path),
-  })(action);
+  return createAuthorizeResourceMiddleware({ authorize })(action);
 }
