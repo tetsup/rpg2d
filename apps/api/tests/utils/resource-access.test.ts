@@ -1,5 +1,5 @@
-import { Action, createAuthorize } from '@api/utils/authorize';
-import { createEnsureResourceAccess } from '@api/utils/resource-access';
+import { Action } from '@api/utils/authorize';
+import { ensureResourceAccess } from '@api/utils/resource-access';
 import { ApiError, ForbiddenError, NotFoundError, UnauthorizedError } from '@api/errors/http-error';
 import type { UserDocument } from '@sharedTypes/database/collection';
 import type { RepositoryResult } from '@database/repositories/utils/common';
@@ -15,69 +15,63 @@ const user: UserDocument = {
 
 const path = { namespace: 'sample', type: 'player', name: 'hero' } as const;
 
-function createAccess(options: {
-  createdBy?: RepositoryResult<string>;
-  capabilities: { read: boolean; create: boolean; update: boolean; admin: boolean };
-}) {
-  return createEnsureResourceAccess({
-    getCreatedBy: async () => options.createdBy ?? { ok: true, data: user.id },
-    authorize: createAuthorize({
-      checkPermissions: async () => ({ ok: true as const, data: options.capabilities }),
-    }),
-  });
-}
+const getCreatedBy = vi.fn<() => Promise<RepositoryResult<string>>>();
+const authorize = vi.fn();
+
+vi.mock('@database/repositories/resource', () => ({
+  ResourceRepository: class {
+    getCreatedBy = getCreatedBy;
+  },
+}));
+
+vi.mock('@api/utils/authorize', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@api/utils/authorize')>();
+  return {
+    ...actual,
+    authorize: (...args: unknown[]) => authorize(...args),
+  };
+});
 
 describe('ensureResourceAccess', () => {
-  it('throws UnauthorizedError when user is missing', async () => {
-    const ensure = createAccess({
-      capabilities: { read: true, create: true, update: true, admin: false },
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    authorize.mockResolvedValue(undefined);
+  });
 
-    await expect(ensure(undefined, path, Action.READ)).rejects.toBeInstanceOf(UnauthorizedError);
+  it('throws UnauthorizedError when user is missing', async () => {
+    await expect(ensureResourceAccess(undefined, path, Action.READ)).rejects.toBeInstanceOf(UnauthorizedError);
   });
 
   it('throws NotFoundError when updating a missing resource', async () => {
-    const ensure = createAccess({
-      createdBy: { ok: false, reason: 'not_found' },
-      capabilities: { read: true, create: true, update: true, admin: false },
-    });
+    getCreatedBy.mockResolvedValue({ ok: false, reason: 'not_found' });
 
-    await expect(ensure(user, path, Action.UPDATE)).rejects.toBeInstanceOf(NotFoundError);
+    await expect(ensureResourceAccess(user, path, Action.UPDATE)).rejects.toBeInstanceOf(NotFoundError);
   });
 
   it('throws ApiError when ownership lookup fails unexpectedly', async () => {
-    const ensure = createAccess({
-      createdBy: { ok: false, reason: 'database_error' },
-      capabilities: { read: true, create: true, update: true, admin: false },
-    });
+    getCreatedBy.mockResolvedValue({ ok: false, reason: 'database_error' });
 
-    await expect(ensure(user, path, Action.DELETE)).rejects.toBeInstanceOf(ApiError);
-    await expect(ensure(user, path, Action.DELETE)).rejects.toMatchObject({ status: 503 });
+    await expect(ensureResourceAccess(user, path, Action.DELETE)).rejects.toBeInstanceOf(ApiError);
+    await expect(ensureResourceAccess(user, path, Action.DELETE)).rejects.toMatchObject({ status: 503 });
   });
 
-  it('throws ForbiddenError when a creator updates another users resource', async () => {
-    const ensure = createAccess({
-      createdBy: { ok: true, data: 'other-user' },
-      capabilities: { read: true, create: true, update: false, admin: false },
-    });
+  it('throws ForbiddenError when authorize rejects', async () => {
+    getCreatedBy.mockResolvedValue({ ok: true, data: 'other-user' });
+    authorize.mockRejectedValue(new ForbiddenError());
 
-    await expect(ensure(user, path, Action.UPDATE)).rejects.toBeInstanceOf(ForbiddenError);
+    await expect(ensureResourceAccess(user, path, Action.UPDATE)).rejects.toBeInstanceOf(ForbiddenError);
   });
 
-  it('allows a creator to update their own resource', async () => {
-    const ensure = createAccess({
-      createdBy: { ok: true, data: user.id },
-      capabilities: { read: true, create: true, update: false, admin: false },
-    });
+  it('loads ownership before authorizing updates', async () => {
+    getCreatedBy.mockResolvedValue({ ok: true, data: user.id });
 
-    await expect(ensure(user, path, Action.UPDATE)).resolves.toBe(user);
+    await expect(ensureResourceAccess(user, path, Action.UPDATE)).resolves.toBe(user);
+    expect(authorize).toHaveBeenCalledWith(user, path.namespace, Action.UPDATE, user.id);
   });
 
-  it('allows read when namespace read is granted', async () => {
-    const ensure = createAccess({
-      capabilities: { read: true, create: false, update: false, admin: false },
-    });
-
-    await expect(ensure(user, path, Action.READ)).resolves.toBe(user);
+  it('authorizes reads without loading ownership', async () => {
+    await expect(ensureResourceAccess(user, path, Action.READ)).resolves.toBe(user);
+    expect(getCreatedBy).not.toHaveBeenCalled();
+    expect(authorize).toHaveBeenCalledWith(user, path.namespace, Action.READ);
   });
 });
