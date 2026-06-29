@@ -1,72 +1,113 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { useQueries } from '@tanstack/react-query';
 import { ActivityIcon } from 'lucide-react';
 import type { Database, ResourceDocument } from '@sharedTypes/database/collection';
 import type { FilterMap } from '@sharedTypes/database/filter';
+import { documentKey, getDocumentById } from '@editor/hooks/api/by-id';
 import { useResolvedDocument } from '@editor/hooks/api/resolved-document';
 
 type ImageData = ResourceDocument<'image'>['data'];
 type TextureData = ResourceDocument<'texture'>['data'];
 type SkinData = ResourceDocument<'skin'>['data'];
 
-function getTextureFirstImageId(texture: TextureData): string | undefined {
-  return texture.layers[0]?.images[0];
+function getLayerImageIds(layer: TextureData['layers'][number]): string[] {
+  if (layer.playback) {
+    const first = layer.images[0];
+    return first ? [first] : [];
+  }
+  return layer.images;
 }
 
-function ImageResourceThumbnail({ image }: { image: ImageData }) {
-  const ref = useRef<HTMLCanvasElement>(null);
+function getTextureCompositeImageIds(texture: TextureData): string[] {
+  return [...texture.layers]
+    .sort((a, b) => a.priority - b.priority)
+    .flatMap((layer) => getLayerImageIds(layer));
+}
+
+function drawImageData(ctx: CanvasRenderingContext2D, image: ImageData, x: number, y: number) {
   const { width, height } = image.size;
+  const imageData = ctx.createImageData(width, height);
+  image.pixels.forEach((row, rowY) => {
+    row.split(/\s+/).forEach((token, colX) => {
+      const rgba = image.palette[token];
+      if (!rgba) return;
+      const i = (rowY * width + colX) * 4;
+      imageData.data[i] = rgba[0];
+      imageData.data[i + 1] = rgba[1];
+      imageData.data[i + 2] = rgba[2];
+      imageData.data[i + 3] = rgba[3];
+    });
+  });
+  const layerCanvas = document.createElement('canvas');
+  layerCanvas.width = width;
+  layerCanvas.height = height;
+  layerCanvas.getContext('2d')!.putImageData(imageData, 0, 0);
+  ctx.drawImage(layerCanvas, x, y);
+}
+
+function CompositeImageThumbnail({ images }: { images: ImageData[] }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const width = Math.max(...images.map((image) => image.size.width));
+  const height = Math.max(...images.map((image) => image.size.height));
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas) return;
+    if (!canvas || images.length === 0) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const imageData = ctx.createImageData(width, height);
-    image.pixels.forEach((row, y) => {
-      row.split(/\s+/).forEach((token, x) => {
-        const rgba = image.palette[token];
-        if (!rgba) return;
-        const i = (y * width + x) * 4;
-        imageData.data[i] = rgba[0];
-        imageData.data[i + 1] = rgba[1];
-        imageData.data[i + 2] = rgba[2];
-        imageData.data[i + 3] = rgba[3];
-      });
-    });
-    ctx.putImageData(imageData, 0, 0);
-  }, [image, width, height]);
+    ctx.clearRect(0, 0, width, height);
+    for (const image of images) {
+      drawImageData(ctx, image, 0, 0);
+    }
+  }, [images, width, height]);
+
+  if (images.length === 0) return null;
 
   return (
     <canvas ref={ref} width={width} height={height} className="size-full [image-rendering:pixelated]" />
   );
 }
 
-function ResolvedImageThumbnail({ imageId }: { imageId: string }) {
-  const resource = useResolvedDocument('resources', imageId);
-  if (!resource || resource.type !== 'image') return null;
-  return <ImageResourceThumbnail image={resource.data} />;
+function ResolvedCompositeImageThumbnail({ imageIds }: { imageIds: string[] }) {
+  const results = useQueries({
+    queries: imageIds.map((id) => ({
+      queryKey: documentKey('resources', id),
+      queryFn: () => getDocumentById('resources', id),
+      enabled: Boolean(id),
+    })),
+  });
+
+  const images = imageIds.flatMap((id, index) => {
+    const resource = results[index]?.data;
+    if (resource?.type !== 'image') return [];
+    return [resource.data];
+  });
+
+  if (imageIds.length > 0 && images.length === 0) return null;
+
+  return <CompositeImageThumbnail images={images} />;
 }
 
 function TextureResourceThumbnail({ texture }: { texture: TextureData }) {
-  const imageId = getTextureFirstImageId(texture);
-  if (!imageId) return null;
-  return <ResolvedImageThumbnail imageId={imageId} />;
+  const imageIds = getTextureCompositeImageIds(texture);
+  if (imageIds.length === 0) return null;
+  return <ResolvedCompositeImageThumbnail imageIds={imageIds} />;
 }
 
 function SkinResourceThumbnail({ skin }: { skin: SkinData }) {
   const texture = useResolvedDocument('resources', skin.textures.down);
   if (!texture || texture.type !== 'texture') return null;
-  const imageId = getTextureFirstImageId(texture.data);
-  if (!imageId) return null;
-  return <ResolvedImageThumbnail imageId={imageId} />;
+  const imageIds = getTextureCompositeImageIds(texture.data);
+  if (imageIds.length === 0) return null;
+  return <ResolvedCompositeImageThumbnail imageIds={imageIds} />;
 }
 
 function renderResourceThumbnail(item: Database['resources']): ReactNode | null {
   switch (item.type) {
     case 'image':
-      return <ImageResourceThumbnail image={item.data} />;
+      return <CompositeImageThumbnail images={[item.data]} />;
     case 'texture':
       return <TextureResourceThumbnail texture={item.data} />;
     case 'skin':
