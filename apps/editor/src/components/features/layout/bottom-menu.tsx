@@ -8,7 +8,7 @@ export function BottomMenu() {
   const navigate = useNavigate();
   const items = [
     { onClick: () => navigate('/'), icon: Home, label: t('ホーム') },
-    { icon: Search, label: t('検索') },
+    { onClick: () => navigate('/resources'), icon: Search, label: t('検索') },
     { icon: ListTree, label: t('ツリー') },
     { icon: Play, label: t('プレー') },
     { icon: Settings, label: t('設定') },
