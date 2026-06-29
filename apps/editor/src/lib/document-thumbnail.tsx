@@ -12,18 +12,13 @@ type SkinData = ResourceDocument<'skin'>['data'];
 type PlayerData = ResourceDocument<'player'>['data'];
 type EntityData = ResourceDocument<'entity'>['data'];
 
-function getLayerImageIds(layer: TextureData['layers'][number]): string[] {
-  if (layer.playback) {
-    const first = layer.images[0];
-    return first ? [first] : [];
-  }
-  return layer.images;
-}
-
 function getTextureCompositeImageIds(texture: TextureData): string[] {
   return [...texture.layers]
     .sort((a, b) => a.priority - b.priority)
-    .flatMap((layer) => getLayerImageIds(layer));
+    .flatMap((layer) => {
+      const first = layer.images[0];
+      return first ? [first] : [];
+    });
 }
 
 function drawImageData(ctx: CanvasRenderingContext2D, image: ImageData, x: number, y: number) {
