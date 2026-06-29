@@ -5,22 +5,15 @@
 
     html {
         @apply font-sans;
-        height: 100dvh;
-        overflow: hidden;
         -webkit-tap-highlight-color: transparent;
     }
 
     body {
         @apply bg-background text-foreground;
-        height: 100dvh;
-        overflow: hidden;
+        min-height: 100dvh;
         transition:
             background-color 200ms,
             color 200ms;
-    }
-
-    #root {
-        height: 100%;
     }
 
     h1,

@@ -19,7 +19,7 @@ export function createEnsureResourceAccess(dependencies: EnsureResourceAccessDep
     user: UserDocument | undefined,
     path: ResourcePath,
     action: Action
-  ) {
+  ): Promise<UserDocument> {
     if (user == null) throw new UnauthorizedError();
 
     if (action === Action.UPDATE || action === Action.DELETE) {
@@ -29,10 +29,11 @@ export function createEnsureResourceAccess(dependencies: EnsureResourceAccessDep
         throw new ApiError(503);
       }
       await dependencies.authorize(user, path.namespace, action, ownership.data);
-      return;
+      return user;
     }
 
     await dependencies.authorize(user, path.namespace, action);
+    return user;
   };
 }
 

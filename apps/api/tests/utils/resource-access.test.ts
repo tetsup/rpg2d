@@ -70,7 +70,7 @@ describe('ensureResourceAccess', () => {
       capabilities: { read: true, create: true, update: false, admin: false },
     });
 
-    await expect(ensure(user, path, Action.UPDATE)).resolves.toBeUndefined();
+    await expect(ensure(user, path, Action.UPDATE)).resolves.toBe(user);
   });
 
   it('allows read when namespace read is granted', async () => {
@@ -78,6 +78,6 @@ describe('ensureResourceAccess', () => {
       capabilities: { read: true, create: false, update: false, admin: false },
     });
 
-    await expect(ensure(user, path, Action.READ)).resolves.toBeUndefined();
+    await expect(ensure(user, path, Action.READ)).resolves.toBe(user);
   });
 });
