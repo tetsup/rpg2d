@@ -1,14 +1,15 @@
 import { createMiddleware } from 'hono/factory';
 import { ResourcePathParamsSchema } from '@schema/api/resource/common';
 import type { ResourcePath } from '@sharedTypes/resource/common';
+import type { RepositoryResult } from '@database/repositories/utils/common';
 import { ResourceRepository } from '@database/repositories/resource';
-import { BadRequestError, NotFoundError, UnauthorizedError } from '@api/errors/http-error';
+import { ApiError, BadRequestError, NotFoundError, UnauthorizedError } from '@api/errors/http-error';
 import type { Variables } from '@api/types/auth';
 import { createAuthorize, Action } from '@api/utils/authorize';
 
 type AuthorizeResourceMiddlewareOptions = {
   authorize: ReturnType<typeof createAuthorize>;
-  getCreatedBy: (path: ResourcePath) => Promise<{ ok: true; data: string } | { ok: false; reason: string }>;
+  getCreatedBy: (path: ResourcePath) => Promise<RepositoryResult<string>>;
 };
 
 export function createAuthorizeResourceMiddleware({
@@ -31,7 +32,7 @@ export function createAuthorizeResourceMiddleware({
         const ownership = await getCreatedBy(path);
         if (!ownership.ok) {
           if (ownership.reason === 'not_found') throw new NotFoundError();
-          throw new NotFoundError();
+          throw new ApiError(503);
         }
         resourceCreatedBy = ownership.data;
       }

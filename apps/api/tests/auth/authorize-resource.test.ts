@@ -3,6 +3,7 @@ import { createAuthorizeResourceMiddleware } from '@api/auth/middlewares/authori
 import { Action, createAuthorize } from '@api/utils/authorize';
 import { ApiError } from '@api/errors/http-error';
 import type { UserDocument } from '@sharedTypes/database/collection';
+import type { RepositoryResult } from '@database/repositories/utils/common';
 
 const user: UserDocument = {
   id: 'user-a',
@@ -15,7 +16,7 @@ const user: UserDocument = {
 
 function createTestApp(options: {
   createdBy?: string;
-  found?: boolean;
+  ownership?: RepositoryResult<string>;
   capabilities: { read: boolean; create: boolean; update: boolean; admin: boolean };
 }) {
   const app = new Hono();
@@ -38,7 +39,7 @@ function createTestApp(options: {
         checkPermissions: async () => ({ ok: true as const, data: options.capabilities }),
       }),
       getCreatedBy: async () => {
-        if (options.found === false) return { ok: false as const, reason: 'not_found' };
+        if (options.ownership) return options.ownership;
         return { ok: true as const, data: options.createdBy ?? user.id };
       },
     })(Action.UPDATE),
@@ -51,7 +52,7 @@ function createTestApp(options: {
 describe('authorizeResourceMiddleware', () => {
   it('returns 404 when the resource does not exist', async () => {
     const app = createTestApp({
-      found: false,
+      ownership: { ok: false, reason: 'not_found' },
       capabilities: { read: true, create: true, update: true, admin: false },
     });
 
@@ -69,6 +70,17 @@ describe('authorizeResourceMiddleware', () => {
     const response = await app.request('/resources/sample/player/hero', { method: 'PUT' });
 
     expect(response.status).toBe(403);
+  });
+
+  it('returns 503 when ownership lookup fails unexpectedly', async () => {
+    const app = createTestApp({
+      ownership: { ok: false, reason: 'database_error' },
+      capabilities: { read: true, create: true, update: true, admin: false },
+    });
+
+    const response = await app.request('/resources/sample/player/hero', { method: 'PUT' });
+
+    expect(response.status).toBe(503);
   });
 
   it('allows a creator to update their own resource', async () => {
