@@ -2,8 +2,15 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { ActivityIcon } from 'lucide-react';
 import type { Database, ResourceDocument } from '@sharedTypes/database/collection';
 import type { FilterMap } from '@sharedTypes/database/filter';
+import { useResolvedDocument } from '@editor/hooks/api/resolved-document';
 
 type ImageData = ResourceDocument<'image'>['data'];
+type TextureData = ResourceDocument<'texture'>['data'];
+type SkinData = ResourceDocument<'skin'>['data'];
+
+function getTextureFirstImageId(texture: TextureData): string | undefined {
+  return texture.layers[0]?.images[0];
+}
 
 function ImageResourceThumbnail({ image }: { image: ImageData }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -36,10 +43,34 @@ function ImageResourceThumbnail({ image }: { image: ImageData }) {
   );
 }
 
+function ResolvedImageThumbnail({ imageId }: { imageId: string }) {
+  const resource = useResolvedDocument('resources', imageId);
+  if (!resource || resource.type !== 'image') return null;
+  return <ImageResourceThumbnail image={resource.data} />;
+}
+
+function TextureResourceThumbnail({ texture }: { texture: TextureData }) {
+  const imageId = getTextureFirstImageId(texture);
+  if (!imageId) return null;
+  return <ResolvedImageThumbnail imageId={imageId} />;
+}
+
+function SkinResourceThumbnail({ skin }: { skin: SkinData }) {
+  const texture = useResolvedDocument('resources', skin.textures.down);
+  if (!texture || texture.type !== 'texture') return null;
+  const imageId = getTextureFirstImageId(texture.data);
+  if (!imageId) return null;
+  return <ResolvedImageThumbnail imageId={imageId} />;
+}
+
 function renderResourceThumbnail(item: Database['resources']): ReactNode | null {
   switch (item.type) {
     case 'image':
       return <ImageResourceThumbnail image={item.data} />;
+    case 'texture':
+      return <TextureResourceThumbnail texture={item.data} />;
+    case 'skin':
+      return <SkinResourceThumbnail skin={item.data} />;
     case 'action':
       return <ActivityIcon className="size-4" />;
     default:
