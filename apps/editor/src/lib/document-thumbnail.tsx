@@ -9,6 +9,8 @@ import { useResolvedDocument } from '@editor/hooks/api/resolved-document';
 type ImageData = ResourceDocument<'image'>['data'];
 type TextureData = ResourceDocument<'texture'>['data'];
 type SkinData = ResourceDocument<'skin'>['data'];
+type PlayerData = ResourceDocument<'player'>['data'];
+type EntityData = ResourceDocument<'entity'>['data'];
 
 function getLayerImageIds(layer: TextureData['layers'][number]): string[] {
   if (layer.playback) {
@@ -96,12 +98,38 @@ function TextureResourceThumbnail({ texture }: { texture: TextureData }) {
   return <ResolvedCompositeImageThumbnail imageIds={imageIds} />;
 }
 
+function ResolvedTextureThumbnail({ textureId }: { textureId: string }) {
+  const texture = useResolvedDocument('resources', textureId);
+  if (!texture || texture.type !== 'texture') return null;
+  return <TextureResourceThumbnail texture={texture.data} />;
+}
+
 function SkinResourceThumbnail({ skin }: { skin: SkinData }) {
   const texture = useResolvedDocument('resources', skin.textures.down);
   if (!texture || texture.type !== 'texture') return null;
   const imageIds = getTextureCompositeImageIds(texture.data);
   if (imageIds.length === 0) return null;
   return <ResolvedCompositeImageThumbnail imageIds={imageIds} />;
+}
+
+function ResolvedSkinThumbnail({ skinId }: { skinId: string }) {
+  const skin = useResolvedDocument('resources', skinId);
+  if (!skin || skin.type !== 'skin') return null;
+  return <SkinResourceThumbnail skin={skin.data} />;
+}
+
+function PlayerResourceThumbnail({ player }: { player: PlayerData }) {
+  return <ResolvedSkinThumbnail skinId={player.initialSkin} />;
+}
+
+function EntityResourceThumbnail({ entity }: { entity: EntityData }) {
+  if (entity.visual === 'skin') {
+    return <ResolvedSkinThumbnail skinId={entity.skin} />;
+  }
+  if (entity.visual === 'texture') {
+    return <ResolvedTextureThumbnail textureId={entity.texture} />;
+  }
+  return null;
 }
 
 function renderResourceThumbnail(item: Database['resources']): ReactNode | null {
@@ -112,6 +140,10 @@ function renderResourceThumbnail(item: Database['resources']): ReactNode | null 
       return <TextureResourceThumbnail texture={item.data} />;
     case 'skin':
       return <SkinResourceThumbnail skin={item.data} />;
+    case 'player':
+      return <PlayerResourceThumbnail player={item.data} />;
+    case 'entity':
+      return <EntityResourceThumbnail entity={item.data} />;
     case 'action':
       return <ActivityIcon className="size-4" />;
     default:
