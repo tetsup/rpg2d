@@ -4,6 +4,8 @@ import { execute } from '@database/client/pg-client';
 import { buildId } from '@database/utils/resource';
 
 export const ownerPermission = 'owner' as const;
+export const editorPermission = 'editor' as const;
+export const creatorPermission = 'creator' as const;
 export const memberPermission = 'reader' as const;
 
 export function createUserInput(overrides: Partial<UserDocument> = {}): UserDocument {
@@ -140,7 +142,7 @@ export function createPlayerDocument(path: ResourcePath = validPlayerPath, data 
 export async function insertResourceRow(
   path: ResourcePath,
   data: object,
-  options: { description?: string; isValid?: boolean } = {}
+  options: { description?: string; isValid?: boolean; createdBy?: string } = {}
 ) {
   const now = new Date();
   const id = buildId(path);
@@ -157,6 +159,7 @@ export async function insertResourceRow(
         description: options.description ?? '',
         isValid: options.isValid ?? true,
         data,
+        createdBy: options.createdBy ?? 'dummy-user',
         createdAt: now,
         updatedAt: now,
       })
@@ -166,8 +169,8 @@ export async function insertResourceRow(
   return { id, path, data };
 }
 
-export async function insertResource(path: ResourcePath = validPlayerPath, data = validPlayerData) {
-  return insertResourceRow(path, data);
+export async function insertResource(path: ResourcePath = validPlayerPath, data = validPlayerData, options: { createdBy?: string } = {}) {
+  return insertResourceRow(path, data, options);
 }
 
 const minimalImageData = {

@@ -41,7 +41,7 @@ resourcesRoute.post(
   authorizeResourceMiddleware(Action.CREATE),
   handle(async (c) => {
     const pathParams = parseParams(ResourceByIdReqSchema, c.req.param());
-    return await new ResourceRepository().create(pathParams, await c.req.json());
+    return await new ResourceRepository().create(pathParams, await c.req.json(), c.get('user').id);
   })
 );
 

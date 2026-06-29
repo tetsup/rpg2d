@@ -40,7 +40,7 @@ export class ResourceRepository {
     this.resourceInputSchema = mockResourceInputSchema ?? createResourceInputSchema;
   }
 
-  async create(path: ResourcePath, data: object) {
+  async create(path: ResourcePath, data: object, userId: string) {
     return repositorySafe(async () => {
       const input = this.resourceInputSchema(path.type).parse({
         ...(data as object),
@@ -56,6 +56,7 @@ export class ResourceRepository {
           .insertInto('resources')
           .values({
             ...document,
+            createdBy: userId,
             createdAt: now,
             updatedAt: now,
           })
@@ -112,6 +113,22 @@ export class ResourceRepository {
             )
             .execute();
         }
+      });
+    });
+  }
+
+  async getCreatedBy(path: ResourcePath) {
+    return repositorySafe(async () => {
+      return execute(async (db) => {
+        const conn = this.dbFactory(db);
+        const resource = await conn
+          .selectFrom('resources')
+          .select('createdBy')
+          .where('id', '=', buildId(path))
+          .executeTakeFirst();
+        if (!resource) throw new RepositoryNotFoundError();
+
+        return resource.createdBy;
       });
     });
   }

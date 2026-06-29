@@ -86,12 +86,13 @@ describe('ResourceRepository', () => {
   describe('create', () => {
     beforeEach(async () => {
       await insertUser({ id: 'dummy-user' });
+      await insertUser({ id: 'creator-user' });
       await insertNamespace({ id: 'sample' });
       await insertSkinDependencies();
     });
 
     it('creates resource', async () => {
-      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
+      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
 
       expect(result.ok).toBeTruthy();
 
@@ -100,10 +101,11 @@ describe('ResourceRepository', () => {
       });
 
       expect(inserted).toBeTruthy();
+      expect(inserted?.createdBy).toBe('creator-user');
     });
 
     it('creates reference edges', async () => {
-      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
+      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
 
       expect(result.ok).toBeTruthy();
 
@@ -116,7 +118,7 @@ describe('ResourceRepository', () => {
 
     it('returns already_exists on duplicate id', async () => {
       await insertResource(validPlayerPath);
-      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
+      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('already_exists');
@@ -127,7 +129,7 @@ describe('ResourceRepository', () => {
 
       const before = await countRows('resources');
 
-      await new ResourceRepository().create(validPlayerPath, createPlayerDocument());
+      await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
 
       const after = await countRows('resources');
 
@@ -335,6 +337,32 @@ describe('ResourceRepository', () => {
       const after = await countRows('resource_edges');
 
       expect(after).toBe(before);
+    });
+  });
+
+  describe('getCreatedBy', () => {
+    beforeEach(async () => {
+      await insertUser({ id: 'dummy-user' });
+      await insertNamespace({ id: 'sample' });
+      await insertResource(validPlayerPath, validPlayerData, { createdBy: 'dummy-user' });
+    });
+
+    it('returns createdBy for an existing resource', async () => {
+      const result = await new ResourceRepository().getCreatedBy(validPlayerPath);
+
+      expect(result.ok).toBeTruthy();
+      expect(result.ok && result.data).toBe('dummy-user');
+    });
+
+    it('returns not_found when missing', async () => {
+      const result = await new ResourceRepository().getCreatedBy({
+        namespace: 'sample',
+        type: 'player',
+        name: 'missing',
+      });
+
+      expect(result.ok).toBeFalsy();
+      expect(result.ok || result.reason).toBe('not_found');
     });
   });
 

@@ -239,24 +239,34 @@ describe('namespace repository', () => {
       await insertPermission('sample', 'member-user', memberPermission);
     });
 
-    it('returns owner permissions', async () => {
+    it('returns owner capabilities', async () => {
       const result = await new NamespaceRepository().checkPermissions({
         namespaceId: 'sample',
         userId: 'owner-user',
       });
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data).toEqual([ownerPermission]);
+      expect(result.ok && result.data).toEqual({
+        read: true,
+        create: true,
+        update: true,
+        admin: true,
+      });
     });
 
-    it('returns member permissions', async () => {
+    it('returns member capabilities', async () => {
       const result = await new NamespaceRepository().checkPermissions({
         namespaceId: 'sample',
         userId: 'member-user',
       });
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data).toEqual([memberPermission]);
+      expect(result.ok && result.data).toEqual({
+        read: true,
+        create: false,
+        update: false,
+        admin: false,
+      });
     });
   });
 

@@ -22,6 +22,10 @@ export type ResourceInput<T extends ResourceType = ResourceType> = z.infer<
 >;
 export type ResourceDocument<T extends ResourceType = ResourceType> = ResourceInput<T> & { id: string };
 
+export type ResourceRecord<T extends ResourceType = ResourceType> = WithTimestamp<ResourceDocument<T>> & {
+  createdBy: string;
+};
+
 export type ResourceMeta<T extends ResourceType = ResourceType> = Pick<
   ResourceDocument<T>,
   'id' | 'namespace' | 'type' | 'name' | 'version' | 'description' | 'isValid'
@@ -41,7 +45,7 @@ export type DatabaseInput = {
 export type Database = {
   namespaces: WithTimestamp<NamespaceDocument>;
   users: WithTimestamp<UserDocument>;
-  resources: WithTimestamp<ResourceDocument>;
+  resources: ResourceRecord;
   namespace_permissions: WithTimestamp<NamespacePermissionDocument>;
   resource_edges: ResourceEdgeDocument;
 };

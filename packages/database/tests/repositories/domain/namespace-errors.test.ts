@@ -89,24 +89,34 @@ describe('namespace repository error mapping', () => {
       await insertNamespace({ id: 'sample', presenceName: 'Sample' });
     });
 
-    it('returns empty permissions when membership is missing', async () => {
+    it('returns no capabilities when membership is missing', async () => {
       const result = await new NamespaceRepository().checkPermissions({
         namespaceId: 'sample',
         userId: 'missing-user',
       });
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data).toEqual([]);
+      expect(result.ok && result.data).toEqual({
+        read: false,
+        create: false,
+        update: false,
+        admin: false,
+      });
     });
 
-    it('returns empty permissions when namespace is missing', async () => {
+    it('returns no capabilities when namespace is missing', async () => {
       const result = await new NamespaceRepository().checkPermissions({
         namespaceId: 'missing',
         userId: 'owner-user',
       });
 
       expect(result.ok).toBeTruthy();
-      expect(result.ok && result.data).toEqual([]);
+      expect(result.ok && result.data).toEqual({
+        read: false,
+        create: false,
+        update: false,
+        admin: false,
+      });
     });
   });
 });

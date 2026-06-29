@@ -59,7 +59,7 @@ describe('resource repository error mapping', () => {
             }),
           }) as ReturnType<typeof createResourceInputSchema>,
       });
-      const result = await resources.create(validPlayerPath, validDocument);
+      const result = await resources.create(validPlayerPath, validDocument, 'creator-user');
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('validation_failed');
@@ -75,7 +75,7 @@ describe('resource repository error mapping', () => {
           insertInto: vi.fn(() => chain),
         }),
       });
-      const result = await resources.create(validPlayerPath, validDocument);
+      const result = await resources.create(validPlayerPath, validDocument, 'creator-user');
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('already_exists');
@@ -91,7 +91,7 @@ describe('resource repository error mapping', () => {
           insertInto: vi.fn(() => chain),
         }),
       });
-      const result = await resources.create(validPlayerPath, validDocument);
+      const result = await resources.create(validPlayerPath, validDocument, 'creator-user');
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('database_error');
@@ -107,7 +107,7 @@ describe('resource repository error mapping', () => {
           insertInto: vi.fn(() => chain),
         }),
       });
-      const result = await resources.create(validPlayerPath, validDocument);
+      const result = await resources.create(validPlayerPath, validDocument, 'creator-user');
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('unknown');
