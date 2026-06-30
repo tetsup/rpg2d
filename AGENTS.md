@@ -27,6 +27,15 @@ pnpm db:migrate
 
 Database tests live in `packages/database/tests` and require PostgreSQL.
 
+## Agent implementation conventions
+
+When implementing features in this repo:
+
+- **Minimal scope**: implement only what the task requires. Do not add parallel abstractions, hooks, or layers "for future use".
+- **Single responsibility**: keep data fetching in existing hooks (e.g. `useDocumentList`); keep label/thumbnail resolution in `lib/`; keep UI composition in `components/`.
+- **Reuse before duplicate**: when picker and browse flows share behaviour, extend the same component rather than forking a second list stack.
+- **Small diffs**: prefer extending existing code over new files; delete dead scaffolds instead of leaving them alongside replacements; avoid drive-by refactors unrelated to the task.
+
 ## Cursor Cloud specific instructions
 
 Cloud Agents need PostgreSQL for `packages/database` integration tests.

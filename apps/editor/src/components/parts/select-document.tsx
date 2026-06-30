@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Database } from '@sharedTypes/database/collection';
 import type { FilterMap } from '@sharedTypes/database/filter';
 import type { ResourceType } from '@sharedTypes/resource/common';
-import { renderDocumentLabel } from '@editor/lib/document-label';
+import type { RenderItemContext } from '@editor/lib/document-item';
 import { Input } from '../ui/input';
 import { InfiniteScrollSelect } from './infinite-scroll-select';
 
@@ -11,6 +11,7 @@ type SelectDocumentProps<T extends keyof FilterMap> = {
   collectionName: T;
   onItemSelect: (item: Database[T]) => void;
   resourceType?: ResourceType;
+  renderItem?: (item: Database[T], ctx: RenderItemContext) => ReactNode;
 };
 
 function buildQuery<T extends keyof FilterMap>(
@@ -29,6 +30,7 @@ export function SelectDocument<T extends keyof FilterMap>({
   collectionName,
   onItemSelect,
   resourceType,
+  renderItem,
 }: SelectDocumentProps<T>) {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState('');
@@ -36,8 +38,6 @@ export function SelectDocument<T extends keyof FilterMap>({
     () => buildQuery(collectionName, searchText, resourceType),
     [collectionName, searchText, resourceType]
   );
-
-  const renderItemLabel = (item: Database[T]) => renderDocumentLabel(collectionName, item);
 
   return (
     <>
@@ -48,7 +48,7 @@ export function SelectDocument<T extends keyof FilterMap>({
         collectionName={collectionName}
         onItemSelect={onItemSelect}
         query={query}
-        renderItemLabel={renderItemLabel}
+        renderItem={renderItem}
       />
     </>
   );
