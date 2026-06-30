@@ -8,7 +8,6 @@ const user: UserDocument = {
   email: 'a@example.com',
   avatar: '',
   isAdmin: false,
-  roles: [],
 };
 
 function mockAuthorize(capabilities: {
@@ -32,7 +31,7 @@ describe('authorize', () => {
     });
 
     await expect(
-      authorize({ ...user, roles: ['admin'] }, 'sample', Action.UPDATE, 'other-user')
+      authorize({ ...user, isAdmin: true }, 'sample', Action.UPDATE, 'other-user')
     ).resolves.toBeUndefined();
   });
 

@@ -10,7 +10,6 @@ const user: UserDocument = {
   email: 'a@example.com',
   avatar: '',
   isAdmin: false,
-  roles: [],
 };
 
 const path = { namespace: 'sample', type: 'player', name: 'hero' } as const;
