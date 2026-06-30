@@ -5,7 +5,8 @@ import { HomePage } from './home';
 import { NewManifestPage } from './manifest/new';
 import { NewNamespacePage } from './namespace/new';
 import { EditNamespacePage } from './namespace/edit';
-import { ResourceListPage } from './resources/index';
+import { ResourceTypeSelectPage } from './resources/index';
+import { ResourceSearchPage } from './resources/search';
 
 export function AppRouter() {
   return (
@@ -14,7 +15,8 @@ export function AppRouter() {
         <Route path="/login" element={<LoginPage />} />
         <Route element={<RequireAuth />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/resources" element={<ResourceListPage />} />
+          <Route path="/resources" element={<ResourceTypeSelectPage />} />
+          <Route path="/resources/:type" element={<ResourceSearchPage />} />
           <Route path="/manifest/new" element={<NewManifestPage />} />
           <Route path="/namespace/new" element={<NewNamespacePage />} />
           <Route path="/namespace/:id" element={<EditNamespacePage />} />
