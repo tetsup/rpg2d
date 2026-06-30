@@ -20,7 +20,7 @@ const defaultDependencies: AuthorizeDependencies = {
 };
 
 function isAdmin(user: UserDocument) {
-  return user.roles.includes('admin');
+  return user.isAdmin;
 }
 
 async function resolveCapabilities(
