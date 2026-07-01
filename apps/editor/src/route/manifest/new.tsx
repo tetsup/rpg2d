@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { createInvalidResourceInputSchema } from '@schema/database/resource';
+import { createDraftResourceInputSchema } from '@schema/database/resource';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import { ManifestForm } from '@editor/forms/manifest';
@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCreateDocument } from '@editor/hooks/api/mutations';
 import { buildResourceId } from '@editor/hooks/api/resource-id';
 
-const manifestCreateSchema = createInvalidResourceInputSchema('manifest');
+const manifestCreateSchema = createDraftResourceInputSchema('manifest');
 
 export function NewManifestPage() {
   const { t } = useTranslation();
@@ -22,11 +22,11 @@ export function NewManifestPage() {
     name: '',
     version: 0,
     description: '',
-    isValid: false,
+    isDraft: true,
     data: {
       initialState: {
         core: { players: [], variables: {}, mode: 'field' },
-        field: { fieldId: '', pos: { x: 0, y: 0 }, direction: 'down', actionIds: [] },
+        field: { fieldId: null, pos: { x: 0, y: 0 }, direction: 'down', actionIds: [] },
       },
       schemas: { playerState: {} },
       config: {
@@ -34,7 +34,7 @@ export function NewManifestPage() {
         textSize: { width: 7, height: 7 },
         moveDurationMs: 500,
         screen: { width: 320, height: 240 },
-        defaultMessagePanel: '',
+        defaultMessagePanel: null,
         messageConfig: { speedMs: 100, margin: { left: 0, top: 0, right: 1, bottom: 1 } },
       },
     },

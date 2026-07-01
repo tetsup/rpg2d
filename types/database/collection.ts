@@ -28,7 +28,7 @@ export type ResourceRecord<T extends ResourceType = ResourceType> = WithTimestam
 
 export type ResourceMeta<T extends ResourceType = ResourceType> = Pick<
   ResourceDocument<T>,
-  'id' | 'namespace' | 'type' | 'name' | 'version' | 'description' | 'isValid'
+  'id' | 'namespace' | 'type' | 'name' | 'version' | 'description' | 'isDraft'
 >;
 
 export type UserInput = z.infer<typeof UserInputSchema>;
