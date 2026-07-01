@@ -81,7 +81,48 @@ describe('manifest create form', () => {
     expect(screen.getByRole('button', { name: /^保存$/ })).toBeEnabled();
   });
 
-  it('becomes invalid when position text inputs contain strings instead of numbers', async () => {
+  it('keeps position coordinates as numbers when edited through NumberField', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+
+    const { container } = renderManifestCreateForm({
+      onSubmit,
+      pickerAssignments: manifestPickerAssignments(),
+    });
+
+    await user.type(screen.getByLabelText('プロジェクト名'), 'v0');
+    await user.click(screen.getByTestId('apply-picker-values'));
+
+    await waitFor(() => {
+      expect(getFormState(container).isValid).toBe(true);
+    });
+
+    const xInput = screen.getByLabelText('x');
+    await user.clear(xInput);
+    await user.type(xInput, '3');
+
+    await waitFor(() => {
+      expect(getFormState(container).isValid).toBe(true);
+    });
+
+    await user.click(screen.getByRole('button', { name: /^保存$/ }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({
+      data: {
+        initialState: {
+          field: {
+            pos: { x: 3, y: 0 },
+          },
+        },
+      },
+    });
+  });
+
+  it('allows null coordinates in draft when a position input is cleared', async () => {
     const user = userEvent.setup();
 
     const { container } = renderManifestCreateForm({
@@ -95,14 +136,12 @@ describe('manifest create form', () => {
       expect(getFormState(container).isValid).toBe(true);
     });
 
-    const xInput = screen.getByLabelText('x');
-    await user.clear(xInput);
-    await user.type(xInput, '1');
+    await user.clear(screen.getByLabelText('x'));
 
     await waitFor(() => {
-      expect(getFormState(container).isValid).toBe(false);
+      expect(getFormState(container).isValid).toBe(true);
     });
 
-    expect(screen.getByRole('button', { name: /^保存$/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /^保存$/ })).toBeEnabled();
   });
 });
