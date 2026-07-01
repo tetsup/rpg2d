@@ -36,7 +36,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           type: 'select-document',
           params: {
             name: 'data.initialState.field.fieldId',
-            label: t('フィールド'),
+            label: t('マップ'),
             collectionName: 'resources',
             resourceType: 'field',
           },
@@ -57,7 +57,7 @@ export function ManifestForm({ mode }: ManifestFieldParams): FieldGroupTemplateP
           type: 'select-document',
           params: {
             name: 'data.config.defaultMessagePanel',
-            label: t('メッセージパネル'),
+            label: t('パネル'),
             collectionName: 'resources',
             resourceType: 'panel',
           },
