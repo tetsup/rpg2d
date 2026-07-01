@@ -1,0 +1,108 @@
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  getFormState,
+  manifestPickerAssignments,
+  manifestTestNamespaceId,
+  renderManifestCreateForm,
+} from '../helpers/manifest-create-form';
+
+describe('manifest create form', () => {
+  it('keeps the form invalid and submit disabled before required meta fields are filled', async () => {
+    const { container } = renderManifestCreateForm();
+
+    await waitFor(() => {
+      expect(getFormState(container).isValid).toBe(false);
+    });
+
+    expect(screen.getByRole('button', { name: /^保存$/ })).toBeDisabled();
+  });
+
+  it('becomes valid when text fields are filled and picker ids are applied under FormProvider', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+
+    const { container } = renderManifestCreateForm({
+      onSubmit,
+      pickerAssignments: manifestPickerAssignments(),
+    });
+
+    await user.type(screen.getByLabelText('プロジェクト名'), 'v0');
+    await user.click(screen.getByTestId('apply-picker-values'));
+
+    await waitFor(() => {
+      expect(getFormState(container).isValid).toBe(true);
+      expect(getFormState(container).isDirty).toBe(true);
+    });
+
+    expect(screen.getByRole('button', { name: /^保存$/ })).toBeEnabled();
+
+    await user.click(screen.getByRole('button', { name: /^保存$/ }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({
+      namespace: manifestTestNamespaceId,
+      name: 'v0',
+      isDraft: true,
+      data: {
+        initialState: {
+          field: {
+            fieldId: 'sample/field/start-field.v0',
+          },
+        },
+        config: {
+          defaultMessagePanel: 'sample/panel/message.v0',
+        },
+      },
+    });
+  });
+
+  it('stays valid in draft when picker ids are null after meta fields are filled', async () => {
+    const user = userEvent.setup();
+
+    const { container } = renderManifestCreateForm({
+      pickerAssignments: manifestPickerAssignments({
+        fieldId: null,
+        defaultMessagePanel: null,
+      }),
+    });
+
+    await user.type(screen.getByLabelText('プロジェクト名'), 'v0');
+    await user.click(screen.getByTestId('apply-picker-values'));
+
+    await waitFor(() => {
+      expect(getFormState(container).isValid).toBe(true);
+    });
+
+    expect(screen.getByRole('button', { name: /^保存$/ })).toBeEnabled();
+  });
+
+  it('becomes invalid when position text inputs contain strings instead of numbers', async () => {
+    const user = userEvent.setup();
+
+    const { container } = renderManifestCreateForm({
+      pickerAssignments: manifestPickerAssignments(),
+    });
+
+    await user.type(screen.getByLabelText('プロジェクト名'), 'v0');
+    await user.click(screen.getByTestId('apply-picker-values'));
+
+    await waitFor(() => {
+      expect(getFormState(container).isValid).toBe(true);
+    });
+
+    const xInput = screen.getByLabelText('x');
+    await user.clear(xInput);
+    await user.type(xInput, '1');
+
+    await waitFor(() => {
+      expect(getFormState(container).isValid).toBe(false);
+    });
+
+    expect(screen.getByRole('button', { name: /^保存$/ })).toBeDisabled();
+  });
+});
