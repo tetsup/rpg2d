@@ -1,14 +1,15 @@
 import { useTranslation } from 'react-i18next';
-import { createDraftResourceInputSchema } from '@schema/database/resource';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
-import { ManifestForm } from '@editor/forms/manifest';
+import {
+  createManifestCreateDefaultValues,
+  ManifestForm,
+  manifestCreateSchema,
+} from '@editor/forms/manifest';
 import { ResourceInput } from '@sharedTypes/database/collection';
 import { useNavigate } from 'react-router-dom';
 import { useCreateDocument } from '@editor/hooks/api/mutations';
 import { buildResourceId } from '@editor/hooks/api/resource-id';
-
-const manifestCreateSchema = createDraftResourceInputSchema('manifest');
 
 export function NewManifestPage() {
   const { t } = useTranslation();
@@ -16,29 +17,7 @@ export function NewManifestPage() {
   const { mutateAsync: createResource } = useCreateDocument('resources');
   const fields = ManifestForm({ mode: 'create' });
 
-  const defaultValues: ResourceInput<'manifest'> = {
-    namespace: '',
-    type: 'manifest',
-    name: '',
-    version: 0,
-    description: '',
-    isDraft: true,
-    data: {
-      initialState: {
-        core: { players: [], variables: {}, mode: 'field' },
-        field: { fieldId: null, pos: { x: 0, y: 0 }, direction: 'down', actionIds: [] },
-      },
-      schemas: { playerState: {} },
-      config: {
-        blockSize: { width: 16, height: 16 },
-        textSize: { width: 7, height: 7 },
-        moveDurationMs: 500,
-        screen: { width: 320, height: 240 },
-        defaultMessagePanel: null,
-        messageConfig: { speedMs: 100, margin: { left: 0, top: 0, right: 1, bottom: 1 } },
-      },
-    },
-  };
+  const defaultValues: ResourceInput<'manifest'> = createManifestCreateDefaultValues();
 
   const onSubmit = async (values: ResourceInput<'manifest'>) => {
     await createResource(values);
