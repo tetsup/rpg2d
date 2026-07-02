@@ -7,7 +7,7 @@ type ManifestFieldParams = { mode: 'create' | 'update' };
 
 export const manifestInputSchema = createResourceInputSchema('manifest');
 
-export function createManifestCreateDefaultValues(): ResourceInput<'manifest'> {
+export function createManifestDefaultValues(): ResourceInput<'manifest'> {
   return {
     namespace: '',
     type: 'manifest',

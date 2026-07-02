@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { FormTemplete } from '@editor/components/features/form/form-templete';
 import {
-  createManifestCreateDefaultValues,
+  createManifestDefaultValues,
   ManifestForm,
   manifestInputSchema,
 } from '@editor/forms/manifest';
@@ -17,7 +17,7 @@ export function NewManifestPage() {
   const { mutateAsync: createResource } = useCreateDocument('resources');
   const fields = ManifestForm({ mode: 'create' });
 
-  const defaultValues: ResourceInput<'manifest'> = createManifestCreateDefaultValues();
+  const defaultValues: ResourceInput<'manifest'> = createManifestDefaultValues();
 
   const onSubmit = async (values: ResourceInput<'manifest'>) => {
     await createResource(values);

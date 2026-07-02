@@ -9,7 +9,7 @@ import { DraftModeToggle } from '@editor/components/features/form/draft-mode-tog
 import { SubmitCard } from '@editor/components/parts/submit-card';
 import { documentKey } from '@editor/hooks/api/by-id';
 import {
-  createManifestCreateDefaultValues,
+  createManifestDefaultValues,
   ManifestForm,
   manifestInputSchema,
 } from '@editor/forms/manifest';
@@ -117,7 +117,7 @@ type ManifestCreateFormHarnessProps = {
 function ManifestCreateFormHarness({
   onSubmit,
   pickerAssignments = [],
-  defaultValues = createManifestCreateDefaultValues(),
+  defaultValues = createManifestDefaultValues(),
 }: ManifestCreateFormHarnessProps) {
   const fields = ManifestForm({ mode: 'create' });
   const form = useForm<ResourceInput<'manifest'>>({
