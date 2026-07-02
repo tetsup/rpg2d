@@ -17,9 +17,9 @@ export function AppRouter() {
           <Route path="/" element={<HomePage />} />
           <Route path="/resources" element={<ResourceTypeSelectPage />} />
           <Route path="/resources/:type" element={<ResourceSearchPage />} />
-          <Route path="/manifest/new" element={<NewManifestPage />} />
-          <Route path="/namespace/new" element={<NewNamespacePage />} />
-          <Route path="/namespace/:id" element={<EditNamespacePage />} />
+          <Route path="/resources/manifest/new" element={<NewManifestPage />} />
+          <Route path="/namespaces/new" element={<NewNamespacePage />} />
+          <Route path="/namespaces/:id" element={<EditNamespacePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

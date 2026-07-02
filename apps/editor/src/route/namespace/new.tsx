@@ -22,7 +22,7 @@ export function NewNamespacePage() {
 
   const onSubmit = async (values: NamespaceInput) => {
     await createNamespace(values);
-    navigate(`/namespace/${values.id}`);
+    navigate(`/namespaces/${values.id}`);
   };
 
   return (
