@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { createDraftResourceInputSchema } from '@schema/database/resource';
+import { createResourceInputSchema } from '@schema/database/resource';
 import type { FieldGroupTemplateProps } from '@editor/components/features/form/field-templete';
 import { ResourceInput } from '@sharedTypes/database/collection';
 
 type ManifestFieldParams = { mode: 'create' | 'update' };
 
-export const manifestCreateSchema = createDraftResourceInputSchema('manifest');
+export const manifestInputSchema = createResourceInputSchema('manifest');
 
 export function createManifestCreateDefaultValues(): ResourceInput<'manifest'> {
   return {

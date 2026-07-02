@@ -2,13 +2,16 @@ import { type DefaultValues, type FieldPath, FormProvider, useForm, useFormConte
 import { zodResolver } from '@hookform/resolvers/zod';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, type RenderOptions } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import { screen } from '@testing-library/react';
 import { FieldGroupTemplate } from '@editor/components/features/form/field-templete';
+import { DraftModeToggle } from '@editor/components/features/form/draft-mode-toggle';
 import { SubmitCard } from '@editor/components/parts/submit-card';
 import { documentKey } from '@editor/hooks/api/by-id';
 import {
   createManifestCreateDefaultValues,
   ManifestForm,
-  manifestCreateSchema,
+  manifestInputSchema,
 } from '@editor/forms/manifest';
 import type { ResourceInput } from '@sharedTypes/database/collection';
 
@@ -118,7 +121,7 @@ function ManifestCreateFormHarness({
 }: ManifestCreateFormHarnessProps) {
   const fields = ManifestForm({ mode: 'create' });
   const form = useForm<ResourceInput<'manifest'>>({
-    resolver: zodResolver(manifestCreateSchema),
+    resolver: zodResolver(manifestInputSchema),
     mode: 'onChange',
     defaultValues,
   });
@@ -131,6 +134,7 @@ function ManifestCreateFormHarness({
             <FieldGroupTemplate key={index} {...fieldGroup} />
           ))}
           {pickerAssignments.length > 0 && <PickerValueSetter assignments={pickerAssignments} />}
+          <DraftModeToggle />
           <SubmitCard />
           <FormStateProbe />
         </div>
@@ -204,4 +208,20 @@ export function manifestPickerAssignments(
           : manifestTestPanelId,
     },
   ];
+}
+
+export async function fillManifestProjectName(user: UserEvent, name = 'v0') {
+  await user.type(screen.getByLabelText('プロジェクト名'), name);
+}
+
+export async function applyManifestPickerValues(user: UserEvent) {
+  await user.click(screen.getByTestId('apply-picker-values'));
+}
+
+export async function setManifestSaveMode(user: UserEvent, mode: 'draft' | 'ready') {
+  await user.click(screen.getByRole('button', { name: mode === 'draft' ? '下書き' : '正式' }));
+}
+
+export function getSaveButton() {
+  return screen.getByRole('button', { name: /^保存$/ });
 }

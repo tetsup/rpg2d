@@ -2,10 +2,14 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import {
+  applyManifestPickerValues,
+  fillManifestProjectName,
   getFormState,
+  getSaveButton,
   manifestPickerAssignments,
   manifestTestNamespaceId,
   renderManifestCreateForm,
+  setManifestSaveMode,
 } from '../helpers/manifest-create-form';
 
 describe('manifest create form', () => {
@@ -142,6 +146,90 @@ describe('manifest create form', () => {
       expect(getFormState(container).isValid).toBe(true);
     });
 
-    expect(screen.getByRole('button', { name: /^保存$/ })).toBeEnabled();
+    expect(getSaveButton()).toBeEnabled();
+  });
+
+  describe('draft mode toggle validation', () => {
+    it('keeps the form valid in both draft and ready modes when all required fields are filled', async () => {
+      const user = userEvent.setup();
+      const { container } = renderManifestCreateForm({
+        pickerAssignments: manifestPickerAssignments(),
+      });
+
+      await fillManifestProjectName(user);
+      await applyManifestPickerValues(user);
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(true);
+      });
+      expect(getSaveButton()).toBeEnabled();
+
+      await setManifestSaveMode(user, 'ready');
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(true);
+      });
+      expect(getSaveButton()).toBeEnabled();
+
+      await setManifestSaveMode(user, 'draft');
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(true);
+      });
+      expect(getSaveButton()).toBeEnabled();
+    });
+
+    it('stays valid in draft but becomes invalid in ready when nullable refs are null', async () => {
+      const user = userEvent.setup();
+      const { container } = renderManifestCreateForm({
+        pickerAssignments: manifestPickerAssignments({
+          fieldId: null,
+          defaultMessagePanel: null,
+        }),
+      });
+
+      await fillManifestProjectName(user);
+      await applyManifestPickerValues(user);
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(true);
+      });
+      expect(getSaveButton()).toBeEnabled();
+
+      await setManifestSaveMode(user, 'ready');
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(false);
+      });
+      expect(getSaveButton()).toBeDisabled();
+
+      await setManifestSaveMode(user, 'draft');
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(true);
+      });
+      expect(getSaveButton()).toBeEnabled();
+    });
+
+    it('keeps the form invalid in both draft and ready modes when meta fields fail validation', async () => {
+      const user = userEvent.setup();
+      const { container } = renderManifestCreateForm({
+        pickerAssignments: manifestPickerAssignments(),
+      });
+
+      await fillManifestProjectName(user, 'Invalid Name');
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(false);
+      });
+      expect(getSaveButton()).toBeDisabled();
+
+      await setManifestSaveMode(user, 'ready');
+
+      await waitFor(() => {
+        expect(getFormState(container).isValid).toBe(false);
+      });
+      expect(getSaveButton()).toBeDisabled();
+    });
   });
 });

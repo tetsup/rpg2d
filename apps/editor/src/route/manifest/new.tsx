@@ -4,7 +4,7 @@ import { FormTemplete } from '@editor/components/features/form/form-templete';
 import {
   createManifestCreateDefaultValues,
   ManifestForm,
-  manifestCreateSchema,
+  manifestInputSchema,
 } from '@editor/forms/manifest';
 import { ResourceInput } from '@sharedTypes/database/collection';
 import { useNavigate } from 'react-router-dom';
@@ -27,9 +27,10 @@ export function NewManifestPage() {
     <LayoutShell titleBarProps={{ title: t('プロジェクト設定') }}>
       <FormTemplete
         fieldGroups={fields}
-        schema={manifestCreateSchema}
+        schema={manifestInputSchema}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
+        withDraftToggle
       />
     </LayoutShell>
   );
