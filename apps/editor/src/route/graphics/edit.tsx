@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
 import { ImageGraphicsEditor } from '@editor/components/features/graphics/image-graphics-editor';
 import {
@@ -7,18 +8,18 @@ import {
 import { buildResourceId } from '@editor/hooks/api/resource-id';
 import { useDocumentById } from '@editor/hooks/api/by-id';
 import { isGraphicsResourceType } from '@editor/lib/resource-type-meta';
-import { useTranslation } from 'react-i18next';
 
 export function EditGraphicsResourcePage() {
   const { t } = useTranslation();
   const { namespace, type, name } = useParams<{ namespace: string; type: string; name: string }>();
+  const isValidRoute =
+    namespace != null && type != null && name != null && isGraphicsResourceType(type);
+  const resourceId = isValidRoute ? buildResourceId({ namespace, type, name }) : undefined;
+  const { data: resource, isLoading, isError } = useDocumentById('resources', resourceId);
 
-  if (namespace == null || type == null || name == null || !isGraphicsResourceType(type)) {
+  if (!isValidRoute) {
     return <Navigate to="/resources" replace />;
   }
-
-  const resourceId = buildResourceId({ namespace, type, name });
-  const { data: resource, isLoading, isError } = useDocumentById('resources', resourceId);
 
   if (isLoading) {
     return null;

@@ -21,6 +21,10 @@ type ImageGraphicsEditorProps = {
 };
 
 export function ImageGraphicsEditor({ resource }: ImageGraphicsEditorProps) {
+  return <ImageGraphicsEditorBody key={resource.id} resource={resource} />;
+}
+
+function ImageGraphicsEditorBody({ resource }: ImageGraphicsEditorProps) {
   const { t } = useTranslation();
   const { mutateAsync: updateResource, isPending } = useUpdateDocument('resources');
   const setEditState = useLayoutStore((state) => state.setEditState);
@@ -28,12 +32,6 @@ export function ImageGraphicsEditor({ resource }: ImageGraphicsEditorProps) {
   const [draftData, setDraftData] = useState(resource.data);
   const [isDraft, setIsDraft] = useState(resource.isDraft);
   const [selectedToken, setSelectedToken] = useState(() => getDefaultPaletteToken(resource.data.palette));
-
-  useEffect(() => {
-    setDraftData(resource.data);
-    setIsDraft(resource.isDraft);
-    setSelectedToken(getDefaultPaletteToken(resource.data.palette));
-  }, [resource.data, resource.id, resource.isDraft]);
 
   const isDirty = useMemo(() => {
     return isDraft !== resource.isDraft || JSON.stringify(draftData) !== JSON.stringify(resource.data);
@@ -64,6 +62,9 @@ export function ImageGraphicsEditor({ resource }: ImageGraphicsEditorProps) {
         id: resource.id,
         body: validation.data,
       });
+      setDraftData(validation.data.data);
+      setIsDraft(validation.data.isDraft);
+      setSelectedToken(getDefaultPaletteToken(validation.data.data.palette));
       toast.success(t('保存しました'));
     } catch (error) {
       console.error(error);
