@@ -1,6 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
-import { AddButton } from '@editor/components/features/graphics/add-button';
+import { ImageGraphicsEditor } from '@editor/components/features/graphics/image-graphics-editor';
 import {
   getSwitcherLabel,
   GraphicsResourceEditorShell,
@@ -8,6 +7,7 @@ import {
 import { buildResourceId } from '@editor/hooks/api/resource-id';
 import { useDocumentById } from '@editor/hooks/api/by-id';
 import { isGraphicsResourceType } from '@editor/lib/resource-type-meta';
+import { useTranslation } from 'react-i18next';
 
 export function EditGraphicsResourcePage() {
   const { t } = useTranslation();
@@ -28,22 +28,11 @@ export function EditGraphicsResourcePage() {
     return <Navigate to="/resources" replace />;
   }
 
-  const switcherLabel = getSwitcherLabel(type, t);
-
   if (resource.type === 'image') {
-    return (
-      <GraphicsResourceEditorShell
-        type="image"
-        title={resource.name}
-        images={[resource.data]}
-        palette={resource.data.palette}
-        emptyLabel={t('画像データがありません')}
-        switcherLabel={switcherLabel}
-        switcherDisabled
-        addButton={<AddButton disabled />}
-      />
-    );
+    return <ImageGraphicsEditor resource={resource} />;
   }
+
+  const switcherLabel = getSwitcherLabel(type, t);
 
   return (
     <GraphicsResourceEditorShell

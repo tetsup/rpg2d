@@ -11,9 +11,5 @@ type LayoutStore = {
 
 export const useLayoutStore = create<LayoutStore>((set) => ({
   editState: {},
-  setEditState: (state) =>
-    set((prevState) => ({
-      ...prevState,
-      state,
-    })),
+  setEditState: (editState) => set({ editState }),
 }));
