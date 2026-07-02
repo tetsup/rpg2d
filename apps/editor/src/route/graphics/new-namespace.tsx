@@ -3,22 +3,18 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { CancelCard } from '@editor/components/parts/cancel-card';
 import { SelectDocument } from '@editor/components/parts/select-document';
-import { MenuCard } from '@editor/components/parts/menu-card';
-import { Sparkles } from 'lucide-react';
-import { parseResourceId } from '@editor/hooks/api/resource-id';
 import {
   findResourceTypeGroup,
-  isBrowsableResourceType,
   isGraphicsResourceType,
   resourceTypeMeta,
 } from '@editor/lib/resource-type-meta';
 
-export function ResourceSearchPage() {
+export function NewGraphicsResourceNamespacePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { type } = useParams<{ type: string }>();
 
-  if (type == null || !isBrowsableResourceType(type)) {
+  if (type == null || !isGraphicsResourceType(type)) {
     return <Navigate to="/resources" replace />;
   }
 
@@ -28,26 +24,15 @@ export function ResourceSearchPage() {
   return (
     <LayoutShell
       titleBarProps={{
-        title: t(meta.label),
+        title: t('{{label}}を作成', { label: meta.label }),
         category: group ? t(group.title) : undefined,
       }}
     >
       <CancelCard />
-      {isGraphicsResourceType(type) && (
-        <MenuCard
-          onClick={() => navigate(`/resources/${type}/new`)}
-          icon={Sparkles}
-          title={t('新規作成')}
-          description={t('{{label}}を新しく作る', { label: t(meta.label) })}
-        />
-      )}
+      <p className="text-sm text-muted-foreground">{t('グループを選んでから編集を始めます')}</p>
       <SelectDocument
-        collectionName="resources"
-        resourceType={type}
-        onItemSelect={(item) => {
-          const { namespace, type: resourceType, name } = parseResourceId(item.id);
-          navigate(`/resources/${namespace}/${resourceType}/${name}`);
-        }}
+        collectionName="namespaces"
+        onItemSelect={(namespace) => navigate(`/resources/${namespace.id}/${type}/new`)}
       />
     </LayoutShell>
   );

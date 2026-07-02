@@ -24,6 +24,17 @@ Object.defineProperty(window, 'matchMedia', {
 
 Element.prototype.scrollIntoView = vi.fn();
 
+class IntersectionObserverMock {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+  writable: true,
+  value: IntersectionObserverMock,
+});
+
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'error' });
 });
