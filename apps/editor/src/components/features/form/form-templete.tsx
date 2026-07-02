@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitCard } from '@editor/components/parts/submit-card';
 import { CancelCard } from '@editor/components/parts/cancel-card';
+import { DraftModeToggle } from './draft-mode-toggle';
 import { FieldGroupTemplate, FieldGroupTemplateProps } from './field-templete';
 import { useEffect } from 'react';
 
@@ -13,6 +14,7 @@ type FormTemplateProps<TValues extends FieldValues> = {
   schema: z.ZodType<TValues, TValues>;
   defaultValues: DefaultValues<TValues>;
   onSubmit: (values: TValues) => Promise<void>;
+  withDraftToggle?: boolean;
 };
 
 export function FormTemplete<TValues extends FieldValues>({
@@ -20,6 +22,7 @@ export function FormTemplete<TValues extends FieldValues>({
   schema,
   onSubmit,
   defaultValues,
+  withDraftToggle = false,
 }: FormTemplateProps<TValues>) {
   const { t } = useTranslation();
   const form = useForm({ resolver: zodResolver(schema), mode: 'onChange', defaultValues });
@@ -45,6 +48,7 @@ export function FormTemplete<TValues extends FieldValues>({
           {fieldGroups.map((fieldGroup, index) => (
             <FieldGroupTemplate key={index} {...fieldGroup} />
           ))}
+          {withDraftToggle && <DraftModeToggle />}
           <SubmitCard />
           <CancelCard />
         </div>

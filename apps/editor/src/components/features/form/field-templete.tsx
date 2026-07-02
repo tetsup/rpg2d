@@ -1,6 +1,7 @@
 import { FieldPath, FieldValues, useFormContext } from 'react-hook-form';
 import { ControlSection } from '@editor/components/forms/control-section';
 import { InputField, type InputFieldProps } from './input-field';
+import { NumberField, type NumberFieldProps } from './number-field';
 import { SelectField, type SelectFieldProps } from './select-field';
 import { FieldPosField, type FieldPosFieldProps } from './field-pos-field';
 import { SwitchField, type SwitchFieldProps } from './switch-field';
@@ -8,6 +9,7 @@ import { SelectDocumentField, type SelectDocumentFieldProps } from './select-doc
 
 type FieldTemplateParamMap<T extends FieldValues> = {
   text: InputFieldProps<T>;
+  number: NumberFieldProps<T>;
   hidden: { name: FieldPath<T> };
   select: SelectFieldProps<T>;
   switch: SwitchFieldProps<T>;
@@ -35,6 +37,8 @@ function FieldTemplate<T extends FieldValues>({ type, params }: FieldItem<T>) {
   switch (type) {
     case 'text':
       return <InputField {...params} />;
+    case 'number':
+      return <NumberField {...params} />;
     case 'hidden':
       return <input type="hidden" {...register(params.name)} />;
     case 'select':

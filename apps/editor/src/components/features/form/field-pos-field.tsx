@@ -1,6 +1,6 @@
-import { FieldPath, FieldValues, useFormContext } from 'react-hook-form';
+import { FieldPath, FieldValues } from 'react-hook-form';
 import { FieldWrapper, useFieldControlId } from '@editor/components/forms/field-wrapper';
-import { Input } from '@editor/components/ui/input';
+import { NumberFieldControl } from './number-field';
 
 export type FieldPosFieldProps<T extends FieldValues> = {
   name: FieldPath<T>;
@@ -14,7 +14,6 @@ function FieldPosFieldControl<T extends FieldValues>({
   disabled,
 }: Pick<FieldPosFieldProps<T>, 'name' | 'disabled'>) {
   const controlId = useFieldControlId();
-  const { register } = useFormContext();
   const xId = `${controlId}-x`;
   const yId = `${controlId}-y`;
 
@@ -24,13 +23,13 @@ function FieldPosFieldControl<T extends FieldValues>({
         <label htmlFor={xId} className="w-4 text-sm">
           x
         </label>
-        <Input {...register(`${name}.x`)} id={xId} disabled={disabled} />
+        <NumberFieldControl name={`${name}.x`} id={xId} disabled={disabled} />
       </div>
       <div className="flex items-center gap-2">
         <label htmlFor={yId} className="w-4 text-sm">
           y
         </label>
-        <Input {...register(`${name}.y`)} id={yId} disabled={disabled} />
+        <NumberFieldControl name={`${name}.y`} id={yId} disabled={disabled} />
       </div>
     </div>
   );

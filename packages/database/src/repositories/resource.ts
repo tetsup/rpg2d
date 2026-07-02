@@ -92,7 +92,7 @@ export class ResourceRepository {
           .updateTable('resources')
           .set({
             name: document.name,
-            isValid: document.isValid,
+            isDraft: document.isDraft,
             data: document,
             updatedAt: now,
           })

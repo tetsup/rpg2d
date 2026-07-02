@@ -133,7 +133,7 @@ export function createPlayerDocument(path: ResourcePath = validPlayerPath, data 
     type: path.type,
     name: path.name,
     version: 0 as const,
-    isValid: true as const,
+    isDraft: false as const,
     description: 'this is resource',
     data,
   };
@@ -142,7 +142,7 @@ export function createPlayerDocument(path: ResourcePath = validPlayerPath, data 
 export async function insertResourceRow(
   path: ResourcePath,
   data: object,
-  options: { description?: string; isValid?: boolean; createdBy?: string } = {}
+  options: { description?: string; isDraft?: boolean; createdBy?: string } = {}
 ) {
   const now = new Date();
   const id = buildId(path);
@@ -157,7 +157,7 @@ export async function insertResourceRow(
         name: path.name,
         version: 0,
         description: options.description ?? '',
-        isValid: options.isValid ?? true,
+        isDraft: options.isDraft ?? false,
         data,
         createdBy: options.createdBy ?? 'dummy-user',
         createdAt: now,
