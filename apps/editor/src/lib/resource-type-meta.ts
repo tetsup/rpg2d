@@ -16,6 +16,10 @@ import type { ResourceType } from '@sharedTypes/resource/common';
 
 export type BrowsableResourceType = Exclude<ResourceType, 'manifest'>;
 
+export const graphicsResourceTypes = ['image', 'texture', 'skin'] as const satisfies readonly BrowsableResourceType[];
+
+export type GraphicsResourceType = (typeof graphicsResourceTypes)[number];
+
 type ResourceTypeMeta = {
   label: string;
   description: string;
@@ -112,6 +116,10 @@ const browsableResourceTypes = resourceTypeGroups.flatMap((group) => group.types
 
 export function isBrowsableResourceType(type: string): type is BrowsableResourceType {
   return browsableResourceTypes.includes(type as BrowsableResourceType);
+}
+
+export function isGraphicsResourceType(type: string): type is GraphicsResourceType {
+  return graphicsResourceTypes.includes(type as GraphicsResourceType);
 }
 
 export function findResourceTypeGroup(type: BrowsableResourceType): ResourceTypeGroup | undefined {

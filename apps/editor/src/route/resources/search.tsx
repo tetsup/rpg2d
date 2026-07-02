@@ -3,7 +3,14 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { CancelCard } from '@editor/components/parts/cancel-card';
 import { SelectDocument } from '@editor/components/parts/select-document';
-import { findResourceTypeGroup, isBrowsableResourceType, resourceTypeMeta } from '@editor/lib/resource-type-meta';
+import { MenuCard } from '@editor/components/parts/menu-card';
+import { Sparkles } from 'lucide-react';
+import {
+  findResourceTypeGroup,
+  isBrowsableResourceType,
+  isGraphicsResourceType,
+  resourceTypeMeta,
+} from '@editor/lib/resource-type-meta';
 
 export function ResourceSearchPage() {
   const { t } = useTranslation();
@@ -25,6 +32,14 @@ export function ResourceSearchPage() {
       }}
     >
       <CancelCard />
+      {isGraphicsResourceType(type) && (
+        <MenuCard
+          onClick={() => navigate(`/resources/${type}/new`)}
+          icon={Sparkles}
+          title={t('新規作成')}
+          description={t('{{label}}を新しく作る', { label: t(meta.label) })}
+        />
+      )}
       <SelectDocument
         collectionName="resources"
         resourceType={type}

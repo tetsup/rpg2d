@@ -2,18 +2,21 @@ import type { ReactNode } from 'react';
 import { TitleBar, type TitleBarProps } from './title-bar';
 import { BottomMenu } from './bottom-menu';
 import { UserMenu } from './user-menu';
+import { cn } from '@editor/lib/utils';
 
 type LayoutShellProps = {
   children: ReactNode;
   titleBarProps: TitleBarProps;
+  /** Removes main padding for full-bleed editors (e.g. graphics canvas). */
+  flush?: boolean;
 };
 
-export function LayoutShell({ children, titleBarProps }: LayoutShellProps) {
+export function LayoutShell({ children, titleBarProps, flush = false }: LayoutShellProps) {
   return (
     <div className="flex h-dvh flex-col overflow-hidden">
       <TitleBar {...titleBarProps} rightSlot={<UserMenu />} />
-      <main className="min-h-0 flex-1 overflow-auto">
-        <div className="space-y-4 p-4">{children}</div>
+      <main className={cn('min-h-0 flex-1', flush ? 'overflow-hidden' : 'overflow-auto')}>
+        <div className={flush ? 'h-full' : 'space-y-4 p-4'}>{children}</div>
       </main>
       <BottomMenu />
     </div>
