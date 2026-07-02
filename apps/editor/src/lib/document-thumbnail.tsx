@@ -5,47 +5,21 @@ import type { Database, ResourceDocument } from '@sharedTypes/database/collectio
 import type { FilterMap } from '@sharedTypes/database/filter';
 import { documentKey, getDocumentById } from '@editor/hooks/api/by-id';
 import { useResolvedDocument } from '@editor/hooks/api/resolved-document';
+import {
+  drawCompositeImages,
+  getCompositeCanvasSize,
+  getTextureCompositeImageIds,
+  type ImagePixelData,
+} from '@editor/lib/pixel-render';
 
-type ImageData = ResourceDocument<'image'>['data'];
 type TextureData = ResourceDocument<'texture'>['data'];
 type SkinData = ResourceDocument<'skin'>['data'];
 type PlayerData = ResourceDocument<'player'>['data'];
 type EntityData = ResourceDocument<'entity'>['data'];
 
-function getTextureCompositeImageIds(texture: TextureData): string[] {
-  return [...texture.layers]
-    .sort((a, b) => a.priority - b.priority)
-    .flatMap((layer) => {
-      const first = layer.images[0];
-      return first ? [first] : [];
-    });
-}
-
-function drawImageData(ctx: CanvasRenderingContext2D, image: ImageData, x: number, y: number) {
-  const { width, height } = image.size;
-  const imageData = ctx.createImageData(width, height);
-  image.pixels.forEach((row, rowY) => {
-    row.split(/\s+/).forEach((token, colX) => {
-      const rgba = image.palette[token];
-      if (!rgba) return;
-      const i = (rowY * width + colX) * 4;
-      imageData.data[i] = rgba[0];
-      imageData.data[i + 1] = rgba[1];
-      imageData.data[i + 2] = rgba[2];
-      imageData.data[i + 3] = rgba[3];
-    });
-  });
-  const layerCanvas = document.createElement('canvas');
-  layerCanvas.width = width;
-  layerCanvas.height = height;
-  layerCanvas.getContext('2d')!.putImageData(imageData, 0, 0);
-  ctx.drawImage(layerCanvas, x, y);
-}
-
-function CompositeImageThumbnail({ images }: { images: ImageData[] }) {
+function CompositeImageThumbnail({ images }: { images: ImagePixelData[] }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const width = Math.max(...images.map((image) => image.size.width));
-  const height = Math.max(...images.map((image) => image.size.height));
+  const { width, height } = getCompositeCanvasSize(images);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -54,10 +28,7 @@ function CompositeImageThumbnail({ images }: { images: ImageData[] }) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, width, height);
-    for (const image of images) {
-      drawImageData(ctx, image, 0, 0);
-    }
+    drawCompositeImages(ctx, images, width, height);
   }, [images, width, height]);
 
   if (images.length === 0) return null;
