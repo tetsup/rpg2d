@@ -35,8 +35,8 @@ export function renderEditorRoutes({ initialEntry = '/', ...options }: RenderEdi
             <MemoryRouter initialEntries={[initialEntry]}>
               <Routes>
                 <Route element={<RequireAuth />}>
-                  <Route path="/namespace/new" element={<NewNamespacePage />} />
-                  <Route path="/namespace/:id" element={<EditNamespacePage />} />
+                  <Route path="/namespaces/new" element={<NewNamespacePage />} />
+                  <Route path="/namespaces/:id" element={<EditNamespacePage />} />
                 </Route>
               </Routes>
             </MemoryRouter>

@@ -7,7 +7,7 @@ import { server } from '../helpers/server';
 describe('namespace create', () => {
   it('associates the isPrivate switch with its label and toggles via label click', async () => {
     const user = userEvent.setup();
-    renderEditorRoutes({ initialEntry: '/namespace/new' });
+    renderEditorRoutes({ initialEntry: '/namespaces/new' });
 
     await waitFor(() => {
       expect(screen.getByLabelText('非公開')).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe('namespace create', () => {
 
   it('toggles via clicking the switch track', async () => {
     const user = userEvent.setup();
-    renderEditorRoutes({ initialEntry: '/namespace/new' });
+    renderEditorRoutes({ initialEntry: '/namespaces/new' });
 
     await waitFor(() => {
       expect(screen.getByLabelText('非公開')).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('namespace create', () => {
     );
 
     const user = userEvent.setup();
-    renderEditorRoutes({ initialEntry: '/namespace/new' });
+    renderEditorRoutes({ initialEntry: '/namespaces/new' });
 
     await waitFor(() => {
       expect(screen.getByLabelText('ID')).toBeInTheDocument();

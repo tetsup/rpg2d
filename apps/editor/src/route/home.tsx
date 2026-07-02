@@ -16,7 +16,7 @@ export function HomePage() {
       <ControlSection title={t('プロジェクト管理')}>
         <MenuCard
           onClick={() => {
-            navigate('/manifest/new');
+            navigate('/resources/manifest/new');
           }}
           icon={Sparkles}
           title={t('新規作成')}
@@ -31,7 +31,7 @@ export function HomePage() {
       <ControlSection title={t('グループ管理')}>
         <MenuCard
           onClick={() => {
-            navigate('/namespace/new');
+            navigate('/namespaces/new');
           }}
           icon={Sparkles}
           title={t('新規作成')}
