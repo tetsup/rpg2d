@@ -36,6 +36,14 @@ When implementing features in this repo:
 - **Reuse before duplicate**: when picker and browse flows share behaviour, extend the same component rather than forking a second list stack.
 - **Small diffs**: prefer extending existing code over new files; delete dead scaffolds instead of leaving them alongside replacements; avoid drive-by refactors unrelated to the task.
 
+### Refactoring
+
+When a change replaces or supersedes existing code:
+
+1. **Remove obsolete modules**: delete files, exports, and imports that the refactor no longer uses (e.g. alias re-export shims, dead barrel files, superseded components). Update call sites to import from the canonical module directly.
+2. **Do not delete intentional WIP**: skip removal when an unreferenced function, class, or module is clearly **in progress** and planned for near-term use in the same feature arc (e.g. scaffolded but not yet wired). If it is ambiguous whether something is dead or WIP, **ask the user** before deleting.
+3. **Prefer direct imports over forwarding re-exports**: avoid `export { X } from '…'` (and alias shims like `export { A as B }`) unless there is a deliberate public API boundary. Consumers should import from the defining module.
+
 ### Before committing
 
 Leaving fixes or follow-up work uncommitted is a common source of CI failures and false “done” reports. Before every commit (and before opening or updating a PR):
@@ -44,6 +52,7 @@ Leaving fixes or follow-up work uncommitted is a common source of CI failures an
 2. **Scope matches the request**: review the staged diff against what the user asked for. Each commit should implement the interpreted requirement—not unrelated refactors, extra abstractions, or “while I’m here” changes. If the diff grows beyond what the prompt reasonably implies, stop and either trim the change or **ask the user** before committing.
 3. **Verify before you claim done**: run checks the task depends on (e.g. `pnpm lint` when touching lint-sensitive code, relevant tests) on the **committed** state when possible, not only on uncommitted local edits.
 4. **When in doubt, ask first**: if requirements are ambiguous, the change set mixes several concerns, or you would need to commit something the user did not ask for (e.g. broad renames, new files, behaviour changes), confirm with the user instead of committing silently.
+5. **Prune redundant code**: scan the diff (and related files) for unnecessary re-exports, alias-only shim files, duplicate barrels, and other dead scaffolding left behind by the change. Fix them in the same commit series when they are clearly obsolete—not intentional WIP (see **Refactoring** above).
 
 ### Git and PR language
 
