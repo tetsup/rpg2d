@@ -36,6 +36,15 @@ When implementing features in this repo:
 - **Reuse before duplicate**: when picker and browse flows share behaviour, extend the same component rather than forking a second list stack.
 - **Small diffs**: prefer extending existing code over new files; delete dead scaffolds instead of leaving them alongside replacements; avoid drive-by refactors unrelated to the task.
 
+### Before committing
+
+Leaving fixes or follow-up work uncommitted is a common source of CI failures and false “done” reports. Before every commit (and before opening or updating a PR):
+
+1. **No leftover diffs**: run `git status` and confirm there are no uncommitted changes that belong to the task (including lint fixes, import updates, and files created during the same session). Do not push or mark work complete while relevant changes still exist only in the working tree.
+2. **Scope matches the request**: review the staged diff against what the user asked for. Each commit should implement the interpreted requirement—not unrelated refactors, extra abstractions, or “while I’m here” changes. If the diff grows beyond what the prompt reasonably implies, stop and either trim the change or **ask the user** before committing.
+3. **Verify before you claim done**: run checks the task depends on (e.g. `pnpm lint` when touching lint-sensitive code, relevant tests) on the **committed** state when possible, not only on uncommitted local edits.
+4. **When in doubt, ask first**: if requirements are ambiguous, the change set mixes several concerns, or you would need to commit something the user did not ask for (e.g. broad renames, new files, behaviour changes), confirm with the user instead of committing silently.
+
 ## Cursor Cloud specific instructions
 
 Cloud Agents need PostgreSQL for `packages/database` integration tests.
