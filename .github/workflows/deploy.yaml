@@ -12,8 +12,10 @@ name: Deploy
 #
 # Prerequisites:
 #   - Neon database with pg_trgm enabled via migrations
-#   - AWS Lambda function with Function URL enabled
+#   - AWS resources created via `infra/aws` Terraform (Lambda + Function URL)
 #   - Two Cloudflare Pages projects (editor, runtime)
+#
+# Default Lambda function name from Terraform: RPG2d-api
 
 on:
   push:
