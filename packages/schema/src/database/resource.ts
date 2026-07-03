@@ -1,14 +1,13 @@
 import z from 'zod';
 import type { ResourceType } from '@sharedTypes/resource/common';
-import { NamespaceSchema, ResourceNameSchema } from '@schema/resource/common/base';
+import { ResourcePathSchema } from '@schema/resource/common/base';
 import { resolveResourceSchema } from '@schema/resource/common/resolver';
 import { deepNullable } from '@schema/utils/deep-nullable';
 
 export const createResourceMetaInputSchema = <T extends ResourceType>(type: T, isDraft: boolean) =>
-  z.object({
-    namespace: NamespaceSchema,
+  ResourcePathSchema.extend({
     type: z.literal(type),
-    name: ResourceNameSchema,
+  }).extend({
     version: z.literal(0),
     description: z.string().max(100).optional(),
     isDraft: z.literal(isDraft),

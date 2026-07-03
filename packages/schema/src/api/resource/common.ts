@@ -1,4 +1,3 @@
-import z from 'zod';
 import { StateDefinition } from '@sharedTypes/variable';
 import { ActionSchema } from '../../resource/action';
 import { EntitySchema } from '../../resource/entity';
@@ -12,27 +11,6 @@ import { buildPlayerSchema } from '../../resource/player';
 import { SkinSchema } from '../../resource/skin';
 import { TextureSchema } from '../../resource/texture';
 import { TileSchema } from '../../resource/tile';
-
-export const resourceTypes = [
-  'action',
-  'entity',
-  'field',
-  'image',
-  'font',
-  'manifest',
-  'panel-skin',
-  'panel',
-  'player',
-  'skin',
-  'texture',
-  'tile',
-] as const;
-
-export const ResourcePathParamsSchema = z.object({
-  namespace: z.string().min(1),
-  type: z.enum(resourceTypes),
-  name: z.string().min(1),
-});
 
 export const parseResource = (data: Record<string, any>, playerStateDefinition: StateDefinition = {}) => {
   switch (data.type) {

@@ -1,7 +1,7 @@
 import { execute } from '@database/client/pg-client';
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import { ResourceRepository } from '@database/repositories/resource';
-import { buildId } from '@database/utils/resource';
+import { formatResourceId } from '@database/utils/resource';
 import { clearTables, countRows } from './helpers/db';
 import {
   createPlayerDocument,
@@ -97,7 +97,7 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       const inserted = await execute(async (db) => {
-        return db.selectFrom('resources').selectAll().where('id', '=', buildId(validPlayerPath)).executeTakeFirst();
+        return db.selectFrom('resources').selectAll().where('id', '=', formatResourceId(validPlayerPath)).executeTakeFirst();
       });
 
       expect(inserted).toBeTruthy();
@@ -110,7 +110,7 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       const edges = await execute(async (db) => {
-        return db.selectFrom('resource_edges').selectAll().where('from', '=', buildId(validPlayerPath)).execute();
+        return db.selectFrom('resource_edges').selectAll().where('from', '=', formatResourceId(validPlayerPath)).execute();
       });
 
       expect(edges.length).toBeGreaterThan(0);
@@ -148,7 +148,7 @@ describe('ResourceRepository', () => {
       await insertUser({ id: testUserId });
       await insertPermission('sample', testUserId, 'reader');
       await insertResource(validPlayerPath);
-      await insertResourceEdge(buildId(validPlayerPath), buildId({ namespace: 'sample', type: 'skin', name: 'hero' }));
+      await insertResourceEdge(formatResourceId(validPlayerPath), formatResourceId({ namespace: 'sample', type: 'skin', name: 'hero' }));
     });
 
     it('updates resource', async () => {
@@ -171,15 +171,15 @@ describe('ResourceRepository', () => {
     it('replaces reference edges', async () => {
       await new ResourceRepository().update(validPlayerPath, {
         ...createPlayerDocument(),
-        data: { ...validPlayerData, initialSkin: buildId(newSkinPath) },
+        data: { ...validPlayerData, initialSkin: formatResourceId(newSkinPath) },
       });
 
       const edges = await execute(async (db) => {
-        return db.selectFrom('resource_edges').selectAll().where('from', '=', buildId(validPlayerPath)).execute();
+        return db.selectFrom('resource_edges').selectAll().where('from', '=', formatResourceId(validPlayerPath)).execute();
       });
 
       expect(edges).toHaveLength(1);
-      expect(edges[0]?.to).toBe(buildId(newSkinPath));
+      expect(edges[0]?.to).toBe(formatResourceId(newSkinPath));
     });
 
     it('returns not_found when missing', async () => {
@@ -311,7 +311,7 @@ describe('ResourceRepository', () => {
       await insertSkinDependencies();
       await insertResourceRow({ namespace: 'sample', type: 'map', name: 'test' }, {});
       await insertResource(validPlayerPath);
-      await insertResourceEdge('sample/map/test', buildId(validPlayerPath));
+      await insertResourceEdge('sample/map/test', formatResourceId(validPlayerPath));
     });
 
     it('returns incoming references', async () => {
@@ -374,8 +374,8 @@ describe('ResourceRepository', () => {
       await insertResourceRow({ namespace: 'sample', type: 'map', name: 'a' }, {});
       await insertResourceRow({ namespace: 'sample', type: 'map', name: 'b' }, {});
       await insertResource(validPlayerPath);
-      await insertResourceEdge(buildId(validPlayerPath), 'sample/map/a');
-      await insertResourceEdge('sample/map/b', buildId(validPlayerPath));
+      await insertResourceEdge(formatResourceId(validPlayerPath), 'sample/map/a');
+      await insertResourceEdge('sample/map/b', formatResourceId(validPlayerPath));
     });
 
     it('deletes resource', async () => {
@@ -384,7 +384,7 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       const resource = await execute(async (db) => {
-        return db.selectFrom('resources').selectAll().where('id', '=', buildId(validPlayerPath)).executeTakeFirst();
+        return db.selectFrom('resources').selectAll().where('id', '=', formatResourceId(validPlayerPath)).executeTakeFirst();
       });
 
       expect(resource).toBeUndefined();

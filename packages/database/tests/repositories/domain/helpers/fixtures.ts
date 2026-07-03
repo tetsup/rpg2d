@@ -1,7 +1,7 @@
 import type { NamespaceDocument, NamespacePermissionDocument, UserDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import { execute } from '@database/client/pg-client';
-import { buildId } from '@database/utils/resource';
+import { formatResourceId } from '@database/utils/resource';
 
 export const ownerPermission = 'owner' as const;
 export const editorPermission = 'editor' as const;
@@ -128,7 +128,7 @@ export const validPlayerData = {
 
 export function createPlayerDocument(path: ResourcePath = validPlayerPath, data = validPlayerData) {
   return {
-    id: buildId(path),
+    id: formatResourceId(path),
     namespace: path.namespace,
     type: path.type,
     name: path.name,
@@ -145,7 +145,7 @@ export async function insertResourceRow(
   options: { description?: string; isDraft?: boolean; createdBy?: string } = {}
 ) {
   const now = new Date();
-  const id = buildId(path);
+  const id = formatResourceId(path);
 
   await execute(async (db) => {
     await db
