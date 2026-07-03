@@ -1,0 +1,9 @@
+aws_region = "ap-northeast-1"
+
+# Browser origins allowed by the Lambda Function URL CORS config.
+# Must match FRONTEND_ORIGIN in GitHub Actions (comma-separated there).
+frontend_origins = [
+  "http://localhost:5173",
+  "https://editor.example.com",
+  "https://play.example.com",
+]
