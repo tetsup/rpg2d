@@ -76,10 +76,10 @@ authRoute.get('/callback', async (c) => {
       redirect_uri: buildCallbackUrl(c.req.url),
     }),
   });
-  const token = (await tokenRes.json()) as SessionTokenResponse;
+  const authToken = (await tokenRes.json()) as SessionTokenResponse;
   const userRes = await fetch(`https://${env.AUTH0_DOMAIN}/userinfo`, {
     headers: {
-      Authorization: `Bearer ${token.access_token}`,
+      Authorization: `Bearer ${authToken.access_token}`,
     },
   });
   const user = (await userRes.json()) as Auth0UserInfo;

@@ -7,6 +7,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "build": "vite build",
+    "build:lambda": "node scripts/build-lambda.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@hono/vite-dev-server": "^0.25.3",
     "chokidar": "^5.0.0",
-    "tsx": "^4.22.0"
+    "tsx": "^4.22.0",
+    "esbuild": "^0.28.0"
   }
 }

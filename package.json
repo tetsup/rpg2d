@@ -26,6 +26,9 @@
     "test:editor":"pnpm --filter @tetsup/rpg2d-editor test",
     "test": "pnpm test:schema && pnpm test:engine && pnpm test:database && pnpm test:api",
     "build:runtime": "pnpm --filter @tetsup/rpg2d-runtime build",
+    "build:editor": "pnpm --filter @tetsup/rpg2d-editor build",
+    "build:api:lambda": "pnpm --filter @tetsup/rpg2d-api build:lambda",
+    "write-runtime-config": "node scripts/write-runtime-config.mjs",
     "db:migrate": "pnpm --filter @tetsup/rpg2d-database migrate"
   },
   "dependencies": {
