@@ -51,7 +51,7 @@ Auth0 ◄──────── OAuth redirect ──────────�
 
 1. [Neon](https://neon.tech) でプロジェクトを作成
 2. 接続文字列（Connection string）を控える
-3. 初回マイグレーション（ローカルまたは CI 前に1回）:
+3. 初回マイグレーション（CI 初回実行前に手動でも可）:
 
 ```bash
 DATABASE_URL='postgresql://user:pass@ep-xxx.neon.tech/neondb?sslmode=require' pnpm db:migrate
@@ -65,8 +65,6 @@ DATABASE_URL='postgresql://user:pass@ep-xxx.neon.tech/neondb?sslmode=require' pn
 |---|---|---|
 | `DATABASE_URL` | GitHub Secret / Lambda 環境変数 | `postgresql://...@ep-xxx.neon.tech/neondb?sslmode=require` |
 | `DATABASE_DRIVER` | Lambda 環境変数（CI が自動設定） | `neon` |
-
-ローカル開発では `DATABASE_DRIVER` 省略（デフォルト `pg`）+ Docker Postgres を使用します（`.env.example` 参照）。
 
 ---
 
@@ -263,30 +261,21 @@ GitHub **Environment 名: `production`** を作成し、以下を登録します
 
 ---
 
-## 環境変数対照表
+## 環境変数一覧（本番）
 
-| 変数 | ローカル `.env` | Lambda | editor build | runtime build | Terraform |
-|---|---|---|---|---|---|
-| `DATABASE_URL` | Docker Postgres | Secret | — | — | — |
-| `DATABASE_DRIVER` | 省略 (`pg`) | `neon` (CI) | — | — | — |
-| `SESSION_SECRET` | 任意 | Secret | — | — | — |
-| `AUTH0_*` | 必須 | Secret | — | — | — |
-| `FRONTEND_ORIGIN` | `http://localhost:5173` | Variable | — | — | `frontend_origins` |
-| `VITE_API_BASE_URL` | 省略（プロキシ） | — | Variable | Variable | output `api_lambda_function_url` |
-
----
-
-## ローカル開発 vs 本番
-
-| 項目 | ローカル | 本番 |
+| 変数 | 設定先 | 備考 |
 |---|---|---|
-| API | `pnpm dev:api` (:3000) | AWS Lambda |
-| DB | Docker Postgres | Neon |
-| DB driver | `pg` | `neon` |
-| editor | `pnpm dev:editor` (:5173) | Cloudflare Pages |
-| runtime | `pnpm dev:runtime` (:5174) | Cloudflare Pages |
-| API 接続 | editor Vite プロキシ (`/api`) | `VITE_API_BASE_URL` 直結 |
-| セッション | 署名 Cookie（共通） | 署名 Cookie（共通） |
+| `DATABASE_URL` | GitHub Secret → Lambda | Neon 接続文字列（`?sslmode=require`） |
+| `DATABASE_DRIVER` | Lambda（CI が設定） | `neon` |
+| `SESSION_SECRET` | GitHub Secret → Lambda | 32 文字以上 |
+| `AUTH0_DOMAIN` | GitHub Secret → Lambda | — |
+| `AUTH0_CLIENT_ID` | GitHub Secret → Lambda | — |
+| `AUTH0_CLIENT_SECRET` | GitHub Secret → Lambda | — |
+| `FRONTEND_ORIGIN` | GitHub Variable → Lambda | カンマ区切り origin。Terraform `frontend_origins` と一致 |
+| `VITE_API_BASE_URL` | GitHub Variable → editor / runtime build | `terraform output api_lambda_function_url` |
+| `AWS_REGION` | GitHub Variable | — |
+| `AWS_LAMBDA_FUNCTION_NAME` | GitHub Variable | 既定: `RPG2d-api` |
+| `CLOUDFLARE_*` | GitHub Variable / Secret | [Cloudflare Pages](#4-cloudflare-pages) 参照 |
 
 ---
 
