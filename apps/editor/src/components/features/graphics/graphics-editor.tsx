@@ -34,11 +34,13 @@ import { useDocumentById } from '@editor/hooks/api/by-id';
 import { useResolvedDocuments } from '@editor/hooks/api/resolved-documents';
 import {
   GraphicsEditorSessionProvider,
+  useGraphicsEditorSession,
+} from '@editor/providers/graphics-editor-session-provider';
+import {
   selectAnyDirty,
   selectSkinDirty,
   selectTextureDirty,
-  useGraphicsEditorSession,
-} from '@editor/providers/graphics-editor-session-provider';
+} from '@editor/stores/graphics-editor-session';
 import { useLayoutStore } from '@editor/stores/edit-state';
 
 type GraphicsEditorProps = {

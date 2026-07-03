@@ -43,9 +43,3 @@ export function useGraphicsEditorStore() {
   }
   return store;
 }
-
-export {
-  selectAnyDirty,
-  selectSkinDirty,
-  selectTextureDirty,
-} from '@editor/stores/graphics-editor-session';
