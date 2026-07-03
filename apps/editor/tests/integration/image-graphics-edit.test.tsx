@@ -27,7 +27,7 @@ const imageResource = {
 };
 
 describe('image graphics editor', () => {
-  it('saves isDraft changes independently', async () => {
+  it('saves isDraft changes independently via partial save', async () => {
     const user = userEvent.setup();
     let putBody: unknown;
 
@@ -48,16 +48,18 @@ describe('image graphics editor', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: '保存' })).toBeDisabled();
+      expect(screen.getByRole('button', { name: '画像' })).toBeDisabled();
     });
 
+    await user.click(screen.getAllByRole('button', { name: '画像情報' })[0]);
     await user.click(screen.getByRole('button', { name: '正式' }));
+    await user.click(screen.getByRole('button', { name: '閉じる' }));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: '保存' })).toBeEnabled();
+      expect(screen.getByRole('button', { name: '画像' })).toBeEnabled();
     });
 
-    await user.click(screen.getByRole('button', { name: '保存' }));
+    await user.click(screen.getByRole('button', { name: '画像' }));
 
     await waitFor(() => {
       expect(putBody).toMatchObject({

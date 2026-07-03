@@ -1,7 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom';
-import { ImageGraphicsEditor } from '@editor/components/features/graphics/image-graphics-editor';
-import { SkinGraphicsEditor } from '@editor/components/features/graphics/skin-graphics-editor';
-import { TextureGraphicsEditor } from '@editor/components/features/graphics/texture-graphics-editor';
+import { GraphicsEditor } from '@editor/components/features/graphics/graphics-editor';
 import { formatResourceId } from '@schema/resource/common/base';
 import { useDocumentById } from '@editor/hooks/api/by-id';
 import { isGraphicsResourceType } from '@editor/lib/resource-type-meta';
@@ -25,16 +23,8 @@ export function EditGraphicsResourcePage() {
     return <Navigate to="/resources" replace />;
   }
 
-  if (resource.type === 'image') {
-    return <ImageGraphicsEditor resource={resource} />;
-  }
-
-  if (resource.type === 'texture') {
-    return <TextureGraphicsEditor resource={resource} />;
-  }
-
-  if (resource.type === 'skin') {
-    return <SkinGraphicsEditor resource={resource} />;
+  if (resource.type === 'image' || resource.type === 'texture' || resource.type === 'skin') {
+    return <GraphicsEditor resource={resource} />;
   }
 
   return <Navigate to="/resources" replace />;
