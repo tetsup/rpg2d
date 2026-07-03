@@ -45,6 +45,16 @@ Leaving fixes or follow-up work uncommitted is a common source of CI failures an
 3. **Verify before you claim done**: run checks the task depends on (e.g. `pnpm lint` when touching lint-sensitive code, relevant tests) on the **committed** state when possible, not only on uncommitted local edits.
 4. **When in doubt, ask first**: if requirements are ambiguous, the change set mixes several concerns, or you would need to commit something the user did not ask for (e.g. broad renames, new files, behaviour changes), confirm with the user instead of committing silently.
 
+### Git and PR language
+
+Use a consistent split between machine-facing titles and human-facing descriptions:
+
+- **Commit messages**: English (subject line and body).
+- **PR titles**: English.
+- **PR descriptions** (body, walkthrough, summary for reviewers): Japanese.
+
+Keep English titles concise and factual; use the Japanese PR body for context, motivation, and testing notes aimed at maintainers.
+
 ## Cursor Cloud specific instructions
 
 Cloud Agents need PostgreSQL for `packages/database` integration tests.
