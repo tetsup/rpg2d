@@ -16,7 +16,3 @@ export type SessionTokenResponse = {
   id_token: string;
   expires_in: number;
 };
-
-export type SessionUser = {
-  sub: string;
-};

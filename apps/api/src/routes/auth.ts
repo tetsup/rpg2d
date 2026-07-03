@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { Hono } from 'hono';
-import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
+import { deleteCookie, setCookie } from 'hono/cookie';
 import { UserRepository } from '@database/repositories/user';
 import type { Auth0UserInfo, SessionTokenResponse, Variables } from '@api/types/auth';
+import { createSessionToken, SESSION_MAX_AGE } from '@api/auth/session-cookie';
 import { env } from '@api/utils/env';
-import { sessionStore } from '@api/auth/stores/session';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 import { UnauthorizedError } from '@api/errors/http-error';
 
@@ -19,6 +19,13 @@ const buildAuth0Url = (base: string) =>
   `&scope=openid profile email`;
 const isDev = process.env.NODE_ENV !== 'production';
 const secure = !isDev;
+const sessionCookieOptions = {
+  httpOnly: true,
+  sameSite: 'Lax' as const,
+  secure,
+  maxAge: SESSION_MAX_AGE,
+  path: '/',
+};
 
 authRoute.get('/login', async (c) => {
   const devUser = c.req.query('dev_user');
@@ -34,9 +41,8 @@ authRoute.get('/login', async (c) => {
     if (!dbUser.ok) {
       return c.text('Failed to create user', 500);
     }
-    const sessionId = crypto.randomUUID();
-    sessionStore.set(sessionId, { sub: userId });
-    setCookie(c, 'session', sessionId, { httpOnly: true, sameSite: 'Lax', secure });
+    const token = await createSessionToken(userId);
+    setCookie(c, 'session', token, sessionCookieOptions);
     return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
   }
   return c.redirect(buildAuth0Url(c.req.url));
@@ -80,26 +86,15 @@ authRoute.get('/callback', async (c) => {
     return c.text('Failed to create user', 500);
   }
 
-  const sessionId = crypto.randomUUID();
+  const token = await createSessionToken(user.sub);
 
-  sessionStore.set(sessionId, {
-    sub: user.sub,
-  });
-
-  setCookie(c, 'session', sessionId, {
-    httpOnly: true,
-    sameSite: 'Lax',
-    secure,
-  });
-  console.log('cookie set');
+  setCookie(c, 'session', token, sessionCookieOptions);
 
   return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
 });
 
 authRoute.get('/logout', (c) => {
-  const sessionId = getCookie(c, 'session');
-  if (sessionId) sessionStore.delete(sessionId);
-  deleteCookie(c, 'session');
+  deleteCookie(c, 'session', { path: '/' });
 
   const url = new URL(`https://${env.AUTH0_DOMAIN}/v2/logout`);
   url.searchParams.set('client_id', env.AUTH0_CLIENT_ID);

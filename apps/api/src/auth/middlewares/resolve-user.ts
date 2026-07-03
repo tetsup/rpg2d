@@ -2,19 +2,17 @@ import { createMiddleware } from 'hono/factory';
 import { getCookie } from 'hono/cookie';
 import { UserRepository } from '@database/repositories/user';
 import type { Variables } from '@api/types/auth';
-import { sessionStore } from '../stores/session';
+import { verifySessionToken } from '@api/auth/session-cookie';
 
 export const resolveUserMiddleware = createMiddleware<{
   Variables: Variables;
 }>(async (c, next) => {
-  /* SESSION */
-  const sessionId = getCookie(c, 'session');
-  if (!sessionId) return next();
-  const sessionUser = sessionStore.get(sessionId);
-  if (!sessionUser) return next();
+  const token = getCookie(c, 'session');
+  if (!token) return next();
+  const session = await verifySessionToken(token);
+  if (!session) return next();
 
-  /* DB RESOLVE */
-  const res = await new UserRepository().get(sessionUser.sub);
+  const res = await new UserRepository().get(session.sub);
   if (!res.ok || !res.data) return next();
   c.set('user', res.data);
   await next();

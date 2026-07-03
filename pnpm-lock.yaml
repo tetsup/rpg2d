@@ -63,6 +63,9 @@ importers:
       hono:
         specifier: ^4.12.18
         version: 4.12.18
+      jose:
+        specifier: ^6.1.3
+        version: 6.2.3
       openid-client:
         specifier: ^6.8.4
         version: 6.8.4
