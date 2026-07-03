@@ -5,6 +5,7 @@ import { UserRepository } from '@database/repositories/user';
 import type { Auth0UserInfo, SessionTokenResponse, Variables } from '@api/types/auth';
 import { createSessionToken, SESSION_MAX_AGE } from '@api/auth/session-cookie';
 import { env } from '@api/utils/env';
+import { resolveFrontendOrigin, resolveReturnOrigin } from '@api/utils/frontend-origin';
 import { resolveUserMiddleware } from '@api/auth/middlewares/resolve-user';
 import { UnauthorizedError } from '@api/errors/http-error';
 
@@ -26,8 +27,22 @@ const sessionCookieOptions = {
   maxAge: SESSION_MAX_AGE,
   path: '/',
 };
+const returnOriginCookieOptions = {
+  httpOnly: true,
+  sameSite: 'Lax' as const,
+  secure,
+  maxAge: 60 * 10,
+  path: '/',
+};
+
+function redirectToFrontend(c: Parameters<typeof resolveReturnOrigin>[0]) {
+  return buildRedirectUrl(`${resolveReturnOrigin(c)}/`);
+}
 
 authRoute.get('/login', async (c) => {
+  const returnOrigin = resolveFrontendOrigin(c);
+  setCookie(c, 'return_origin', returnOrigin, returnOriginCookieOptions);
+
   const devUser = c.req.query('dev_user');
   if (isDev && devUser) {
     const userId = `dev|${devUser}`;
@@ -43,7 +58,7 @@ authRoute.get('/login', async (c) => {
     }
     const token = await createSessionToken(userId);
     setCookie(c, 'session', token, sessionCookieOptions);
-    return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
+    return c.redirect(redirectToFrontend(c));
   }
   return c.redirect(buildAuth0Url(c.req.url));
 });
@@ -88,19 +103,22 @@ authRoute.get('/callback', async (c) => {
 
   const token = await createSessionToken(user.sub);
 
+  const redirectUrl = redirectToFrontend(c);
   setCookie(c, 'session', token, sessionCookieOptions);
+  deleteCookie(c, 'return_origin', { path: '/' });
 
-  return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
+  return c.redirect(redirectUrl);
 });
 
 authRoute.get('/logout', (c) => {
   deleteCookie(c, 'session', { path: '/' });
+  deleteCookie(c, 'return_origin', { path: '/' });
 
   const url = new URL(`https://${env.AUTH0_DOMAIN}/v2/logout`);
   url.searchParams.set('client_id', env.AUTH0_CLIENT_ID);
   url.searchParams.set('returnTo', buildRedirectUrl(c.req.url));
 
-  return c.redirect(buildRedirectUrl(`${env.FRONTEND_ORIGIN}/`));
+  return c.redirect(redirectToFrontend(c));
 });
 
 authRoute.get('/me', resolveUserMiddleware, (c) => {

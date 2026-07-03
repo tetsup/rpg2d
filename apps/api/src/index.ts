@@ -5,14 +5,14 @@ import { resolveUserMiddleware } from './auth/middlewares/resolve-user';
 import { authRoute } from './routes/auth';
 import { namespacesRoute } from './routes/namespaces';
 import { resourcesRoute } from './routes/resources';
-import { env } from './utils/env';
+import { createCorsOriginValidator } from './utils/frontend-origin';
 
 const app = new Hono();
 
 app.use(
   '*',
   cors({
-    origin: env.FRONTEND_ORIGIN,
+    origin: createCorsOriginValidator(),
     credentials: true,
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type'],
