@@ -1,7 +1,7 @@
 import type { NamespaceDocument, NamespacePermissionDocument, UserDocument, WithTimestamp } from '@sharedTypes/database/collection';
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import { execute } from '@database/client/pg-client';
-import { formatResourceId } from '@database/utils/resource';
+import { formatResourceId } from '@schema/resource/common/base';
 
 export const ownerPermission = 'owner' as const;
 export const editorPermission = 'editor' as const;

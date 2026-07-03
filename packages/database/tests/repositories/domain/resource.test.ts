@@ -1,7 +1,7 @@
 import { execute } from '@database/client/pg-client';
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import { ResourceRepository } from '@database/repositories/resource';
-import { formatResourceId } from '@database/utils/resource';
+import { formatResourceId } from '@schema/resource/common/base';
 import { clearTables, countRows } from './helpers/db';
 import {
   createPlayerDocument,
