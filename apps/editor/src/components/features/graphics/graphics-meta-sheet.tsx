@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createResourceInputSchema } from '@schema/database/resource';
 import type { ResourceRecord } from '@sharedTypes/database/collection';
 import { Button } from '@editor/components/ui/button';
 import {
@@ -24,7 +23,6 @@ type GraphicsMetaSheetProps = {
   skinIsDraft?: boolean;
   textureDraft?: ResourceRecord<'texture'>['data'];
   textureIsDraft?: boolean;
-  imageDraft?: ResourceRecord<'image'>['data'];
   imageIsDraft?: boolean;
   onSkinChange?: (data: ResourceRecord<'skin'>['data'], isDraft: boolean) => void;
   onTextureChange?: (data: ResourceRecord<'texture'>['data'], isDraft: boolean) => void;
@@ -41,7 +39,6 @@ export function GraphicsMetaSheet({
   skinIsDraft,
   textureDraft,
   textureIsDraft,
-  imageDraft,
   imageIsDraft,
   onSkinChange,
   onTextureChange,
@@ -82,6 +79,7 @@ export function GraphicsMetaSheet({
 
         {panel === 'image' && imageResource != null && (
           <ImageMetaFields
+            key={imageResource.id}
             resource={imageResource}
             isDraft={imageIsDraft ?? true}
             onChange={onImageChange!}
@@ -170,10 +168,6 @@ function ImageMetaFields({
   const { t } = useTranslation();
   const [description, setDescription] = useState(resource.description ?? '');
 
-  useEffect(() => {
-    setDescription(resource.description ?? '');
-  }, [resource.description, resource.id]);
-
   return (
     <div className="space-y-4 text-sm">
       <DraftToggle isDraft={isDraft} onChange={(next) => onChange(next, description)} />
@@ -208,58 +202,4 @@ function DraftToggle({ isDraft, onChange }: { isDraft: boolean; onChange: (next:
       />
     </label>
   );
-}
-
-export function validateSkinDraft(
-  resource: ResourceRecord<'skin'>,
-  draft: ResourceRecord<'skin'>['data'],
-  isDraft: boolean
-) {
-  return createResourceInputSchema('skin').safeParse({
-    namespace: resource.namespace,
-    type: 'skin',
-    name: resource.name,
-    version: resource.version,
-    description: resource.description,
-    isDraft,
-    data: draft,
-  });
-}
-
-export function validateTextureDraft(
-  resource: ResourceRecord<'texture'>,
-  draft: ResourceRecord<'texture'>['data'],
-  isDraft: boolean
-) {
-  return createResourceInputSchema('texture').safeParse({
-    namespace: resource.namespace,
-    type: 'texture',
-    name: resource.name,
-    version: resource.version,
-    description: resource.description,
-    isDraft,
-    data: draft,
-  });
-}
-
-export function useSkinValidation(
-  resource: ResourceRecord<'skin'> | undefined,
-  draft: ResourceRecord<'skin'>['data'] | null,
-  isDraft: boolean
-) {
-  return useMemo(() => {
-    if (resource == null || draft == null) return null;
-    return validateSkinDraft(resource, draft, isDraft);
-  }, [draft, isDraft, resource]);
-}
-
-export function useTextureValidation(
-  resource: ResourceRecord<'texture'> | undefined,
-  draft: ResourceRecord<'texture'>['data'] | null,
-  isDraft: boolean
-) {
-  return useMemo(() => {
-    if (resource == null || draft == null) return null;
-    return validateTextureDraft(resource, draft, isDraft);
-  }, [draft, isDraft, resource]);
 }

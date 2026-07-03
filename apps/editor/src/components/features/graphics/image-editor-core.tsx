@@ -12,27 +12,16 @@ export type ImageEditorCoreSlots = {
   palette: React.ReactNode;
 };
 
+/** Call from a component keyed by `resource?.id` so state resets on frame change. */
 export function useImageEditorState(
   resource: ResourceRecord<'image'> | undefined,
   onDirtyChange?: (dirty: boolean) => void
 ) {
-  const [draftData, setDraftData] = useState(resource?.data);
-  const [isDraft, setIsDraft] = useState(resource?.isDraft ?? true);
+  const [draftData, setDraftData] = useState(() => resource?.data);
+  const [isDraft, setIsDraft] = useState(() => resource?.isDraft ?? true);
   const [selectedToken, setSelectedToken] = useState(() =>
     resource ? getDefaultPaletteToken(resource.data.palette) : 'ff'
   );
-
-  useEffect(() => {
-    if (resource == null) {
-      setDraftData(undefined);
-      onDirtyChange?.(false);
-      return;
-    }
-    setDraftData(resource.data);
-    setIsDraft(resource.isDraft);
-    setSelectedToken(getDefaultPaletteToken(resource.data.palette));
-    onDirtyChange?.(false);
-  }, [resource?.id, onDirtyChange, resource?.data, resource?.isDraft]);
 
   const isDirty = useMemo(() => {
     if (resource == null || draftData == null) return false;
@@ -74,7 +63,8 @@ type ImageEditorCoreProps = {
   emptyLabel: string;
 };
 
-export function ImageEditorCore({ state, emptyLabel }: ImageEditorCoreProps) {
+export function renderImageEditorCore(props: ImageEditorCoreProps): ImageEditorCoreSlots {
+  const { state, emptyLabel } = props;
   const { draftData, selectedToken, setDraftData, setSelectedToken } = state;
 
   if (draftData == null) {
@@ -82,7 +72,7 @@ export function ImageEditorCore({ state, emptyLabel }: ImageEditorCoreProps) {
       canvas: <PixelCanvas className="w-full" emptyLabel={emptyLabel} />,
       toolbar: <ToolBar />,
       palette: <PalettePanel />,
-    } satisfies ImageEditorCoreSlots;
+    };
   }
 
   return {
@@ -104,9 +94,5 @@ export function ImageEditorCore({ state, emptyLabel }: ImageEditorCoreProps) {
         onSelectToken={setSelectedToken}
       />
     ),
-  } satisfies ImageEditorCoreSlots;
-}
-
-export function renderImageEditorCore(props: ImageEditorCoreProps): ImageEditorCoreSlots {
-  return ImageEditorCore(props);
+  };
 }
