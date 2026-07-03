@@ -8,6 +8,8 @@ export type GraphicsEditorSlots = {
   palette?: ReactNode;
   switcher?: ReactNode;
   addButton?: ReactNode;
+  /** Partial save buttons and meta open buttons */
+  contextActions?: ReactNode;
 };
 
 type GraphicsEditorLayoutProps = GraphicsEditorSlots & {
@@ -25,10 +27,12 @@ export function GraphicsEditorLayout({
   palette,
   switcher,
   addButton,
+  contextActions,
   className,
 }: GraphicsEditorLayoutProps) {
   const bottomItems = [
     { key: 'switcher', node: switcher },
+    { key: 'contextActions', node: contextActions },
     { key: 'toolbar', node: toolbar },
     { key: 'palette', node: palette },
     { key: 'addButton', node: addButton },

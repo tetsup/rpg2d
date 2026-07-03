@@ -1,16 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
-import { ImageGraphicsEditor } from '@editor/components/features/graphics/image-graphics-editor';
-import {
-  getSwitcherLabel,
-  GraphicsResourceEditorShell,
-} from '@editor/components/features/graphics/graphics-resource-editor-shell';
+import { GraphicsEditor } from '@editor/components/features/graphics/graphics-editor';
 import { formatResourceId } from '@schema/resource/common/base';
 import { useDocumentById } from '@editor/hooks/api/by-id';
 import { isGraphicsResourceType } from '@editor/lib/resource-type-meta';
 
 export function EditGraphicsResourcePage() {
-  const { t } = useTranslation();
   const { namespace, type, name } = useParams<{ namespace: string; type: string; name: string }>();
   const isValidRoute =
     namespace != null && type != null && name != null && isGraphicsResourceType(type);
@@ -29,18 +23,9 @@ export function EditGraphicsResourcePage() {
     return <Navigate to="/resources" replace />;
   }
 
-  if (resource.type === 'image') {
-    return <ImageGraphicsEditor resource={resource} />;
+  if (resource.type === 'image' || resource.type === 'texture' || resource.type === 'skin') {
+    return <GraphicsEditor resource={resource} />;
   }
 
-  const switcherLabel = getSwitcherLabel(type, t);
-
-  return (
-    <GraphicsResourceEditorShell
-      type={type}
-      title={resource.name}
-      emptyLabel={t('表示する画像がありません')}
-      switcherLabel={switcherLabel}
-    />
-  );
+  return <Navigate to="/resources" replace />;
 }
