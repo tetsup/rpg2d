@@ -8,3 +8,27 @@ export function getTextureLayers(texture: TextureData) {
 }
 
 export const DEFAULT_EDITABLE_LAYER_INDEX = 0;
+
+export function getDefaultEditableLayer(texture: TextureData) {
+  return getTextureLayers(texture)[DEFAULT_EDITABLE_LAYER_INDEX];
+}
+
+export function appendImageToDefaultLayer(texture: TextureData, imageId: string): TextureData {
+  if (texture.layers.length === 0) {
+    return { layers: [{ priority: 8, images: [imageId] }] };
+  }
+
+  const targetPriority = getDefaultEditableLayer(texture).priority;
+
+  return {
+    layers: texture.layers.map((layer) =>
+      layer.priority === targetPriority
+        ? { ...layer, images: [...layer.images, imageId] }
+        : layer
+    ),
+  };
+}
+
+export function getDefaultLayerImageIds(texture: TextureData): string[] {
+  return getDefaultEditableLayer(texture)?.images ?? [];
+}

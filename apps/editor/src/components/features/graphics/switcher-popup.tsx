@@ -13,20 +13,29 @@ import {
 
 type SwitcherPopupProps = {
   label: string;
+  /** Shown on the trigger when a context item is active (e.g. frame id). */
+  valueLabel?: string;
   description?: string;
   children?: ReactNode;
   disabled?: boolean;
 };
 
-export function SwitcherPopup({ label, description, children, disabled = false }: SwitcherPopupProps) {
+export function SwitcherPopup({
+  label,
+  valueLabel,
+  description,
+  children,
+  disabled = false,
+}: SwitcherPopupProps) {
   const { t } = useTranslation();
+  const triggerLabel = valueLabel ? `${label}: ${valueLabel}` : label;
 
   return (
     <Dialog>
       <DialogTrigger
         render={
           <Button type="button" variant="outline" size="sm" disabled={disabled} className="shrink-0">
-            <span className="truncate">{label}</span>
+            <span className="truncate">{triggerLabel}</span>
             <ChevronDown className="size-4 shrink-0" />
           </Button>
         }
