@@ -55,6 +55,12 @@ describe('graphics resource create page', () => {
     let postedBody: unknown;
 
     server.use(
+      http.post('/api/resources/search', () =>
+        HttpResponse.json({
+          items: [],
+          hasMore: false,
+        })
+      ),
       http.post('/api/resources/sample/image/:name', async ({ request }) => {
         postedBody = await request.json();
         return HttpResponse.json({});
@@ -97,7 +103,7 @@ describe('graphics resource create page', () => {
     });
 
     const body = postedBody as { name: string };
-    expect(body.name).toMatch(/^image\.[a-z0-9]+\.v0$/);
+    expect(body.name).toBe('aa');
 
     await waitFor(() => {
       expect(screen.getByRole('toolbar', { name: '描画ツール' })).toBeInTheDocument();

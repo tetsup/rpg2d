@@ -9,16 +9,15 @@ import {
 } from '@editor/components/features/graphics/graphics-resource-editor-shell';
 import { ImageSizeDialog } from '@editor/components/features/graphics/image-size-dialog';
 import { createEmptyImageData } from '@editor/lib/empty-image-data';
-import { generateGraphicsResourceName } from '@editor/lib/graphics-resource-name';
+import { reserveGraphicsResourceDraft } from '@editor/lib/reserve-graphics-resource';
 import { isGraphicsResourceType, resourceTypeMeta } from '@editor/lib/resource-type-meta';
-import { useCreateDocument } from '@editor/hooks/api/mutations';
 
 export function NewGraphicsResourcePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { namespace, type } = useParams<{ namespace: string; type: string }>();
   const [sizeDialogOpen, setSizeDialogOpen] = useState(false);
-  const { mutateAsync: createResource, isPending } = useCreateDocument('resources');
+  const [isCreating, setIsCreating] = useState(false);
 
   if (namespace == null || type == null || !isGraphicsResourceType(type)) {
     return <Navigate to="/resources" replace />;
@@ -27,21 +26,19 @@ export function NewGraphicsResourcePage() {
   const switcherLabel = getSwitcherLabel(type, t);
 
   const handleCreateImage = async (size: { width: number; height: number }) => {
-    const name = generateGraphicsResourceName('image');
-
+    setIsCreating(true);
     try {
-      await createResource({
+      const { name } = await reserveGraphicsResourceDraft({
         namespace,
         type: 'image',
-        name,
-        version: 0,
-        isDraft: true,
         data: createEmptyImageData(size.width, size.height),
       });
       navigate(`/resources/${namespace}/image/${name}`);
     } catch (error) {
       console.error(error);
       toast.error(`${t('作成に失敗しました')}: ${(error as Error).message}`);
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -56,7 +53,7 @@ export function NewGraphicsResourcePage() {
           switcherDisabled
           addButton={
             <AddButton
-              disabled={isPending}
+              disabled={isCreating}
               onClick={() => setSizeDialogOpen(true)}
             />
           }
