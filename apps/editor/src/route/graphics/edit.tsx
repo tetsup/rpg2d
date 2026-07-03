@@ -5,7 +5,7 @@ import {
   getSwitcherLabel,
   GraphicsResourceEditorShell,
 } from '@editor/components/features/graphics/graphics-resource-editor-shell';
-import { buildResourceId } from '@editor/hooks/api/resource-id';
+import { formatResourceId } from '@schema/resource/common/base';
 import { useDocumentById } from '@editor/hooks/api/by-id';
 import { isGraphicsResourceType } from '@editor/lib/resource-type-meta';
 
@@ -14,7 +14,7 @@ export function EditGraphicsResourcePage() {
   const { namespace, type, name } = useParams<{ namespace: string; type: string; name: string }>();
   const isValidRoute =
     namespace != null && type != null && name != null && isGraphicsResourceType(type);
-  const resourceId = isValidRoute ? buildResourceId({ namespace, type, name }) : undefined;
+  const resourceId = isValidRoute ? formatResourceId({ namespace, type, name }) : undefined;
   const { data: resource, isLoading, isError } = useDocumentById('resources', resourceId);
 
   if (!isValidRoute) {

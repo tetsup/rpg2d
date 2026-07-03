@@ -3,7 +3,8 @@ import { ResourcePath } from '@sharedTypes/resource/common';
 import { Database, ResourceDocument, ResourceInput } from '@sharedTypes/database/collection';
 import { createResourceInputSchema } from '@schema/database/resource';
 import { ResourceFilterSchema } from '@schema/filter/domain';
-import { buildId, extractResourceRefs } from '@database/utils/resource';
+import { formatResourceId } from '@schema/resource/common/base';
+import { extractResourceRefs } from '@database/utils/resource';
 import { execute, withTransaction } from '@database/client/pg-client';
 import { contains } from '@database/filters/utils';
 import { applyResourceFilter } from '@database/filters/resource';
@@ -28,7 +29,7 @@ function getPath(meta: Pick<ResourceDocument, 'namespace' | 'type' | 'name'>) {
 }
 
 function toDocument(path: ResourcePath, input: ResourceInput): ResourceDocument {
-  return { ...input, id: buildId(path) };
+  return { ...input, id: formatResourceId(path) };
 }
 
 export class ResourceRepository {
@@ -96,17 +97,17 @@ export class ResourceRepository {
             data: document,
             updatedAt: now,
           })
-          .where('id', '=', buildId(path))
+          .where('id', '=', formatResourceId(path))
           .executeTakeFirst();
         if (Number(result.numUpdatedRows) === 0) throw new RepositoryNotFoundError();
-        await conn.deleteFrom('resource_edges').where('from', '=', buildId(path)).execute();
+        await conn.deleteFrom('resource_edges').where('from', '=', formatResourceId(path)).execute();
         const refs = extractResourceRefs(input.data);
         if (refs.length) {
           await conn
             .insertInto('resource_edges')
             .values(
               refs.map((ref) => ({
-                from: buildId(newPath),
+                from: formatResourceId(newPath),
                 to: ref,
                 type: 'reference',
               }))
@@ -124,7 +125,7 @@ export class ResourceRepository {
         const resource = await conn
           .selectFrom('resources')
           .select('createdBy')
-          .where('id', '=', buildId(path))
+          .where('id', '=', formatResourceId(path))
           .executeTakeFirst();
         if (!resource) throw new RepositoryNotFoundError();
 
@@ -140,7 +141,7 @@ export class ResourceRepository {
         const resource = await conn
           .selectFrom('resources')
           .select('data')
-          .where('id', '=', buildId(path))
+          .where('id', '=', formatResourceId(path))
           .executeTakeFirst();
         if (!resource) throw new RepositoryNotFoundError();
 
@@ -198,7 +199,7 @@ export class ResourceRepository {
     return repositorySafe(async () => {
       return execute(async (db) => {
         const conn = this.dbFactory(db);
-        return conn.selectFrom('resource_edges').selectAll().where('to', '=', buildId(path)).execute();
+        return conn.selectFrom('resource_edges').selectAll().where('to', '=', formatResourceId(path)).execute();
       });
     });
   }
@@ -207,7 +208,7 @@ export class ResourceRepository {
     return repositorySafe(async () => {
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
-        const id = buildId(path);
+        const id = formatResourceId(path);
         const result = await conn.deleteFrom('resources').where('id', '=', id).executeTakeFirst();
         if (Number(result.numDeletedRows) === 0) throw new RepositoryNotFoundError();
 

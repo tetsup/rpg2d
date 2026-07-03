@@ -1,6 +1,6 @@
 import z from 'zod';
 import type { ExecutableResourceType, ResourceId } from '@sharedTypes/resource/common';
-import { NamespaceSchema, ResourceNameSchema, resources, splitId } from '@schema/resource/common/base';
+import { NamespaceSchema, parseResourceId, ResourceNameSchema, resources } from '@schema/resource/common/base';
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
@@ -43,7 +43,7 @@ export class ResourceStore {
     id: ResourceId,
     expectedType: K
   ): Promise<InstanceType<ResourceClass<K>>> => {
-    const { namespace, type, name } = splitId.parse(id);
+    const { namespace, type, name } = parseResourceId.parse(id);
     if (type !== expectedType) throw new Error('mismatch id and type');
     const resource = this.resources[expectedType].get(id);
     if (resource !== undefined) return resource;

@@ -9,7 +9,7 @@ import {
 import { ResourceInput } from '@sharedTypes/database/collection';
 import { useNavigate } from 'react-router-dom';
 import { useCreateDocument } from '@editor/hooks/api/mutations';
-import { buildResourceId } from '@editor/hooks/api/resource-id';
+import { formatResourceId } from '@schema/resource/common/base';
 
 export function NewManifestPage() {
   const { t } = useTranslation();
@@ -21,7 +21,7 @@ export function NewManifestPage() {
 
   const onSubmit = async (values: ResourceInput<'manifest'>) => {
     await createResource(values);
-    navigate(`/resource/${buildResourceId(values)}`);
+    navigate(`/resource/${formatResourceId(values)}`);
   };
   return (
     <LayoutShell titleBarProps={{ title: t('プロジェクト設定') }}>

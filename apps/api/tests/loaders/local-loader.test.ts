@@ -11,9 +11,8 @@ const parseResourceMock = vi.fn();
 
 let watchCallback: ((event: string, filePath: string) => void) | undefined;
 
-vi.mock('../../../../packages/schema/src/api/resource', () => ({
-  resourceTypes: ['player', 'field'],
-  parseResource: (...args: any[]) => parseResourceMock(...args),
+vi.mock('@schema/api/resource/common', () => ({
+  parseResource: (...args: unknown[]) => parseResourceMock(...args),
 }));
 
 vi.mock('chokidar', () => ({

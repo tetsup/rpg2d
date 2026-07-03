@@ -4,8 +4,9 @@ import { fetchDeleteApi } from '@editor/lib/api/delete';
 import { fetchPostApi } from '@editor/lib/api/post';
 import { fetchPutApi } from '@editor/lib/api/put';
 import { queryClient } from '@editor/lib/query-client';
+import { formatResourceId } from '@schema/resource/common/base';
 import { documentKey, getDocumentApiPath, type DocumentCollection } from '@editor/hooks/api/by-id';
-import { buildResourceId, isResourceCollection, toResourceApiPath } from '@editor/hooks/api/resource-id';
+import { isResourceCollection, toResourceApiPath } from '@editor/hooks/api/resource-id';
 import { invalidateDocumentLists } from '@editor/hooks/api/search';
 
 function resolveDocumentId<K extends DocumentCollection>(
@@ -14,7 +15,7 @@ function resolveDocumentId<K extends DocumentCollection>(
 ): string {
   if (isResourceCollection(collectionName)) {
     const input = body as DatabaseInput['resources'];
-    return buildResourceId({
+    return formatResourceId({
       namespace: input.namespace,
       type: input.type,
       name: input.name,

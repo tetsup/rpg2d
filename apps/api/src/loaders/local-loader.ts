@@ -3,10 +3,11 @@ import * as path from 'node:path';
 import chokidar from 'chokidar';
 import * as yaml from 'yaml';
 import { NotFoundError } from '../errors/http-error';
-import { parseResource, resourceTypes } from '../../../../packages/schema/src/api/resource';
+import { parseResource } from '@schema/api/resource/common';
+import { resources } from '@schema/resource/common/base';
 
 export class LocalLoader {
-  private resources = Object.fromEntries(resourceTypes.map((resourceType) => [resourceType, new Map()]));
+  private resources = Object.fromEntries(resources.map((resourceType) => [resourceType, new Map()]));
 
   constructor(private rootDir: string) {
     this.loadAll();

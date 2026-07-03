@@ -5,7 +5,7 @@ import { CancelCard } from '@editor/components/parts/cancel-card';
 import { SelectDocument } from '@editor/components/parts/select-document';
 import { MenuCard } from '@editor/components/parts/menu-card';
 import { Sparkles } from 'lucide-react';
-import { parseResourceId } from '@editor/hooks/api/resource-id';
+import { parseResourceId } from '@schema/resource/common/base';
 import {
   findResourceTypeGroup,
   isBrowsableResourceType,
@@ -45,7 +45,7 @@ export function ResourceSearchPage() {
         collectionName="resources"
         resourceType={type}
         onItemSelect={(item) => {
-          const { namespace, type: resourceType, name } = parseResourceId(item.id);
+          const { namespace, type: resourceType, name } = parseResourceId.parse(item.id);
           navigate(`/resources/${namespace}/${resourceType}/${name}`);
         }}
       />

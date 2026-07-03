@@ -1,6 +1,6 @@
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import type { ResourceDocument } from '@sharedTypes/database/collection';
-import { IdSchema } from '@schema/resource/common/base';
+import { formatResourceId, IdSchema } from '@schema/resource/common/base';
 import type { createResourceInputSchema } from '@schema/database/resource';
 
 export function buildDocument(
@@ -14,11 +14,7 @@ export function buildDocument(
     type: path.type,
     name: path.name,
   });
-  return { ...input, id: buildId(path) };
-}
-
-export function buildId(path: ResourcePath) {
-  return `${path.namespace}/${path.type}/${path.name}`;
+  return { ...input, id: formatResourceId(path) };
 }
 
 export function extractResourceRefs(value: unknown): string[] {

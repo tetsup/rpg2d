@@ -1,5 +1,5 @@
 import z from 'zod';
-import type { ResourcePath, ResourceType } from '@sharedTypes/resource/common';
+import type { ResourceType } from '@sharedTypes/resource/common';
 
 export const resources = [
   'action',
@@ -28,6 +28,16 @@ export const ResourceNameSchema = z.string().regex(new RegExp(`^${resourceNamePa
 
 export const ResourceTypeSchema = z.enum(resources);
 
+export const ResourcePathSchema = z.object({
+  namespace: NamespaceSchema,
+  type: ResourceTypeSchema,
+  name: ResourceNameSchema,
+});
+
+export function formatResourceId(path: z.infer<typeof ResourcePathSchema>): string {
+  return `${path.namespace}/${path.type}/${path.name}`;
+}
+
 export const IdSchemaFromTypePattern = (typePattern: string) =>
   z
     .string()
@@ -40,7 +50,7 @@ export const IdSchemaFromType = (type: ResourceType) => IdSchemaFromTypePattern(
 
 export const IdSchema = IdSchemaFromTypePattern(resourceTypePattern);
 
-export const splitId = IdSchema.transform((id) => {
+export const parseResourceId = IdSchema.transform((id) => {
   const [namespace, type, name] = id.split('/');
-  return { namespace, type, name } as ResourcePath;
+  return ResourcePathSchema.parse({ namespace, type, name });
 });

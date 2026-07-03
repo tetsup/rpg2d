@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import yaml from 'yaml';
-import { ResourcePathParamsSchema } from '@schema/api/resource/common';
+import { ResourcePathSchema } from '@schema/resource/common/base';
 import { BadRequestError, execWithHandleError, NotFoundError } from './errors';
 
 class ResourceLoader {
@@ -35,7 +35,7 @@ export const handlers = [
     '/api/resources/:namespace/:type/:name',
     async ({ params }) =>
       await execWithHandleError(async () => {
-        const { namespace, type, name } = ResourcePathParamsSchema.parse(params);
+        const { namespace, type, name } = ResourcePathSchema.parse(params);
         const resource = await resourceLoader.readResource(`${namespace}/${type}/${name}`);
         if (resource == null) throw new NotFoundError();
         return HttpResponse.json(resource);
