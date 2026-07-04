@@ -33,15 +33,20 @@ export class ResourceStore {
     name: string
   ): Promise<InstanceType<ResourceClass<K>>> {
     const schema = this.ctx.schemas.get(type);
-    const responseSchema = z.object({
-      namespace: NamespaceSchema.refine((v) => v === namespace),
-      type: z.literal(type),
-      name: ResourceNameSchema.refine((v) => v === name),
-      version: z.literal(0),
-      data: schema,
-    });
-    const resource = await this.fetch(namespace, type, name, responseSchema);
-    return await this.ctx.factory.create(resource.data, type);
+    const body = await this.fetch(namespace, type, name, z.unknown());
+    const payload =
+      body != null && typeof body === 'object' && 'data' in body
+        ? z
+            .object({
+              namespace: NamespaceSchema.refine((v) => v === namespace),
+              type: z.literal(type),
+              name: ResourceNameSchema.refine((v) => v === name),
+              version: z.literal(0),
+              data: schema,
+            })
+            .parse(body).data
+        : schema.parse(body);
+    return await this.ctx.factory.create(payload, type);
   }
 
   get = async <K extends ExecutableResourceType>(

@@ -686,6 +686,7 @@ describe('ResourceStore: unbound call must not throw', () => {
       namespace: 'test',
       type: 'action',
       name: 'sample',
+      version: 0,
       data: { sequence: [] },
     });
     const get = store.get;
@@ -698,6 +699,7 @@ describe('ResourceStore: unbound call must not throw', () => {
       namespace: 'test',
       type: 'action',
       name: 'sample',
+      version: 0,
       data: { sequence: [] },
     });
     const get = store.get;

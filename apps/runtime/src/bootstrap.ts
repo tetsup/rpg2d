@@ -28,7 +28,9 @@ export async function loadManifest(manifestId: string, resourceUri: string): Pro
     throw new Error(`Failed to load manifest: ${manifestId}`);
   }
   const body = await response.json();
-  return body.data as ManifestData;
+  return (body != null && typeof body === 'object' && 'data' in body
+    ? (body as { data: ManifestData }).data
+    : body) as ManifestData;
 }
 
 export type RuntimeSession = {
