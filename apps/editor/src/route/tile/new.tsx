@@ -32,7 +32,7 @@ export function NewTilePage() {
   return (
     <LayoutShell
       titleBarProps={{
-        title: t('{{label}}を作成', { label: t(meta.label) }),
+        title: `${t(meta.label)}${t('を作成')}`,
         category: group ? t(group.title) : undefined,
       }}
     >

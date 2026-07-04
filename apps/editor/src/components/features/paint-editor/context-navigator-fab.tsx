@@ -61,7 +61,7 @@ function ContextChipDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{label}</DialogTitle>
-          <DialogDescription>{t('{{label}}を切り替えます', { label })}</DialogDescription>
+          <DialogDescription>{`${label}${t('を切り替えます')}`}</DialogDescription>
         </DialogHeader>
         {children}
         {onAdd != null && (

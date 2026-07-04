@@ -18,20 +18,29 @@ export function NewGraphicsResourcePage() {
   const { namespace, type } = useParams<{ namespace: string; type: string }>();
   const [sizeDialogOpen, setSizeDialogOpen] = useState(false);
   const [nameDialogOpen, setNameDialogOpen] = useState(false);
+  const [pendingImageName, setPendingImageName] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
   if (namespace == null || type == null || !isGraphicsResourceType(type)) {
     return <Navigate to="/resources" replace />;
   }
 
+  const meta = resourceTypeMeta[type];
+  const typeLabel = t(meta.label);
+  const createTitle = `${typeLabel}${t('を作成')}`;
+
   const handleCreateImage = async (size: { width: number; height: number }) => {
+    if (pendingImageName == null) return;
+
     setIsCreating(true);
     try {
       const { name } = await reserveGraphicsResourceDraft({
         namespace,
         type: 'image',
+        hint: pendingImageName,
         data: createEmptyImageData(size.width, size.height),
       });
+      setPendingImageName(null);
       navigate(`/resources/${namespace}/image/${name}`);
     } catch (error) {
       console.error(error);
@@ -42,10 +51,16 @@ export function NewGraphicsResourcePage() {
   };
 
   const handleCreateNamedResource = async (resourceName: string) => {
+    if (type === 'image') {
+      setPendingImageName(resourceName);
+      setNameDialogOpen(false);
+      setSizeDialogOpen(true);
+      return;
+    }
+
     setIsCreating(true);
     try {
-      const data =
-        type === 'skin' ? createEmptySkinData() : createEmptyTextureData();
+      const data = type === 'skin' ? createEmptySkinData() : createEmptyTextureData();
       const { name } = await reserveGraphicsResourceDraft({
         namespace,
         type,
@@ -62,36 +77,21 @@ export function NewGraphicsResourcePage() {
     }
   };
 
-  if (type === 'image') {
-    return (
-      <>
-        <GraphicsResourceEditorShell
-          type={type}
-          title={t('画像を作成')}
-          emptyLabel={t('サイズを指定して画像を作成してください')}
-          emptyAction={
-            <Button type="button" disabled={isCreating} onClick={() => setSizeDialogOpen(true)}>
-              {t('サイズを指定して作成')}
-            </Button>
-          }
-        />
-        <ImageSizeDialog
-          open={sizeDialogOpen}
-          onOpenChange={setSizeDialogOpen}
-          onConfirm={handleCreateImage}
-        />
-      </>
-    );
-  }
-
-  const meta = resourceTypeMeta[type];
+  const handleSizeDialogOpenChange = (open: boolean) => {
+    setSizeDialogOpen(open);
+    if (!open) setPendingImageName(null);
+  };
 
   return (
     <>
       <GraphicsResourceEditorShell
         type={type}
-        title={t('{{label}}を作成', { label: t(meta.label) })}
-        emptyLabel={t('名前を入力して{{label}}を作成してください', { label: t(meta.label) })}
+        title={createTitle}
+        emptyLabel={
+          type === 'image'
+            ? t('名前とサイズを指定して画像を作成してください')
+            : t('名前を入力して作成してください')
+        }
         emptyAction={
           <Button type="button" disabled={isCreating} onClick={() => setNameDialogOpen(true)}>
             {t('名前を指定して作成')}
@@ -101,11 +101,18 @@ export function NewGraphicsResourcePage() {
       <GraphicsResourceNameDialog
         open={nameDialogOpen}
         onOpenChange={setNameDialogOpen}
-        title={t('{{label}}を作成', { label: t(meta.label) })}
+        title={createTitle}
         description={t('リソース名を入力します（例: hero, hero.down）')}
         pending={isCreating}
         onConfirm={handleCreateNamedResource}
       />
+      {type === 'image' && (
+        <ImageSizeDialog
+          open={sizeDialogOpen}
+          onOpenChange={handleSizeDialogOpenChange}
+          onConfirm={handleCreateImage}
+        />
+      )}
     </>
   );
 }

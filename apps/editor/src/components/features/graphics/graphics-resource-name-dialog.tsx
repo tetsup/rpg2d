@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ResourceNameSchema } from '@schema/resource/common/base';
 import { Button } from '@editor/components/ui/button';
 import {
   Dialog,
@@ -39,7 +40,8 @@ export function GraphicsResourceNameDialog({
   };
 
   const trimmed = name.trim();
-  const canConfirm = trimmed.length > 0 && !pending;
+  const isValidName = trimmed.length > 0 && ResourceNameSchema.safeParse(trimmed).success;
+  const canConfirm = isValidName && !pending;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -55,7 +57,13 @@ export function GraphicsResourceNameDialog({
             onChange={(event) => setName(event.target.value)}
             placeholder={t('例: hero')}
             autoFocus
+            aria-invalid={trimmed.length > 0 && !isValidName}
           />
+          {trimmed.length > 0 && !isValidName && (
+            <p className="text-xs text-destructive">
+              {t('名前は小文字英字で始まり、英数字・ハイフン・ドットのみ使えます')}
+            </p>
+          )}
         </label>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
