@@ -15,7 +15,7 @@ import {
 import { cn } from '@editor/lib/utils';
 import { SyncIndicatorDot } from './sync-indicator-dot';
 
-type ContextChip = {
+export type ContextChip = {
   id: string;
   label: string;
   valueLabel?: string;
@@ -28,12 +28,7 @@ type ContextChip = {
   addDisabled?: boolean;
 };
 
-type ContextNavigatorFabProps = {
-  chips: ContextChip[];
-  className?: string;
-};
-
-function FabChip({
+function ContextChipDialog({
   label,
   valueLabel,
   showDirtyDot,
@@ -49,8 +44,8 @@ function FabChip({
     <Dialog>
       <DialogTrigger
         render={
-          <Button type="button" variant="secondary" size="sm" className="relative shrink-0 shadow-md">
-            <span className="truncate">{triggerLabel}</span>
+          <Button type="button" variant="outline" size="sm" className="relative shrink-0">
+            <span className="max-w-24 truncate">{triggerLabel}</span>
             <ChevronDown className="size-4 shrink-0" />
             {showDirtyDot && <SyncIndicatorDot variant="dirty" />}
             {!showDirtyDot && showDraftDot && <SyncIndicatorDot variant="draft" />}
@@ -73,18 +68,21 @@ function FabChip({
   );
 }
 
-export function ContextNavigatorFab({ chips, className }: ContextNavigatorFabProps) {
+type ContextNavigatorChipsProps = {
+  chips: ContextChip[];
+  className?: string;
+};
+
+export function ContextNavigatorChips({ chips, className }: ContextNavigatorChipsProps) {
   if (chips.length === 0) return null;
 
   return (
-    <div className={cn('pointer-events-none absolute inset-x-0 top-2 z-10 flex justify-end px-2', className)}>
-      <div className="pointer-events-auto flex flex-col items-end gap-1">
-        {chips.map((chip) => (
-          <FabChip key={chip.id} {...chip}>
-            <GraphicsContextList items={chip.items} activeId={chip.activeId} emptyLabel={chip.emptyLabel} />
-          </FabChip>
-        ))}
-      </div>
+    <div className={cn('flex shrink-0 items-center gap-1', className)}>
+      {chips.map((chip) => (
+        <ContextChipDialog key={chip.id} {...chip}>
+          <GraphicsContextList items={chip.items} activeId={chip.activeId} emptyLabel={chip.emptyLabel} />
+        </ContextChipDialog>
+      ))}
     </div>
   );
 }

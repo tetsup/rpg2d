@@ -46,8 +46,8 @@ describe('graphics resource create page', () => {
       expect(screen.getByRole('toolbar', { name: '描画ツール' })).toBeInTheDocument();
     });
 
-    expect(screen.getByText('＋ボタンから画像を追加してください')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '追加' })).toBeEnabled();
+    expect(screen.getByText('サイズを指定して画像を作成してください')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'サイズを指定して作成' })).toBeEnabled();
   });
 
   it('creates an image with an auto-generated name and navigates to edit', async () => {
@@ -87,7 +87,7 @@ describe('graphics resource create page', () => {
 
     renderGraphicsRoutes('/resources/sample/image/new');
 
-    await user.click(await screen.findByRole('button', { name: '追加' }));
+    await user.click(await screen.findByRole('button', { name: 'サイズを指定して作成' }));
     await user.click(screen.getByRole('button', { name: '作成' }));
 
     await waitFor(() => {

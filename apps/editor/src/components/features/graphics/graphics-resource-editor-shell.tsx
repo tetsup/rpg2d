@@ -22,7 +22,7 @@ type GraphicsResourceEditorShellProps = {
   images?: ImagePixelData[];
   palette?: ImagePixelData['palette'];
   emptyLabel: string;
-  addButton?: ReactNode;
+  emptyAction?: ReactNode;
 };
 
 function getSwitcherLabel(type: GraphicsResourceType, t: (key: string) => string): string {
@@ -42,11 +42,12 @@ export function GraphicsResourceEditorShell({
   images,
   palette,
   emptyLabel,
-  addButton,
+  emptyAction,
 }: GraphicsResourceEditorShellProps) {
   const { t } = useTranslation();
   const meta = resourceTypeMeta[type];
   const group = findResourceTypeGroup(type);
+  const isEmpty = (images?.length ?? 0) === 0;
 
   const swatchItems =
     palette != null
@@ -74,7 +75,14 @@ export function GraphicsResourceEditorShell({
       <PaintEditorLayout
         canvas={
           <CanvasViewport zoom={1} operationMode="paint" className="h-full">
-            <PixelCanvas className="w-full" images={images} emptyLabel={emptyLabel} />
+            {isEmpty ? (
+              <div className="flex min-h-40 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-muted/30 p-6 text-center text-sm text-muted-foreground">
+                <p>{emptyLabel}</p>
+                {emptyAction}
+              </div>
+            ) : (
+              <PixelCanvas className="w-full" images={images} emptyLabel={emptyLabel} />
+            )}
           </CanvasViewport>
         }
         toolbar={
@@ -99,8 +107,7 @@ export function GraphicsResourceEditorShell({
                 saving={false}
                 onSelectScope={() => undefined}
               />,
-              addButton,
-            ].filter(Boolean)}
+            ]}
           />
         }
       />

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { ResourceRecord } from '@sharedTypes/database/collection';
 import { CanvasViewport } from '@editor/components/features/paint-editor/canvas-viewport';
-import { ContextNavigatorFab } from '@editor/components/features/paint-editor/context-navigator-fab';
+import { ContextNavigatorChips, type ContextChip } from '@editor/components/features/paint-editor/context-navigator-chips';
 import { DrawResourcePopup } from '@editor/components/features/paint-editor/draw-resource-popup';
 import { GraphicsSaveDialog } from '@editor/components/features/paint-editor/graphics-save-dialog';
 import { OperationModeGroup } from '@editor/components/features/paint-editor/operation-mode-group';
@@ -260,7 +260,7 @@ function GraphicsEditorContent({
       ? t('方向チップからテクスチャを追加してください')
       : entryType === 'texture' || (entryType === 'skin' && textureId != null)
         ? t('フレームチップからフレームを追加してください')
-        : t('＋ボタンから画像を追加してください');
+        : t('描画リソースから色を選んで編集してください');
 
   const directionItems = SKIN_DIRECTIONS.map((direction) => ({
     id: direction,
@@ -400,7 +400,7 @@ function GraphicsEditorContent({
           }
         };
 
-        const contextChips = [
+        const contextChips: ContextChip[] = [
           ...(showDirection
             ? [
                 {
@@ -428,7 +428,7 @@ function GraphicsEditorContent({
                   showDirtyDot: imageDirty,
                   showDraftDot: hasDraftFrames,
                   onAdd: showFrameAdd ? () => setSizeDialogOpen(true) : undefined,
-                  addDisabled: isAdding || isPending || frameIds.length === 0,
+                  addDisabled: isAdding || isPending,
                 },
               ]
             : []),
@@ -448,10 +448,10 @@ function GraphicsEditorContent({
                   </div>
                 </CanvasViewport>
               }
-              fab={<ContextNavigatorFab chips={contextChips} />}
               toolbar={
                 <PaintEditorToolbar
                   items={[
+                    <ContextNavigatorChips key="context" chips={contextChips} />,
                     <OperationModeGroup key="mode" mode={operationMode} onModeChange={setOperationMode} />,
                     <DrawResourcePopup
                       key="palette"
