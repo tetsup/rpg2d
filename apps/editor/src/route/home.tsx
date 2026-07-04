@@ -1,19 +1,16 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { FolderUp, Settings2, Sparkles } from 'lucide-react';
 import { MenuCard } from '@editor/components/parts/menu-card';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
-import { ManifestPickerDialog } from '@editor/components/features/play/manifest-picker-dialog';
 import { ControlSection } from '@editor/components/forms/control-section';
+import { playPath } from '@editor/lib/play/navigation';
 import { useWorkspaceStore } from '@editor/stores/workspace';
 
 export function HomePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const workspace = useWorkspaceStore((s) => s.current);
-  const setWorkspace = useWorkspaceStore((s) => s.setCurrent);
-  const [pickerOpen, setPickerOpen] = useState(false);
 
   return (
     <LayoutShell titleBarProps={{ title: t('ホーム') }}>
@@ -28,14 +25,14 @@ export function HomePage() {
         />
 
         <MenuCard
-          onClick={() => setPickerOpen(true)}
+          onClick={() => navigate(playPath(undefined, { pick: true }))}
           icon={FolderUp}
           title={t('ロード')}
           description={t('過去に作ったゲームを開く')}
         />
         {workspace.manifestId != null && (
           <MenuCard
-            onClick={() => navigate(`/play?manifest=${encodeURIComponent(workspace.manifestId)}`)}
+            onClick={() => navigate(playPath(workspace.manifestId))}
             icon={Settings2}
             title={t('プレー')}
             description={workspace.manifestId}
@@ -52,13 +49,6 @@ export function HomePage() {
           description={t('新しいグループを作成')}
         />
       </ControlSection>
-      <ManifestPickerDialog
-        open={pickerOpen}
-        onOpenChange={setPickerOpen}
-        onSelect={(id) => {
-          setWorkspace({ manifestId: id });
-        }}
-      />
     </LayoutShell>
   );
 }
