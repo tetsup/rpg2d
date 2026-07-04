@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { renderEditor } from '../helpers/render-app';
 import { server } from '../helpers/server';
-import { EditGraphicsResourcePage } from '@editor/route/graphics/edit';
+import { EditResourcePage } from '@editor/route/resource/edit';
 
 const imageResource = {
   id: 'sample/image/hero.down1.v0',
@@ -42,7 +42,7 @@ describe('image graphics editor', () => {
     renderEditor(
       <MemoryRouter initialEntries={['/resources/sample/image/hero.down1.v0']}>
         <Routes>
-          <Route path="/resources/:namespace/:type/:name" element={<EditGraphicsResourcePage />} />
+          <Route path="/resources/:namespace/:type/:name" element={<EditResourcePage />} />
         </Routes>
       </MemoryRouter>
     );

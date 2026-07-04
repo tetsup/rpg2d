@@ -9,7 +9,7 @@ import { parseResourceId } from '@schema/resource/common/base';
 import {
   findResourceTypeGroup,
   isBrowsableResourceType,
-  isGraphicsResourceType,
+  isCreatableResourceType,
   resourceTypeMeta,
 } from '@editor/lib/resource-type-meta';
 
@@ -33,7 +33,7 @@ export function ResourceSearchPage() {
       }}
     >
       <CancelCard />
-      {isGraphicsResourceType(type) && (
+      {isCreatableResourceType(type) && (
         <MenuCard
           onClick={() => navigate(`/resources/${type}/new`)}
           icon={Sparkles}

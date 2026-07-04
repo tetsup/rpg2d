@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { renderEditor } from '../helpers/render-app';
 import { server } from '../helpers/server';
-import { EditGraphicsResourcePage } from '@editor/route/graphics/edit';
+import { EditResourcePage } from '@editor/route/resource/edit';
 
 const textureResource = {
   id: 'sample/texture/hero.down',
@@ -61,7 +61,7 @@ describe('texture graphics context editor', () => {
     renderEditor(
       <MemoryRouter initialEntries={['/resources/sample/texture/hero.down']}>
         <Routes>
-          <Route path="/resources/:namespace/:type/:name" element={<EditGraphicsResourcePage />} />
+          <Route path="/resources/:namespace/:type/:name" element={<EditResourcePage />} />
         </Routes>
       </MemoryRouter>
     );
