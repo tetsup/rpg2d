@@ -31,6 +31,11 @@ export const creatableResourceTypes = [
 
 export type CreatableResourceType = (typeof creatableResourceTypes)[number];
 
+/** Resource types whose document picker should show image thumbnails. */
+export const thumbnailPickerResourceTypes = graphicsResourceTypes;
+
+export type ThumbnailPickerResourceType = GraphicsResourceType;
+
 type ResourceTypeMeta = {
   label: string;
   description: string;
@@ -139,6 +144,10 @@ export function isFormCreatableResourceType(type: string): type is FormCreatable
 
 export function isCreatableResourceType(type: string): type is CreatableResourceType {
   return creatableResourceTypes.includes(type as CreatableResourceType);
+}
+
+export function isThumbnailPickerResourceType(type: string): type is ThumbnailPickerResourceType {
+  return thumbnailPickerResourceTypes.includes(type as ThumbnailPickerResourceType);
 }
 
 export function findResourceTypeGroup(type: BrowsableResourceType): ResourceTypeGroup | undefined {

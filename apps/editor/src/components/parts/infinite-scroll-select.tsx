@@ -4,20 +4,12 @@ import { useInView } from 'react-intersection-observer';
 import { Database } from '@sharedTypes/database/collection';
 import { useDocumentList } from '@editor/hooks/api/search';
 import { buildRenderItemContext, type RenderItemContext } from '@editor/lib/document-item';
+import { DocumentListItemContent } from './document-list-item-content';
 import { Command, CommandEmpty, CommandGroup, CommandItem } from '../ui/command';
 import { FilterMap } from '@sharedTypes/database/filter';
 
 function defaultRenderItem<T>(_item: T, { label, thumbnail }: RenderItemContext) {
-  if (!thumbnail) return label;
-
-  return (
-    <span className="flex min-w-0 items-center gap-2">
-      <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-muted">
-        {thumbnail}
-      </span>
-      <span className="truncate">{label}</span>
-    </span>
-  );
+  return <DocumentListItemContent label={label} thumbnail={thumbnail} />;
 }
 
 type InfiniteScrollSelectProps<T extends keyof FilterMap> = {
