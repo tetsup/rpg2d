@@ -22,7 +22,7 @@ type GraphicsResourceEditorShellProps = {
   images?: ImagePixelData[];
   palette?: ImagePixelData['palette'];
   emptyLabel: string;
-  addButton?: React.ReactNode;
+  addButton?: ReactNode;
 };
 
 function getSwitcherLabel(type: GraphicsResourceType, t: (key: string) => string): string {

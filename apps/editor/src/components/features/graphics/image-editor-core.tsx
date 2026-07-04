@@ -23,13 +23,6 @@ export function useImageEditorState(
     resource ? getDefaultPaletteToken(resource.data.palette) : 'ff'
   );
 
-  useEffect(() => {
-    setDraftData(resource?.data);
-    setIsDraft(resource?.isDraft ?? true);
-    setDescription(resource?.description ?? '');
-    setSelectedToken(resource ? getDefaultPaletteToken(resource.data.palette) : 'ff');
-  }, [resource?.id, resource?.data, resource?.description, resource?.isDraft, resource]);
-
   const isDirty = useMemo(() => {
     if (resource == null || draftData == null) return false;
     return (
@@ -79,7 +72,7 @@ type ImageEditorCoreProps = {
 
 export function renderImageEditorCore(props: ImageEditorCoreProps): ImageEditorCoreSlots {
   const { state, emptyLabel, operationMode } = props;
-  const { draftData, selectedToken, setDraftData, setSelectedToken } = state;
+  const { draftData, selectedToken, setDraftData } = state;
   const editable = draftData != null && isPaintMode(operationMode);
 
   if (draftData == null) {

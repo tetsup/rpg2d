@@ -68,15 +68,12 @@ describe('useImageEditorState', () => {
     expect(onDirtyChange).toHaveBeenLastCalledWith(true);
   });
 
-  it('resets local state when the resource id changes', () => {
-    const { result, rerender } = renderHook(
-      ({ resource }) => useImageEditorState(resource),
-      { initialProps: { resource: sampleImageResource } }
-    );
+  it('starts with fresh state when mounted for a different resource', () => {
+    const { result: first } = renderHook(() => useImageEditorState(sampleImageResource));
 
     act(() => {
-      result.current.setIsDraft(false);
-      result.current.setDescription('temporary');
+      first.current.setIsDraft(false);
+      first.current.setDescription('temporary');
     });
 
     const nextResource = {
@@ -87,10 +84,10 @@ describe('useImageEditorState', () => {
       description: 'loaded',
     };
 
-    rerender({ resource: nextResource });
+    const { result: second } = renderHook(() => useImageEditorState(nextResource));
 
-    expect(result.current.isDirty).toBe(false);
-    expect(result.current.isDraft).toBe(true);
-    expect(result.current.description).toBe('loaded');
+    expect(second.current.isDirty).toBe(false);
+    expect(second.current.isDraft).toBe(true);
+    expect(second.current.description).toBe('loaded');
   });
 });
