@@ -9,14 +9,11 @@ function parseOptionalNumber(value: string | null): number | undefined {
   return Number.isFinite(parsed) ? parsed : undefined;
 }
 
+/** Drives play from the current workspace. Remount only when applying DB edits. */
 export function usePlaySession() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const workspaceManifestId = useWorkspaceStore((s) => s.current.manifestId);
-  const setWorkspace = useWorkspaceStore((s) => s.setCurrent);
+  const [searchParams] = useSearchParams();
+  const manifestId = useWorkspaceStore((s) => s.current.manifestId);
   const [sessionKey, setSessionKey] = useState(0);
-  const [pickerOpen, setPickerOpen] = useState(false);
-
-  const manifestId = searchParams.get('manifest') ?? workspaceManifestId ?? undefined;
 
   const runtimeConfig = useMemo((): RuntimeConfig | null => {
     if (!manifestId) return null;
@@ -27,29 +24,15 @@ export function usePlaySession() {
     });
   }, [manifestId, searchParams]);
 
-  const selectManifest = (id: string) => {
-    setWorkspace({ manifestId: id });
-    setSearchParams({ manifest: id }, { replace: true });
+  /** Re-fetch workspace resources from the API after editing them elsewhere. */
+  const applyChanges = () => {
     setSessionKey((current) => current + 1);
-    setPickerOpen(false);
-  };
-
-  const reload = () => {
-    setSessionKey((current) => current + 1);
-  };
-
-  const openPicker = () => {
-    setPickerOpen(true);
   };
 
   return {
     manifestId,
     runtimeConfig,
     sessionKey,
-    pickerOpen,
-    setPickerOpen,
-    selectManifest,
-    reload,
-    openPicker,
+    applyChanges,
   };
 }
