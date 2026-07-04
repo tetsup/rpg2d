@@ -56,7 +56,13 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data).toEqual(validPlayerData);
+        expect(result.data).toMatchObject({
+          id: formatResourceId(validPlayerPath),
+          namespace: validPlayerPath.namespace,
+          type: validPlayerPath.type,
+          name: validPlayerPath.name,
+          data: validPlayerData,
+        });
       }
     });
 
@@ -163,7 +169,11 @@ describe('ResourceRepository', () => {
       expect(got.ok).toBeTruthy();
 
       if (got.ok) {
-        const innerData = 'initialState' in got.data ? got.data : (got.data as { data: typeof validPlayerData }).data;
+        const payload = got.data.data;
+        const innerData =
+          payload != null && typeof payload === 'object' && 'data' in payload && 'type' in payload
+            ? (payload as { data: typeof validPlayerData }).data
+            : payload;
         expect((innerData as { initialState?: { hp?: number } }).initialState?.hp).toBe(200);
       }
     });

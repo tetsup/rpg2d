@@ -14,6 +14,7 @@ describe('resource repository error mapping', () => {
   describe('get', () => {
     it('maps database_error', async () => {
       const chain = {
+        selectAll: vi.fn().mockReturnThis(),
         select: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
         executeTakeFirst: vi.fn().mockRejectedValue(createPgError('XX000')),
@@ -32,6 +33,7 @@ describe('resource repository error mapping', () => {
 
     it('maps unknown error', async () => {
       const chain = {
+        selectAll: vi.fn().mockReturnThis(),
         select: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
         executeTakeFirst: vi.fn().mockRejectedValue(new Error('unknown')),

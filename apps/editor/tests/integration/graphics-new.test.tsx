@@ -170,6 +170,88 @@ describe('graphics resource create page', () => {
     });
   });
 
+  it('creates a texture with a user-provided name and navigates to edit', async () => {
+    const user = userEvent.setup();
+    let postedBody: unknown;
+
+    server.use(
+      http.post('/api/resources/search', () =>
+        HttpResponse.json({
+          items: [],
+          hasMore: false,
+        })
+      ),
+      http.post('/api/resources/sample/texture/:name', async ({ request }) => {
+        postedBody = await request.json();
+        return HttpResponse.json({});
+      }),
+      http.get('/api/resources/sample/texture/:name', ({ params }) =>
+        HttpResponse.json({
+          id: `sample/texture/${params.name}`,
+          namespace: 'sample',
+          type: 'texture',
+          name: params.name,
+          version: 0,
+          isDraft: true,
+          data: {
+            layers: [{ priority: 8, images: [] }],
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: 'test-user',
+        })
+      )
+    );
+
+    renderGraphicsRoutes('/resources/sample/texture/new');
+
+    await user.click(await screen.findByRole('button', { name: '名前を指定して作成' }));
+    await user.type(screen.getByPlaceholderText('例: hero'), 'hero');
+    await user.click(screen.getByRole('button', { name: '作成' }));
+
+    await waitFor(() => {
+      expect(postedBody).toMatchObject({
+        namespace: 'sample',
+        type: 'texture',
+        name: 'hero',
+        isDraft: true,
+      });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole('toolbar', { name: '描画ツール' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: '保存' })).toBeInTheDocument();
+    });
+  });
+
+  it('redirects to resources when GET returns payload without resource metadata', async () => {
+    server.use(
+      http.post('/api/resources/search', () =>
+        HttpResponse.json({
+          items: [],
+          hasMore: false,
+        })
+      ),
+      http.post('/api/resources/sample/texture/hero', () => HttpResponse.json({})),
+      http.get('/api/resources/sample/texture/hero', () =>
+        HttpResponse.json({
+          layers: [{ priority: 8, images: [] }],
+        })
+      )
+    );
+
+    renderGraphicsRoutes('/resources/sample/texture/new');
+
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: '名前を指定して作成' }));
+    await user.type(screen.getByPlaceholderText('例: hero'), 'hero');
+    await user.click(screen.getByRole('button', { name: '作成' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('resources home')).toBeInTheDocument();
+    });
+  });
+
   it('shows namespace picker for tile type', async () => {
     server.use(
       http.post('/api/namespaces/search', () =>
