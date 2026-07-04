@@ -51,7 +51,7 @@ export function PixelCanvas({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    drawCompositeImages(ctx, displayImages, width, height);
+    drawCompositeImages(ctx, displayImages, width, height, { showPixelGrid: true });
   }, [displayImages, width, height]);
 
   const paintAt = useCallback(
@@ -112,7 +112,7 @@ export function PixelCanvas({
         width={width}
         height={height}
         className={cn(
-          'max-h-full max-w-full touch-none [image-rendering:pixelated]',
+          'max-h-full max-w-full border border-border/60 shadow-sm touch-none [image-rendering:pixelated]',
           editable && 'cursor-crosshair'
         )}
         onPointerDown={handlePointerDown}
