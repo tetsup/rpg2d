@@ -15,7 +15,7 @@ import {
 import { cn } from '@editor/lib/utils';
 import { SyncIndicatorDot } from './sync-indicator-dot';
 
-type ContextChip = {
+export type ContextChip = {
   id: string;
   label: string;
   valueLabel?: string;
@@ -28,12 +28,7 @@ type ContextChip = {
   addDisabled?: boolean;
 };
 
-type ContextNavigatorFabProps = {
-  chips: ContextChip[];
-  className?: string;
-};
-
-function FabChip({
+function ContextChipDialog({
   label,
   valueLabel,
   showDirtyDot,
@@ -41,7 +36,8 @@ function FabChip({
   children,
   onAdd,
   addDisabled,
-}: ContextChip & { children: ReactNode }) {
+  triggerClassName,
+}: ContextChip & { children: ReactNode; triggerClassName?: string }) {
   const { t } = useTranslation();
   const triggerLabel = valueLabel ? `${label}: ${valueLabel}` : label;
 
@@ -49,7 +45,12 @@ function FabChip({
     <Dialog>
       <DialogTrigger
         render={
-          <Button type="button" variant="secondary" size="sm" className="relative shrink-0 shadow-md">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            className={cn('relative shrink-0 shadow-md', triggerClassName)}
+          >
             <span className="truncate">{triggerLabel}</span>
             <ChevronDown className="size-4 shrink-0" />
             {showDirtyDot && <SyncIndicatorDot variant="dirty" />}
@@ -60,7 +61,7 @@ function FabChip({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{label}</DialogTitle>
-          <DialogDescription>{t('{{label}}を切り替えます', { label })}</DialogDescription>
+          <DialogDescription>{`${label}${t('を切り替えます')}`}</DialogDescription>
         </DialogHeader>
         {children}
         {onAdd != null && (
@@ -73,16 +74,26 @@ function FabChip({
   );
 }
 
+type ContextNavigatorFabProps = {
+  chips: ContextChip[];
+  className?: string;
+};
+
 export function ContextNavigatorFab({ chips, className }: ContextNavigatorFabProps) {
   if (chips.length === 0) return null;
 
   return (
-    <div className={cn('pointer-events-none absolute inset-x-0 top-2 z-10 flex justify-end px-2', className)}>
+    <div
+      className={cn(
+        'pointer-events-none absolute inset-x-0 top-2 z-10 flex justify-end px-2',
+        className
+      )}
+    >
       <div className="pointer-events-auto flex flex-col items-end gap-1">
         {chips.map((chip) => (
-          <FabChip key={chip.id} {...chip}>
+          <ContextChipDialog key={chip.id} {...chip}>
             <GraphicsContextList items={chip.items} activeId={chip.activeId} emptyLabel={chip.emptyLabel} />
-          </FabChip>
+          </ContextChipDialog>
         ))}
       </div>
     </div>

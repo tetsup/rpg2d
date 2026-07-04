@@ -32,7 +32,7 @@ export function EditTilePage() {
   return (
     <LayoutShell
       titleBarProps={{
-        title: t('{{label}}を編集', { label: t(meta.label) }),
+        title: `${t(meta.label)}${t('を編集')}`,
         category: group ? t(group.title) : undefined,
       }}
     >

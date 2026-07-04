@@ -38,7 +38,7 @@ export function ResourceSearchPage() {
           onClick={() => navigate(`/resources/${type}/new`)}
           icon={Sparkles}
           title={t('新規作成')}
-          description={t('{{label}}を新しく作る', { label: t(meta.label) })}
+          description={`${t(meta.label)}${t('を新しく作る')}`}
         />
       )}
       <SelectDocument

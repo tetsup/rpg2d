@@ -8,6 +8,7 @@ import { AuthProvider } from './providers/auth';
 import { queryClient } from './lib/query-client';
 import { AppRouter } from './route/router';
 import { Toaster } from './components/ui/sonner';
+import '@editor/i18n/config';
 import '../index.css';
 
 if (import.meta.env.DEV) {

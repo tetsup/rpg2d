@@ -30,10 +30,13 @@ export function ToolbarIconButton({
     <Button
       type="button"
       variant={pressed ? 'secondary' : 'outline'}
-      size="icon-sm"
+      size="icon"
       disabled={disabled}
       onClick={onClick}
-      className={cn('relative shrink-0', className)}
+      className={cn(
+        'relative shrink-0 !size-[var(--touch-size)] [&_svg]:!size-[calc(var(--touch-size)*0.45)]',
+        className
+      )}
       aria-label={label}
       aria-pressed={pressed}
     >

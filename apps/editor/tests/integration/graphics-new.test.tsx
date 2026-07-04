@@ -46,11 +46,11 @@ describe('graphics resource create page', () => {
       expect(screen.getByRole('toolbar', { name: '描画ツール' })).toBeInTheDocument();
     });
 
-    expect(screen.getByText('＋ボタンから画像を追加してください')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '追加' })).toBeEnabled();
+    expect(screen.getByText('名前とサイズを指定して画像を作成してください')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '名前を指定して作成' })).toBeEnabled();
   });
 
-  it('creates an image with an auto-generated name and navigates to edit', async () => {
+  it('creates an image with a user-provided name and navigates to edit', async () => {
     const user = userEvent.setup();
     let postedBody: unknown;
 
@@ -87,13 +87,16 @@ describe('graphics resource create page', () => {
 
     renderGraphicsRoutes('/resources/sample/image/new');
 
-    await user.click(await screen.findByRole('button', { name: '追加' }));
+    await user.click(await screen.findByRole('button', { name: '名前を指定して作成' }));
+    await user.type(screen.getByPlaceholderText('例: hero'), 'hero');
+    await user.click(screen.getByRole('button', { name: '作成' }));
     await user.click(screen.getByRole('button', { name: '作成' }));
 
     await waitFor(() => {
       expect(postedBody).toMatchObject({
         namespace: 'sample',
         type: 'image',
+        name: 'hero',
         version: 0,
         isDraft: true,
         data: {
@@ -102,8 +105,65 @@ describe('graphics resource create page', () => {
       });
     });
 
-    const body = postedBody as { name: string };
-    expect(body.name).toBe('aa');
+    await waitFor(() => {
+      expect(screen.getByRole('toolbar', { name: '描画ツール' })).toBeInTheDocument();
+    });
+  });
+
+  it('creates an image with a suffixed name when the hint is taken', async () => {
+    const user = userEvent.setup();
+    let postedBody: unknown;
+
+    server.use(
+      http.post('/api/resources/search', () =>
+        HttpResponse.json({
+          items: [{ id: 'sample/image/hero', namespace: 'sample', type: 'image', name: 'hero' }],
+          hasMore: false,
+        })
+      ),
+      http.post('/api/resources/sample/image/:name', async ({ request }) => {
+        postedBody = await request.json();
+        return HttpResponse.json({});
+      }),
+      http.get('/api/resources/sample/image/:name', ({ params }) =>
+        HttpResponse.json({
+          id: `sample/image/${params.name}`,
+          namespace: 'sample',
+          type: 'image',
+          name: params.name,
+          version: 0,
+          isDraft: true,
+          data: {
+            size: { width: 16, height: 16 },
+            palette: { ff: [0, 0, 0, 0] },
+            pixels: Array(16).fill(Array(16).fill('ff').join(' ')),
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: 'test-user',
+        })
+      )
+    );
+
+    renderGraphicsRoutes('/resources/sample/image/new');
+
+    await user.click(await screen.findByRole('button', { name: '名前を指定して作成' }));
+    await user.type(screen.getByPlaceholderText('例: hero'), 'hero');
+    await user.click(screen.getByRole('button', { name: '作成' }));
+    await user.click(screen.getByRole('button', { name: '作成' }));
+
+    await waitFor(() => {
+      expect(postedBody).toMatchObject({
+        namespace: 'sample',
+        type: 'image',
+        name: 'hero-aa',
+        version: 0,
+        isDraft: true,
+        data: {
+          size: { width: 16, height: 16 },
+        },
+      });
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('toolbar', { name: '描画ツール' })).toBeInTheDocument();
