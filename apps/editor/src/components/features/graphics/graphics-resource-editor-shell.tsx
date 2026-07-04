@@ -1,12 +1,14 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
-import { AddButton } from '@editor/components/features/graphics/add-button';
-import { GraphicsEditorLayout } from '@editor/components/features/graphics/graphics-editor-layout';
-import { PalettePanel } from '@editor/components/features/graphics/palette-panel';
 import { PixelCanvas } from '@editor/components/features/graphics/pixel-canvas';
-import { SwitcherPopup } from '@editor/components/features/graphics/switcher-popup';
-import { ToolBar } from '@editor/components/features/graphics/toolbar';
+import { CanvasViewport } from '@editor/components/features/paint-editor/canvas-viewport';
+import { DrawResourcePopup } from '@editor/components/features/paint-editor/draw-resource-popup';
+import { OperationModeGroup } from '@editor/components/features/paint-editor/operation-mode-group';
+import { PaintEditorLayout } from '@editor/components/features/paint-editor/paint-editor-layout';
+import { PaintEditorToolbar } from '@editor/components/features/paint-editor/paint-editor-toolbar';
+import { SaveToolbarMenu } from '@editor/components/features/paint-editor/save-toolbar-menu';
+import { ZoomPopup } from '@editor/components/features/paint-editor/zoom-popup';
 import type { ImagePixelData } from '@editor/lib/pixel-render';
 import {
   findResourceTypeGroup,
@@ -20,9 +22,7 @@ type GraphicsResourceEditorShellProps = {
   images?: ImagePixelData[];
   palette?: ImagePixelData['palette'];
   emptyLabel: string;
-  switcherLabel: string;
-  addButton?: ReactNode;
-  switcherDisabled?: boolean;
+  addButton?: React.ReactNode;
 };
 
 function getSwitcherLabel(type: GraphicsResourceType, t: (key: string) => string): string {
@@ -42,13 +42,25 @@ export function GraphicsResourceEditorShell({
   images,
   palette,
   emptyLabel,
-  switcherLabel,
   addButton,
-  switcherDisabled = false,
 }: GraphicsResourceEditorShellProps) {
   const { t } = useTranslation();
   const meta = resourceTypeMeta[type];
   const group = findResourceTypeGroup(type);
+
+  const swatchItems =
+    palette != null
+      ? Object.entries(palette).map(([token, rgba]) => ({
+          key: token,
+          label: token,
+          swatch: (
+            <span
+              className="block size-full"
+              style={{ backgroundColor: `rgba(${rgba.join(',')})` }}
+            />
+          ),
+        }))
+      : [];
 
   return (
     <LayoutShell
@@ -59,18 +71,38 @@ export function GraphicsResourceEditorShell({
         subtitle: meta.label,
       }}
     >
-      <GraphicsEditorLayout
-        canvas={<PixelCanvas className="w-full" images={images} emptyLabel={emptyLabel} />}
-        switcher={
-          <SwitcherPopup
-            label={switcherLabel}
-            description={t('{{label}}を切り替えます', { label: switcherLabel })}
-            disabled={switcherDisabled}
+      <PaintEditorLayout
+        canvas={
+          <CanvasViewport zoom={1} operationMode="paint" className="h-full">
+            <PixelCanvas className="w-full" images={images} emptyLabel={emptyLabel} />
+          </CanvasViewport>
+        }
+        toolbar={
+          <PaintEditorToolbar
+            items={[
+              <OperationModeGroup key="mode" mode="paint" onModeChange={() => undefined} />,
+              <DrawResourcePopup key="palette" items={swatchItems} emptyLabel={t('パレット未設定')} />,
+              <ZoomPopup key="zoom" zoom={1} onZoomChange={() => undefined} />,
+              <SaveToolbarMenu
+                key="save"
+                items={[
+                  {
+                    scope: 'image',
+                    label: t('画像'),
+                    isDirty: false,
+                    isValid: true,
+                    hasDraftDescendants: false,
+                    draftChildren: [],
+                    invalidMessages: [],
+                  },
+                ]}
+                saving={false}
+                onSelectScope={() => undefined}
+              />,
+              addButton,
+            ].filter(Boolean)}
           />
         }
-        toolbar={<ToolBar />}
-        palette={<PalettePanel palette={palette} />}
-        addButton={addButton ?? <AddButton />}
       />
     </LayoutShell>
   );

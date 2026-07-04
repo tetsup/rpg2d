@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createResourceInputSchema } from '@schema/database/resource';
 import type { ResourceRecord } from '@sharedTypes/database/collection';
-import { PalettePanel } from '@editor/components/features/graphics/palette-panel';
 import { PixelCanvas } from '@editor/components/features/graphics/pixel-canvas';
-import { ToolBar } from '@editor/components/features/graphics/toolbar';
+import { isPaintMode, type OperationMode } from '@editor/lib/paint-editor/operation-mode';
 import { getDefaultPaletteToken, setImagePixel } from '@editor/lib/image-pixel-mutate';
 
 export type ImageEditorCoreSlots = {
   canvas: React.ReactNode;
-  toolbar: React.ReactNode;
-  palette: React.ReactNode;
+  canvasWidth: number;
+  canvasHeight: number;
 };
 
 /** Call from a component keyed by `resource?.id` so state resets on frame change. */
@@ -19,14 +18,26 @@ export function useImageEditorState(
 ) {
   const [draftData, setDraftData] = useState(() => resource?.data);
   const [isDraft, setIsDraft] = useState(() => resource?.isDraft ?? true);
+  const [description, setDescription] = useState(() => resource?.description ?? '');
   const [selectedToken, setSelectedToken] = useState(() =>
     resource ? getDefaultPaletteToken(resource.data.palette) : 'ff'
   );
 
+  useEffect(() => {
+    setDraftData(resource?.data);
+    setIsDraft(resource?.isDraft ?? true);
+    setDescription(resource?.description ?? '');
+    setSelectedToken(resource ? getDefaultPaletteToken(resource.data.palette) : 'ff');
+  }, [resource?.id, resource?.data, resource?.description, resource?.isDraft, resource]);
+
   const isDirty = useMemo(() => {
     if (resource == null || draftData == null) return false;
-    return isDraft !== resource.isDraft || JSON.stringify(draftData) !== JSON.stringify(resource.data);
-  }, [draftData, isDraft, resource]);
+    return (
+      isDraft !== resource.isDraft ||
+      description !== (resource.description ?? '') ||
+      JSON.stringify(draftData) !== JSON.stringify(resource.data)
+    );
+  }, [draftData, description, isDraft, resource]);
 
   useEffect(() => {
     onDirtyChange?.(isDirty);
@@ -39,17 +50,19 @@ export function useImageEditorState(
       type: 'image',
       name: resource.name,
       version: resource.version,
-      description: resource.description,
+      description,
       isDraft,
       data: draftData,
     });
-  }, [draftData, isDraft, resource]);
+  }, [draftData, description, isDraft, resource]);
 
   return {
     resource,
     draftData,
     isDraft,
     setIsDraft,
+    description,
+    setDescription,
     selectedToken,
     setSelectedToken,
     setDraftData,
@@ -61,17 +74,19 @@ export function useImageEditorState(
 type ImageEditorCoreProps = {
   state: ReturnType<typeof useImageEditorState>;
   emptyLabel: string;
+  operationMode: OperationMode;
 };
 
 export function renderImageEditorCore(props: ImageEditorCoreProps): ImageEditorCoreSlots {
-  const { state, emptyLabel } = props;
+  const { state, emptyLabel, operationMode } = props;
   const { draftData, selectedToken, setDraftData, setSelectedToken } = state;
+  const editable = draftData != null && isPaintMode(operationMode);
 
   if (draftData == null) {
     return {
       canvas: <PixelCanvas className="w-full" emptyLabel={emptyLabel} />,
-      toolbar: <ToolBar />,
-      palette: <PalettePanel />,
+      canvasWidth: 0,
+      canvasHeight: 0,
     };
   }
 
@@ -81,18 +96,33 @@ export function renderImageEditorCore(props: ImageEditorCoreProps): ImageEditorC
         className="w-full"
         image={draftData}
         activeToken={selectedToken}
-        onPaint={(x, y) => {
-          setDraftData((current) => (current ? setImagePixel(current, x, y, selectedToken) : current));
-        }}
+        onPaint={
+          editable
+            ? (x, y) => {
+                setDraftData((current) =>
+                  current ? setImagePixel(current, x, y, selectedToken) : current
+                );
+              }
+            : undefined
+        }
       />
     ),
-    toolbar: <ToolBar />,
-    palette: (
-      <PalettePanel
-        palette={draftData.palette}
-        selectedToken={selectedToken}
-        onSelectToken={setSelectedToken}
-      />
-    ),
+    canvasWidth: draftData.size.width,
+    canvasHeight: draftData.size.height,
   };
+}
+
+export function buildColorSwatchItems(
+  palette: ResourceRecord<'image'>['data']['palette'] | undefined,
+  selectedToken?: string
+) {
+  if (palette == null) return [];
+  return Object.entries(palette).map(([token, rgba]) => ({
+    key: token,
+    label: token,
+    swatch: (
+      <span className="block size-full" style={{ backgroundColor: `rgba(${rgba.join(',')})` }} />
+    ),
+    isDirty: token === selectedToken,
+  }));
 }

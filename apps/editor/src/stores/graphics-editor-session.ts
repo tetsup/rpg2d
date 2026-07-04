@@ -1,5 +1,7 @@
 import { createStore, type StoreApi } from 'zustand';
 import type { ResourceDocument, ResourceRecord } from '@sharedTypes/database/collection';
+import type { OperationMode } from '@editor/lib/paint-editor/operation-mode';
+import { clampZoom } from '@editor/lib/paint-editor/zoom';
 import type { SkinDirection } from '@editor/lib/skin-directions';
 import { getDefaultLayerImageIds } from '@editor/lib/texture-layers';
 
@@ -29,6 +31,8 @@ export type GraphicsEditorSessionState = {
 
   imageDirty: boolean;
   metaPanel: MetaPanel;
+  operationMode: OperationMode;
+  zoom: number;
 
   setActiveDirection: (direction: SkinDirection) => void;
   setActiveFrameId: (frameId: string | null) => void;
@@ -39,6 +43,8 @@ export type GraphicsEditorSessionState = {
   setSkinIsDraft: (isDraft: boolean) => void;
   setTextureIsDraft: (isDraft: boolean) => void;
   setImageDirty: (dirty: boolean) => void;
+  setOperationMode: (mode: OperationMode) => void;
+  setZoom: (zoom: number) => void;
   openMeta: (panel: Exclude<MetaPanel, null>) => void;
   closeMeta: () => void;
 };
@@ -66,6 +72,8 @@ export function buildInitialStateFromResource(
     textureRevision: '',
     imageDirty: false,
     metaPanel: null as MetaPanel,
+    operationMode: 'paint' as OperationMode,
+    zoom: 1,
   };
 
   if (resource.type === 'skin') {
@@ -139,6 +147,8 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
     setSkinIsDraft: (isDraft) => set({ skinIsDraft: isDraft }),
     setTextureIsDraft: (isDraft) => set({ textureIsDraft: isDraft }),
     setImageDirty: (dirty) => set({ imageDirty: dirty }),
+    setOperationMode: (mode) => set({ operationMode: mode }),
+    setZoom: (zoom) => set({ zoom: clampZoom(zoom) }),
     openMeta: (panel) => set({ metaPanel: panel }),
     closeMeta: () => set({ metaPanel: null }),
   }));
