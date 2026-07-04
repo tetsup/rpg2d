@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { createEditorRuntimeConfig, type RuntimeConfig } from '@runtime/bootstrap';
 import { useWorkspaceStore } from '@editor/stores/workspace';
@@ -17,16 +17,6 @@ export function usePlaySession() {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const manifestId = searchParams.get('manifest') ?? workspaceManifestId ?? undefined;
-  const requestPicker = searchParams.get('pick') === '1';
-
-  useEffect(() => {
-    if (requestPicker) {
-      setPickerOpen(true);
-      const nextParams = new URLSearchParams(searchParams);
-      nextParams.delete('pick');
-      setSearchParams(nextParams, { replace: true });
-    }
-  }, [requestPicker, searchParams, setSearchParams]);
 
   const runtimeConfig = useMemo((): RuntimeConfig | null => {
     if (!manifestId) return null;

@@ -3,7 +3,7 @@ import { RefreshCw } from 'lucide-react';
 import { RuntimeHost } from '@runtime/runtime-host';
 import '@runtime/styles/layout.css';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
-import { ManifestPickerDialog } from '@editor/components/features/play/manifest-picker-dialog';
+import { ManifestPickerDialog } from '@editor/components/features/manifest/manifest-picker-dialog';
 import { Button } from '@editor/components/ui/button';
 import { usePlaySession } from '@editor/hooks/play/use-play-session';
 
