@@ -21,6 +21,8 @@ import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { createEmptyImageData } from '@editor/lib/empty-image-data';
 import { createEmptyTextureData } from '@editor/lib/empty-texture-data';
 import { getResourceContextLabel } from '@editor/lib/graphics-context-label';
+import { addPaletteColor, removePaletteColor } from '@editor/lib/image-palette-mutate';
+import { getDefaultPaletteToken } from '@editor/lib/image-pixel-mutate';
 import {
   buildSaveLayerItems,
   executeGraphicsSave,
@@ -374,6 +376,30 @@ function GraphicsEditorContent({
 
         const swatchItems = buildColorSwatchItems(imageState.draftData?.palette, imageState.selectedToken);
 
+        const handleAddPaletteColor = () => {
+          if (imageState.draftData == null) return;
+          const result = addPaletteColor(imageState.draftData);
+          if (result == null) {
+            toast.error(t('これ以上色を追加できません'));
+            return;
+          }
+          imageState.setDraftData(result.data);
+          imageState.setSelectedToken(result.token);
+        };
+
+        const handleDeletePaletteColor = (token: string) => {
+          if (imageState.draftData == null) return;
+          const next = removePaletteColor(imageState.draftData, token);
+          if (next == null) {
+            toast.error(t('この色は削除できません'));
+            return;
+          }
+          imageState.setDraftData(next);
+          if (imageState.selectedToken === token) {
+            imageState.setSelectedToken(getDefaultPaletteToken(next.palette));
+          }
+        };
+
         const contextChips = [
           ...(showDirection
             ? [
@@ -432,6 +458,10 @@ function GraphicsEditorContent({
                       items={swatchItems}
                       selectedKey={imageState.selectedToken}
                       onSelectKey={imageState.setSelectedToken}
+                      onAdd={activeImage != null ? handleAddPaletteColor : undefined}
+                      onDeleteKey={activeImage != null ? handleDeletePaletteColor : undefined}
+                      addDisabled={imageState.draftData == null}
+                      deleteDisabled={imageState.draftData == null || swatchItems.length <= 1}
                       emptyLabel={t('パレット未設定')}
                     />,
                     <ZoomPopup
