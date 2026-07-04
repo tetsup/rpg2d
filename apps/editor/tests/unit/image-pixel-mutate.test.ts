@@ -23,7 +23,11 @@ describe('setImagePixel', () => {
 });
 
 describe('getDefaultPaletteToken', () => {
-  it('returns the first palette key', () => {
+  it('returns the first opaque palette key', () => {
     expect(getDefaultPaletteToken(sample.palette)).toBe('aa');
+  });
+
+  it('skips transparent ff when choosing a paint color', () => {
+    expect(getDefaultPaletteToken({ ff: [0, 0, 0, 0], aa: [0, 0, 0, 255] })).toBe('aa');
   });
 });

@@ -14,5 +14,6 @@ export function setImagePixel(data: ImagePixelData, x: number, y: number, token:
 }
 
 export function getDefaultPaletteToken(palette: ImagePixelData['palette']): string {
-  return Object.keys(palette)[0] ?? 'ff';
+  const opaque = Object.keys(palette).find((key) => key !== 'ff');
+  return opaque ?? 'ff';
 }
