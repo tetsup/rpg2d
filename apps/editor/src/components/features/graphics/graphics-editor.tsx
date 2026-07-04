@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { ResourceRecord } from '@sharedTypes/database/collection';
 import { CanvasViewport } from '@editor/components/features/paint-editor/canvas-viewport';
-import { ContextNavigatorChips, type ContextChip } from '@editor/components/features/paint-editor/context-navigator-chips';
+import { ContextNavigatorFab, type ContextChip } from '@editor/components/features/paint-editor/context-navigator-fab';
 import { DrawResourcePopup } from '@editor/components/features/paint-editor/draw-resource-popup';
 import { GraphicsSaveDialog } from '@editor/components/features/paint-editor/graphics-save-dialog';
 import { OperationModeGroup } from '@editor/components/features/paint-editor/operation-mode-group';
@@ -448,10 +448,10 @@ function GraphicsEditorContent({
                   </div>
                 </CanvasViewport>
               }
+              fab={<ContextNavigatorFab chips={contextChips} />}
               toolbar={
                 <PaintEditorToolbar
                   items={[
-                    <ContextNavigatorChips key="context" chips={contextChips} />,
                     <OperationModeGroup key="mode" mode={operationMode} onModeChange={setOperationMode} />,
                     <DrawResourcePopup
                       key="palette"
