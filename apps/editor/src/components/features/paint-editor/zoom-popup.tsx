@@ -38,7 +38,7 @@ export function ZoomPopup({ zoom, onZoomChange, canvasWidth, canvasHeight, conta
       <DialogTrigger
         render={
           <ToolbarIconButton
-            icon={<Maximize2 className="size-4" />}
+            icon={<Maximize2 />}
             label={t('ズーム {{value}}', { value: zoomLabel })}
           />
         }

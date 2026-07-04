@@ -52,7 +52,7 @@ export function DrawResourcePopup<TKey extends string>({
       <DialogTrigger
         render={
           <ToolbarIconButton
-            icon={triggerIcon ?? <Palette className="size-4" />}
+            icon={triggerIcon ?? <Palette />}
             label={triggerLabel ?? t('描画リソース')}
           />
         }

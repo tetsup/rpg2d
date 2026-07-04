@@ -12,7 +12,7 @@ export function PaintEditorToolbar({ items, className }: PaintEditorToolbarProps
 
   return (
     <div
-      className={cn('flex items-center gap-1 overflow-x-auto', className)}
+      className={cn('flex items-center gap-2 overflow-x-auto', className)}
       role="toolbar"
       aria-label={t('描画ツール')}
     >

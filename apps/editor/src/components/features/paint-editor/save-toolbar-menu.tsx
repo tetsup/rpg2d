@@ -30,7 +30,7 @@ export function SaveToolbarMenu({
   if (singleScope != null) {
     return (
       <ToolbarIconButton
-        icon={<Save className="size-4" />}
+        icon={<Save />}
         label={t('保存')}
         disabled={saving}
         showDirtyDot={showDirtyDot}
@@ -45,7 +45,7 @@ export function SaveToolbarMenu({
       <DropdownMenuTrigger
         render={
           <ToolbarIconButton
-            icon={<Save className="size-4" />}
+            icon={<Save />}
             label={t('保存')}
             disabled={saving || !items.some((item) => item.isDirty)}
             showDirtyDot={showDirtyDot}

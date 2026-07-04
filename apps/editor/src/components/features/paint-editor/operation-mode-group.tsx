@@ -5,11 +5,11 @@ import { operationModes, type OperationMode } from '@editor/lib/paint-editor/ope
 import { ToolbarIconButton } from './toolbar-icon-button';
 
 const modeIcons: Record<OperationMode, ReactNode> = {
-  pan: <Hand className="size-4" />,
-  paint: <Paintbrush className="size-4" />,
-  rectFill: <SquareDashed className="size-4" />,
-  select: <Lasso className="size-4" />,
-  paste: <MousePointer2 className="size-4" />,
+  pan: <Hand />,
+  paint: <Paintbrush />,
+  rectFill: <SquareDashed />,
+  select: <Lasso />,
+  paste: <MousePointer2 />,
 };
 
 const stubModes = new Set<OperationMode>(['rectFill', 'select', 'paste']);
