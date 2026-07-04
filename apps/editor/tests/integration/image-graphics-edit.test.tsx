@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -27,7 +27,7 @@ const imageResource = {
 };
 
 describe('image graphics editor', () => {
-  it('saves isDraft changes independently via partial save', async () => {
+  it('saves isDraft changes via the save dialog', async () => {
     const user = userEvent.setup();
     let putBody: unknown;
 
@@ -48,18 +48,14 @@ describe('image graphics editor', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: '画像' })).toBeDisabled();
+      expect(screen.getByRole('button', { name: '保存' })).toBeEnabled();
     });
 
-    await user.click(screen.getAllByRole('button', { name: '画像情報' })[0]);
-    await user.click(screen.getByRole('button', { name: '正式' }));
-    await user.click(screen.getByRole('button', { name: '閉じる' }));
+    await user.click(screen.getByRole('button', { name: '保存' }));
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: '画像' })).toBeEnabled();
-    });
-
-    await user.click(screen.getByRole('button', { name: '画像' }));
+    const dialog = await screen.findByRole('dialog');
+    await user.click(within(dialog).getByRole('button', { name: '正式' }));
+    await user.click(within(dialog).getByRole('button', { name: '保存' }));
 
     await waitFor(() => {
       expect(putBody).toMatchObject({

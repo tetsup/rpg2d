@@ -70,6 +70,7 @@ describe('texture graphics context editor', () => {
       expect(screen.getByRole('button', { name: /フレーム: aa/ })).toBeInTheDocument();
     });
 
+    await user.click(screen.getByRole('button', { name: /フレーム: aa/ }));
     await user.click(screen.getByRole('button', { name: '追加' }));
     await user.click(screen.getByRole('button', { name: '作成' }));
 

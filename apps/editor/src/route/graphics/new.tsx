@@ -3,10 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { AddButton } from '@editor/components/features/graphics/add-button';
-import {
-  getSwitcherLabel,
-  GraphicsResourceEditorShell,
-} from '@editor/components/features/graphics/graphics-resource-editor-shell';
+import { GraphicsResourceEditorShell } from '@editor/components/features/graphics/graphics-resource-editor-shell';
 import { ImageSizeDialog } from '@editor/components/features/graphics/image-size-dialog';
 import { createEmptyImageData } from '@editor/lib/empty-image-data';
 import { reserveGraphicsResourceDraft } from '@editor/lib/reserve-graphics-resource';
@@ -22,8 +19,6 @@ export function NewGraphicsResourcePage() {
   if (namespace == null || type == null || !isGraphicsResourceType(type)) {
     return <Navigate to="/resources" replace />;
   }
-
-  const switcherLabel = getSwitcherLabel(type, t);
 
   const handleCreateImage = async (size: { width: number; height: number }) => {
     setIsCreating(true);
@@ -49,13 +44,8 @@ export function NewGraphicsResourcePage() {
           type={type}
           title={t('画像を作成')}
           emptyLabel={t('＋ボタンから画像を追加してください')}
-          switcherLabel={switcherLabel}
-          switcherDisabled
           addButton={
-            <AddButton
-              disabled={isCreating}
-              onClick={() => setSizeDialogOpen(true)}
-            />
+            <AddButton disabled={isCreating} onClick={() => setSizeDialogOpen(true)} />
           }
         />
         <ImageSizeDialog
@@ -72,8 +62,6 @@ export function NewGraphicsResourcePage() {
       type={type}
       title={t('{{label}}を作成', { label: t(resourceTypeMeta[type].label) })}
       emptyLabel={t('＋ボタンから追加してください')}
-      switcherLabel={switcherLabel}
-      switcherDisabled
     />
   );
 }
