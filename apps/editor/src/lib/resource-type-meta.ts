@@ -20,6 +20,22 @@ export const graphicsResourceTypes = ['image', 'texture', 'skin'] as const satis
 
 export type GraphicsResourceType = (typeof graphicsResourceTypes)[number];
 
+export const formCreatableResourceTypes = ['tile'] as const satisfies readonly BrowsableResourceType[];
+
+export type FormCreatableResourceType = (typeof formCreatableResourceTypes)[number];
+
+export const creatableResourceTypes = [
+  ...graphicsResourceTypes,
+  ...formCreatableResourceTypes,
+] as const satisfies readonly BrowsableResourceType[];
+
+export type CreatableResourceType = (typeof creatableResourceTypes)[number];
+
+/** Resource types whose document picker should show image thumbnails. */
+export const thumbnailPickerResourceTypes = graphicsResourceTypes;
+
+export type ThumbnailPickerResourceType = GraphicsResourceType;
+
 type ResourceTypeMeta = {
   label: string;
   description: string;
@@ -120,6 +136,18 @@ export function isBrowsableResourceType(type: string): type is BrowsableResource
 
 export function isGraphicsResourceType(type: string): type is GraphicsResourceType {
   return graphicsResourceTypes.includes(type as GraphicsResourceType);
+}
+
+export function isFormCreatableResourceType(type: string): type is FormCreatableResourceType {
+  return formCreatableResourceTypes.includes(type as FormCreatableResourceType);
+}
+
+export function isCreatableResourceType(type: string): type is CreatableResourceType {
+  return creatableResourceTypes.includes(type as CreatableResourceType);
+}
+
+export function isThumbnailPickerResourceType(type: string): type is ThumbnailPickerResourceType {
+  return thumbnailPickerResourceTypes.includes(type as ThumbnailPickerResourceType);
 }
 
 export function findResourceTypeGroup(type: BrowsableResourceType): ResourceTypeGroup | undefined {

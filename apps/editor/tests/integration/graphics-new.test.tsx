@@ -4,17 +4,17 @@ import { http, HttpResponse } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { renderEditor } from '../helpers/render-app';
 import { server } from '../helpers/server';
-import { NewGraphicsResourceNamespacePage } from '@editor/route/graphics/new-namespace';
-import { NewGraphicsResourcePage } from '@editor/route/graphics/new';
-import { EditGraphicsResourcePage } from '@editor/route/graphics/edit';
+import { NewResourceNamespacePage } from '@editor/route/resource/new-namespace';
+import { NewResourceByNamespacePage } from '@editor/route/resource/new-by-namespace';
+import { EditResourcePage } from '@editor/route/resource/edit';
 
 function renderGraphicsRoutes(initialEntry: string) {
   return renderEditor(
     <MemoryRouter initialEntries={[initialEntry]}>
       <Routes>
-        <Route path="/resources/:type/new" element={<NewGraphicsResourceNamespacePage />} />
-        <Route path="/resources/:namespace/:type/new" element={<NewGraphicsResourcePage />} />
-        <Route path="/resources/:namespace/:type/:name" element={<EditGraphicsResourcePage />} />
+        <Route path="/resources/:type/new" element={<NewResourceNamespacePage />} />
+        <Route path="/resources/:namespace/:type/new" element={<NewResourceByNamespacePage />} />
+        <Route path="/resources/:namespace/:type/:name" element={<EditResourcePage />} />
         <Route path="/resources" element={<div>resources home</div>} />
       </Routes>
     </MemoryRouter>
@@ -110,11 +110,20 @@ describe('graphics resource create page', () => {
     });
   });
 
-  it('redirects unsupported resource types to /resources', async () => {
+  it('shows namespace picker for tile type', async () => {
+    server.use(
+      http.post('/api/namespaces/search', () =>
+        HttpResponse.json({
+          items: [{ id: 'sample', presenceName: 'Sample', isPrivate: false }],
+          hasMore: false,
+        })
+      )
+    );
+
     renderGraphicsRoutes('/resources/tile/new');
 
     await waitFor(() => {
-      expect(screen.getByText('resources home')).toBeInTheDocument();
+      expect(screen.getByText('グループを選んでから編集を始めます')).toBeInTheDocument();
     });
   });
 });

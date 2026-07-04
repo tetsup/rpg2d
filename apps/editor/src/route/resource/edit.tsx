@@ -1,17 +1,25 @@
 import { Navigate, useParams } from 'react-router-dom';
 import { GraphicsEditor } from '@editor/components/features/graphics/graphics-editor';
+import { EditTilePage } from '@editor/route/tile/edit';
 import { formatResourceId } from '@schema/resource/common/base';
 import { useDocumentById } from '@editor/hooks/api/by-id';
 import { isGraphicsResourceType } from '@editor/lib/resource-type-meta';
 
-export function EditGraphicsResourcePage() {
+export function EditResourcePage() {
   const { namespace, type, name } = useParams<{ namespace: string; type: string; name: string }>();
-  const isValidRoute =
-    namespace != null && type != null && name != null && isGraphicsResourceType(type);
+  const isValidRoute = namespace != null && type != null && name != null;
   const resourceId = isValidRoute ? formatResourceId({ namespace, type, name }) : undefined;
   const { data: resource, isLoading, isError } = useDocumentById('resources', resourceId);
 
   if (!isValidRoute) {
+    return <Navigate to="/resources" replace />;
+  }
+
+  if (type === 'tile') {
+    return <EditTilePage />;
+  }
+
+  if (!isGraphicsResourceType(type)) {
     return <Navigate to="/resources" replace />;
   }
 

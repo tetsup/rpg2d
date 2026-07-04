@@ -64,9 +64,9 @@ function TextureResourceThumbnail({ texture }: { texture: TextureData }) {
   return <ResolvedCompositeImageThumbnail imageIds={imageIds} />;
 }
 
-function ResolvedTextureThumbnail({ textureId }: { textureId: string }) {
-  const texture = useResolvedDocument('resources', textureId);
-  if (!texture || texture.type !== 'texture') return null;
+export function ResolvedTextureThumbnail({ textureId }: { textureId: string | null | undefined }) {
+  const texture = useResolvedDocument('resources', textureId ?? undefined);
+  if (!textureId || !texture || texture.type !== 'texture') return null;
   return <TextureResourceThumbnail texture={texture.data} />;
 }
 
@@ -112,6 +112,8 @@ function renderResourceThumbnail(item: Database['resources']): ReactNode | null 
       return <EntityResourceThumbnail entity={item.data} />;
     case 'action':
       return <ActivityIcon className="size-4" />;
+    case 'tile':
+      return <ResolvedTextureThumbnail textureId={item.data.texture} />;
     default:
       return null;
   }
