@@ -4,29 +4,15 @@ import type { RpgKey } from '@sharedTypes/engine';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
 import type { AssignPad } from './hooks/softpad';
 import { getApiBaseUrl } from './config';
+import {
+  applyStartOverrides,
+  resolveResourceUri,
+  type RuntimeConfig,
+  type RuntimeMode,
+} from './runtime-config';
 
-export type RuntimeMode = 'mock' | 'api';
-
-export type RuntimeConfig = {
-  mode: RuntimeMode;
-  manifestId: string;
-  startFieldId?: string;
-  startX?: number;
-  startY?: number;
-  /** When set, overrides the default resource base path (e.g. editor proxy `/api/resources`). */
-  resourceUri?: string;
-};
-
-export function parseRuntimeSearchParams(searchParams: URLSearchParams): RuntimeConfig {
-  const mode = (searchParams.get('mode') ?? 'mock') as RuntimeMode;
-  return {
-    mode,
-    manifestId: searchParams.get('manifest') ?? 'sample/manifest/v0',
-    startFieldId: searchParams.get('field') ?? undefined,
-    startX: searchParams.get('x') ? Number(searchParams.get('x')) : undefined,
-    startY: searchParams.get('y') ? Number(searchParams.get('y')) : undefined,
-  };
-}
+export type { RuntimeConfig, RuntimeMode } from './runtime-config';
+export { applyStartOverrides, parseRuntimeSearchParams, resolveResourceUri } from './runtime-config';
 
 export async function setupMockIfNeeded(mode: RuntimeMode): Promise<void> {
   if (mode !== 'mock') return;
@@ -36,16 +22,6 @@ export async function setupMockIfNeeded(mode: RuntimeMode): Promise<void> {
   });
 }
 
-export function resolveResourceUri(config: RuntimeConfig): string {
-  if (config.resourceUri) return config.resourceUri;
-  switch (config.mode) {
-    case 'mock':
-      return '/api/resources';
-    default:
-      return `${getApiBaseUrl()}/api/resources`;
-  }
-}
-
 export async function loadManifest(manifestId: string, resourceUri: string): Promise<ManifestData> {
   const response = await fetch(`${resourceUri}/${manifestId}`, { credentials: 'include' });
   if (!response.ok) {
@@ -53,23 +29,6 @@ export async function loadManifest(manifestId: string, resourceUri: string): Pro
   }
   const body = await response.json();
   return body.data as ManifestData;
-}
-
-export function applyStartOverrides(manifest: ManifestData, config: RuntimeConfig): ManifestData {
-  return {
-    ...manifest,
-    initialState: {
-      ...manifest.initialState,
-      field: {
-        ...manifest.initialState.field,
-        fieldId: config.startFieldId ?? manifest.initialState.field.fieldId,
-        pos: {
-          x: config.startX ?? manifest.initialState.field.pos.x,
-          y: config.startY ?? manifest.initialState.field.pos.y,
-        },
-      },
-    },
-  };
 }
 
 export type RuntimeSession = {
@@ -95,7 +54,7 @@ export async function createRuntimeSession({
   assignPad: AssignPad;
 }): Promise<RuntimeSession> {
   await setupMockIfNeeded(config.mode);
-  const resourceUri = resolveResourceUri(config);
+  const resourceUri = resolveResourceUri(config, getApiBaseUrl());
   const manifest = await loadManifest(config.manifestId, resourceUri);
   const resolvedManifest = applyStartOverrides(manifest, config);
   const engine = new RpgCore(resolvedManifest, { resourceUri });
