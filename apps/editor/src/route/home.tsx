@@ -6,7 +6,6 @@ import { MenuCard } from '@editor/components/parts/menu-card';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { ManifestPickerDialog } from '@editor/components/features/manifest/manifest-picker-dialog';
 import { ControlSection } from '@editor/components/forms/control-section';
-import { PLAY_PATH } from '@editor/lib/play/navigation';
 import { useWorkspaceStore } from '@editor/stores/workspace';
 
 export function HomePage() {
@@ -37,7 +36,7 @@ export function HomePage() {
         {workspace.manifestId != null && (
           <>
             <MenuCard
-              onClick={() => navigate(PLAY_PATH)}
+              onClick={() => navigate('/play')}
               icon={Play}
               title={t('プレー')}
               description={workspace.manifestId}

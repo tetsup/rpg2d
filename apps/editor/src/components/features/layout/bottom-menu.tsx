@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Home, ListTree, Play, Search, Settings } from 'lucide-react';
 import { MenuBar } from '@editor/components/parts/menu-bar';
-import { PLAY_PATH } from '@editor/lib/play/navigation';
 
 export function BottomMenu() {
   const { t } = useTranslation();
@@ -14,10 +13,10 @@ export function BottomMenu() {
     { onClick: () => navigate('/resources'), icon: Search, label: t('検索') },
     { icon: ListTree, label: t('ツリー') },
     {
-      onClick: () => navigate(PLAY_PATH),
+      onClick: () => navigate('/play'),
       icon: Play,
       label: t('プレー'),
-      active: location.pathname === PLAY_PATH,
+      active: location.pathname === '/play',
     },
     { icon: Settings, label: t('設定') },
   ];
