@@ -5,19 +5,21 @@ import { RuntimeHost } from '@runtime/runtime-host';
 import '@runtime/styles/layout.css';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { Button } from '@editor/components/ui/button';
-import { usePlaySession } from '@editor/hooks/play/use-play-session';
+import { usePlaySession } from '@editor/hooks/use-play-session';
+import { useWorkspaceStore } from '@editor/stores/workspace';
 
 export function PlayPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { manifestId, runtimeConfig, sessionKey, applyChanges } = usePlaySession();
+  const projectId = useWorkspaceStore((s) => s.current.manifestId);
+  const { runtimeConfig, sessionKey, applyChanges } = usePlaySession();
 
   return (
     <LayoutShell
       flush
       titleBarProps={{
         title: t('プレー'),
-        subtitle: manifestId,
+        subtitle: projectId,
         rightSlot: (
           <Button
             type="button"

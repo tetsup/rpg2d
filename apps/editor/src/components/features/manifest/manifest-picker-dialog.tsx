@@ -17,7 +17,7 @@ export function ManifestPickerDialog({ open, onOpenChange, onSelect }: ManifestP
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 overflow-hidden">
         <DialogHeader className="p-4">
-          <DialogTitle>{t('マニフェストを選択')}</DialogTitle>
+          <DialogTitle>{t('プロジェクトを選択')}</DialogTitle>
         </DialogHeader>
         <DocumentPicker
           collectionName="resources"

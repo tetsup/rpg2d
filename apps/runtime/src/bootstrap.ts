@@ -17,17 +17,6 @@ export type RuntimeConfig = {
   resourceUri?: string;
 };
 
-export const DEFAULT_KEY_ASSIGNMENT: KeyAssignment<RpgKey> = {
-  ArrowLeft: 'left',
-  ArrowRight: 'right',
-  ArrowUp: 'up',
-  ArrowDown: 'down',
-  Enter: 'enter',
-  Escape: 'esc',
-};
-
-const FETCH_INIT: RequestInit = { credentials: 'include' };
-
 export function parseRuntimeSearchParams(searchParams: URLSearchParams): RuntimeConfig {
   const mode = (searchParams.get('mode') ?? 'mock') as RuntimeMode;
   return {
@@ -36,18 +25,6 @@ export function parseRuntimeSearchParams(searchParams: URLSearchParams): Runtime
     startFieldId: searchParams.get('field') ?? undefined,
     startX: searchParams.get('x') ? Number(searchParams.get('x')) : undefined,
     startY: searchParams.get('y') ? Number(searchParams.get('y')) : undefined,
-  };
-}
-
-export function createEditorRuntimeConfig(
-  manifestId: string,
-  overrides?: Pick<RuntimeConfig, 'startFieldId' | 'startX' | 'startY'>
-): RuntimeConfig {
-  return {
-    mode: 'api',
-    manifestId,
-    resourceUri: '/api/resources',
-    ...overrides,
   };
 }
 
@@ -70,7 +47,7 @@ export function resolveResourceUri(config: RuntimeConfig): string {
 }
 
 export async function loadManifest(manifestId: string, resourceUri: string): Promise<ManifestData> {
-  const response = await fetch(`${resourceUri}/${manifestId}`, FETCH_INIT);
+  const response = await fetch(`${resourceUri}/${manifestId}`, { credentials: 'include' });
   if (!response.ok) {
     throw new Error(`Failed to load manifest: ${manifestId}`);
   }
@@ -78,7 +55,7 @@ export async function loadManifest(manifestId: string, resourceUri: string): Pro
   return body.data as ManifestData;
 }
 
-export function applyEditorOverrides(manifest: ManifestData, config: RuntimeConfig): ManifestData {
+export function applyStartOverrides(manifest: ManifestData, config: RuntimeConfig): ManifestData {
   return {
     ...manifest,
     initialState: {
@@ -99,6 +76,15 @@ export type RuntimeSession = {
   app: GameApp<RpgKey>;
 };
 
+const keyAssignment: KeyAssignment<RpgKey> = {
+  ArrowLeft: 'left',
+  ArrowRight: 'right',
+  ArrowUp: 'up',
+  ArrowDown: 'down',
+  Enter: 'enter',
+  Escape: 'esc',
+};
+
 export async function createRuntimeSession({
   canvas,
   config,
@@ -111,7 +97,7 @@ export async function createRuntimeSession({
   await setupMockIfNeeded(config.mode);
   const resourceUri = resolveResourceUri(config);
   const manifest = await loadManifest(config.manifestId, resourceUri);
-  const resolvedManifest = applyEditorOverrides(manifest, config);
+  const resolvedManifest = applyStartOverrides(manifest, config);
   const engine = new RpgCore(resolvedManifest, { resourceUri });
   const app = new GameApp(canvas, engine, {
     maxObjects: 10000,
@@ -119,7 +105,7 @@ export async function createRuntimeSession({
       width: resolvedManifest.config.screen.width,
       height: resolvedManifest.config.screen.height,
     },
-    keyAssignment: DEFAULT_KEY_ASSIGNMENT,
+    keyAssignment,
     assignPad,
   });
   const mode: TransparentMode = resolveTransparentMode();
