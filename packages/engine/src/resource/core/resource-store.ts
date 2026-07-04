@@ -19,7 +19,12 @@ export class ResourceStore {
   }
 
   fetch = async <T>(namespace: string, type: string, name: string, schema: z.ZodType<T>): Promise<T> => {
-    return await fetchJson(`${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`, this.fetchFunc, schema);
+    return await fetchJson(
+      `${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`,
+      this.fetchFunc,
+      schema,
+      { credentials: 'include' }
+    );
   };
 
   private async resolve<K extends ExecutableResourceType>(

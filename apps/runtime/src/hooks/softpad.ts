@@ -2,7 +2,9 @@ import { useEffect, useRef } from 'react';
 import { InputManager } from '@tetsup/web2d';
 import { RpgKey } from '@sharedTypes/engine';
 
-export const useAssignPad = () => {
+export type AssignPad = (input: InputManager<RpgKey>) => void;
+
+export const useAssignPad = (): AssignPad => {
   const inputRef = useRef<InputManager<RpgKey> | null>(null);
 
   useEffect(() => {

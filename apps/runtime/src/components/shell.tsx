@@ -11,15 +11,17 @@ import '../styles/layout.css';
 export function RuntimeShell({
   appRef,
   canvasRef,
+  embedded = false,
 }: {
   appRef: RefObject<GameApp<RpgKey> | null>;
   canvasRef: RefObject<HTMLCanvasElement | null>;
+  embedded?: boolean;
 }) {
   const showHud = useRuntimeUiStateStore((s) => s.showHud);
   const showSoftPad = useRuntimeUiStateStore((s) => s.showSoftPad);
 
   return (
-    <div className="runtime-shell">
+    <div className={embedded ? 'runtime-shell runtime-shell--embedded' : 'runtime-shell'}>
       <RuntimeViewport canvasRef={canvasRef} />
       {showHud && <RuntimeHud appRef={appRef} />}
       <RuntimeToolbar appRef={appRef} />

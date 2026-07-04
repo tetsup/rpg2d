@@ -10,6 +10,7 @@ import { ResourceSearchPage } from './resources/search';
 import { NewGraphicsResourcePage } from './graphics/new';
 import { NewGraphicsResourceNamespacePage } from './graphics/new-namespace';
 import { EditGraphicsResourcePage } from './graphics/edit';
+import { PlayPage } from './play';
 
 export function AppRouter() {
   return (
@@ -24,6 +25,7 @@ export function AppRouter() {
           <Route path="/resources/:type/new" element={<NewGraphicsResourceNamespacePage />} />
           <Route path="/resources/:namespace/:type/:name" element={<EditGraphicsResourcePage />} />
           <Route path="/resources/:type" element={<ResourceSearchPage />} />
+          <Route path="/play" element={<PlayPage />} />
           <Route path="/namespaces/new" element={<NewNamespacePage />} />
           <Route path="/namespaces/:id" element={<EditNamespacePage />} />
         </Route>
