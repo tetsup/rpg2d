@@ -1,15 +1,12 @@
 import { Maximize2, Minus, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@editor/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@editor/components/ui/dialog';
 import { fitZoom, zoomIn, zoomOut } from '@editor/lib/paint-editor/zoom';
+import {
+  AnchoredEditorMenu,
+  AnchoredEditorMenuContent,
+  AnchoredEditorMenuTrigger,
+} from './anchored-editor-menu';
 import { ToolbarIconButton } from './toolbar-icon-button';
 
 type ZoomPopupProps = {
@@ -34,8 +31,8 @@ export function ZoomPopup({ zoom, onZoomChange, canvasWidth, canvasHeight, conta
   };
 
   return (
-    <Dialog>
-      <DialogTrigger
+    <AnchoredEditorMenu>
+      <AnchoredEditorMenuTrigger
         render={
           <ToolbarIconButton
             icon={<Maximize2 />}
@@ -43,11 +40,13 @@ export function ZoomPopup({ zoom, onZoomChange, canvasWidth, canvasHeight, conta
           />
         }
       />
-      <DialogContent className="max-w-xs">
-        <DialogHeader>
-          <DialogTitle>{t('ズーム')}</DialogTitle>
-          <DialogDescription>{t('キャンバスの表示倍率を調整します')}</DialogDescription>
-        </DialogHeader>
+      <AnchoredEditorMenuContent
+        title={t('ズーム')}
+        description={t('キャンバスの表示倍率を調整します')}
+        side="top"
+        align="center"
+        className="max-w-xs"
+      >
         <div className="flex items-center justify-center gap-2">
           <Button type="button" variant="outline" size="icon-sm" onClick={() => onZoomChange(zoomOut(zoom))}>
             <Minus className="size-4" />
@@ -62,7 +61,7 @@ export function ZoomPopup({ zoom, onZoomChange, canvasWidth, canvasHeight, conta
             {t('フィット')}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </AnchoredEditorMenuContent>
+    </AnchoredEditorMenu>
   );
 }
