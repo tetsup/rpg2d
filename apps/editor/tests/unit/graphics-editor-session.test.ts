@@ -23,7 +23,6 @@ describe('graphics editor session image draft', () => {
     const nextId = 'sample/image/hero.down-ab';
     store.getState().setActiveFrameId(nextId);
     store.getState().seedImageDraft({
-      id: nextId,
       data: sampleImageResource.data,
     });
 

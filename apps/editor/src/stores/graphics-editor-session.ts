@@ -7,7 +7,6 @@ import type { SkinDirection } from '@editor/lib/skin-directions';
 import { getDefaultLayerImageIds } from '@editor/lib/texture-layers';
 
 export type GraphicsEntryType = 'skin' | 'texture' | 'image';
-export type MetaPanel = GraphicsEntryType | null;
 
 type SkinData = ResourceDocument<'skin'>['data'];
 type TextureData = ResourceDocument<'texture'>['data'];
@@ -21,24 +20,20 @@ export type GraphicsEditorSessionState = {
   activeDirection: SkinDirection;
   activeFrameId: string | null;
 
-  skinId: string | null;
   skinDraft: SkinData | null;
   skinIsDraft: boolean;
   skinRevision: string;
 
-  textureId: string | null;
   textureDraft: TextureData | null;
   textureIsDraft: boolean;
   textureRevision: string;
 
-  imageId: string | null;
   imageDraft: ImageData | null;
   imageIsDraft: boolean;
   imageDescription: string;
   imageRevision: string;
   selectedToken: string;
 
-  metaPanel: MetaPanel;
   operationMode: OperationMode;
   zoom: number;
 
@@ -51,7 +46,6 @@ export type GraphicsEditorSessionState = {
   patchTextureDraft: (updater: (current: TextureData) => TextureData) => void;
   patchImageDraft: (updater: (current: ImageData) => ImageData) => void;
   seedImageDraft: (params: {
-    id: string;
     data: ImageData;
     isDraft?: boolean;
     description?: string;
@@ -63,8 +57,6 @@ export type GraphicsEditorSessionState = {
   setSelectedToken: (token: string) => void;
   setOperationMode: (mode: OperationMode) => void;
   setZoom: (zoom: number) => void;
-  openMeta: (panel: Exclude<MetaPanel, null>) => void;
-  closeMeta: () => void;
 };
 
 function revision(value: unknown) {
@@ -83,6 +75,16 @@ function imageRevisionSnapshot(resource: {
   });
 }
 
+function clearImageDraftState() {
+  return {
+    imageDraft: null as ImageData | null,
+    imageIsDraft: true,
+    imageDescription: '',
+    imageRevision: '',
+    selectedToken: 'ff',
+  };
+}
+
 export function buildInitialStateFromResource(
   resource: ResourceRecord<'skin' | 'texture' | 'image'>
 ): GraphicsEditorSessionState {
@@ -92,21 +94,13 @@ export function buildInitialStateFromResource(
     namespace: resource.namespace,
     activeDirection: 'down' as SkinDirection,
     activeFrameId: null as string | null,
-    skinId: null as string | null,
     skinDraft: null as SkinData | null,
     skinIsDraft: true,
     skinRevision: '',
-    textureId: null as string | null,
     textureDraft: null as TextureData | null,
     textureIsDraft: true,
     textureRevision: '',
-    imageId: null as string | null,
-    imageDraft: null as ImageData | null,
-    imageIsDraft: true,
-    imageDescription: '',
-    imageRevision: '',
-    selectedToken: 'ff',
-    metaPanel: null as MetaPanel,
+    ...clearImageDraftState(),
     operationMode: 'paint' as OperationMode,
     zoom: 1,
   };
@@ -114,7 +108,6 @@ export function buildInitialStateFromResource(
   if (resource.type === 'skin') {
     return {
       ...base,
-      skinId: resource.id,
       skinDraft: resource.data,
       skinIsDraft: resource.isDraft,
       skinRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -125,7 +118,6 @@ export function buildInitialStateFromResource(
     const frameIds = getDefaultLayerImageIds(resource.data);
     return {
       ...base,
-      textureId: resource.id,
       textureDraft: resource.data,
       textureIsDraft: resource.isDraft,
       textureRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -136,7 +128,6 @@ export function buildInitialStateFromResource(
   return {
     ...base,
     activeFrameId: resource.id,
-    imageId: resource.id,
     imageDraft: resource.data,
     imageIsDraft: resource.isDraft,
     imageDescription: resource.description ?? '',
@@ -153,28 +144,17 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
       set({
         activeDirection: direction,
         activeFrameId: null,
-        imageId: null,
-        imageDraft: null,
-        imageIsDraft: true,
-        imageDescription: '',
-        imageRevision: '',
-        selectedToken: 'ff',
+        ...clearImageDraftState(),
       }),
 
     setActiveFrameId: (frameId) =>
       set({
         activeFrameId: frameId,
-        imageId: frameId,
-        imageDraft: null,
-        imageIsDraft: true,
-        imageDescription: '',
-        imageRevision: '',
-        selectedToken: 'ff',
+        ...clearImageDraftState(),
       }),
 
     syncSkin: (resource) =>
       set({
-        skinId: resource.id,
         skinDraft: resource.data,
         skinIsDraft: resource.isDraft,
         skinRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -184,7 +164,6 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
       const frameIds = getDefaultLayerImageIds(resource.data);
       const state = get();
       set({
-        textureId: resource.id,
         textureDraft: resource.data,
         textureIsDraft: resource.isDraft,
         textureRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -207,7 +186,6 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
     syncImage: (resource) => {
       if (get().activeFrameId !== resource.id) return;
       set({
-        imageId: resource.id,
         imageDraft: resource.data,
         imageIsDraft: resource.isDraft,
         imageDescription: resource.description ?? '',
@@ -222,15 +200,16 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
       set({ imageDraft: updater(current) });
     },
 
-    seedImageDraft: ({ id, data, isDraft = true, description = '' }) =>
+    seedImageDraft: ({ data, isDraft = true, description = '' }) => {
+      if (get().activeFrameId == null) return;
       set({
-        imageId: id,
         imageDraft: data,
         imageIsDraft: isDraft,
         imageDescription: description,
         imageRevision: imageRevisionSnapshot({ data, isDraft, description }),
         selectedToken: getDefaultPaletteToken(data.palette),
-      }),
+      });
+    },
 
     setSkinIsDraft: (isDraft) => set({ skinIsDraft: isDraft }),
     setTextureIsDraft: (isDraft) => set({ textureIsDraft: isDraft }),
@@ -239,8 +218,6 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
     setSelectedToken: (token) => set({ selectedToken: token }),
     setOperationMode: (mode) => set({ operationMode: mode }),
     setZoom: (zoom) => set({ zoom: clampZoom(zoom) }),
-    openMeta: (panel) => set({ metaPanel: panel }),
-    closeMeta: () => set({ metaPanel: null }),
   }));
 }
 

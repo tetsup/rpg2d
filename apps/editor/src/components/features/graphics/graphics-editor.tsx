@@ -12,18 +12,15 @@ import { PaintEditorToolbar } from '@editor/components/features/paint-editor/pai
 import { SaveToolbarMenu } from '@editor/components/features/paint-editor/save-toolbar-menu';
 import { ZoomPopup } from '@editor/components/features/paint-editor/zoom-popup';
 import { ImageSizeDialog } from '@editor/components/features/graphics/image-size-dialog';
-import {
-  buildColorSwatchItems,
-  renderImageEditorCore,
-} from '@editor/components/features/graphics/image-editor-core';
+import { PixelCanvas } from '@editor/components/features/graphics/pixel-canvas';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { createEmptyImageData } from '@editor/lib/empty-image-data';
 import { createEmptyTextureData } from '@editor/lib/empty-texture-data';
 import { getResourceContextLabel } from '@editor/lib/graphics-context-label';
 import { addPaletteColor, removePaletteColor } from '@editor/lib/image-palette-mutate';
 import { getDefaultPaletteToken, setImagePixel } from '@editor/lib/image-pixel-mutate';
-import { documentKey } from '@editor/hooks/api/by-id';
-import { queryClient } from '@editor/lib/query-client';
+import { buildPaletteSwatchItems } from '@editor/lib/palette-swatch-items';
+import { isPaintMode } from '@editor/lib/paint-editor/operation-mode';
 import {
   buildSaveLayerItems,
   executeGraphicsSave,
@@ -227,12 +224,14 @@ function GraphicsEditorContent({
   const handleSelectDirection = (direction: SkinDirection) => {
     if (direction === activeDirection) return;
     if (!guardSwitch()) return;
+    syncedImageId.current = null;
     setActiveDirection(direction);
   };
 
   const handleSelectFrame = (frameId: string) => {
     if (frameId === activeImageId) return;
     if (!guardSwitch()) return;
+    syncedImageId.current = null;
     setActiveFrameId(frameId);
   };
 
@@ -261,28 +260,15 @@ function GraphicsEditorContent({
         const emptyImage = createEmptyImageData(size.width, size.height);
         emptyImage.palette = resolvePaletteForNewImage({ sameTexturePalettes: siblingPalettes });
 
-        const { id, name } = await reserveGraphicsResourceDraft({
+        const { id } = await reserveGraphicsResourceDraft({
           namespace,
           type: 'image',
           parent: textureResource.name,
           data: emptyImage,
         });
-        const createdImage: ResourceRecord<'image'> = {
-          id,
-          namespace,
-          type: 'image',
-          name,
-          version: 0,
-          isDraft: true,
-          data: emptyImage,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          createdBy: '',
-        };
-        queryClient.setQueryData(documentKey('resources', id), createdImage);
         patchTextureDraft((current) => appendImageToDefaultLayer(current, id));
         setActiveFrameId(id);
-        seedImageDraft({ id, data: emptyImage });
+        seedImageDraft({ data: emptyImage });
         syncedImageId.current = id;
         toast.success(t('フレームを追加しました'));
       }
@@ -337,18 +323,34 @@ function GraphicsEditorContent({
     setSaveDialogOpen(true);
   };
 
-  const imageSlots = renderImageEditorCore({
-    draftData: imageDraft,
-    selectedToken,
-    onPaint:
-      imageDraft != null
-        ? (x, y) => {
-            patchImageDraft((current) => setImagePixel(current, x, y, selectedToken));
+  const imageSlots = useMemo(() => {
+    const editable = imageDraft != null && isPaintMode(operationMode);
+    if (imageDraft == null) {
+      return {
+        canvas: <PixelCanvas className="w-full" emptyLabel={emptyLabel} />,
+        canvasWidth: 0,
+        canvasHeight: 0,
+      };
+    }
+    return {
+      canvas: (
+        <PixelCanvas
+          className="w-full"
+          image={imageDraft}
+          activeToken={selectedToken}
+          onPaint={
+            editable
+              ? (x, y) => {
+                  patchImageDraft((current) => setImagePixel(current, x, y, selectedToken));
+                }
+              : undefined
           }
-        : undefined,
-    emptyLabel,
-    operationMode,
-  });
+        />
+      ),
+      canvasWidth: imageDraft.size.width,
+      canvasHeight: imageDraft.size.height,
+    };
+  }, [emptyLabel, imageDraft, operationMode, patchImageDraft, selectedToken]);
 
   const saveContext: GraphicsSaveContext = {
     entryType,
@@ -413,7 +415,7 @@ function GraphicsEditorContent({
     }
   };
 
-  const swatchItems = buildColorSwatchItems(imageDraft?.palette, selectedToken);
+  const swatchItems = buildPaletteSwatchItems(imageDraft?.palette, selectedToken);
 
   const handleAddPaletteColor = () => {
     if (imageDraft == null) return;

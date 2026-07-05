@@ -39,6 +39,14 @@ export async function createDocument<K extends DocumentCollection>(
   body: DatabaseInput[K]
 ): Promise<void> {
   await fetchPostApi(getCreateApiPath(collectionName, body), body);
+  const id = resolveDocumentId(collectionName, body);
+  queryClient.setQueryData(documentKey(collectionName, id), {
+    id,
+    ...body,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: '',
+  } as Database[K]);
   await invalidateDocumentLists(queryClient, collectionName);
 }
 

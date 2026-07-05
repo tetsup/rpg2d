@@ -35,11 +35,3 @@ export function useGraphicsEditorSession<T>(selector: (state: GraphicsEditorSess
   }
   return useStore(store, selector);
 }
-
-export function useGraphicsEditorStore() {
-  const store = useContext(GraphicsEditorSessionContext);
-  if (store == null) {
-    throw new Error('useGraphicsEditorStore must be used within GraphicsEditorSessionProvider');
-  }
-  return store;
-}

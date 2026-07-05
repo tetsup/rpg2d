@@ -9,6 +9,7 @@ import { PaintEditorLayout } from '@editor/components/features/paint-editor/pain
 import { PaintEditorToolbar } from '@editor/components/features/paint-editor/paint-editor-toolbar';
 import { SaveToolbarMenu } from '@editor/components/features/paint-editor/save-toolbar-menu';
 import { ZoomPopup } from '@editor/components/features/paint-editor/zoom-popup';
+import { buildPaletteSwatchItems } from '@editor/lib/palette-swatch-items';
 import type { ImagePixelData } from '@editor/lib/pixel-render';
 import {
   findResourceTypeGroup,
@@ -25,17 +26,6 @@ type GraphicsResourceEditorShellProps = {
   emptyAction?: ReactNode;
 };
 
-function getSwitcherLabel(type: GraphicsResourceType, t: (key: string) => string): string {
-  switch (type) {
-    case 'image':
-      return t('画像');
-    case 'texture':
-      return t('フレーム');
-    case 'skin':
-      return t('方向');
-  }
-}
-
 export function GraphicsResourceEditorShell({
   type,
   title,
@@ -49,19 +39,7 @@ export function GraphicsResourceEditorShell({
   const group = findResourceTypeGroup(type);
   const isEmpty = (images?.length ?? 0) === 0;
 
-  const swatchItems =
-    palette != null
-      ? Object.entries(palette).map(([token, rgba]) => ({
-          key: token,
-          label: token,
-          swatch: (
-            <span
-              className="block size-full"
-              style={{ backgroundColor: `rgba(${rgba.join(',')})` }}
-            />
-          ),
-        }))
-      : [];
+  const swatchItems = buildPaletteSwatchItems(palette);
 
   return (
     <LayoutShell
@@ -114,5 +92,3 @@ export function GraphicsResourceEditorShell({
     </LayoutShell>
   );
 }
-
-export { getSwitcherLabel };
