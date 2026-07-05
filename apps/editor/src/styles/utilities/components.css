@@ -30,4 +30,38 @@
     .game-list-item {
         @apply flex items-center gap-3 rounded-3xl p-3;
     }
+
+    .pixel-editor-surface {
+        position: relative;
+        flex-shrink: 0;
+        border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+        box-shadow: var(--shadow-sm);
+        touch-action: none;
+    }
+
+    .pixel-editor-checker {
+        --checker-light: #e8e8e8;
+        --checker-dark: #c8c8c8;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-color: var(--checker-light);
+        background-image:
+            linear-gradient(var(--checker-dark) 50%, transparent 50%),
+            linear-gradient(90deg, var(--checker-dark) 50%, transparent 50%);
+        background-size: calc(var(--cell-size) * 2) calc(var(--cell-size) * 2);
+        background-position:
+            0 0,
+            var(--cell-size) var(--cell-size);
+    }
+
+    .pixel-editor-grid-lines {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+            linear-gradient(to right, rgb(0 0 0 / 0.2) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(0 0 0 / 0.2) 1px, transparent 1px);
+        background-size: var(--cell-size) var(--cell-size);
+    }
 }

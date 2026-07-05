@@ -1,18 +1,36 @@
-import { useCallback, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import { useCallback, useRef, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from 'react';
 import type { OperationMode } from '@editor/lib/paint-editor/operation-mode';
 import { cn } from '@editor/lib/utils';
 
 type CanvasViewportProps = {
-  zoom: number;
   operationMode: OperationMode;
   children: ReactNode;
   className?: string;
+  containerRef?: Ref<HTMLDivElement>;
 };
 
-export function CanvasViewport({ zoom, operationMode, children, className }: CanvasViewportProps) {
+export function CanvasViewport({
+  operationMode,
+  children,
+  className,
+  containerRef,
+}: CanvasViewportProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isPanningRef = useRef(false);
   const panOriginRef = useRef({ x: 0, y: 0, scrollLeft: 0, scrollTop: 0 });
+
+  const setScrollRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      scrollRef.current = node;
+      if (containerRef == null) return;
+      if (typeof containerRef === 'function') {
+        containerRef(node);
+        return;
+      }
+      containerRef.current = node;
+    },
+    [containerRef]
+  );
 
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -48,7 +66,7 @@ export function CanvasViewport({ zoom, operationMode, children, className }: Can
 
   return (
     <div
-      ref={scrollRef}
+      ref={setScrollRef}
       className={cn(
         'min-h-0 flex-1 overflow-auto',
         operationMode === 'pan' && 'cursor-grab active:cursor-grabbing',
@@ -59,12 +77,7 @@ export function CanvasViewport({ zoom, operationMode, children, className }: Can
       onPointerUp={stopPanning}
       onPointerCancel={stopPanning}
     >
-      <div
-        className="flex min-h-full items-center justify-center p-2"
-        style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
-      >
-        {children}
-      </div>
+      <div className="flex min-h-full items-center justify-center p-2">{children}</div>
     </div>
   );
 }

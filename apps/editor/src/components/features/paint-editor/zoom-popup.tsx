@@ -1,7 +1,7 @@
 import { Maximize2, Minus, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@editor/components/ui/button';
-import { fitZoom, zoomIn, zoomOut } from '@editor/lib/paint-editor/zoom';
+import { formatZoomLabel, zoomIn, zoomOut } from '@editor/lib/paint-editor/zoom';
 import {
   AnchoredEditorMenu,
   AnchoredEditorMenuContent,
@@ -12,23 +12,11 @@ import { ToolbarIconButton } from './toolbar-icon-button';
 type ZoomPopupProps = {
   zoom: number;
   onZoomChange: (zoom: number) => void;
-  canvasWidth?: number;
-  canvasHeight?: number;
-  containerRef?: React.RefObject<HTMLElement | null>;
 };
 
-export function ZoomPopup({ zoom, onZoomChange, canvasWidth, canvasHeight, containerRef }: ZoomPopupProps) {
+export function ZoomPopup({ zoom, onZoomChange }: ZoomPopupProps) {
   const { t } = useTranslation();
-  const zoomLabel = `${Math.round(zoom * 100)}%`;
-
-  const handleFit = () => {
-    const container = containerRef?.current;
-    if (container == null || canvasWidth == null || canvasHeight == null) {
-      onZoomChange(1);
-      return;
-    }
-    onZoomChange(fitZoom(canvasWidth, canvasHeight, container.clientWidth, container.clientHeight));
-  };
+  const zoomLabel = formatZoomLabel(zoom);
 
   return (
     <AnchoredEditorMenu>
@@ -57,7 +45,7 @@ export function ZoomPopup({ zoom, onZoomChange, canvasWidth, canvasHeight, conta
             <Plus className="size-4" />
             <span className="sr-only">{t('拡大')}</span>
           </Button>
-          <Button type="button" variant="outline" size="sm" onClick={handleFit}>
+          <Button type="button" variant="outline" size="sm" onClick={() => onZoomChange(1)}>
             {t('フィット')}
           </Button>
         </div>

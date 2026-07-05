@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react';
+import { useCallback, useEffect, useRef, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { cn } from '@editor/lib/utils';
 import {
   drawCompositeImages,
@@ -10,6 +10,8 @@ type PixelCanvasProps = {
   images?: ImagePixelData[];
   image?: ImagePixelData;
   activeToken?: string;
+  cellSize?: number;
+  showGrid?: boolean;
   onPaint?: (x: number, y: number) => void;
   emptyLabel?: string;
   className?: string;
@@ -34,6 +36,8 @@ export function PixelCanvas({
   images,
   image,
   activeToken,
+  cellSize = 1,
+  showGrid = true,
   onPaint,
   emptyLabel,
   className,
@@ -43,6 +47,7 @@ export function PixelCanvas({
   const displayImages = image ? [image] : (images ?? []);
   const { width, height } = getCompositeCanvasSize(displayImages);
   const editable = image != null && onPaint != null;
+  const resolvedCellSize = Math.max(cellSize, 0.01);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -51,7 +56,7 @@ export function PixelCanvas({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    drawCompositeImages(ctx, displayImages, width, height, { showPixelGrid: true });
+    drawCompositeImages(ctx, displayImages, width, height);
   }, [displayImages, width, height]);
 
   const paintAt = useCallback(
@@ -107,21 +112,38 @@ export function PixelCanvas({
 
   return (
     <div className={cn('flex items-center justify-center', className)}>
-      <canvas
-        ref={ref}
-        width={width}
-        height={height}
-        className={cn(
-          'max-h-full max-w-full border border-border/60 shadow-sm touch-none [image-rendering:pixelated]',
-          editable && 'cursor-crosshair'
-        )}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={stopDrawing}
-        onPointerCancel={stopDrawing}
-        onPointerLeave={stopDrawing}
-        aria-label={editable ? `pixel-canvas-${activeToken ?? 'edit'}` : undefined}
-      />
+      <div
+        className="pixel-editor-surface"
+        style={
+          {
+            width: width * resolvedCellSize,
+            height: height * resolvedCellSize,
+            '--cell-size': `${resolvedCellSize}px`,
+          } as CSSProperties
+        }
+      >
+        <canvas
+          ref={ref}
+          width={width}
+          height={height}
+          className={cn(
+            'block size-full [image-rendering:pixelated]',
+            editable && 'cursor-crosshair'
+          )}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={stopDrawing}
+          onPointerCancel={stopDrawing}
+          onPointerLeave={stopDrawing}
+          aria-label={editable ? `pixel-canvas-${activeToken ?? 'edit'}` : undefined}
+        />
+        {showGrid ? (
+          <>
+            <div className="pixel-editor-checker" aria-hidden />
+            <div className="pixel-editor-grid-lines" aria-hidden />
+          </>
+        ) : null}
+      </div>
     </div>
   );
 }
