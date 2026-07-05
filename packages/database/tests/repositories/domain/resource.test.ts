@@ -57,10 +57,10 @@ describe('ResourceRepository', () => {
 
       if (result.ok) {
         expect(result.data).toMatchObject({
-          id: 'sample/player/hero',
-          namespace: 'sample',
-          type: 'player',
-          name: 'hero',
+          id: formatResourceId(validPlayerPath),
+          namespace: validPlayerPath.namespace,
+          type: validPlayerPath.type,
+          name: validPlayerPath.name,
           version: 0,
           isDraft: false,
           createdBy: 'dummy-user',

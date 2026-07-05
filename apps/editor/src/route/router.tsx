@@ -7,9 +7,9 @@ import { NewNamespacePage } from './namespace/new';
 import { EditNamespacePage } from './namespace/edit';
 import { ResourceTypeSelectPage } from './resources/index';
 import { ResourceSearchPage } from './resources/search';
-import { NewGraphicsResourcePage } from './graphics/new';
-import { NewGraphicsResourceNamespacePage } from './graphics/new-namespace';
-import { EditGraphicsResourcePage } from './graphics/edit';
+import { NewResourceByNamespacePage } from './resource/new-by-namespace';
+import { NewResourceNamespacePage } from './resource/new-namespace';
+import { EditResourcePage } from './resource/edit';
 import { PlayPage } from './play';
 
 export function AppRouter() {
@@ -21,9 +21,9 @@ export function AppRouter() {
           <Route path="/" element={<HomePage />} />
           <Route path="/resources" element={<ResourceTypeSelectPage />} />
           <Route path="/resources/manifest/new" element={<NewManifestPage />} />
-          <Route path="/resources/:namespace/:type/new" element={<NewGraphicsResourcePage />} />
-          <Route path="/resources/:type/new" element={<NewGraphicsResourceNamespacePage />} />
-          <Route path="/resources/:namespace/:type/:name" element={<EditGraphicsResourcePage />} />
+          <Route path="/resources/:namespace/:type/new" element={<NewResourceByNamespacePage />} />
+          <Route path="/resources/:type/new" element={<NewResourceNamespacePage />} />
+          <Route path="/resources/:namespace/:type/:name" element={<EditResourcePage />} />
           <Route path="/resources/:type" element={<ResourceSearchPage />} />
           <Route path="/play" element={<PlayPage />} />
           <Route path="/namespaces/new" element={<NewNamespacePage />} />

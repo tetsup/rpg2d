@@ -10,13 +10,15 @@ export type SelectDocumentFieldProps<T extends FieldValues> = {
   label: string;
   hint?: string;
   resourceType?: ResourceType;
+  showThumbnail?: boolean;
 };
 
 function SelectDocumentFieldControl<T extends FieldValues>({
   collectionName,
   name,
   resourceType,
-}: Pick<SelectDocumentFieldProps<T>, 'collectionName' | 'name' | 'resourceType'>) {
+  showThumbnail,
+}: Pick<SelectDocumentFieldProps<T>, 'collectionName' | 'name' | 'resourceType' | 'showThumbnail'>) {
   const controlId = useFieldControlId();
   const { control } = useFormContext();
 
@@ -31,6 +33,7 @@ function SelectDocumentFieldControl<T extends FieldValues>({
           value={field.value}
           onSelect={field.onChange}
           resourceType={resourceType}
+          showThumbnail={showThumbnail}
         />
       )}
     />
@@ -43,10 +46,16 @@ export function SelectDocumentField<T extends FieldValues>({
   label,
   hint,
   resourceType,
+  showThumbnail,
 }: SelectDocumentFieldProps<T>) {
   return (
     <FieldWrapper name={name} label={label} hint={hint}>
-      <SelectDocumentFieldControl collectionName={collectionName} name={name} resourceType={resourceType} />
+      <SelectDocumentFieldControl
+        collectionName={collectionName}
+        name={name}
+        resourceType={resourceType}
+        showThumbnail={showThumbnail}
+      />
     </FieldWrapper>
   );
 }

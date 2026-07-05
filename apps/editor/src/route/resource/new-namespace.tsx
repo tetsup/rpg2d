@@ -5,16 +5,16 @@ import { CancelCard } from '@editor/components/parts/cancel-card';
 import { SelectDocument } from '@editor/components/parts/select-document';
 import {
   findResourceTypeGroup,
-  isGraphicsResourceType,
+  isCreatableResourceType,
   resourceTypeMeta,
 } from '@editor/lib/resource-type-meta';
 
-export function NewGraphicsResourceNamespacePage() {
+export function NewResourceNamespacePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { type } = useParams<{ type: string }>();
 
-  if (type == null || !isGraphicsResourceType(type)) {
+  if (type == null || !isCreatableResourceType(type)) {
     return <Navigate to="/resources" replace />;
   }
 
@@ -24,7 +24,7 @@ export function NewGraphicsResourceNamespacePage() {
   return (
     <LayoutShell
       titleBarProps={{
-        title: t('{{label}}を作成', { label: meta.label }),
+        title: `${t(meta.label)}${t('を作成')}`,
         category: group ? t(group.title) : undefined,
       }}
     >

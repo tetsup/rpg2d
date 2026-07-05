@@ -9,7 +9,7 @@ import { parseResourceId } from '@schema/resource/common/base';
 import {
   findResourceTypeGroup,
   isBrowsableResourceType,
-  isGraphicsResourceType,
+  isCreatableResourceType,
   resourceTypeMeta,
 } from '@editor/lib/resource-type-meta';
 
@@ -33,12 +33,12 @@ export function ResourceSearchPage() {
       }}
     >
       <CancelCard />
-      {isGraphicsResourceType(type) && (
+      {isCreatableResourceType(type) && (
         <MenuCard
           onClick={() => navigate(`/resources/${type}/new`)}
           icon={Sparkles}
           title={t('新規作成')}
-          description={t('{{label}}を新しく作る', { label: t(meta.label) })}
+          description={`${t(meta.label)}${t('を新しく作る')}`}
         />
       )}
       <SelectDocument
