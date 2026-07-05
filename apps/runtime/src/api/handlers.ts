@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import yaml from 'yaml';
-import { ResourcePathSchema } from '@schema/resource/common/base';
+import { formatResourceId, ResourcePathSchema } from '@schema/resource/common/base';
 import { BadRequestError, execWithHandleError, NotFoundError } from './errors';
 
 class ResourceLoader {
@@ -38,7 +38,12 @@ export const handlers = [
         const { namespace, type, name } = ResourcePathSchema.parse(params);
         const resource = await resourceLoader.readResource(`${namespace}/${type}/${name}`);
         if (resource == null) throw new NotFoundError();
-        return HttpResponse.json(resource);
+        return HttpResponse.json({
+          ...resource,
+          id: formatResourceId({ namespace, type, name }),
+          isDraft: resource.isDraft ?? false,
+          createdBy: resource.createdBy ?? 'mock',
+        });
       })
   ),
 ];

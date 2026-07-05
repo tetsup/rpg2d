@@ -61,8 +61,11 @@ describe('ResourceRepository', () => {
           namespace: validPlayerPath.namespace,
           type: validPlayerPath.type,
           name: validPlayerPath.name,
-          data: validPlayerData,
+          version: 0,
+          isDraft: false,
+          createdBy: 'dummy-user',
         });
+        expect(result.data.data).toEqual(validPlayerData);
       }
     });
 
@@ -169,12 +172,7 @@ describe('ResourceRepository', () => {
       expect(got.ok).toBeTruthy();
 
       if (got.ok) {
-        const payload = got.data.data;
-        const innerData =
-          payload != null && typeof payload === 'object' && 'data' in payload && 'type' in payload
-            ? (payload as { data: typeof validPlayerData }).data
-            : payload;
-        expect((innerData as { initialState?: { hp?: number } }).initialState?.hp).toBe(200);
+        expect(got.data.data.initialState?.hp).toBe(200);
       }
     });
 

@@ -10,10 +10,12 @@ import { ResourceInput } from '@sharedTypes/database/collection';
 import { useNavigate } from 'react-router-dom';
 import { useCreateDocument } from '@editor/hooks/api/mutations';
 import { formatResourceId } from '@schema/resource/common/base';
+import { useWorkspaceStore } from '@editor/stores/workspace';
 
 export function NewManifestPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const setWorkspace = useWorkspaceStore((s) => s.setCurrent);
   const { mutateAsync: createResource } = useCreateDocument('resources');
   const fields = ManifestForm({ mode: 'create' });
 
@@ -21,7 +23,9 @@ export function NewManifestPage() {
 
   const onSubmit = async (values: ResourceInput<'manifest'>) => {
     await createResource(values);
-    navigate(`/resource/${formatResourceId(values)}`);
+    const manifestId = formatResourceId(values);
+    setWorkspace({ manifestId });
+    navigate('/');
   };
   return (
     <LayoutShell titleBarProps={{ title: t('プロジェクト設定') }}>

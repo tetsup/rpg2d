@@ -7,16 +7,19 @@ import { ResourceConfigSchema } from '@schema/config/resource-config';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
 import type { ResourceConfig } from '@sharedTypes/config';
 
-const actionDocument = {
+const actionResource = {
+  id: 'sample/action/greet',
   namespace: 'sample',
   type: 'action',
   name: 'greet',
   version: 0,
-  createdAt: '2026-01-01T00:00:00.000Z',
-  updatedAt: '2026-01-01T00:00:00.000Z',
+  isDraft: false,
   data: {
     sequence: [{ command: 'sendMessage', messages: ['hello'] }],
   },
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+  createdBy: 'test-user',
 } as const;
 
 const createManifest = (): ManifestData =>
@@ -71,15 +74,15 @@ const createStoreWithFetchMock = (body: unknown) => {
   return { store, fetchMock };
 };
 
-const withoutField = (field: keyof typeof actionDocument): Record<string, unknown> => {
-  const body: Record<string, unknown> = { ...actionDocument };
+const withoutField = (field: keyof typeof actionResource): Record<string, unknown> => {
+  const body: Record<string, unknown> = { ...actionResource };
   delete body[field];
   return body;
 };
 
 describe('ResourceStore + ResourceFactory resource fetch integration', () => {
   it('APIレスポンスのactionデータからActionインスタンスを生成できる', async () => {
-    const store = createStore(actionDocument);
+    const store = createStore(actionResource);
 
     const action = await store.get('sample/action/greet', 'action');
 
@@ -107,35 +110,35 @@ describe('ResourceStore + ResourceFactory resource fetch integration', () => {
   });
 
   it('versionが1の場合は失敗する', async () => {
-    await expect(createStore({ ...actionDocument, version: 1 }).get('sample/action/greet', 'action')).rejects.toThrow();
+    await expect(createStore({ ...actionResource, version: 1 }).get('sample/action/greet', 'action')).rejects.toThrow();
   });
 
   it('versionが文字列の場合は失敗する', async () => {
     await expect(
-      createStore({ ...actionDocument, version: '0' }).get('sample/action/greet', 'action')
+      createStore({ ...actionResource, version: '0' }).get('sample/action/greet', 'action')
     ).rejects.toThrow();
   });
 
   it('namespaceが要求したResourceIdと一致しない場合は失敗する', async () => {
     await expect(
-      createStore({ ...actionDocument, namespace: 'other' }).get('sample/action/greet', 'action')
+      createStore({ ...actionResource, namespace: 'other' }).get('sample/action/greet', 'action')
     ).rejects.toThrow();
   });
 
   it('typeが要求したResourceIdと一致しない場合は失敗する', async () => {
     await expect(
-      createStore({ ...actionDocument, type: 'player' }).get('sample/action/greet', 'action')
+      createStore({ ...actionResource, type: 'player' }).get('sample/action/greet', 'action')
     ).rejects.toThrow();
   });
 
   it('nameが要求したResourceIdと一致しない場合は失敗する', async () => {
     await expect(
-      createStore({ ...actionDocument, name: 'other' }).get('sample/action/greet', 'action')
+      createStore({ ...actionResource, name: 'other' }).get('sample/action/greet', 'action')
     ).rejects.toThrow();
   });
 
   it('同じResourceIdを取得すると同じインスタンスを返す', async () => {
-    const store = createStore(actionDocument);
+    const store = createStore(actionResource);
 
     const a = await store.get('sample/action/greet', 'action');
     const b = await store.get('sample/action/greet', 'action');
@@ -144,7 +147,7 @@ describe('ResourceStore + ResourceFactory resource fetch integration', () => {
   });
 
   it('同じResourceIdを2回取得してもfetchFuncは1回だけ呼ばれる', async () => {
-    const { store, fetchMock } = createStoreWithFetchMock(actionDocument);
+    const { store, fetchMock } = createStoreWithFetchMock(actionResource);
 
     await store.get('sample/action/greet', 'action');
     await store.get('sample/action/greet', 'action');
@@ -164,7 +167,7 @@ describe('ResourceStore + ResourceFactory resource fetch integration', () => {
   });
 
   it('data配下のsequenceを読み取れる', async () => {
-    const store = createStore(actionDocument);
+    const store = createStore(actionResource);
 
     const action = await store.get('sample/action/greet', 'action');
 

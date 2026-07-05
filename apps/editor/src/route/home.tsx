@@ -1,15 +1,19 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { FolderUp, Settings2, Sparkles } from 'lucide-react';
+import { FolderUp, Play, Settings2, Sparkles } from 'lucide-react';
 import { MenuCard } from '@editor/components/parts/menu-card';
+import { DocumentPickerDialog } from '@editor/components/parts/document-picker-dialog';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
-import { useWorkspaceStore } from '@editor/stores/workspace';
 import { ControlSection } from '@editor/components/forms/control-section';
+import { useWorkspaceStore } from '@editor/stores/workspace';
 
 export function HomePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const workspace = useWorkspaceStore((s) => s.current);
+  const setWorkspace = useWorkspaceStore((s) => s.setCurrent);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   return (
     <LayoutShell titleBarProps={{ title: t('ホーム') }}>
@@ -23,9 +27,22 @@ export function HomePage() {
           description={t('新しいゲームを作成')}
         />
 
-        <MenuCard icon={FolderUp} title={t('ロード')} description={t('過去に作ったゲームを開く')} />
+        <MenuCard
+          onClick={() => setPickerOpen(true)}
+          icon={FolderUp}
+          title={t('ロード')}
+          description={t('過去に作ったゲームを開く')}
+        />
         {workspace.manifestId != null && (
-          <MenuCard icon={Settings2} title={t('コンフィグ')} description={t('初期設定を変更')} />
+          <>
+            <MenuCard
+              onClick={() => navigate('/play')}
+              icon={Play}
+              title={t('プレー')}
+              description={workspace.manifestId}
+            />
+            <MenuCard icon={Settings2} title={t('コンフィグ')} description={t('初期設定を変更')} />
+          </>
         )}
       </ControlSection>
       <ControlSection title={t('グループ管理')}>
@@ -38,6 +55,19 @@ export function HomePage() {
           description={t('新しいグループを作成')}
         />
       </ControlSection>
+      <DocumentPickerDialog
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        title={t('プロジェクトを選択')}
+        collectionName="resources"
+        resourceType="manifest"
+        onSelect={(id) => {
+          setWorkspace({ manifestId: id });
+        }}
+        onCreate={() => {
+          navigate('/resources/manifest/new');
+        }}
+      />
     </LayoutShell>
   );
 }

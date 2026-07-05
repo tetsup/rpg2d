@@ -1,6 +1,7 @@
 import z from 'zod';
 import type { ExecutableResourceType, ResourceId } from '@sharedTypes/resource/common';
 import { NamespaceSchema, parseResourceId, ResourceNameSchema, resources } from '@schema/resource/common/base';
+import { ResourceRecordResponseSchema } from '@schema/api/resource/record';
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
@@ -19,7 +20,12 @@ export class ResourceStore {
   }
 
   fetch = async <T>(namespace: string, type: string, name: string, schema: z.ZodType<T>): Promise<T> => {
-    return await fetchJson(`${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`, this.fetchFunc, schema);
+    return await fetchJson(
+      `${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`,
+      this.fetchFunc,
+      schema,
+      { credentials: 'include' }
+    );
   };
 
   private async resolve<K extends ExecutableResourceType>(
@@ -28,15 +34,14 @@ export class ResourceStore {
     name: string
   ): Promise<InstanceType<ResourceClass<K>>> {
     const schema = this.ctx.schemas.get(type);
-    const responseSchema = z.object({
+    const body = await this.fetch(namespace, type, name, z.unknown());
+    const record = ResourceRecordResponseSchema.extend({
       namespace: NamespaceSchema.refine((v) => v === namespace),
       type: z.literal(type),
       name: ResourceNameSchema.refine((v) => v === name),
-      version: z.literal(0),
-      data: schema,
-    });
-    const resource = await this.fetch(namespace, type, name, responseSchema);
-    return await this.ctx.factory.create(resource.data, type);
+    }).parse(body);
+    const payload = schema.parse(record.data);
+    return await this.ctx.factory.create(payload, type);
   }
 
   get = async <K extends ExecutableResourceType>(

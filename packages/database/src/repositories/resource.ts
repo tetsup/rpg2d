@@ -94,7 +94,7 @@ export class ResourceRepository {
           .set({
             name: document.name,
             isDraft: document.isDraft,
-            data: document,
+            data: input.data,
             updatedAt: now,
           })
           .where('id', '=', formatResourceId(path))

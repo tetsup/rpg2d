@@ -103,6 +103,9 @@ importers:
       '@tanstack/react-virtual':
         specifier: ^3.13.24
         version: 3.13.24(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@tetsup/web2d':
+        specifier: ^0.0.17
+        version: 0.0.17
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

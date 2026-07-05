@@ -670,6 +670,19 @@ describe('ResourceFactory: unbound call must not throw', () => {
 // ---------------------------------------------------------------------------
 
 describe('ResourceStore: unbound call must not throw', () => {
+  const actionResource = {
+    id: 'test/action/sample',
+    namespace: 'test',
+    type: 'action',
+    name: 'sample',
+    version: 0,
+    isDraft: false,
+    data: { sequence: [] },
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'test-user',
+  };
+
   it('keeps this binding in fetch — unbound call must not throw', async () => {
     const store = new ResourceStore(makeContext());
     vi.spyOn(store, 'fetch').mockResolvedValue({
@@ -682,24 +695,14 @@ describe('ResourceStore: unbound call must not throw', () => {
 
   it('keeps this binding in get — unbound call must not throw', async () => {
     const store = new ResourceStore(makeContext());
-    vi.spyOn(store, 'fetch').mockResolvedValue({
-      namespace: 'test',
-      type: 'action',
-      name: 'sample',
-      data: { sequence: [] },
-    });
+    vi.spyOn(store, 'fetch').mockResolvedValue(actionResource);
     const get = store.get;
     await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
   });
 
   it('get called multiple times unbound must not throw', async () => {
     const store = new ResourceStore(makeContext());
-    vi.spyOn(store, 'fetch').mockResolvedValue({
-      namespace: 'test',
-      type: 'action',
-      name: 'sample',
-      data: { sequence: [] },
-    });
+    vi.spyOn(store, 'fetch').mockResolvedValue(actionResource);
     const get = store.get;
     await expect(get('test/action/sample', 'action')).resolves.not.toThrow();
     await expect(get('test/action/sample', 'action')).resolves.not.toThrow();

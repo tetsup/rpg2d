@@ -12,9 +12,19 @@ type LayoutShellProps = {
 };
 
 export function LayoutShell({ children, titleBarProps, flush = false }: LayoutShellProps) {
+  const { rightSlot: titleBarRightSlot, ...restTitleBarProps } = titleBarProps;
+
   return (
     <div className="flex h-dvh flex-col overflow-hidden">
-      <TitleBar {...titleBarProps} rightSlot={<UserMenu />} />
+      <TitleBar
+        {...restTitleBarProps}
+        rightSlot={
+          <>
+            {titleBarRightSlot}
+            <UserMenu />
+          </>
+        }
+      />
       <main className={cn('min-h-0 flex-1', flush ? 'overflow-hidden' : 'overflow-auto')}>
         <div className={flush ? 'h-full' : 'space-y-4 p-4'}>{children}</div>
       </main>

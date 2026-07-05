@@ -5,6 +5,7 @@ type MenuItem = {
   onClick?: MouseEventHandler<HTMLDivElement>;
   icon: LucideIcon;
   label: string;
+  active?: boolean;
 };
 type MenuBarProps = {
   items: MenuItem[];
@@ -15,10 +16,10 @@ function MenuBarBody({ items, align }: MenuBarProps) {
   return (
     <nav className={`fixed ${align}-0 left-0 right-0 border-t bg-background`}>
       <div className="flex">
-        {items.map(({ onClick, icon: Icon, label }, index) => (
+        {items.map(({ onClick, icon: Icon, label, active }, index) => (
           <div
             key={index}
-            className="
+            className={`
               flex-1
               flex
               flex-col
@@ -26,7 +27,8 @@ function MenuBarBody({ items, align }: MenuBarProps) {
               justify-center
               gap-1
               py-2
-            "
+              ${active ? 'text-primary' : ''}
+            `}
             onClick={onClick}
           >
             <Icon className="h-7 w-7" />

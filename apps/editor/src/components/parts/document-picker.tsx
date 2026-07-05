@@ -7,9 +7,8 @@ import { buildRenderItemContext } from '@editor/lib/document-item';
 import { isThumbnailPickerResourceType } from '@editor/lib/resource-type-meta';
 import { useResolvedDocument } from '@editor/hooks/api/resolved-document';
 import { Button } from '@editor/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from '@editor/components/ui/dialog';
 import { DocumentListItemContent } from './document-list-item-content';
-import { SelectDocument } from './select-document';
+import { DocumentPickerDialog } from './document-picker-dialog';
 
 type DocumentPickerProps<T extends keyof FilterMap> = {
   collectionName: T;
@@ -48,41 +47,25 @@ export function DocumentPicker<T extends keyof FilterMap>({
   }, [collectionName, displayLabel, selectedDocument, showThumbnail]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          <Button id={id} variant="outline" className="h-auto min-h-10 w-full justify-start gap-2 py-2">
-            {selectedItemContent}
-          </Button>
-        }
+    <>
+      <Button
+        id={id}
+        type="button"
+        variant="outline"
+        className="h-auto min-h-10 w-full justify-start gap-2 py-2"
+        onClick={() => setOpen(true)}
+      >
+        {selectedItemContent}
+      </Button>
+      <DocumentPickerDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t('選択するか、新規作成してください')}
+        collectionName={collectionName}
+        onSelect={onSelect}
+        onCreate={onCreate}
+        resourceType={resourceType}
       />
-      <DialogContent className="p-0 overflow-hidden">
-        <DialogHeader className="p-4">
-          <DialogTitle>{t('選択するか、新規作成してください')}</DialogTitle>
-        </DialogHeader>
-        <SelectDocument
-          collectionName={collectionName}
-          onItemSelect={(item) => {
-            onSelect(item.id);
-            setOpen(false);
-          }}
-          resourceType={resourceType}
-        />
-        {onCreate && (
-          <div className="p-2 border-t">
-            <Button
-              variant="secondary"
-              className="w-full"
-              onClick={() => {
-                onCreate();
-                setOpen(false);
-              }}
-            >
-              +{t('新規作成')}
-            </Button>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+    </>
   );
 }
