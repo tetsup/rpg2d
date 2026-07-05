@@ -1,5 +1,5 @@
 export const ZOOM_MIN = 0.5;
-export const ZOOM_MAX = 8;
+export const ZOOM_MAX = 64;
 export const ZOOM_STEP = 0.25;
 
 export function clampZoom(value: number): number {
@@ -24,4 +24,21 @@ export function fitZoom(
     return 1;
   }
   return clampZoom(Math.min(containerWidth / canvasWidth, containerHeight / canvasHeight));
+}
+
+/** Fit zoom when the canvas is smaller than the viewport; otherwise keep the current scale. */
+export function autoFitZoom(
+  canvasWidth: number,
+  canvasHeight: number,
+  containerWidth: number,
+  containerHeight: number
+): number | null {
+  if (canvasWidth <= 0 || canvasHeight <= 0 || containerWidth <= 0 || containerHeight <= 0) {
+    return null;
+  }
+  const fit = fitZoom(canvasWidth, canvasHeight, containerWidth, containerHeight);
+  if (fit <= 1) {
+    return null;
+  }
+  return fit;
 }

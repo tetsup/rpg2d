@@ -48,6 +48,7 @@ import {
   GraphicsEditorSessionProvider,
 } from '@editor/providers/graphics-editor-session-provider';
 import { useGraphicsEditorContentSession } from '@editor/hooks/ui/use-graphics-editor-content-session';
+import { useAutoFitZoom } from '@editor/hooks/ui/use-auto-fit-zoom';
 import { useLayoutStore } from '@editor/stores/edit-state';
 
 type GraphicsEditorProps = {
@@ -332,6 +333,7 @@ function GraphicsEditorContent({
         <PixelCanvas
           className="w-full"
           image={imageDraft}
+          cellSize={zoom}
           activeToken={selectedToken}
           onPaint={
             editable
@@ -372,6 +374,14 @@ function GraphicsEditorContent({
   });
 
   const activeSaveItem = saveScope != null ? getSaveLayerItem(saveLayerItems, saveScope) : null;
+
+  useAutoFitZoom({
+    containerRef: viewportRef,
+    canvasWidth: imageSlots.canvasWidth,
+    canvasHeight: imageSlots.canvasHeight,
+    imageKey: activeImageId,
+    setZoom,
+  });
 
   const dialogIsDraft =
     saveScope === 'skin'
@@ -474,10 +484,12 @@ function GraphicsEditorContent({
     <>
       <PaintEditorLayout
         canvas={
-          <CanvasViewport zoom={zoom} operationMode={operationMode} className="h-full">
-            <div ref={viewportRef} className="w-full">
-              {imageSlots.canvas}
-            </div>
+          <CanvasViewport
+            containerRef={viewportRef}
+            operationMode={operationMode}
+            className="h-full"
+          >
+            {imageSlots.canvas}
           </CanvasViewport>
         }
         fab={<ContextNavigatorFab chips={contextChips} />}

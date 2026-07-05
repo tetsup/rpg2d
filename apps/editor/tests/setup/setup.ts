@@ -24,6 +24,23 @@ Object.defineProperty(window, 'matchMedia', {
 
 Element.prototype.scrollIntoView = vi.fn();
 
+class ResizeObserverMock {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+
+  constructor(private readonly callback: ResizeObserverCallback) {}
+
+  trigger() {
+    this.callback([], this);
+  }
+}
+
+Object.defineProperty(window, 'ResizeObserver', {
+  writable: true,
+  value: ResizeObserverMock,
+});
+
 class IntersectionObserverMock {
   observe = vi.fn();
   unobserve = vi.fn();
