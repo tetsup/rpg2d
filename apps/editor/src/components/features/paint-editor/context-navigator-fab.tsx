@@ -1,18 +1,15 @@
-import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { AddButton } from '@editor/components/features/graphics/add-button';
 import { GraphicsContextList, type GraphicsContextItem } from '@editor/components/features/graphics/graphics-context-list';
 import { Button } from '@editor/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@editor/components/ui/dialog';
 import { cn } from '@editor/lib/utils';
+import {
+  AnchoredEditorMenu,
+  AnchoredEditorMenuContent,
+  AnchoredEditorMenuTrigger,
+} from './anchored-editor-menu';
 import { SyncIndicatorDot } from './sync-indicator-dot';
 
 export type ContextChip = {
@@ -28,22 +25,32 @@ export type ContextChip = {
   addDisabled?: boolean;
 };
 
-function ContextChipDialog({
+function ContextChipMenu({
   label,
   valueLabel,
+  items,
+  activeId,
+  emptyLabel,
   showDirtyDot,
   showDraftDot,
-  children,
   onAdd,
   addDisabled,
   triggerClassName,
-}: ContextChip & { children: ReactNode; triggerClassName?: string }) {
+}: ContextChip & { triggerClassName?: string }) {
   const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
   const triggerLabel = valueLabel ? `${label}: ${valueLabel}` : label;
+  const itemsWithClose = items.map((item) => ({
+    ...item,
+    onSelect: () => {
+      item.onSelect();
+      setOpen(false);
+    },
+  }));
 
   return (
-    <Dialog>
-      <DialogTrigger
+    <AnchoredEditorMenu open={open} onOpenChange={setOpen}>
+      <AnchoredEditorMenuTrigger
         render={
           <Button
             type="button"
@@ -58,19 +65,26 @@ function ContextChipDialog({
           </Button>
         }
       />
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{label}</DialogTitle>
-          <DialogDescription>{`${label}${t('を切り替えます')}`}</DialogDescription>
-        </DialogHeader>
-        {children}
-        {onAdd != null && (
-          <div className="flex justify-end pt-2">
-            <AddButton disabled={addDisabled} onClick={onAdd} />
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+      <AnchoredEditorMenuContent
+        title={label}
+        description={`${label}${t('を切り替えます')}`}
+        side="bottom"
+        align="end"
+        footer={
+          onAdd != null ? (
+            <AddButton
+              disabled={addDisabled}
+              onClick={() => {
+                onAdd();
+                setOpen(false);
+              }}
+            />
+          ) : undefined
+        }
+      >
+        <GraphicsContextList items={itemsWithClose} activeId={activeId} emptyLabel={emptyLabel} />
+      </AnchoredEditorMenuContent>
+    </AnchoredEditorMenu>
   );
 }
 
@@ -91,9 +105,7 @@ export function ContextNavigatorFab({ chips, className }: ContextNavigatorFabPro
     >
       <div className="pointer-events-auto flex flex-col items-end gap-1">
         {chips.map((chip) => (
-          <ContextChipDialog key={chip.id} {...chip}>
-            <GraphicsContextList items={chip.items} activeId={chip.activeId} emptyLabel={chip.emptyLabel} />
-          </ContextChipDialog>
+          <ContextChipMenu key={chip.id} {...chip} />
         ))}
       </div>
     </div>

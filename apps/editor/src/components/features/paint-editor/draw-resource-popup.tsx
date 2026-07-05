@@ -4,13 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { AddButton } from '@editor/components/features/graphics/add-button';
 import { Button } from '@editor/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@editor/components/ui/dialog';
+  AnchoredEditorMenu,
+  AnchoredEditorMenuContent,
+  AnchoredEditorMenuTrigger,
+} from './anchored-editor-menu';
 import { SelectableSwatchPalette, type SwatchPaletteItem } from './selectable-swatch-palette';
 import { ToolbarIconButton } from './toolbar-icon-button';
 
@@ -40,39 +37,36 @@ export function DrawResourcePopup<TKey extends string>({
   triggerLabel,
 }: DrawResourcePopupProps<TKey>) {
   const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const editable = onAdd != null || onDeleteKey != null;
+  const paletteTitle = triggerLabel ?? t('描画リソース');
 
   return (
-    <Dialog
-      onOpenChange={(open) => {
-        if (!open) setDeleteMode(false);
+    <AnchoredEditorMenu
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (!nextOpen) setDeleteMode(false);
       }}
     >
-      <DialogTrigger
+      <AnchoredEditorMenuTrigger
         render={
           <ToolbarIconButton
             icon={triggerIcon ?? <Palette />}
-            label={triggerLabel ?? t('描画リソース')}
+            label={paletteTitle}
           />
         }
       />
-      <DialogContent className="max-w-sm">
-        <DialogHeader>
-          <DialogTitle>{triggerLabel ?? t('描画リソース')}</DialogTitle>
-          <DialogDescription>{t('描画に使う色を選びます')}</DialogDescription>
-        </DialogHeader>
-        <div className="space-y-3">
-          <SelectableSwatchPalette
-            items={items}
-            selectedKey={deleteMode ? undefined : selectedKey}
-            onSelectKey={deleteMode ? undefined : onSelectKey}
-            deleteMode={deleteMode}
-            onDeleteKey={onDeleteKey}
-            emptyLabel={emptyLabel}
-          />
-          {editable && (
-            <div className="flex justify-end gap-1">
+      <AnchoredEditorMenuContent
+        title={paletteTitle}
+        description={t('描画に使う色を選びます')}
+        side="top"
+        align="center"
+        className="max-w-sm"
+        footer={
+          editable ? (
+            <div className="flex gap-1">
               {onAdd != null && (
                 <AddButton disabled={addDisabled} onClick={onAdd} label={t('色を追加')} />
               )}
@@ -90,9 +84,18 @@ export function DrawResourcePopup<TKey extends string>({
                 </Button>
               )}
             </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
+          ) : undefined
+        }
+      >
+        <SelectableSwatchPalette
+          items={items}
+          selectedKey={deleteMode ? undefined : selectedKey}
+          onSelectKey={deleteMode ? undefined : onSelectKey}
+          deleteMode={deleteMode}
+          onDeleteKey={onDeleteKey}
+          emptyLabel={emptyLabel}
+        />
+      </AnchoredEditorMenuContent>
+    </AnchoredEditorMenu>
   );
 }
