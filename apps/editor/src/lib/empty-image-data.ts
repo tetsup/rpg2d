@@ -1,12 +1,11 @@
+import { DEFAULT_IMAGE_PALETTE, TRANSPARENT_PALETTE_TOKEN } from '@editor/lib/default-image-palette';
 import type { ImagePixelData } from '@editor/lib/pixel-render';
 
-const TRANSPARENT_TOKEN = 'ff';
-
 export function createEmptyImageData(width: number, height: number): ImagePixelData {
-  const row = Array(width).fill(TRANSPARENT_TOKEN).join(' ');
+  const row = Array(width).fill(TRANSPARENT_PALETTE_TOKEN).join(' ');
   return {
     size: { width, height },
-    palette: { [TRANSPARENT_TOKEN]: [0, 0, 0, 0] },
+    palette: { ...DEFAULT_IMAGE_PALETTE },
     pixels: Array(height).fill(row),
   };
 }

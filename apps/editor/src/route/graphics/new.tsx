@@ -29,15 +29,13 @@ export function NewGraphicsResourcePage() {
   const typeLabel = t(meta.label);
   const createTitle = `${typeLabel}${t('を作成')}`;
 
-  const handleCreateImage = async (size: { width: number; height: number }) => {
-    if (pendingImageName == null) return;
-
+  const handleCreateImage = async (size: { width: number; height: number }, resourceName: string) => {
     setIsCreating(true);
     try {
       const { name } = await reserveGraphicsResourceDraft({
         namespace,
         type: 'image',
-        hint: pendingImageName,
+        hint: resourceName,
         data: createEmptyImageData(size.width, size.height),
       });
       setPendingImageName(null);
@@ -106,11 +104,11 @@ export function NewGraphicsResourcePage() {
         pending={isCreating}
         onConfirm={handleCreateNamedResource}
       />
-      {type === 'image' && (
+      {type === 'image' && pendingImageName != null && (
         <ImageSizeDialog
           open={sizeDialogOpen}
           onOpenChange={handleSizeDialogOpenChange}
-          onConfirm={handleCreateImage}
+          onConfirm={(size) => handleCreateImage(size, pendingImageName)}
         />
       )}
     </>
