@@ -46,14 +46,8 @@ import { useDocumentById } from '@editor/hooks/api/by-id';
 import { useResolvedDocuments } from '@editor/hooks/api/resolved-documents';
 import {
   GraphicsEditorSessionProvider,
-  useGraphicsEditorSession,
 } from '@editor/providers/graphics-editor-session-provider';
-import {
-  selectAnyDirty,
-  selectImageDirty,
-  selectSkinDirty,
-  selectTextureDirty,
-} from '@editor/stores/graphics-editor-session';
+import { useGraphicsEditorContentSession } from '@editor/hooks/ui/use-graphics-editor-content-session';
 import { useLayoutStore } from '@editor/stores/edit-state';
 
 type GraphicsEditorProps = {
@@ -97,41 +91,42 @@ function GraphicsEditorContent({
   const setEditState = useLayoutStore((state) => state.setEditState);
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  const entryType = useGraphicsEditorSession((s) => s.entryType);
-  const namespace = useGraphicsEditorSession((s) => s.namespace);
-  const activeDirection = useGraphicsEditorSession((s) => s.activeDirection);
-  const activeFrameId = useGraphicsEditorSession((s) => s.activeFrameId);
-  const skinDraft = useGraphicsEditorSession((s) => s.skinDraft);
-  const skinIsDraft = useGraphicsEditorSession((s) => s.skinIsDraft);
-  const textureDraft = useGraphicsEditorSession((s) => s.textureDraft);
-  const textureIsDraft = useGraphicsEditorSession((s) => s.textureIsDraft);
-  const imageDraft = useGraphicsEditorSession((s) => s.imageDraft);
-  const imageIsDraft = useGraphicsEditorSession((s) => s.imageIsDraft);
-  const imageDescription = useGraphicsEditorSession((s) => s.imageDescription);
-  const selectedToken = useGraphicsEditorSession((s) => s.selectedToken);
-  const imageDirty = useGraphicsEditorSession(selectImageDirty);
-  const skinDirty = useGraphicsEditorSession(selectSkinDirty);
-  const textureDirty = useGraphicsEditorSession(selectTextureDirty);
-  const anyDirty = useGraphicsEditorSession(selectAnyDirty);
-  const operationMode = useGraphicsEditorSession((s) => s.operationMode);
-  const zoom = useGraphicsEditorSession((s) => s.zoom);
-
-  const setActiveDirection = useGraphicsEditorSession((s) => s.setActiveDirection);
-  const setActiveFrameId = useGraphicsEditorSession((s) => s.setActiveFrameId);
-  const patchSkinDraft = useGraphicsEditorSession((s) => s.patchSkinDraft);
-  const patchTextureDraft = useGraphicsEditorSession((s) => s.patchTextureDraft);
-  const patchImageDraft = useGraphicsEditorSession((s) => s.patchImageDraft);
-  const syncSkin = useGraphicsEditorSession((s) => s.syncSkin);
-  const syncTexture = useGraphicsEditorSession((s) => s.syncTexture);
-  const syncImage = useGraphicsEditorSession((s) => s.syncImage);
-  const seedImageDraft = useGraphicsEditorSession((s) => s.seedImageDraft);
-  const setSkinIsDraft = useGraphicsEditorSession((s) => s.setSkinIsDraft);
-  const setTextureIsDraft = useGraphicsEditorSession((s) => s.setTextureIsDraft);
-  const setImageIsDraft = useGraphicsEditorSession((s) => s.setImageIsDraft);
-  const setImageDescription = useGraphicsEditorSession((s) => s.setImageDescription);
-  const setSelectedToken = useGraphicsEditorSession((s) => s.setSelectedToken);
-  const setOperationMode = useGraphicsEditorSession((s) => s.setOperationMode);
-  const setZoom = useGraphicsEditorSession((s) => s.setZoom);
+  const {
+    entryType,
+    namespace,
+    activeDirection,
+    activeFrameId,
+    skinDraft,
+    skinIsDraft,
+    textureDraft,
+    textureIsDraft,
+    imageDraft,
+    imageIsDraft,
+    imageDescription,
+    selectedToken,
+    imageDirty,
+    skinDirty,
+    textureDirty,
+    anyDirty,
+    operationMode,
+    zoom,
+    setActiveDirection,
+    setActiveFrameId,
+    patchSkinDraft,
+    patchTextureDraft,
+    patchImageDraft,
+    syncSkin,
+    syncTexture,
+    syncImage,
+    seedImageDraft,
+    setSkinIsDraft,
+    setTextureIsDraft,
+    setImageIsDraft,
+    setImageDescription,
+    setSelectedToken,
+    setOperationMode,
+    setZoom,
+  } = useGraphicsEditorContentSession();
 
   const [sizeDialogOpen, setSizeDialogOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
