@@ -1,9 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
-import { createResourceInputSchema } from '@schema/database/resource';
 import type { ResourceRecord } from '@sharedTypes/database/collection';
 import { PixelCanvas } from '@editor/components/features/graphics/pixel-canvas';
 import { isPaintMode, type OperationMode } from '@editor/lib/paint-editor/operation-mode';
-import { getDefaultPaletteToken, setImagePixel } from '@editor/lib/image-pixel-mutate';
+import type { ImagePixelData } from '@editor/lib/pixel-render';
 
 export type ImageEditorCoreSlots = {
   canvas: React.ReactNode;
@@ -11,84 +9,17 @@ export type ImageEditorCoreSlots = {
   canvasHeight: number;
 };
 
-/** Call from a component keyed by `resource?.id` so state resets on frame change. */
-export function useImageEditorState(
-  resource: ResourceRecord<'image'> | undefined,
-  onDirtyChange?: (dirty: boolean) => void
-) {
-  const [draftData, setDraftData] = useState(() => resource?.data);
-  const [isDraft, setIsDraft] = useState(() => resource?.isDraft ?? true);
-  const [description, setDescription] = useState(() => resource?.description ?? '');
-  const [selectedToken, setSelectedToken] = useState(() =>
-    resource ? getDefaultPaletteToken(resource.data.palette) : 'ff'
-  );
-
-  useEffect(() => {
-    if (resource == null) {
-      setDraftData(undefined);
-      setIsDraft(true);
-      setDescription('');
-      setSelectedToken('ff');
-      return;
-    }
-
-    setDraftData(resource.data);
-    setIsDraft(resource.isDraft);
-    setDescription(resource.description ?? '');
-    setSelectedToken(getDefaultPaletteToken(resource.data.palette));
-  }, [resource?.id]);
-
-  const isDirty = useMemo(() => {
-    if (resource == null || draftData == null) return false;
-    return (
-      isDraft !== resource.isDraft ||
-      description !== (resource.description ?? '') ||
-      JSON.stringify(draftData) !== JSON.stringify(resource.data)
-    );
-  }, [draftData, description, isDraft, resource]);
-
-  useEffect(() => {
-    onDirtyChange?.(isDirty);
-  }, [isDirty, onDirtyChange]);
-
-  const validation = useMemo(() => {
-    if (resource == null || draftData == null) return null;
-    return createResourceInputSchema('image').safeParse({
-      namespace: resource.namespace,
-      type: 'image',
-      name: resource.name,
-      version: resource.version,
-      description,
-      isDraft,
-      data: draftData,
-    });
-  }, [draftData, description, isDraft, resource]);
-
-  return {
-    resource,
-    draftData,
-    isDraft,
-    setIsDraft,
-    description,
-    setDescription,
-    selectedToken,
-    setSelectedToken,
-    setDraftData,
-    isDirty,
-    validation,
-  };
-}
-
 type ImageEditorCoreProps = {
-  state: ReturnType<typeof useImageEditorState>;
+  draftData: ImagePixelData | null | undefined;
+  selectedToken: string;
+  onPaint?: (x: number, y: number) => void;
   emptyLabel: string;
   operationMode: OperationMode;
 };
 
 export function renderImageEditorCore(props: ImageEditorCoreProps): ImageEditorCoreSlots {
-  const { state, emptyLabel, operationMode } = props;
-  const { draftData, selectedToken, setDraftData } = state;
-  const editable = draftData != null && isPaintMode(operationMode);
+  const { draftData, selectedToken, onPaint, emptyLabel, operationMode } = props;
+  const editable = draftData != null && onPaint != null && isPaintMode(operationMode);
 
   if (draftData == null) {
     return {
@@ -104,15 +35,7 @@ export function renderImageEditorCore(props: ImageEditorCoreProps): ImageEditorC
         className="w-full"
         image={draftData}
         activeToken={selectedToken}
-        onPaint={
-          editable
-            ? (x, y) => {
-                setDraftData((current) =>
-                  current ? setImagePixel(current, x, y, selectedToken) : current
-                );
-              }
-            : undefined
-        }
+        onPaint={editable ? onPaint : undefined}
       />
     ),
     canvasWidth: draftData.size.width,
