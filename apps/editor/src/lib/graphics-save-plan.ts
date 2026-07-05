@@ -143,12 +143,14 @@ export async function executeGraphicsSave({
   updateResource,
   syncTexture,
   syncSkin,
+  syncImage,
 }: {
   scope: SaveLayerScope;
   context: GraphicsSaveContext;
   updateResource: (args: { id: string; body: DatabaseInput['resources'] }) => Promise<void>;
   syncTexture?: (resource: ResourceRecord<'texture'>) => void;
   syncSkin?: (resource: ResourceRecord<'skin'>) => void;
+  syncImage?: (resource: ResourceRecord<'image'>) => void;
 }): Promise<void> {
   for (const layerScope of getCascadeScopes(scope)) {
     if (layerScope === 'image') {
@@ -163,6 +165,12 @@ export async function executeGraphicsSave({
       await updateResource({
         id: context.imageResource.id,
         body: context.imageValidation.data,
+      });
+      syncImage?.({
+        ...context.imageResource,
+        data: context.imageValidation.data.data,
+        isDraft: context.imageValidation.data.isDraft,
+        description: context.imageValidation.data.description,
       });
       continue;
     }

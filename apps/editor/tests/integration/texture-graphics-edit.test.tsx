@@ -46,6 +46,24 @@ describe('texture graphics context editor', () => {
     server.use(
       http.get('/api/resources/sample/texture/hero.down', () => HttpResponse.json(textureResource)),
       http.get('/api/resources/sample/image/hero.down-aa', () => HttpResponse.json(frameResource)),
+      http.get('/api/resources/sample/image/hero.down-ab', () =>
+        HttpResponse.json({
+          id: 'sample/image/hero.down-ab',
+          namespace: 'sample',
+          type: 'image',
+          name: 'hero.down-ab',
+          version: 0,
+          isDraft: true,
+          data: {
+            size: { width: 16, height: 16 },
+            palette: { aa: [0, 0, 0, 255], ff: [0, 0, 0, 0] },
+            pixels: Array.from({ length: 16 }, () => 'ff '.repeat(16).trimEnd()),
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: 'test-user',
+        })
+      ),
       http.post('/api/resources/search', () =>
         HttpResponse.json({
           items: [textureResource, frameResource],
@@ -81,6 +99,10 @@ describe('texture graphics context editor', () => {
         name: 'hero.down-ab',
         isDraft: true,
       });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('pixel-canvas-aa')).toBeInTheDocument();
     });
   });
 });

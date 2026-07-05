@@ -1,15 +1,16 @@
 import { createStore, type StoreApi } from 'zustand';
 import type { ResourceDocument, ResourceRecord } from '@sharedTypes/database/collection';
 import type { OperationMode } from '@editor/lib/paint-editor/operation-mode';
+import { getDefaultPaletteToken } from '@editor/lib/image-pixel-mutate';
 import { clampZoom } from '@editor/lib/paint-editor/zoom';
 import type { SkinDirection } from '@editor/lib/skin-directions';
 import { getDefaultLayerImageIds } from '@editor/lib/texture-layers';
 
 export type GraphicsEntryType = 'skin' | 'texture' | 'image';
-export type MetaPanel = GraphicsEntryType | null;
 
 type SkinData = ResourceDocument<'skin'>['data'];
 type TextureData = ResourceDocument<'texture'>['data'];
+type ImageData = ResourceDocument<'image'>['data'];
 
 export type GraphicsEditorSessionState = {
   entryId: string;
@@ -19,18 +20,20 @@ export type GraphicsEditorSessionState = {
   activeDirection: SkinDirection;
   activeFrameId: string | null;
 
-  skinId: string | null;
   skinDraft: SkinData | null;
   skinIsDraft: boolean;
   skinRevision: string;
 
-  textureId: string | null;
   textureDraft: TextureData | null;
   textureIsDraft: boolean;
   textureRevision: string;
 
-  imageDirty: boolean;
-  metaPanel: MetaPanel;
+  imageDraft: ImageData | null;
+  imageIsDraft: boolean;
+  imageDescription: string;
+  imageRevision: string;
+  selectedToken: string;
+
   operationMode: OperationMode;
   zoom: number;
 
@@ -38,19 +41,48 @@ export type GraphicsEditorSessionState = {
   setActiveFrameId: (frameId: string | null) => void;
   syncSkin: (resource: ResourceRecord<'skin'>) => void;
   syncTexture: (resource: ResourceRecord<'texture'>) => void;
+  syncImage: (resource: ResourceRecord<'image'>) => void;
   patchSkinDraft: (updater: (current: SkinData) => SkinData) => void;
   patchTextureDraft: (updater: (current: TextureData) => TextureData) => void;
+  patchImageDraft: (updater: (current: ImageData) => ImageData) => void;
+  seedImageDraft: (params: {
+    data: ImageData;
+    isDraft?: boolean;
+    description?: string;
+  }) => void;
   setSkinIsDraft: (isDraft: boolean) => void;
   setTextureIsDraft: (isDraft: boolean) => void;
-  setImageDirty: (dirty: boolean) => void;
+  setImageIsDraft: (isDraft: boolean) => void;
+  setImageDescription: (description: string) => void;
+  setSelectedToken: (token: string) => void;
   setOperationMode: (mode: OperationMode) => void;
   setZoom: (zoom: number) => void;
-  openMeta: (panel: Exclude<MetaPanel, null>) => void;
-  closeMeta: () => void;
 };
 
 function revision(value: unknown) {
   return JSON.stringify(value);
+}
+
+function imageRevisionSnapshot(resource: {
+  data: ImageData;
+  isDraft: boolean;
+  description?: string;
+}) {
+  return revision({
+    data: resource.data,
+    isDraft: resource.isDraft,
+    description: resource.description ?? '',
+  });
+}
+
+function clearImageDraftState() {
+  return {
+    imageDraft: null as ImageData | null,
+    imageIsDraft: true,
+    imageDescription: '',
+    imageRevision: '',
+    selectedToken: 'ff',
+  };
 }
 
 export function buildInitialStateFromResource(
@@ -62,16 +94,13 @@ export function buildInitialStateFromResource(
     namespace: resource.namespace,
     activeDirection: 'down' as SkinDirection,
     activeFrameId: null as string | null,
-    skinId: null as string | null,
     skinDraft: null as SkinData | null,
     skinIsDraft: true,
     skinRevision: '',
-    textureId: null as string | null,
     textureDraft: null as TextureData | null,
     textureIsDraft: true,
     textureRevision: '',
-    imageDirty: false,
-    metaPanel: null as MetaPanel,
+    ...clearImageDraftState(),
     operationMode: 'paint' as OperationMode,
     zoom: 1,
   };
@@ -79,7 +108,6 @@ export function buildInitialStateFromResource(
   if (resource.type === 'skin') {
     return {
       ...base,
-      skinId: resource.id,
       skinDraft: resource.data,
       skinIsDraft: resource.isDraft,
       skinRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -90,7 +118,6 @@ export function buildInitialStateFromResource(
     const frameIds = getDefaultLayerImageIds(resource.data);
     return {
       ...base,
-      textureId: resource.id,
       textureDraft: resource.data,
       textureIsDraft: resource.isDraft,
       textureRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -101,6 +128,11 @@ export function buildInitialStateFromResource(
   return {
     ...base,
     activeFrameId: resource.id,
+    imageDraft: resource.data,
+    imageIsDraft: resource.isDraft,
+    imageDescription: resource.description ?? '',
+    imageRevision: imageRevisionSnapshot(resource),
+    selectedToken: getDefaultPaletteToken(resource.data.palette),
   };
 }
 
@@ -108,13 +140,21 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
   return createStore<GraphicsEditorSessionState>((set, get) => ({
     ...buildInitialStateFromResource(resource),
 
-    setActiveDirection: (direction) => set({ activeDirection: direction, activeFrameId: null }),
+    setActiveDirection: (direction) =>
+      set({
+        activeDirection: direction,
+        activeFrameId: null,
+        ...clearImageDraftState(),
+      }),
 
-    setActiveFrameId: (frameId) => set({ activeFrameId: frameId }),
+    setActiveFrameId: (frameId) =>
+      set({
+        activeFrameId: frameId,
+        ...clearImageDraftState(),
+      }),
 
     syncSkin: (resource) =>
       set({
-        skinId: resource.id,
         skinDraft: resource.data,
         skinIsDraft: resource.isDraft,
         skinRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -124,7 +164,6 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
       const frameIds = getDefaultLayerImageIds(resource.data);
       const state = get();
       set({
-        textureId: resource.id,
         textureDraft: resource.data,
         textureIsDraft: resource.isDraft,
         textureRevision: revision({ data: resource.data, isDraft: resource.isDraft }),
@@ -144,13 +183,41 @@ export function createGraphicsEditorSession(resource: ResourceRecord<'skin' | 't
       set({ textureDraft: updater(current) });
     },
 
+    syncImage: (resource) => {
+      if (get().activeFrameId !== resource.id) return;
+      set({
+        imageDraft: resource.data,
+        imageIsDraft: resource.isDraft,
+        imageDescription: resource.description ?? '',
+        imageRevision: imageRevisionSnapshot(resource),
+        selectedToken: getDefaultPaletteToken(resource.data.palette),
+      });
+    },
+
+    patchImageDraft: (updater) => {
+      const current = get().imageDraft;
+      if (current == null) return;
+      set({ imageDraft: updater(current) });
+    },
+
+    seedImageDraft: ({ data, isDraft = true, description = '' }) => {
+      if (get().activeFrameId == null) return;
+      set({
+        imageDraft: data,
+        imageIsDraft: isDraft,
+        imageDescription: description,
+        imageRevision: imageRevisionSnapshot({ data, isDraft, description }),
+        selectedToken: getDefaultPaletteToken(data.palette),
+      });
+    },
+
     setSkinIsDraft: (isDraft) => set({ skinIsDraft: isDraft }),
     setTextureIsDraft: (isDraft) => set({ textureIsDraft: isDraft }),
-    setImageDirty: (dirty) => set({ imageDirty: dirty }),
+    setImageIsDraft: (isDraft) => set({ imageIsDraft: isDraft }),
+    setImageDescription: (description) => set({ imageDescription: description }),
+    setSelectedToken: (token) => set({ selectedToken: token }),
     setOperationMode: (mode) => set({ operationMode: mode }),
     setZoom: (zoom) => set({ zoom: clampZoom(zoom) }),
-    openMeta: (panel) => set({ metaPanel: panel }),
-    closeMeta: () => set({ metaPanel: null }),
   }));
 }
 
@@ -170,6 +237,17 @@ export function selectTextureDirty(state: GraphicsEditorSessionState) {
   );
 }
 
+export function selectImageDirty(state: GraphicsEditorSessionState) {
+  if (state.imageDraft == null) return false;
+  return (
+    revision({
+      data: state.imageDraft,
+      isDraft: state.imageIsDraft,
+      description: state.imageDescription,
+    }) !== state.imageRevision
+  );
+}
+
 export function selectAnyDirty(state: GraphicsEditorSessionState) {
-  return selectSkinDirty(state) || selectTextureDirty(state) || state.imageDirty;
+  return selectSkinDirty(state) || selectTextureDirty(state) || selectImageDirty(state);
 }

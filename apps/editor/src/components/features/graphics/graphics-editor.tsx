@@ -12,17 +12,15 @@ import { PaintEditorToolbar } from '@editor/components/features/paint-editor/pai
 import { SaveToolbarMenu } from '@editor/components/features/paint-editor/save-toolbar-menu';
 import { ZoomPopup } from '@editor/components/features/paint-editor/zoom-popup';
 import { ImageSizeDialog } from '@editor/components/features/graphics/image-size-dialog';
-import {
-  buildColorSwatchItems,
-  renderImageEditorCore,
-  useImageEditorState,
-} from '@editor/components/features/graphics/image-editor-core';
+import { PixelCanvas } from '@editor/components/features/graphics/pixel-canvas';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { createEmptyImageData } from '@editor/lib/empty-image-data';
 import { createEmptyTextureData } from '@editor/lib/empty-texture-data';
 import { getResourceContextLabel } from '@editor/lib/graphics-context-label';
 import { addPaletteColor, removePaletteColor } from '@editor/lib/image-palette-mutate';
-import { getDefaultPaletteToken } from '@editor/lib/image-pixel-mutate';
+import { getDefaultPaletteToken, setImagePixel } from '@editor/lib/image-pixel-mutate';
+import { buildPaletteSwatchItems } from '@editor/lib/palette-swatch-items';
+import { isPaintMode } from '@editor/lib/paint-editor/operation-mode';
 import {
   buildSaveLayerItems,
   executeGraphicsSave,
@@ -42,19 +40,14 @@ import {
   appendImageToDefaultLayer,
   getDefaultLayerImageIds,
 } from '@editor/lib/texture-layers';
-import { useSkinValidation, useTextureValidation } from '@editor/lib/graphics-meta-validation';
+import { useSkinValidation, useTextureValidation, useImageValidation } from '@editor/lib/graphics-meta-validation';
 import { useUpdateDocument } from '@editor/hooks/api/mutations';
 import { useDocumentById } from '@editor/hooks/api/by-id';
 import { useResolvedDocuments } from '@editor/hooks/api/resolved-documents';
 import {
   GraphicsEditorSessionProvider,
-  useGraphicsEditorSession,
 } from '@editor/providers/graphics-editor-session-provider';
-import {
-  selectAnyDirty,
-  selectSkinDirty,
-  selectTextureDirty,
-} from '@editor/stores/graphics-editor-session';
+import { useGraphicsEditorContentSession } from '@editor/hooks/ui/use-graphics-editor-content-session';
 import { useLayoutStore } from '@editor/stores/edit-state';
 
 type GraphicsEditorProps = {
@@ -98,32 +91,42 @@ function GraphicsEditorContent({
   const setEditState = useLayoutStore((state) => state.setEditState);
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  const entryType = useGraphicsEditorSession((s) => s.entryType);
-  const namespace = useGraphicsEditorSession((s) => s.namespace);
-  const activeDirection = useGraphicsEditorSession((s) => s.activeDirection);
-  const activeFrameId = useGraphicsEditorSession((s) => s.activeFrameId);
-  const skinDraft = useGraphicsEditorSession((s) => s.skinDraft);
-  const skinIsDraft = useGraphicsEditorSession((s) => s.skinIsDraft);
-  const textureDraft = useGraphicsEditorSession((s) => s.textureDraft);
-  const textureIsDraft = useGraphicsEditorSession((s) => s.textureIsDraft);
-  const imageDirty = useGraphicsEditorSession((s) => s.imageDirty);
-  const skinDirty = useGraphicsEditorSession(selectSkinDirty);
-  const textureDirty = useGraphicsEditorSession(selectTextureDirty);
-  const anyDirty = useGraphicsEditorSession(selectAnyDirty);
-  const operationMode = useGraphicsEditorSession((s) => s.operationMode);
-  const zoom = useGraphicsEditorSession((s) => s.zoom);
-
-  const setActiveDirection = useGraphicsEditorSession((s) => s.setActiveDirection);
-  const setActiveFrameId = useGraphicsEditorSession((s) => s.setActiveFrameId);
-  const patchSkinDraft = useGraphicsEditorSession((s) => s.patchSkinDraft);
-  const patchTextureDraft = useGraphicsEditorSession((s) => s.patchTextureDraft);
-  const syncSkin = useGraphicsEditorSession((s) => s.syncSkin);
-  const syncTexture = useGraphicsEditorSession((s) => s.syncTexture);
-  const setSkinIsDraft = useGraphicsEditorSession((s) => s.setSkinIsDraft);
-  const setTextureIsDraft = useGraphicsEditorSession((s) => s.setTextureIsDraft);
-  const setImageDirty = useGraphicsEditorSession((s) => s.setImageDirty);
-  const setOperationMode = useGraphicsEditorSession((s) => s.setOperationMode);
-  const setZoom = useGraphicsEditorSession((s) => s.setZoom);
+  const {
+    entryType,
+    namespace,
+    activeDirection,
+    activeFrameId,
+    skinDraft,
+    skinIsDraft,
+    textureDraft,
+    textureIsDraft,
+    imageDraft,
+    imageIsDraft,
+    imageDescription,
+    selectedToken,
+    imageDirty,
+    skinDirty,
+    textureDirty,
+    anyDirty,
+    operationMode,
+    zoom,
+    setActiveDirection,
+    setActiveFrameId,
+    patchSkinDraft,
+    patchTextureDraft,
+    patchImageDraft,
+    syncSkin,
+    syncTexture,
+    syncImage,
+    seedImageDraft,
+    setSkinIsDraft,
+    setTextureIsDraft,
+    setImageIsDraft,
+    setImageDescription,
+    setSelectedToken,
+    setOperationMode,
+    setZoom,
+  } = useGraphicsEditorContentSession();
 
   const [sizeDialogOpen, setSizeDialogOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -140,6 +143,7 @@ function GraphicsEditorContent({
 
   const { data: textureResource } = useDocumentById('resources', textureId ?? undefined);
   const syncedTextureId = useRef<string | null>(null);
+  const syncedImageId = useRef<string | null>(null);
 
   useEffect(() => {
     if (skinFromQuery?.type === 'skin') syncSkin(skinFromQuery);
@@ -169,6 +173,16 @@ function GraphicsEditorContent({
   const { data: activeImageResource } = useDocumentById('resources', activeImageId ?? undefined);
   const activeImage = activeImageResource?.type === 'image' ? activeImageResource : undefined;
 
+  useEffect(() => {
+    if (activeImage?.type !== 'image') {
+      syncedImageId.current = null;
+      return;
+    }
+    if (syncedImageId.current === activeImage.id) return;
+    syncedImageId.current = activeImage.id;
+    syncImage(activeImage);
+  }, [activeImage, syncImage]);
+
   const directionTextureIds = useMemo(() => {
     if (entryType !== 'skin' || skinDraft == null) return [];
     return SKIN_DIRECTIONS.map((direction) => skinDraft.textures[direction]).filter(
@@ -192,6 +206,7 @@ function GraphicsEditorContent({
     textureDraft,
     textureIsDraft
   );
+  const imageValidation = useImageValidation(activeImage, imageDraft, imageIsDraft, imageDescription);
 
   const guardSwitch = useCallback(() => {
     if (anyDirty) {
@@ -204,12 +219,14 @@ function GraphicsEditorContent({
   const handleSelectDirection = (direction: SkinDirection) => {
     if (direction === activeDirection) return;
     if (!guardSwitch()) return;
+    syncedImageId.current = null;
     setActiveDirection(direction);
   };
 
   const handleSelectFrame = (frameId: string) => {
     if (frameId === activeImageId) return;
     if (!guardSwitch()) return;
+    syncedImageId.current = null;
     setActiveFrameId(frameId);
   };
 
@@ -246,6 +263,8 @@ function GraphicsEditorContent({
         });
         patchTextureDraft((current) => appendImageToDefaultLayer(current, id));
         setActiveFrameId(id);
+        seedImageDraft({ data: emptyImage });
+        syncedImageId.current = id;
         toast.success(t('フレームを追加しました'));
       }
     } catch (error) {
@@ -299,222 +318,219 @@ function GraphicsEditorContent({
     setSaveDialogOpen(true);
   };
 
+  const imageSlots = useMemo(() => {
+    const editable = imageDraft != null && isPaintMode(operationMode);
+    if (imageDraft == null) {
+      return {
+        canvas: <PixelCanvas className="w-full" emptyLabel={emptyLabel} />,
+        canvasWidth: 0,
+        canvasHeight: 0,
+      };
+    }
+    return {
+      canvas: (
+        <PixelCanvas
+          className="w-full"
+          image={imageDraft}
+          activeToken={selectedToken}
+          onPaint={
+            editable
+              ? (x, y) => {
+                  patchImageDraft((current) => setImagePixel(current, x, y, selectedToken));
+                }
+              : undefined
+          }
+        />
+      ),
+      canvasWidth: imageDraft.size.width,
+      canvasHeight: imageDraft.size.height,
+    };
+  }, [emptyLabel, imageDraft, operationMode, patchImageDraft, selectedToken]);
+
+  const saveContext: GraphicsSaveContext = {
+    entryType,
+    imageResource: activeImage,
+    imageDirty,
+    imageIsDraft,
+    imageValidation,
+    textureResource: textureResource?.type === 'texture' ? textureResource : undefined,
+    textureDirty,
+    textureIsDraft,
+    textureValidation,
+    skinResource,
+    skinDirty,
+    skinIsDraft,
+    skinValidation,
+    frameResources,
+    directionTextureResources: resolvedDirectionTextures,
+  };
+
+  const saveLayerItems = buildSaveLayerItems(saveContext, {
+    image: t('画像'),
+    texture: t('テクスチャ'),
+    skin: t('スキン'),
+  });
+
+  const activeSaveItem = saveScope != null ? getSaveLayerItem(saveLayerItems, saveScope) : null;
+
+  const dialogIsDraft =
+    saveScope === 'skin'
+      ? skinIsDraft
+      : saveScope === 'texture'
+        ? textureIsDraft
+        : imageIsDraft;
+
+  const handleDialogDraftChange = (next: boolean) => {
+    if (saveScope === 'skin') {
+      setSkinIsDraft(next);
+      return;
+    }
+    if (saveScope === 'texture') {
+      setTextureIsDraft(next);
+      return;
+    }
+    setImageIsDraft(next);
+  };
+
+  const handleSave = async () => {
+    if (saveScope == null || activeSaveItem == null || !activeSaveItem.isValid) return;
+    try {
+      await executeGraphicsSave({
+        scope: saveScope,
+        context: saveContext,
+        updateResource,
+        syncTexture: (next) => syncTexture(next),
+        syncSkin: (next) => syncSkin(next),
+        syncImage: (next) => syncImage(next),
+      });
+      toast.success(t('保存しました'));
+      setSaveDialogOpen(false);
+    } catch (error) {
+      toast.error(`${t('保存に失敗しました')}: ${(error as Error).message}`);
+    }
+  };
+
+  const swatchItems = buildPaletteSwatchItems(imageDraft?.palette, selectedToken);
+
+  const handleAddPaletteColor = () => {
+    if (imageDraft == null) return;
+    const result = addPaletteColor(imageDraft);
+    if (result == null) {
+      toast.error(t('これ以上色を追加できません'));
+      return;
+    }
+    patchImageDraft(() => result.data);
+    setSelectedToken(result.token);
+  };
+
+  const handleDeletePaletteColor = (token: string) => {
+    if (imageDraft == null) return;
+    const next = removePaletteColor(imageDraft, token);
+    if (next == null) {
+      toast.error(t('この色は削除できません'));
+      return;
+    }
+    patchImageDraft(() => next);
+    if (selectedToken === token) {
+      setSelectedToken(getDefaultPaletteToken(next.palette));
+    }
+  };
+
+  const contextChips: ContextChip[] = [
+    ...(showDirection
+      ? [
+          {
+            id: 'direction',
+            label: t('方向'),
+            valueLabel: t(SKIN_DIRECTION_LABELS[activeDirection]),
+            items: directionItems,
+            activeId: activeDirection,
+            emptyLabel: t('方向がありません'),
+            showDraftDot: hasDraftTextures,
+            onAdd: showDirectionAdd ? () => setSizeDialogOpen(true) : undefined,
+            addDisabled: isAdding || isPending,
+          },
+        ]
+      : []),
+    ...(showFrames
+      ? [
+          {
+            id: 'frame',
+            label: t('フレーム'),
+            valueLabel: activeFrameLabel,
+            items: frameItems,
+            activeId: activeImageId ?? undefined,
+            emptyLabel: t('フレームがありません'),
+            showDirtyDot: imageDirty,
+            showDraftDot: hasDraftFrames,
+            onAdd: showFrameAdd ? () => setSizeDialogOpen(true) : undefined,
+            addDisabled: isAdding || isPending,
+          },
+        ]
+      : []),
+  ];
+
   return (
-    <KeyedImageEditorState
-      key={activeImageId ?? 'empty'}
-      activeImage={activeImage}
-      onDirtyChange={setImageDirty}
-    >
-      {(imageState) => {
-        const imageSlots = renderImageEditorCore({
-          state: imageState,
-          emptyLabel,
-          operationMode,
-        });
+    <>
+      <PaintEditorLayout
+        canvas={
+          <CanvasViewport zoom={zoom} operationMode={operationMode} className="h-full">
+            <div ref={viewportRef} className="w-full">
+              {imageSlots.canvas}
+            </div>
+          </CanvasViewport>
+        }
+        fab={<ContextNavigatorFab chips={contextChips} />}
+        toolbar={
+          <PaintEditorToolbar
+            items={[
+              <OperationModeGroup key="mode" mode={operationMode} onModeChange={setOperationMode} />,
+              <DrawResourcePopup
+                key="palette"
+                items={swatchItems}
+                selectedKey={selectedToken}
+                onSelectKey={setSelectedToken}
+                onAdd={imageDraft != null ? handleAddPaletteColor : undefined}
+                onDeleteKey={imageDraft != null ? handleDeletePaletteColor : undefined}
+                addDisabled={imageDraft == null}
+                deleteDisabled={imageDraft == null || swatchItems.length <= 1}
+                emptyLabel={t('パレット未設定')}
+              />,
+              <ZoomPopup
+                key="zoom"
+                zoom={zoom}
+                onZoomChange={setZoom}
+                canvasWidth={imageSlots.canvasWidth}
+                canvasHeight={imageSlots.canvasHeight}
+                containerRef={viewportRef}
+              />,
+              <SaveToolbarMenu
+                key="save"
+                items={saveLayerItems}
+                saving={isPending}
+                showDirtyDot={anyDirty}
+                showDraftDot={hasDraftFrames || hasDraftTextures}
+                onSelectScope={openSaveDialog}
+              />,
+            ]}
+          />
+        }
+      />
 
-        const saveContext: GraphicsSaveContext = {
-          entryType,
-          imageResource: activeImage,
-          imageDirty,
-          imageIsDraft: imageState.isDraft,
-          imageValidation: imageState.validation,
-          textureResource: textureResource?.type === 'texture' ? textureResource : undefined,
-          textureDirty,
-          textureIsDraft,
-          textureValidation,
-          skinResource,
-          skinDirty,
-          skinIsDraft,
-          skinValidation,
-          frameResources,
-          directionTextureResources: resolvedDirectionTextures,
-        };
+      <ImageSizeDialog open={sizeDialogOpen} onOpenChange={setSizeDialogOpen} onConfirm={handleAdd} />
 
-        const saveLayerItems = buildSaveLayerItems(saveContext, {
-          image: t('画像'),
-          texture: t('テクスチャ'),
-          skin: t('スキン'),
-        });
-
-        const activeSaveItem = saveScope != null ? getSaveLayerItem(saveLayerItems, saveScope) : null;
-
-        const dialogIsDraft =
-          saveScope === 'skin'
-            ? skinIsDraft
-            : saveScope === 'texture'
-              ? textureIsDraft
-              : imageState.isDraft;
-
-        const handleDialogDraftChange = (next: boolean) => {
-          if (saveScope === 'skin') {
-            setSkinIsDraft(next);
-            return;
-          }
-          if (saveScope === 'texture') {
-            setTextureIsDraft(next);
-            return;
-          }
-          imageState.setIsDraft(next);
-        };
-
-        const handleSave = async () => {
-          if (saveScope == null || activeSaveItem == null || !activeSaveItem.isValid) return;
-          try {
-            await executeGraphicsSave({
-              scope: saveScope,
-              context: saveContext,
-              updateResource,
-              syncTexture: (next) => syncTexture(next),
-              syncSkin: (next) => syncSkin(next),
-            });
-            toast.success(t('保存しました'));
-            setSaveDialogOpen(false);
-          } catch (error) {
-            toast.error(`${t('保存に失敗しました')}: ${(error as Error).message}`);
-          }
-        };
-
-        const swatchItems = buildColorSwatchItems(imageState.draftData?.palette, imageState.selectedToken);
-
-        const handleAddPaletteColor = () => {
-          if (imageState.draftData == null) return;
-          const result = addPaletteColor(imageState.draftData);
-          if (result == null) {
-            toast.error(t('これ以上色を追加できません'));
-            return;
-          }
-          imageState.setDraftData(result.data);
-          imageState.setSelectedToken(result.token);
-        };
-
-        const handleDeletePaletteColor = (token: string) => {
-          if (imageState.draftData == null) return;
-          const next = removePaletteColor(imageState.draftData, token);
-          if (next == null) {
-            toast.error(t('この色は削除できません'));
-            return;
-          }
-          imageState.setDraftData(next);
-          if (imageState.selectedToken === token) {
-            imageState.setSelectedToken(getDefaultPaletteToken(next.palette));
-          }
-        };
-
-        const contextChips: ContextChip[] = [
-          ...(showDirection
-            ? [
-                {
-                  id: 'direction',
-                  label: t('方向'),
-                  valueLabel: t(SKIN_DIRECTION_LABELS[activeDirection]),
-                  items: directionItems,
-                  activeId: activeDirection,
-                  emptyLabel: t('方向がありません'),
-                  showDraftDot: hasDraftTextures,
-                  onAdd: showDirectionAdd ? () => setSizeDialogOpen(true) : undefined,
-                  addDisabled: isAdding || isPending,
-                },
-              ]
-            : []),
-          ...(showFrames
-            ? [
-                {
-                  id: 'frame',
-                  label: t('フレーム'),
-                  valueLabel: activeFrameLabel,
-                  items: frameItems,
-                  activeId: activeImageId ?? undefined,
-                  emptyLabel: t('フレームがありません'),
-                  showDirtyDot: imageDirty,
-                  showDraftDot: hasDraftFrames,
-                  onAdd: showFrameAdd ? () => setSizeDialogOpen(true) : undefined,
-                  addDisabled: isAdding || isPending,
-                },
-              ]
-            : []),
-        ];
-
-        return (
-          <>
-            <PaintEditorLayout
-              canvas={
-                <CanvasViewport
-                  zoom={zoom}
-                  operationMode={operationMode}
-                  className="h-full"
-                >
-                  <div ref={viewportRef} className="w-full">
-                    {imageSlots.canvas}
-                  </div>
-                </CanvasViewport>
-              }
-              fab={<ContextNavigatorFab chips={contextChips} />}
-              toolbar={
-                <PaintEditorToolbar
-                  items={[
-                    <OperationModeGroup key="mode" mode={operationMode} onModeChange={setOperationMode} />,
-                    <DrawResourcePopup
-                      key="palette"
-                      items={swatchItems}
-                      selectedKey={imageState.selectedToken}
-                      onSelectKey={imageState.setSelectedToken}
-                      onAdd={activeImage != null ? handleAddPaletteColor : undefined}
-                      onDeleteKey={activeImage != null ? handleDeletePaletteColor : undefined}
-                      addDisabled={imageState.draftData == null}
-                      deleteDisabled={imageState.draftData == null || swatchItems.length <= 1}
-                      emptyLabel={t('パレット未設定')}
-                    />,
-                    <ZoomPopup
-                      key="zoom"
-                      zoom={zoom}
-                      onZoomChange={setZoom}
-                      canvasWidth={imageSlots.canvasWidth}
-                      canvasHeight={imageSlots.canvasHeight}
-                      containerRef={viewportRef}
-                    />,
-                    <SaveToolbarMenu
-                      key="save"
-                      items={saveLayerItems}
-                      saving={isPending}
-                      showDirtyDot={anyDirty}
-                      showDraftDot={hasDraftFrames || hasDraftTextures}
-                      onSelectScope={openSaveDialog}
-                    />,
-                  ]}
-                />
-              }
-            />
-
-            <ImageSizeDialog open={sizeDialogOpen} onOpenChange={setSizeDialogOpen} onConfirm={handleAdd} />
-
-            <GraphicsSaveDialog
-              open={saveDialogOpen}
-              onOpenChange={setSaveDialogOpen}
-              scope={saveScope}
-              item={activeSaveItem}
-              isDraft={dialogIsDraft}
-              onDraftChange={handleDialogDraftChange}
-              description={imageState.description}
-              onDescriptionChange={saveScope === 'image' ? imageState.setDescription : undefined}
-              saving={isPending}
-              onSave={handleSave}
-            />
-          </>
-        );
-      }}
-    </KeyedImageEditorState>
+      <GraphicsSaveDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        scope={saveScope}
+        item={activeSaveItem}
+        isDraft={dialogIsDraft}
+        onDraftChange={handleDialogDraftChange}
+        description={imageDescription}
+        onDescriptionChange={saveScope === 'image' ? setImageDescription : undefined}
+        saving={isPending}
+        onSave={handleSave}
+      />
+    </>
   );
-}
-
-function KeyedImageEditorState({
-  activeImage,
-  onDirtyChange,
-  children,
-}: {
-  activeImage: ResourceRecord<'image'> | undefined;
-  onDirtyChange: (dirty: boolean) => void;
-  children: (state: ReturnType<typeof useImageEditorState>) => React.ReactNode;
-}) {
-  const imageState = useImageEditorState(activeImage, onDirtyChange);
-  return children(imageState);
 }

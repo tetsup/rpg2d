@@ -34,6 +34,23 @@ export function validateTextureDraft(
   });
 }
 
+export function validateImageDraft(
+  resource: ResourceRecord<'image'>,
+  draft: ResourceRecord<'image'>['data'],
+  isDraft: boolean,
+  description: string
+) {
+  return createResourceInputSchema('image').safeParse({
+    namespace: resource.namespace,
+    type: 'image',
+    name: resource.name,
+    version: resource.version,
+    description,
+    isDraft,
+    data: draft,
+  });
+}
+
 export function useSkinValidation(
   resource: ResourceRecord<'skin'> | undefined,
   draft: ResourceRecord<'skin'>['data'] | null,
@@ -54,4 +71,16 @@ export function useTextureValidation(
     if (resource == null || draft == null) return null;
     return validateTextureDraft(resource, draft, isDraft);
   }, [draft, isDraft, resource]);
+}
+
+export function useImageValidation(
+  resource: ResourceRecord<'image'> | undefined,
+  draft: ResourceRecord<'image'>['data'] | null,
+  isDraft: boolean,
+  description: string
+) {
+  return useMemo(() => {
+    if (resource == null || draft == null) return null;
+    return validateImageDraft(resource, draft, isDraft, description);
+  }, [description, draft, isDraft, resource]);
 }
