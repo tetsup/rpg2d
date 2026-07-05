@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { FolderUp, Play, Settings2, Sparkles } from 'lucide-react';
 import { MenuCard } from '@editor/components/parts/menu-card';
+import { DocumentPickerDialog } from '@editor/components/parts/document-picker-dialog';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
-import { ManifestPickerDialog } from '@editor/components/features/manifest/manifest-picker-dialog';
 import { ControlSection } from '@editor/components/forms/control-section';
 import { useWorkspaceStore } from '@editor/stores/workspace';
 
@@ -55,11 +55,17 @@ export function HomePage() {
           description={t('新しいグループを作成')}
         />
       </ControlSection>
-      <ManifestPickerDialog
+      <DocumentPickerDialog
         open={pickerOpen}
         onOpenChange={setPickerOpen}
+        title={t('プロジェクトを選択')}
+        collectionName="resources"
+        resourceType="manifest"
         onSelect={(id) => {
           setWorkspace({ manifestId: id });
+        }}
+        onCreate={() => {
+          navigate('/resources/manifest/new');
         }}
       />
     </LayoutShell>
