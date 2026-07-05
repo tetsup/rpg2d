@@ -56,7 +56,16 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       if (result.ok) {
-        expect(result.data).toEqual(validPlayerData);
+        expect(result.data).toMatchObject({
+          id: 'sample/player/hero',
+          namespace: 'sample',
+          type: 'player',
+          name: 'hero',
+          version: 0,
+          isDraft: false,
+          createdBy: 'dummy-user',
+        });
+        expect(result.data.data).toEqual(validPlayerData);
       }
     });
 
@@ -163,8 +172,7 @@ describe('ResourceRepository', () => {
       expect(got.ok).toBeTruthy();
 
       if (got.ok) {
-        const innerData = 'initialState' in got.data ? got.data : (got.data as { data: typeof validPlayerData }).data;
-        expect((innerData as { initialState?: { hp?: number } }).initialState?.hp).toBe(200);
+        expect(got.data.data.initialState?.hp).toBe(200);
       }
     });
 

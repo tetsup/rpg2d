@@ -1,6 +1,7 @@
 import z from 'zod';
 import type { ExecutableResourceType, ResourceId } from '@sharedTypes/resource/common';
 import { NamespaceSchema, parseResourceId, ResourceNameSchema, resources } from '@schema/resource/common/base';
+import { ResourceRecordResponseSchema } from '@schema/api/resource/record';
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContext } from './game-context';
@@ -34,18 +35,12 @@ export class ResourceStore {
   ): Promise<InstanceType<ResourceClass<K>>> {
     const schema = this.ctx.schemas.get(type);
     const body = await this.fetch(namespace, type, name, z.unknown());
-    const payload =
-      body != null && typeof body === 'object' && 'data' in body
-        ? z
-            .object({
-              namespace: NamespaceSchema.refine((v) => v === namespace),
-              type: z.literal(type),
-              name: ResourceNameSchema.refine((v) => v === name),
-              version: z.literal(0),
-              data: schema,
-            })
-            .parse(body).data
-        : schema.parse(body);
+    const record = ResourceRecordResponseSchema.extend({
+      namespace: NamespaceSchema.refine((v) => v === namespace),
+      type: z.literal(type),
+      name: ResourceNameSchema.refine((v) => v === name),
+    }).parse(body);
+    const payload = schema.parse(record.data);
     return await this.ctx.factory.create(payload, type);
   }
 

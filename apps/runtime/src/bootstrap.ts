@@ -1,9 +1,9 @@
 import { GameApp, resolveTransparentMode, type KeyAssignment, type TransparentMode } from '@tetsup/web2d';
 import { RpgCore } from '@engine/index';
 import type { RpgKey } from '@sharedTypes/engine';
-import type { ManifestData } from '@sharedTypes/resource/manifest';
 import type { AssignPad } from './hooks/softpad';
 import { getApiBaseUrl } from './config';
+import { loadManifest } from './load-manifest';
 import {
   applyStartOverrides,
   resolveResourceUri,
@@ -13,6 +13,7 @@ import {
 
 export type { RuntimeConfig, RuntimeMode } from './runtime-config';
 export { applyStartOverrides, parseRuntimeSearchParams, resolveResourceUri } from './runtime-config';
+export { loadManifest } from './load-manifest';
 
 export async function setupMockIfNeeded(mode: RuntimeMode): Promise<void> {
   if (mode !== 'mock') return;
@@ -20,17 +21,6 @@ export async function setupMockIfNeeded(mode: RuntimeMode): Promise<void> {
   await worker.start({
     onUnhandledRequest: 'bypass',
   });
-}
-
-export async function loadManifest(manifestId: string, resourceUri: string): Promise<ManifestData> {
-  const response = await fetch(`${resourceUri}/${manifestId}`, { credentials: 'include' });
-  if (!response.ok) {
-    throw new Error(`Failed to load manifest: ${manifestId}`);
-  }
-  const body = await response.json();
-  return (body != null && typeof body === 'object' && 'data' in body
-    ? (body as { data: ManifestData }).data
-    : body) as ManifestData;
 }
 
 export type RuntimeSession = {

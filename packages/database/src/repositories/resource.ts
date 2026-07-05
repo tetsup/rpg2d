@@ -94,7 +94,7 @@ export class ResourceRepository {
           .set({
             name: document.name,
             isDraft: document.isDraft,
-            data: document,
+            data: input.data,
             updatedAt: now,
           })
           .where('id', '=', formatResourceId(path))
@@ -140,12 +140,12 @@ export class ResourceRepository {
         const conn = this.dbFactory(db);
         const resource = await conn
           .selectFrom('resources')
-          .select('data')
+          .selectAll()
           .where('id', '=', formatResourceId(path))
           .executeTakeFirst();
         if (!resource) throw new RepositoryNotFoundError();
 
-        return resource.data;
+        return resource;
       });
     });
   }
