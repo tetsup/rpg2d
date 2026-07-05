@@ -68,6 +68,47 @@ describe('useImageEditorState', () => {
     expect(onDirtyChange).toHaveBeenLastCalledWith(true);
   });
 
+  it('hydrates draft state when the resource arrives after mount', () => {
+    const { result, rerender } = renderHook(
+      ({ resource }: { resource: typeof sampleImageResource | undefined }) =>
+        useImageEditorState(resource),
+      { initialProps: { resource: undefined } }
+    );
+
+    expect(result.current.draftData).toBeUndefined();
+
+    rerender({ resource: sampleImageResource });
+
+    expect(result.current.draftData).toEqual(sampleImageResource.data);
+    expect(result.current.isDirty).toBe(false);
+    expect(result.current.selectedToken).toBe('aa');
+  });
+
+  it('does not reset local edits when the same resource is updated in the cache', () => {
+    const { result, rerender } = renderHook(
+      ({ resource }: { resource: typeof sampleImageResource }) => useImageEditorState(resource),
+      { initialProps: { resource: sampleImageResource } }
+    );
+
+    act(() => {
+      result.current.setIsDraft(false);
+    });
+
+    const cachedUpdate = {
+      ...sampleImageResource,
+      data: {
+        ...sampleImageResource.data,
+        pixels: ['bb bb', 'bb bb'],
+      },
+    };
+
+    rerender({ resource: cachedUpdate });
+
+    expect(result.current.isDirty).toBe(true);
+    expect(result.current.isDraft).toBe(false);
+    expect(result.current.draftData?.pixels[0]).toBe('aa aa');
+  });
+
   it('starts with fresh state when mounted for a different resource', () => {
     const { result: first } = renderHook(() => useImageEditorState(sampleImageResource));
 

@@ -23,6 +23,21 @@ export function useImageEditorState(
     resource ? getDefaultPaletteToken(resource.data.palette) : 'ff'
   );
 
+  useEffect(() => {
+    if (resource == null) {
+      setDraftData(undefined);
+      setIsDraft(true);
+      setDescription('');
+      setSelectedToken('ff');
+      return;
+    }
+
+    setDraftData(resource.data);
+    setIsDraft(resource.isDraft);
+    setDescription(resource.description ?? '');
+    setSelectedToken(getDefaultPaletteToken(resource.data.palette));
+  }, [resource?.id]);
+
   const isDirty = useMemo(() => {
     if (resource == null || draftData == null) return false;
     return (
