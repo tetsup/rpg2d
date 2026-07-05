@@ -47,7 +47,7 @@ export function PixelCanvas({
   const displayImages = image ? [image] : (images ?? []);
   const { width, height } = getCompositeCanvasSize(displayImages);
   const editable = image != null && onPaint != null;
-  const resolvedCellSize = Math.max(cellSize, 1);
+  const resolvedCellSize = Math.max(cellSize, 0.01);
 
   useEffect(() => {
     const canvas = ref.current;

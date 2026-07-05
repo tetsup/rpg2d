@@ -48,7 +48,9 @@ import {
   GraphicsEditorSessionProvider,
 } from '@editor/providers/graphics-editor-session-provider';
 import { useGraphicsEditorContentSession } from '@editor/hooks/ui/use-graphics-editor-content-session';
-import { useAutoFitZoom } from '@editor/hooks/ui/use-auto-fit-zoom';
+import { useFitCellSize } from '@editor/hooks/ui/use-fit-cell-size';
+import { useResetZoomOnImageChange } from '@editor/hooks/ui/use-reset-zoom-on-image-change';
+import { toCellSize } from '@editor/lib/paint-editor/zoom';
 import { useLayoutStore } from '@editor/stores/edit-state';
 
 type GraphicsEditorProps = {
@@ -319,13 +321,20 @@ function GraphicsEditorContent({
     setSaveDialogOpen(true);
   };
 
+  const fitCellSize = useFitCellSize({
+    containerRef: viewportRef,
+    canvasWidth: imageDraft?.size.width ?? 0,
+    canvasHeight: imageDraft?.size.height ?? 0,
+  });
+  const cellSize = toCellSize(fitCellSize, zoom);
+
+  useResetZoomOnImageChange(activeImageId, setZoom);
+
   const imageSlots = useMemo(() => {
     const editable = imageDraft != null && isPaintMode(operationMode);
     if (imageDraft == null) {
       return {
         canvas: <PixelCanvas className="w-full" emptyLabel={emptyLabel} />,
-        canvasWidth: 0,
-        canvasHeight: 0,
       };
     }
     return {
@@ -333,7 +342,7 @@ function GraphicsEditorContent({
         <PixelCanvas
           className="w-full"
           image={imageDraft}
-          cellSize={zoom}
+          cellSize={cellSize}
           activeToken={selectedToken}
           onPaint={
             editable
@@ -344,10 +353,8 @@ function GraphicsEditorContent({
           }
         />
       ),
-      canvasWidth: imageDraft.size.width,
-      canvasHeight: imageDraft.size.height,
     };
-  }, [emptyLabel, imageDraft, operationMode, patchImageDraft, selectedToken]);
+  }, [cellSize, emptyLabel, imageDraft, operationMode, patchImageDraft, selectedToken]);
 
   const saveContext: GraphicsSaveContext = {
     entryType,
@@ -374,14 +381,6 @@ function GraphicsEditorContent({
   });
 
   const activeSaveItem = saveScope != null ? getSaveLayerItem(saveLayerItems, saveScope) : null;
-
-  useAutoFitZoom({
-    containerRef: viewportRef,
-    canvasWidth: imageSlots.canvasWidth,
-    canvasHeight: imageSlots.canvasHeight,
-    imageKey: activeImageId,
-    setZoom,
-  });
 
   const dialogIsDraft =
     saveScope === 'skin'
@@ -508,14 +507,7 @@ function GraphicsEditorContent({
                 deleteDisabled={imageDraft == null || swatchItems.length <= 1}
                 emptyLabel={t('パレット未設定')}
               />,
-              <ZoomPopup
-                key="zoom"
-                zoom={zoom}
-                onZoomChange={setZoom}
-                canvasWidth={imageSlots.canvasWidth}
-                canvasHeight={imageSlots.canvasHeight}
-                containerRef={viewportRef}
-              />,
+              <ZoomPopup key="zoom" zoom={zoom} onZoomChange={setZoom} />,
               <SaveToolbarMenu
                 key="save"
                 items={saveLayerItems}

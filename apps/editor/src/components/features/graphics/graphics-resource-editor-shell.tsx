@@ -10,8 +10,10 @@ import { PaintEditorLayout } from '@editor/components/features/paint-editor/pain
 import { PaintEditorToolbar } from '@editor/components/features/paint-editor/paint-editor-toolbar';
 import { SaveToolbarMenu } from '@editor/components/features/paint-editor/save-toolbar-menu';
 import { ZoomPopup } from '@editor/components/features/paint-editor/zoom-popup';
-import { useAutoFitZoom } from '@editor/hooks/ui/use-auto-fit-zoom';
+import { useFitCellSize } from '@editor/hooks/ui/use-fit-cell-size';
+import { useResetZoomOnImageChange } from '@editor/hooks/ui/use-reset-zoom-on-image-change';
 import { buildPaletteSwatchItems } from '@editor/lib/palette-swatch-items';
+import { toCellSize } from '@editor/lib/paint-editor/zoom';
 import { getCompositeCanvasSize, type ImagePixelData } from '@editor/lib/pixel-render';
 import {
   findResourceTypeGroup,
@@ -43,14 +45,16 @@ export function GraphicsResourceEditorShell({
   const viewportRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
   const canvasSize = getCompositeCanvasSize(images ?? []);
+  const previewKey = isEmpty ? null : `${canvasSize.width}x${canvasSize.height}`;
 
-  useAutoFitZoom({
+  const fitCellSize = useFitCellSize({
     containerRef: viewportRef,
     canvasWidth: canvasSize.width,
     canvasHeight: canvasSize.height,
-    imageKey: isEmpty ? null : `${canvasSize.width}x${canvasSize.height}`,
-    setZoom,
   });
+  const cellSize = toCellSize(fitCellSize, zoom);
+
+  useResetZoomOnImageChange(previewKey, setZoom);
 
   const swatchItems = buildPaletteSwatchItems(palette);
 
@@ -72,7 +76,7 @@ export function GraphicsResourceEditorShell({
                 {emptyAction}
               </div>
             ) : (
-              <PixelCanvas className="w-full" images={images} cellSize={zoom} emptyLabel={emptyLabel} />
+              <PixelCanvas className="w-full" images={images} cellSize={cellSize} emptyLabel={emptyLabel} />
             )}
           </CanvasViewport>
         }
@@ -81,14 +85,7 @@ export function GraphicsResourceEditorShell({
             items={[
               <OperationModeGroup key="mode" mode="paint" onModeChange={() => undefined} />,
               <DrawResourcePopup key="palette" items={swatchItems} emptyLabel={t('パレット未設定')} />,
-              <ZoomPopup
-                key="zoom"
-                zoom={zoom}
-                onZoomChange={setZoom}
-                canvasWidth={canvasSize.width}
-                canvasHeight={canvasSize.height}
-                containerRef={viewportRef}
-              />,
+              <ZoomPopup key="zoom" zoom={zoom} onZoomChange={setZoom} />,
               <SaveToolbarMenu
                 key="save"
                 items={[
