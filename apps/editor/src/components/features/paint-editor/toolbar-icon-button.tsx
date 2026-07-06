@@ -29,7 +29,7 @@ export function ToolbarIconButton({
   return (
     <Button
       type="button"
-      variant={pressed ? 'secondary' : 'outline'}
+      variant={pressed ? 'default' : 'secondary'}
       size="icon"
       disabled={disabled}
       onClick={onClick}
