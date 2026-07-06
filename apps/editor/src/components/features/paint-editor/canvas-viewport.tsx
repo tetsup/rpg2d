@@ -1,4 +1,11 @@
-import { useCallback, useRef, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from 'react';
+import {
+  useCallback,
+  useRef,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import type { OperationMode } from '@editor/lib/paint-editor/operation-mode';
 import { cn } from '@editor/lib/utils';
 
@@ -6,32 +13,20 @@ type CanvasViewportProps = {
   operationMode: OperationMode;
   children: ReactNode;
   className?: string;
-  containerRef?: Ref<HTMLDivElement>;
+  setContainer?: Dispatch<SetStateAction<HTMLDivElement | null>>;
 };
 
-export function CanvasViewport({
-  operationMode,
-  children,
-  className,
-  containerRef,
-}: CanvasViewportProps) {
+export function CanvasViewport({ operationMode, children, className, setContainer }: CanvasViewportProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const isPanningRef = useRef(false);
-  const panOriginRef = useRef({ x: 0, y: 0, scrollLeft: 0, scrollTop: 0 });
-
   const setScrollRef = useCallback(
     (node: HTMLDivElement | null) => {
       scrollRef.current = node;
-      if (containerRef == null) return;
-      if (typeof containerRef === 'function') {
-        containerRef(node);
-        return;
-      }
-      containerRef.current = node;
+      setContainer?.(node);
     },
-    [containerRef]
+    [setContainer]
   );
-
+  const isPanningRef = useRef(false);
+  const panOriginRef = useRef({ x: 0, y: 0, scrollLeft: 0, scrollTop: 0 });
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
       if (operationMode !== 'pan' || scrollRef.current == null) return;

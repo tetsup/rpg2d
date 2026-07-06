@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LayoutShell } from '@editor/components/features/layout/layout-shell';
 import { PixelCanvas } from '@editor/components/features/graphics/pixel-canvas';
@@ -15,11 +15,7 @@ import { useResetZoomOnImageChange } from '@editor/hooks/ui/use-reset-zoom-on-im
 import { buildPaletteSwatchItems } from '@editor/lib/palette-swatch-items';
 import { toCellSize } from '@editor/lib/paint-editor/zoom';
 import { getCompositeCanvasSize, type ImagePixelData } from '@editor/lib/pixel-render';
-import {
-  findResourceTypeGroup,
-  resourceTypeMeta,
-  type GraphicsResourceType,
-} from '@editor/lib/resource-type-meta';
+import { findResourceTypeGroup, resourceTypeMeta, type GraphicsResourceType } from '@editor/lib/resource-type-meta';
 
 type GraphicsResourceEditorShellProps = {
   type: GraphicsResourceType;
@@ -42,13 +38,13 @@ export function GraphicsResourceEditorShell({
   const meta = resourceTypeMeta[type];
   const group = findResourceTypeGroup(type);
   const isEmpty = (images?.length ?? 0) === 0;
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [zoom, setZoom] = useState(1);
   const canvasSize = getCompositeCanvasSize(images ?? []);
   const previewKey = isEmpty ? null : `${canvasSize.width}x${canvasSize.height}`;
 
   const fitCellSize = useFitCellSize({
-    containerRef: viewportRef,
+    container,
     canvasWidth: canvasSize.width,
     canvasHeight: canvasSize.height,
   });
@@ -69,7 +65,7 @@ export function GraphicsResourceEditorShell({
     >
       <PaintEditorLayout
         canvas={
-          <CanvasViewport containerRef={viewportRef} operationMode="paint" className="h-full">
+          <CanvasViewport setContainer={setContainer} operationMode="paint" className="h-full">
             {isEmpty ? (
               <div className="flex min-h-40 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-muted/30 p-6 text-center text-sm text-muted-foreground">
                 <p>{emptyLabel}</p>
