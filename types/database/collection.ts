@@ -1,7 +1,7 @@
 import z from 'zod';
 import type { NamespaceInputSchema } from '@schema/database/namespace';
 import type { NamespacePermissionInputSchema } from '@schema/database/namespace-permission';
-import type { createResourceInputSchema } from '@schema/database/resource';
+import type { createResourceMetaInputSchema, ResourceInputSchemaMap } from '@schema/database/resource';
 import type { ResourceEdgeInputSchema } from '@schema/database/resource-edge';
 import type { UserInputSchema } from '@schema/database/user';
 import type { ResourceType } from '@sharedTypes/resource/common';
@@ -17,19 +17,15 @@ export type NamespaceDocument = NamespaceInput & { createdBy: string };
 export type ResourceEdgeInput = z.infer<typeof ResourceEdgeInputSchema>;
 export type ResourceEdgeDocument = ResourceEdgeInput;
 
-export type ResourceInput<T extends ResourceType = ResourceType> = z.infer<
-  ReturnType<typeof createResourceInputSchema<T>>
->;
+export type ResourceInput<T extends ResourceType> = z.infer<(typeof ResourceInputSchemaMap)[T]>;
+
 export type ResourceDocument<T extends ResourceType = ResourceType> = ResourceInput<T> & { id: string };
 
 export type ResourceRecord<T extends ResourceType = ResourceType> = WithTimestamp<ResourceDocument<T>> & {
   createdBy: string;
 };
 
-export type ResourceMeta<T extends ResourceType = ResourceType> = Pick<
-  ResourceDocument<T>,
-  'id' | 'namespace' | 'type' | 'name' | 'version' | 'description' | 'isDraft'
->;
+export type ResourceMeta<T extends ResourceType = ResourceType> = ReturnType<typeof createResourceMetaInputSchema<T>>;
 
 export type UserInput = z.infer<typeof UserInputSchema>;
 export type UserDocument = UserInput;
@@ -37,7 +33,7 @@ export type UserDocument = UserInput;
 export type DatabaseInput = {
   namespaces: NamespaceInput;
   users: UserInput;
-  resources: ResourceInput;
+  resources: ResourceInput<any>;
   namespace_permissions: NamespacePermissionInput;
   resource_edges: ResourceEdgeInput;
 };

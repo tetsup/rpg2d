@@ -1,5 +1,5 @@
 import { Kysely } from 'kysely';
-import { ResourcePath } from '@sharedTypes/resource/common';
+import { ResourcePath, ResourceType } from '@sharedTypes/resource/common';
 import { Database, ResourceDocument, ResourceInput } from '@sharedTypes/database/collection';
 import { createResourceInputSchema } from '@schema/database/resource';
 import { ResourceFilterSchema } from '@schema/filter/domain';
@@ -8,12 +8,12 @@ import { extractResourceRefs } from '@database/utils/resource';
 import { execute, withTransaction } from '@database/client/pg-client';
 import { contains } from '@database/filters/utils';
 import { applyResourceFilter } from '@database/filters/resource';
-import { RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { repositorySafe } from './utils/common';
 import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 
 type FindParams = {
   name?: string;
-  type?: string;
+  type?: ResourceType;
   namespace?: string;
   cursor?: string;
   limit?: number;
@@ -24,11 +24,11 @@ type ResourceRepositoryOptions = {
   mockResourceInputSchema?: typeof createResourceInputSchema;
 };
 
-function getPath(meta: Pick<ResourceDocument, 'namespace' | 'type' | 'name'>) {
+export function getPath(meta: Pick<ResourceDocument, 'namespace' | 'type' | 'name'>) {
   return { namespace: meta.namespace, type: meta.type, name: meta.name };
 }
 
-function toDocument(path: ResourcePath, input: ResourceInput): ResourceDocument {
+function toDocument(path: ResourcePath, input: ResourceInput<any>): ResourceDocument {
   return { ...input, id: formatResourceId(path) };
 }
 
@@ -53,7 +53,7 @@ export class ResourceRepository {
       const now = new Date();
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
-        await conn
+        const created = await conn
           .insertInto('resources')
           .values({
             ...document,
@@ -61,7 +61,8 @@ export class ResourceRepository {
             createdAt: now,
             updatedAt: now,
           })
-          .execute();
+          .returningAll()
+          .executeTakeFirstOrThrow();
         const refs = extractResourceRefs(input.data);
         if (refs.length) {
           await conn
@@ -74,6 +75,7 @@ export class ResourceRepository {
               }))
             )
             .execute();
+          return created;
         }
       });
     });
@@ -89,7 +91,7 @@ export class ResourceRepository {
       const newPath = getPath(document);
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
-        const result = await conn
+        const updated = await conn
           .updateTable('resources')
           .set({
             name: document.name,
@@ -98,8 +100,8 @@ export class ResourceRepository {
             updatedAt: now,
           })
           .where('id', '=', formatResourceId(path))
+          .returningAll()
           .executeTakeFirst();
-        if (Number(result.numUpdatedRows) === 0) throw new RepositoryNotFoundError();
         await conn.deleteFrom('resource_edges').where('from', '=', formatResourceId(path)).execute();
         const refs = extractResourceRefs(input.data);
         if (refs.length) {
@@ -113,6 +115,7 @@ export class ResourceRepository {
               }))
             )
             .execute();
+          return updated;
         }
       });
     });
@@ -126,9 +129,7 @@ export class ResourceRepository {
           .selectFrom('resources')
           .select('createdBy')
           .where('id', '=', formatResourceId(path))
-          .executeTakeFirst();
-        if (!resource) throw new RepositoryNotFoundError();
-
+          .executeTakeFirstOrThrow();
         return resource.createdBy;
       });
     });
@@ -142,9 +143,7 @@ export class ResourceRepository {
           .selectFrom('resources')
           .selectAll()
           .where('id', '=', formatResourceId(path))
-          .executeTakeFirst();
-        if (!resource) throw new RepositoryNotFoundError();
-
+          .executeTakeFirstOrThrow();
         return resource;
       });
     });
@@ -209,9 +208,7 @@ export class ResourceRepository {
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
         const id = formatResourceId(path);
-        const result = await conn.deleteFrom('resources').where('id', '=', id).executeTakeFirst();
-        if (Number(result.numDeletedRows) === 0) throw new RepositoryNotFoundError();
-
+        await conn.deleteFrom('resources').where('id', '=', id).executeTakeFirstOrThrow();
         await conn
           .deleteFrom('resource_edges')
           .where((eb) => eb.or([eb('from', '=', id), eb('to', '=', id)]))

@@ -6,7 +6,7 @@ import { NamespaceFilterSchema } from '@schema/filter/domain';
 import { resolveNamespaceCapabilities } from '@schema/database/namespace-capabilities';
 import { execute, withTransaction } from '@database/client/pg-client';
 import { applyNamespaceFilter } from '@database/filters/namespace';
-import { RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { repositorySafe } from './utils/common';
 import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 
 type NamespaceRepositoryOptions = {
@@ -30,8 +30,11 @@ export class NamespaceRepository {
     return repositorySafe(async () => {
       return execute(async (db) => {
         const conn = this.dbFactory(db);
-        const namespace = await conn.selectFrom('namespaces').selectAll().where('id', '=', id).executeTakeFirst();
-        if (!namespace) throw new RepositoryNotFoundError();
+        const namespace = await conn
+          .selectFrom('namespaces')
+          .selectAll()
+          .where('id', '=', id)
+          .executeTakeFirstOrThrow();
         return namespace;
       });
     });
@@ -43,7 +46,7 @@ export class NamespaceRepository {
       const now = new Date();
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
-        await conn
+        const res = await conn
           .insertInto('namespaces')
           .values({
             ...parsed,
@@ -51,7 +54,8 @@ export class NamespaceRepository {
             createdAt: now,
             updatedAt: now,
           })
-          .execute();
+          .returningAll()
+          .executeTakeFirstOrThrow();
         await conn
           .insertInto('namespace_permissions')
           .values({
@@ -62,6 +66,7 @@ export class NamespaceRepository {
             updatedAt: now,
           })
           .execute();
+        return res;
       });
     });
   }
@@ -71,17 +76,15 @@ export class NamespaceRepository {
       return execute(async (db) => {
         const conn = this.dbFactory(db);
         const parsed = this.namespaceSchema.parse(namespace);
-        const result = await conn
+        const updated = await conn
           .updateTable('namespaces')
           .set({
             ...parsed,
             updatedAt: new Date(),
           })
           .where('id', '=', id)
-          .execute();
-        if (result[0].numUpdatedRows === 0n) {
-          throw new RepositoryNotFoundError();
-        }
+          .returningAll()
+          .executeTakeFirstOrThrow();
 
         await conn
           .updateTable('namespace_permissions')
@@ -90,6 +93,7 @@ export class NamespaceRepository {
           })
           .where('namespaceId', '=', id)
           .execute();
+        return updated;
       });
     });
   }
@@ -98,8 +102,7 @@ export class NamespaceRepository {
     return repositorySafe(async () => {
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
-        const result = await conn.deleteFrom('namespaces').where('id', '=', id).executeTakeFirst();
-        if (Number(result.numDeletedRows) === 0) throw new RepositoryNotFoundError();
+        await conn.deleteFrom('namespaces').where('id', '=', id).executeTakeFirstOrThrow();
         await conn.deleteFrom('namespace_permissions').where('namespaceId', '=', id).execute();
       });
     });
@@ -127,12 +130,11 @@ export class NamespaceRepository {
     return repositorySafe(async () => {
       return execute(async (db) => {
         const conn = this.dbFactory(db);
-        const result = await conn
+        await conn
           .deleteFrom('namespace_permissions')
           .where('namespaceId', '=', namespaceId)
           .where('userId', '=', userId)
-          .executeTakeFirst();
-        if (Number(result.numDeletedRows) === 0) throw new RepositoryNotFoundError();
+          .executeTakeFirstOrThrow();
       });
     });
   }

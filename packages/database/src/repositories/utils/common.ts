@@ -1,3 +1,4 @@
+import { NoResultError } from 'kysely';
 import { DatabaseError } from 'pg';
 import { ZodError } from 'zod';
 
@@ -10,13 +11,6 @@ export type RepositoryResult<T> =
       detail?: object;
     };
 
-export class RepositoryNotFoundError extends Error {
-  constructor(message = 'Resource not found') {
-    super(message);
-    this.name = 'RepositoryNotFoundError';
-  }
-}
-
 export async function repositorySafe<T>(callback: () => Promise<T>): Promise<RepositoryResult<T>> {
   try {
     const data = await callback();
@@ -28,7 +22,7 @@ export async function repositorySafe<T>(callback: () => Promise<T>): Promise<Rep
 
 function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
   // application/domain
-  if (error instanceof RepositoryNotFoundError) {
+  if (error instanceof NoResultError) {
     return { ok: false, reason: 'not_found', error };
   }
 

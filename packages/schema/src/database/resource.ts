@@ -1,6 +1,6 @@
 import z from 'zod';
 import type { ResourceType } from '@sharedTypes/resource/common';
-import { ResourcePathSchema } from '@schema/resource/common/base';
+import { ResourcePathSchema, resources } from '@schema/resource/common/base';
 import { resolveResourceSchema } from '@schema/resource/common/resolver';
 import { deepNullable } from '@schema/utils/deep-nullable';
 
@@ -30,7 +30,8 @@ export const createReadyResourceInputSchema = (type: ResourceType) =>
   });
 
 export const createResourceInputSchema = (type: ResourceType) =>
-  z.discriminatedUnion('isDraft', [
-    createDraftResourceInputSchema(type),
-    createReadyResourceInputSchema(type),
-  ]);
+  z.discriminatedUnion('isDraft', [createDraftResourceInputSchema(type), createReadyResourceInputSchema(type)]);
+
+export const ResourceInputSchemaMap = Object.fromEntries(
+  resources.map((resource) => [resource, createResourceInputSchema(resource)])
+);

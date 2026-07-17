@@ -2,7 +2,7 @@ import type { Kysely } from 'kysely';
 import type { Database } from '@sharedTypes/database/collection';
 import { execute } from '@database/client/pg-client';
 import { UserInputSchema } from '@schema/database/user';
-import { RepositoryNotFoundError, repositorySafe } from './utils/common';
+import { repositorySafe } from './utils/common';
 import { FindOptions, resolveDbFetchLimit } from './utils/limits';
 import { UserFilterSchema } from '@schema/filter/domain';
 import { applyUserFilter } from '@database/filters/user';
@@ -25,10 +25,7 @@ export class UserRepository {
     return repositorySafe(async () => {
       return execute(async (db) => {
         const conn = this.dbFactory(db);
-        const user = await conn.selectFrom('users').selectAll().where('id', '=', id).executeTakeFirst();
-        if (!user) throw new RepositoryNotFoundError();
-
-        return user;
+        return await conn.selectFrom('users').selectAll().where('id', '=', id).executeTakeFirstOrThrow();
       });
     });
   }
@@ -40,17 +37,19 @@ export class UserRepository {
         const now = new Date();
         const user = this.schema.parse(data);
         if (upsert) {
-          await conn
+          return await conn
             .insertInto('users')
             .values({ ...user, createdAt: now, updatedAt: now })
             .onConflict((oc) => oc.column('id').doUpdateSet({ ...user, updatedAt: now }))
-            .execute();
+            .returningAll()
+            .executeTakeFirstOrThrow();
         } else {
-          await conn
+          return await conn
             .updateTable('users')
             .set({ ...user, updatedAt: now })
             .where('id', '=', user.id)
-            .execute();
+            .returningAll()
+            .executeTakeFirstOrThrow();
         }
       });
     });

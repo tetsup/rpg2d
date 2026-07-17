@@ -14,7 +14,6 @@ export function SubmitCard() {
       title={isSubmitting ? `${t('保存中')}...` : t('保存')}
       description={t('変更内容を保存する')}
       variant={isDirty ? (isValid ? 'success' : 'error') : 'disabled'}
-      disabled={!isValid || !isDirty || isSubmitting}
     />
   );
 }
