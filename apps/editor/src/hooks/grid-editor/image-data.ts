@@ -18,9 +18,6 @@ export function resizeGrid<T>(grid: T[][], size: Size2d, fillValue: T): T[][] {
   ];
 }
 
-const chunk = <T>(arr: T[], size: number): T[][] =>
-  [...Array(Math.ceil(arr.length / size))].map((_, i) => arr.slice(i * size, (i + 1) * size));
-
 const toMatrix = (strArray: string[]) => strArray.map((rowStr) => rowStr.split(' '));
 
 export function useImageData({ defaultValue, onCommit }: UseImageDataProps) {

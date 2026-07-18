@@ -1,15 +1,7 @@
 import { NoResultError } from 'kysely';
 import { DatabaseError } from 'pg';
-import { ZodError } from 'zod';
-
-export type RepositoryResult<T> =
-  | { ok: true; data: T }
-  | {
-      ok: false;
-      reason: 'not_found' | 'already_exists' | 'validation_failed' | 'database_error' | 'network_error' | 'unknown';
-      error?: unknown;
-      detail?: object;
-    };
+import z from 'zod';
+import type { RepositoryResult } from '@sharedTypes/database/repository';
 
 export async function repositorySafe<T>(callback: () => Promise<T>): Promise<RepositoryResult<T>> {
   try {
@@ -26,7 +18,8 @@ function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
     return { ok: false, reason: 'not_found', error };
   }
 
-  if (error instanceof ZodError) return { ok: false, reason: 'validation_failed', error, detail: error.issues };
+  if (error instanceof z.ZodError)
+    return { ok: false, reason: 'validation_failed', error, detail: { errors: z.flattenError(error) } };
 
   if (error instanceof DatabaseError) {
     switch (error.code) {
@@ -35,6 +28,7 @@ function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
           ok: false,
           reason: 'already_exists',
           error,
+          detail: { fields: error.column ? [error.column] : [] },
         };
 
       case '23503':
@@ -44,6 +38,12 @@ function normalizeRepositoryError(error: unknown): RepositoryResult<never> {
           ok: false,
           reason: 'validation_failed',
           error,
+          detail: {
+            errors: {
+              formErrors: [],
+              fieldErrors: error.column ? { [error.column]: error.detail ? [error.detail] : [] } : {},
+            },
+          },
         };
 
       case '40001':

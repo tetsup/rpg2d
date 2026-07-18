@@ -7,11 +7,12 @@ import { NewNamespacePage } from './namespace/new';
 import { EditNamespacePage } from './namespace/edit';
 import { ResourceTypeSelectPage } from './resources/index';
 import { ResourceSearchPage } from './resources/search';
+import { NewImagePage } from './resource/image/new';
+import { EditImagePage } from './resource/image/edit';
 import { NewResourceByNamespacePage } from './resource/new-by-namespace';
 import { NewResourceNamespacePage } from './resource/new-namespace';
 import { EditResourcePage } from './resource/edit';
 import { PlayPage } from './play';
-import { NewImagePage } from './resource/image/new';
 
 export function AppRouter() {
   return (
@@ -23,7 +24,7 @@ export function AppRouter() {
           <Route path="/resources" element={<ResourceTypeSelectPage />} />
           <Route path="/resources/manifest/new" element={<NewManifestPage />} />
           <Route path="/resources/image/new" element={<NewImagePage />} />
-          <Route path="/resources/image/:id" element={<NewImagePage />} />
+          <Route path="/resources/:namespace/image/:name" element={<EditImagePage />} />
           <Route path="/resources/:type" element={<ResourceSearchPage />} />
           <Route path="/play" element={<PlayPage />} />
           <Route path="/namespaces/new" element={<NewNamespacePage />} />

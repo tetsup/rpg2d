@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
+import { cn } from '@editor/lib/utils';
 import { TitleBar, type TitleBarProps } from './title-bar';
 import { BottomMenu } from './bottom-menu';
 import { UserMenu } from './user-menu';
-import { cn } from '@editor/lib/utils';
 
 type LayoutShellProps = {
   children: ReactNode;
@@ -25,8 +25,9 @@ export function LayoutShell({ children, titleBarProps, flush = false }: LayoutSh
           </>
         }
       />
-      <main className={cn('min-h-0 flex-1', flush ? 'overflow-hidden' : 'overflow-auto')}>
-        <div className={flush ? 'h-full' : 'space-y-4 p-4'}>{children}</div>
+
+      <main className={cn('min-h-0 flex-1', flush ? 'flex flex-col overflow-hidden' : 'overflow-auto')}>
+        <div className={cn(flush ? 'h-full' : 'space-y-4 p-4')}>{children}</div>
       </main>
       <BottomMenu />
     </div>

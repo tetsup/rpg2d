@@ -95,6 +95,7 @@ export class ResourceRepository {
           .updateTable('resources')
           .set({
             name: document.name,
+            description: document.description,
             isDraft: document.isDraft,
             data: input.data,
             updatedAt: now,

@@ -15,6 +15,8 @@ type ImageEditorProps = {
 };
 
 export function ImageEditor({ defaultValues, defaultPath }: ImageEditorProps) {
+  console.log('___');
+  console.log(defaultValues);
   const form = useForm({
     defaultValues,
     resolver: zodResolver(ResourceInputSchemaMap['image']),

@@ -32,7 +32,7 @@ export function NewImagePage() {
   };
 
   return (
-    <LayoutShell titleBarProps={{ title: t('イメージ編集') }}>
+    <LayoutShell flush titleBarProps={{ title: t('イメージ編集') }}>
       <ImageEditor
         defaultValues={{ namespace: 'test', type: 'image', name: 'test', version: 0, isDraft: false, data }}
       />

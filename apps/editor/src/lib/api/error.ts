@@ -1,8 +1,10 @@
+import type { ErrorResponseMap } from '@sharedTypes/api/response';
+
 export class ApiError extends Error {
   constructor(
-    readonly response: Response,
-    readonly body: unknown
+    readonly status: number,
+    readonly body: ErrorResponseMap[keyof ErrorResponseMap]
   ) {
-    super(response.statusText);
+    super();
   }
 }

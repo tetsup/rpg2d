@@ -10,6 +10,7 @@ import { AppRouter } from './route/router';
 import { Toaster } from './components/ui/sonner';
 import '@editor/i18n/config';
 import '../index.css';
+import { AlertProvider } from './providers/alert';
 
 if (import.meta.env.DEV) {
   import('eruda').then(({ default: eruda }) => {
@@ -23,10 +24,12 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <Toaster />
-        <AuthProvider>
-          <AppRouter />
-        </AuthProvider>
+        <AlertProvider>
+          <Toaster />
+          <AuthProvider>
+            <AppRouter />
+          </AuthProvider>
+        </AlertProvider>
       </QueryClientProvider>
     </ThemeProvider>
   </StrictMode>

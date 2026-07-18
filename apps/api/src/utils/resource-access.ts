@@ -1,7 +1,7 @@
 import { ResourceRepository } from '@database/repositories/resource';
 import type { ResourcePath } from '@sharedTypes/resource/common';
 import type { UserDocument } from '@sharedTypes/database/collection';
-import { ApiError, NotFoundError, UnauthorizedError } from '@api/errors/http-error';
+import { NotFoundError, ServiceUnavailableError, UnauthorizedError } from '@api/errors/http-error';
 import { Action, authorize } from '@api/utils/authorize';
 
 export async function ensureResourceAccess(
@@ -15,7 +15,7 @@ export async function ensureResourceAccess(
     const ownership = await new ResourceRepository().getCreatedBy(path);
     if (!ownership.ok) {
       if (ownership.reason === 'not_found') throw new NotFoundError();
-      throw new ApiError(503);
+      throw new ServiceUnavailableError();
     }
     await authorize(user, path.namespace, action, ownership.data);
     return user;
