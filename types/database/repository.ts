@@ -1,4 +1,7 @@
-import type z from 'zod';
+export type FlattenedError = {
+  formErrors: string[];
+  fieldErrors: Record<string, string[]>;
+};
 
 export type RepositoryResult<T> =
   | { ok: true; data: T }
@@ -18,5 +21,5 @@ export type RepositoryResult<T> =
       ok: false;
       reason: 'validation_failed';
       error?: unknown;
-      detail: { errors: ReturnType<typeof z.flattenError> };
+      detail: { errors: FlattenedError };
     };

@@ -1,11 +1,6 @@
-import type { RepositoryResult } from '@sharedTypes/database/repository';
+import type { FlattenedError, RepositoryResult } from '@sharedTypes/database/repository';
 
 export type RepositoryError<T> = Extract<RepositoryResult<T>, { ok: false }>;
-
-type FlattenedError = {
-  formErrors: string[];
-  fieldErrors: Record<string, string[]>;
-};
 
 export type ValidationErrorResponse = {
   errors: FlattenedError;
