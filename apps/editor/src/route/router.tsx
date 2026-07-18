@@ -9,9 +9,6 @@ import { ResourceTypeSelectPage } from './resources/index';
 import { ResourceSearchPage } from './resources/search';
 import { NewImagePage } from './resource/image/new';
 import { EditImagePage } from './resource/image/edit';
-import { NewResourceByNamespacePage } from './resource/new-by-namespace';
-import { NewResourceNamespacePage } from './resource/new-namespace';
-import { EditResourcePage } from './resource/edit';
 import { PlayPage } from './play';
 
 export function AppRouter() {
