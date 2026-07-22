@@ -1,0 +1,24 @@
+{
+  "ignoreDeprecations": "6.0",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sharedTypes/*": ["types/*"],
+      "@engine/*": ["packages/engine/src/*"],
+      "@schema/*": ["packages/schema/src/*"],
+      "@database/*": ["packages/database/src/*"],
+      "@api/*": ["apps/api/src/*"],
+      "@editor/*": ["apps/editor/src/*"],
+      "@runtime/*": ["apps/runtime/src/*"]
+    }
+  },
+  "include": ["./**/*.ts"]
+}

@@ -1,0 +1,4930 @@
+{
+  "nodes": [
+    "packages/shared/vitest.config.ts",
+    "packages/engine/src/manager/entity.ts",
+    "packages/engine/src/utils/pos.ts",
+    "packages/engine/src/utils/queue.ts",
+    "packages/engine/src/utils/rect.ts",
+    "packages/engine/src/types/resource-deps.ts",
+    "packages/engine/src/types/resource.ts",
+    "packages/shared/src/types/config.ts",
+    "packages/shared/src/types/engine.ts",
+    "packages/shared/src/types/variable.ts",
+    "packages/shared/tests/common/search.test.ts",
+    "packages/shared/tests/common/string.test.ts",
+    "packages/shared/tests/database/namespace-capabilities.test.ts",
+    "packages/shared/tests/database/resource.test.ts",
+    "packages/shared/tests/resource/condition.test.ts",
+    "packages/shared/tests/resource/entity.test.ts",
+    "packages/shared/tests/resource/path.test.ts",
+    "packages/shared/tests/resource/player.test.ts",
+    "packages/shared/tests/resource/playerState.test.ts",
+    "packages/shared/tests/setup/setup.ts",
+    "packages/shared/tests/utils/deep-nullable.test.ts",
+    "packages/engine/src/resource/core/asset-cache.ts",
+    "packages/engine/src/resource/core/game-context.ts",
+    "packages/engine/src/resource/core/game-state.ts",
+    "packages/engine/src/resource/core/resource-base.ts",
+    "packages/engine/src/resource/core/resource-factory.ts",
+    "packages/engine/src/resource/core/resource-store.ts",
+    "packages/engine/src/resource/core/schema-registry.ts",
+    "packages/engine/src/resource/domain/action.ts",
+    "packages/engine/src/resource/domain/entity.ts",
+    "packages/engine/src/resource/domain/field.ts",
+    "packages/engine/src/resource/domain/imageLoader.ts",
+    "packages/engine/src/resource/domain/player.ts",
+    "packages/engine/src/resource/domain/skin.ts",
+    "packages/engine/src/resource/domain/texture.ts",
+    "packages/engine/src/resource/domain/tile.ts",
+    "packages/engine/src/manager/field/field-pos.ts",
+    "packages/engine/src/manager/input/input-engine.ts",
+    "packages/engine/src/manager/panel/message-panel.ts",
+    "packages/engine/src/manager/panel/panel-manager.ts",
+    "packages/engine/src/utils/http/error.ts",
+    "packages/engine/src/utils/http/fetch.ts",
+    "packages/engine/src/utils/image/png.ts",
+    "packages/engine/src/utils/image/rgba.ts",
+    "packages/shared/src/base/lib/utils.ts",
+    "packages/shared/src/schema/common/string.ts",
+    "packages/shared/src/schema/config/resource-config.ts",
+    "packages/shared/src/schema/database/namespace-capabilities.ts",
+    "packages/shared/src/schema/database/namespace-permission.ts",
+    "packages/shared/src/schema/database/namespace.ts",
+    "packages/shared/src/schema/database/resource-edge.ts",
+    "packages/shared/src/schema/database/resource.ts",
+    "packages/shared/src/schema/database/user.ts",
+    "packages/shared/src/schema/filter/domain.ts",
+    "packages/shared/src/schema/filter/mapper.ts",
+    "packages/shared/src/schema/filter/operator.ts",
+    "packages/shared/src/schema/filter/variable.ts",
+    "packages/shared/src/schema/resource/action.ts",
+    "packages/shared/src/schema/resource/entity.ts",
+    "packages/shared/src/schema/resource/field.ts",
+    "packages/shared/src/schema/resource/font.ts",
+    "packages/shared/src/schema/resource/image.ts",
+    "packages/shared/src/schema/resource/manifest.ts",
+    "packages/shared/src/schema/resource/panel-skin.ts",
+    "packages/shared/src/schema/resource/panel.ts",
+    "packages/shared/src/schema/resource/player.ts",
+    "packages/shared/src/schema/resource/skin.ts",
+    "packages/shared/src/schema/resource/texture.ts",
+    "packages/shared/src/schema/resource/tile.ts",
+    "packages/shared/src/schema/utils/deep-nullable.ts",
+    "packages/shared/src/types/api/resource.ts",
+    "packages/shared/src/types/api/response.ts",
+    "packages/shared/src/types/database/collection.ts",
+    "packages/shared/src/types/database/filter.ts",
+    "packages/shared/src/types/database/repository.ts",
+    "packages/shared/src/types/resource/action.ts",
+    "packages/shared/src/types/resource/common.ts",
+    "packages/shared/src/types/resource/entity.ts",
+    "packages/shared/src/types/resource/field.ts",
+    "packages/shared/src/types/resource/font.ts",
+    "packages/shared/src/types/resource/image.ts",
+    "packages/shared/src/types/resource/manifest.ts",
+    "packages/shared/src/types/resource/panel-skin.ts",
+    "packages/shared/src/types/resource/panel.ts",
+    "packages/shared/src/types/resource/player.ts",
+    "packages/shared/src/types/resource/skin.ts",
+    "packages/shared/src/types/resource/texture.ts",
+    "packages/shared/src/types/resource/tile.ts",
+    "packages/shared/src/types/util/color.ts",
+    "packages/shared/src/types/util/key.ts",
+    "packages/shared/tests/api/resource/search.test.ts",
+    "packages/engine/src/resource/domain/panel/color.ts",
+    "packages/engine/src/resource/domain/panel/font.ts",
+    "packages/engine/src/resource/domain/panel/panel-skin.ts",
+    "packages/engine/src/resource/domain/panel/panel.ts",
+    "packages/shared/src/base/components/ui/alert.tsx",
+    "packages/shared/src/base/components/ui/avatar.tsx",
+    "packages/shared/src/base/components/ui/button.tsx",
+    "packages/shared/src/base/components/ui/command.tsx",
+    "packages/shared/src/base/components/ui/dialog.tsx",
+    "packages/shared/src/base/components/ui/dropdown-menu.tsx",
+    "packages/shared/src/base/components/ui/input-group.tsx",
+    "packages/shared/src/base/components/ui/input.tsx",
+    "packages/shared/src/base/components/ui/item.tsx",
+    "packages/shared/src/base/components/ui/popover.tsx",
+    "packages/shared/src/base/components/ui/select.tsx",
+    "packages/shared/src/base/components/ui/separator.tsx",
+    "packages/shared/src/base/components/ui/skeleton.tsx",
+    "packages/shared/src/base/components/ui/slider.tsx",
+    "packages/shared/src/base/components/ui/sonner.tsx",
+    "packages/shared/src/base/components/ui/textarea.tsx",
+    "packages/shared/src/schema/api/resource/common.ts",
+    "packages/shared/src/schema/api/resource/record.ts",
+    "packages/shared/src/schema/api/resource/search.ts",
+    "packages/shared/src/schema/resource/action/movement.ts",
+    "packages/shared/src/schema/resource/action/sequence.ts",
+    "packages/shared/src/schema/resource/common/base.ts",
+    "packages/shared/src/schema/resource/common/coordinate.ts",
+    "packages/shared/src/schema/resource/common/image.ts",
+    "packages/shared/src/schema/resource/common/resolver.ts",
+    "packages/shared/src/schema/resource/panel/panel-content.ts",
+    "packages/shared/src/schema/resource/variable/condition.ts",
+    "packages/shared/src/schema/resource/variable/definition.ts",
+    "packages/shared/src/schema/resource/variable/operation.ts",
+    "packages/shared/src/schema/resource/variable/player-state.ts",
+    "packages/engine/src/index.ts",
+    "packages/engine/src/manager/battle.ts",
+    "packages/engine/src/manager/error.ts",
+    "packages/engine/src/manager/event.ts",
+    "packages/engine/src/manager/menu.ts",
+    "packages/engine/tests/engine/core-panel-manager.test.ts",
+    "packages/engine/tests/engine/message-panel-integration.test.ts",
+    "packages/engine/tests/engine/panel-manager.test.ts",
+    "packages/engine/tests/engine/this-binding.test.ts",
+    "packages/engine/tests/setup/setup.ts",
+    "packages/engine/src/manager/action/action-manager.ts",
+    "packages/engine/src/manager/action/sequence.ts",
+    "packages/engine/src/manager/field/field-core.ts",
+    "packages/engine/src/manager/field/layer-resolver.ts",
+    "packages/engine/src/manager/field/movement-controller.ts",
+    "packages/engine/tests/engine/action/action-manager.test.ts",
+    "packages/engine/tests/engine/action/sequence.test.ts",
+    "packages/engine/tests/engine/field/field-core.test.ts",
+    "packages/engine/tests/engine/field/field-pos.test.ts",
+    "packages/engine/tests/engine/field/layer-resolver.test.ts",
+    "packages/engine/tests/engine/field/movement-controller.test.ts",
+    "packages/engine/tests/engine/input/input-engine.test.ts",
+    "packages/engine/tests/resource/core/asset-cache.test.ts",
+    "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+    "packages/database/vitest.config.ts",
+    "packages/database/migrations/001_extensions.ts",
+    "packages/database/migrations/002_users.ts",
+    "packages/database/migrations/003_namespaces.ts",
+    "packages/database/migrations/004_namespace_permissions.ts",
+    "packages/database/migrations/005_resources.ts",
+    "packages/database/migrations/006_resource_edges.ts",
+    "packages/database/migrations/007_resource_created_by_and_permissions.ts",
+    "packages/database/migrations/008_resources_is_draft.ts",
+    "packages/database/src/client/pg-client.ts",
+    "packages/database/src/client/schema-config.ts",
+    "packages/database/src/filters/namespace.ts",
+    "packages/database/src/filters/resource.ts",
+    "packages/database/src/filters/user.ts",
+    "packages/database/src/filters/utils.ts",
+    "packages/database/src/repositories/namespace.ts",
+    "packages/database/src/repositories/resource.ts",
+    "packages/database/src/repositories/user.ts",
+    "packages/database/src/utils/resource.ts",
+    "packages/database/tests/setup/setup.ts",
+    "packages/database/src/repositories/utils/common.ts",
+    "packages/database/src/repositories/utils/filter.ts",
+    "packages/database/src/repositories/utils/limits.ts",
+    "packages/database/tests/repositories/domain/namespace-errors.test.ts",
+    "packages/database/tests/repositories/domain/namespace.test.ts",
+    "packages/database/tests/repositories/domain/resource-errors.test.ts",
+    "packages/database/tests/repositories/domain/resource.test.ts",
+    "packages/database/tests/repositories/domain/user-errors.test.ts",
+    "packages/database/tests/repositories/domain/user.test.ts",
+    "packages/database/tests/repositories/utils/filter.test.ts",
+    "packages/database/tests/repositories/utils/limits.test.ts",
+    "packages/database/tests/repositories/domain/helpers/db.ts",
+    "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+    "packages/database/tests/repositories/domain/helpers/mock-db.ts",
+    "apps/runtime/src/App.tsx",
+    "apps/runtime/src/bootstrap.ts",
+    "apps/runtime/src/config.ts",
+    "apps/runtime/src/load-manifest.ts",
+    "apps/runtime/src/main.tsx",
+    "apps/runtime/src/runtime-config.ts",
+    "apps/runtime/src/runtime-host.tsx",
+    "apps/runtime/src/api/browser.ts",
+    "apps/runtime/src/api/errors.ts",
+    "apps/runtime/src/api/handlers.ts",
+    "apps/runtime/src/components/hud.tsx",
+    "apps/runtime/src/components/shell.tsx",
+    "apps/runtime/src/components/softpad.tsx",
+    "apps/runtime/src/components/toolbar.tsx",
+    "apps/runtime/src/components/viewport.tsx",
+    "apps/runtime/src/hooks/softpad.ts",
+    "apps/runtime/src/hooks/stats.ts",
+    "apps/runtime/src/stores/ui-state.ts",
+    "apps/editor/vite.config.ts",
+    "apps/editor/vitest.config.ts",
+    "apps/editor/src/main.tsx",
+    "apps/editor/src/i18n/config.ts",
+    "apps/editor/tests/helpers/graphics-save-fixtures.ts",
+    "apps/editor/tests/helpers/manifest-create-form.tsx",
+    "apps/editor/tests/helpers/render-app.tsx",
+    "apps/editor/tests/helpers/server.ts",
+    "apps/editor/tests/integration/graphics-new.test.tsx",
+    "apps/editor/tests/integration/image-graphics-edit.test.tsx",
+    "apps/editor/tests/integration/manifest-create-form.test.tsx",
+    "apps/editor/tests/integration/namespace-create.test.tsx",
+    "apps/editor/tests/integration/texture-graphics-edit.test.tsx",
+    "apps/editor/tests/integration/tile-create.test.tsx",
+    "apps/editor/tests/setup/setup.ts",
+    "apps/editor/tests/unit/allocate-resource-name.test.ts",
+    "apps/editor/tests/unit/default-image-palette.test.ts",
+    "apps/editor/tests/unit/document-list-item-content.test.tsx",
+    "apps/editor/tests/unit/document-picker-thumbnail.test.tsx",
+    "apps/editor/tests/unit/graphics-context-label.test.ts",
+    "apps/editor/tests/unit/graphics-editor-session.test.ts",
+    "apps/editor/tests/unit/graphics-palette-match.test.ts",
+    "apps/editor/tests/unit/graphics-save-plan.test.ts",
+    "apps/editor/tests/unit/grid-editor.test.ts",
+    "apps/editor/tests/unit/image-palette-mutate.test.ts",
+    "apps/editor/tests/unit/image-pixel-mutate.test.ts",
+    "apps/editor/tests/unit/pixel-render.test.ts",
+    "apps/editor/tests/unit/reserve-graphics-resource.test.ts",
+    "apps/editor/tests/unit/zoom.test.ts",
+    "apps/editor/src/app/route/home.tsx",
+    "apps/editor/src/app/route/login.tsx",
+    "apps/editor/src/app/route/play.tsx",
+    "apps/editor/src/app/route/router.tsx",
+    "apps/editor/src/app/stores/edit-state.ts",
+    "apps/editor/src/app/stores/workspace.ts",
+    "apps/editor/src/features/manifest-form/manifest.ts",
+    "apps/editor/src/features/namespace-form/namespace.ts",
+    "apps/editor/src/features/tile-form/tile.ts",
+    "apps/editor/src/shared/lib/allocate-resource-name.ts",
+    "apps/editor/src/shared/lib/async-run.ts",
+    "apps/editor/src/shared/lib/color.ts",
+    "apps/editor/src/shared/lib/default-image-palette.ts",
+    "apps/editor/src/shared/lib/document-item.ts",
+    "apps/editor/src/shared/lib/document-label.ts",
+    "apps/editor/src/shared/lib/document-thumbnail.tsx",
+    "apps/editor/src/shared/lib/empty-image-data.ts",
+    "apps/editor/src/shared/lib/empty-skin-data.ts",
+    "apps/editor/src/shared/lib/empty-texture-data.ts",
+    "apps/editor/src/shared/lib/graphics-context-label.ts",
+    "apps/editor/src/shared/lib/graphics-meta-validation.ts",
+    "apps/editor/src/shared/lib/graphics-palette-match.ts",
+    "apps/editor/src/shared/lib/graphics-save-plan.ts",
+    "apps/editor/src/shared/lib/image-palette-mutate.ts",
+    "apps/editor/src/shared/lib/image-pixel-mutate.ts",
+    "apps/editor/src/shared/lib/palette-swatch-items.tsx",
+    "apps/editor/src/shared/lib/pixel-render.ts",
+    "apps/editor/src/shared/lib/query-client.ts",
+    "apps/editor/src/shared/lib/require-auth.tsx",
+    "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+    "apps/editor/src/shared/lib/resource-type-meta.ts",
+    "apps/editor/src/shared/lib/skin-directions.ts",
+    "apps/editor/src/shared/lib/texture-layers.ts",
+    "apps/editor/src/shared/parts/action-card.tsx",
+    "apps/editor/src/shared/parts/backdrop.tsx",
+    "apps/editor/src/shared/parts/cancel-card.tsx",
+    "apps/editor/src/shared/parts/card-button.tsx",
+    "apps/editor/src/shared/parts/document-list-item-content.tsx",
+    "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+    "apps/editor/src/shared/parts/document-picker.tsx",
+    "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+    "apps/editor/src/shared/parts/info-card.tsx",
+    "apps/editor/src/shared/parts/menu-bar.tsx",
+    "apps/editor/src/shared/parts/menu-card.tsx",
+    "apps/editor/src/shared/parts/select-document.tsx",
+    "apps/editor/src/shared/parts/styled-switch.tsx",
+    "apps/editor/src/shared/parts/submit-card.tsx",
+    "apps/editor/src/shared/providers/alert.tsx",
+    "apps/editor/src/shared/providers/auth.tsx",
+    "apps/editor/src/shared/providers/theme.tsx",
+    "apps/editor/src/shared/skeletons/form.tsx",
+    "apps/editor/src/shared/skeletons/user-menu.tsx",
+    "apps/editor/src/shared/ui/error-handler.ts",
+    "apps/editor/src/shared/ui/theme-store.ts",
+    "apps/editor/src/app/layout/components/alert-viewport.tsx",
+    "apps/editor/src/app/layout/components/bottom-menu.tsx",
+    "apps/editor/src/app/layout/components/layout-shell.tsx",
+    "apps/editor/src/app/layout/components/title-bar.tsx",
+    "apps/editor/src/app/layout/components/user-menu.tsx",
+    "apps/editor/src/app/route/manifest/new.tsx",
+    "apps/editor/src/app/route/namespace/edit.tsx",
+    "apps/editor/src/app/route/namespace/new.tsx",
+    "apps/editor/src/app/route/resource/index.tsx",
+    "apps/editor/src/app/route/resource/search.tsx",
+    "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
+    "apps/editor/src/features/grid-editor/components/color-editor.tsx",
+    "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
+    "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+    "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+    "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+    "apps/editor/src/features/grid-editor/components/palette.tsx",
+    "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+    "apps/editor/src/features/grid-editor/components/sync-indicator-dot.tsx",
+    "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+    "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
+    "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
+    "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+    "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
+    "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
+    "apps/editor/src/features/grid-editor/hooks/screen.ts",
+    "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+    "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
+    "apps/editor/src/features/player/hooks/play-session.ts",
+    "apps/editor/src/i18n/locales/en/common.json",
+    "apps/editor/src/i18n/locales/ja/common.json",
+    "apps/editor/src/shared/api/hooks/by-id.ts",
+    "apps/editor/src/shared/api/hooks/me.ts",
+    "apps/editor/src/shared/api/hooks/mutations.ts",
+    "apps/editor/src/shared/api/hooks/resolved-document.ts",
+    "apps/editor/src/shared/api/hooks/resolved-documents.ts",
+    "apps/editor/src/shared/api/hooks/resource-id.ts",
+    "apps/editor/src/shared/api/hooks/search.ts",
+    "apps/editor/src/shared/api/lib/common.ts",
+    "apps/editor/src/shared/api/lib/delete.ts",
+    "apps/editor/src/shared/api/lib/error.ts",
+    "apps/editor/src/shared/api/lib/get.ts",
+    "apps/editor/src/shared/api/lib/post.ts",
+    "apps/editor/src/shared/api/lib/put.ts",
+    "apps/editor/src/shared/form/components/control-section.tsx",
+    "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
+    "apps/editor/src/shared/form/components/field-pos-field.tsx",
+    "apps/editor/src/shared/form/components/field-templete.tsx",
+    "apps/editor/src/shared/form/components/field-wrapper.tsx",
+    "apps/editor/src/shared/form/components/form-templete.tsx",
+    "apps/editor/src/shared/form/components/input-field.tsx",
+    "apps/editor/src/shared/form/components/number-field.tsx",
+    "apps/editor/src/shared/form/components/select-document-field.tsx",
+    "apps/editor/src/shared/form/components/select-field.tsx",
+    "apps/editor/src/shared/form/components/switch-field.tsx",
+    "apps/editor/src/app/route/resource/image/edit.tsx",
+    "apps/editor/src/app/route/resource/image/new.tsx",
+    "apps/api/vite.config.ts",
+    "apps/api/vitest.config.ts",
+    "apps/api/src/config.ts",
+    "apps/api/src/index.ts",
+    "apps/api/src/lambda.ts",
+    "apps/api/src/auth/session-cookie.ts",
+    "apps/api/src/errors/convertor.ts",
+    "apps/api/src/errors/http-error.ts",
+    "apps/api/src/loaders/local-loader.ts",
+    "apps/api/src/routes/auth.ts",
+    "apps/api/src/routes/namespaces.ts",
+    "apps/api/src/routes/resources.ts",
+    "apps/api/src/types/auth.ts",
+    "apps/api/src/utils/authorize.ts",
+    "apps/api/src/utils/env.ts",
+    "apps/api/src/utils/frontend-origin.ts",
+    "apps/api/src/utils/handle.ts",
+    "apps/api/src/utils/params.ts",
+    "apps/api/src/utils/path.ts",
+    "apps/api/src/utils/resource-access.ts",
+    "apps/api/tests/auth/session-cookie.test.ts",
+    "apps/api/tests/loaders/local-loader.test.ts",
+    "apps/api/tests/setup/setup.ts",
+    "apps/api/tests/utils/authorize.test.ts",
+    "apps/api/tests/utils/frontend-origin.test.ts",
+    "apps/api/tests/utils/resource-access.test.ts",
+    "apps/api/src/auth/middlewares/authorize-resource.ts",
+    "apps/api/src/auth/middlewares/resolve-user.ts"
+  ],
+  "edges": [
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/shared/src/types/resource/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/shared/src/types/resource/field.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/engine/src/utils/queue.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/engine/src/resource/domain/entity.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/entity.ts",
+      "to": "packages/engine/src/manager/field/field-pos.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/utils/pos.ts",
+      "to": "packages/shared/src/types/resource/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/utils/pos.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/utils/rect.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/tile.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/entity.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/panel/font.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/panel/color.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/skin.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource-deps.ts",
+      "to": "packages/engine/src/resource/domain/texture.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/types/resource.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource.ts",
+      "to": "packages/engine/src/resource/core/schema-registry.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource.ts",
+      "to": "packages/engine/src/resource/core/resource-factory.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/types/resource.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/config.ts",
+      "to": "packages/shared/src/schema/config/resource-config.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/engine.ts",
+      "to": "packages/engine/src/manager/entity.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/engine.ts",
+      "to": "packages/engine/src/manager/field/field-pos.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/engine.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/engine.ts",
+      "to": "packages/engine/src/resource/domain/player.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/engine.ts",
+      "to": "packages/engine/src/utils/queue.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/engine.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/engine.ts",
+      "to": "packages/shared/src/types/resource/texture.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/tests/common/search.test.ts",
+      "to": "packages/shared/src/schema/filter/domain.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/common/string.test.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/database/namespace-capabilities.test.ts",
+      "to": "packages/shared/src/schema/database/namespace-capabilities.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/database/resource.test.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/resource/condition.test.ts",
+      "to": "packages/shared/src/schema/resource/variable/condition.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/resource/entity.test.ts",
+      "to": "packages/shared/src/schema/resource/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/resource/path.test.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/resource/player.test.ts",
+      "to": "packages/shared/src/schema/resource/player.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/resource/player.test.ts",
+      "to": "packages/shared/src/types/variable.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/tests/resource/playerState.test.ts",
+      "to": "packages/shared/src/schema/resource/variable/definition.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/resource/playerState.test.ts",
+      "to": "packages/shared/src/schema/resource/variable/player-state.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/utils/deep-nullable.test.ts",
+      "to": "packages/shared/src/schema/utils/deep-nullable.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/utils/deep-nullable.test.ts",
+      "to": "packages/shared/src/schema/resource/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/utils/deep-nullable.test.ts",
+      "to": "packages/shared/src/schema/resource/field.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/utils/deep-nullable.test.ts",
+      "to": "packages/shared/src/schema/resource/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/utils/deep-nullable.test.ts",
+      "to": "packages/shared/src/schema/resource/skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/utils/deep-nullable.test.ts",
+      "to": "packages/shared/src/schema/resource/texture.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/tests/utils/deep-nullable.test.ts",
+      "to": "packages/shared/src/schema/resource/tile.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/asset-cache.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/asset-cache.ts",
+      "to": "packages/engine/src/resource/domain/imageLoader.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/asset-cache.ts",
+      "to": "packages/engine/src/resource/core/resource-store.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/shared/src/types/config.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/engine/src/resource/core/resource-store.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/engine/src/resource/core/asset-cache.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/engine/src/resource/core/game-state.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/engine/src/resource/core/schema-registry.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-context.ts",
+      "to": "packages/engine/src/resource/core/resource-factory.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-state.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-state.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/game-state.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-base.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-base.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-base.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/types/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/field.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/panel/font.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/panel/panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/player.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/texture.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/tile.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-factory.ts",
+      "to": "packages/engine/src/resource/domain/imageLoader.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-store.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-store.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-store.ts",
+      "to": "packages/shared/src/schema/api/resource/record.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-store.ts",
+      "to": "packages/engine/src/utils/http/fetch.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-store.ts",
+      "to": "packages/engine/src/types/resource.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/resource-store.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/field.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/font.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/panel-skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/player.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/texture.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/core/schema-registry.ts",
+      "to": "packages/shared/src/schema/resource/tile.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/action.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/action.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/entity.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/entity.ts",
+      "to": "packages/shared/src/types/resource/entity.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/entity.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/entity.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/entity.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/entity.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/shared/src/types/resource/field.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/engine/src/resource/domain/tile.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/field.ts",
+      "to": "packages/engine/src/resource/domain/entity.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/imageLoader.ts",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/imageLoader.ts",
+      "to": "packages/engine/src/utils/image/rgba.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/imageLoader.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/imageLoader.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/imageLoader.ts",
+      "to": "packages/engine/src/utils/image/png.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/player.ts",
+      "to": "packages/shared/src/types/resource/player.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/player.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/player.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/player.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/skin.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/skin.ts",
+      "to": "packages/shared/src/types/resource/skin.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/skin.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/skin.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/skin.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/texture.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/texture.ts",
+      "to": "packages/shared/src/types/resource/texture.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/texture.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/texture.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/texture.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/tile.ts",
+      "to": "packages/shared/src/types/resource/tile.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/tile.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/tile.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/tile.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-pos.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-pos.ts",
+      "to": "packages/engine/src/utils/pos.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-pos.ts",
+      "to": "packages/shared/src/types/resource/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-pos.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/input/input-engine.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/panel/message-panel.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/panel/message-panel.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/panel/message-panel.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/panel/message-panel.ts",
+      "to": "packages/engine/src/resource/domain/panel/panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/panel/message-panel.ts",
+      "to": "packages/engine/src/utils/queue.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/panel/message-panel.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/panel/message-panel.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/panel/panel-manager.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/panel/panel-manager.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/panel/panel-manager.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/panel/panel-manager.ts",
+      "to": "packages/engine/src/manager/panel/message-panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/utils/http/fetch.ts",
+      "to": "packages/engine/src/utils/http/error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/utils/image/png.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/utils/image/rgba.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/utils/image/rgba.ts",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/schema/database/namespace-capabilities.ts",
+      "to": "packages/shared/src/schema/database/namespace-permission.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/schema/database/namespace.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/database/namespace.ts",
+      "to": "packages/shared/src/schema/common/string.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/database/resource-edge.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/database/resource.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/schema/database/resource.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/database/resource.ts",
+      "to": "packages/shared/src/schema/resource/common/resolver.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/database/resource.ts",
+      "to": "packages/shared/src/schema/utils/deep-nullable.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/filter/domain.ts",
+      "to": "packages/shared/src/schema/filter/mapper.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/filter/mapper.ts",
+      "to": "packages/shared/src/schema/filter/operator.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/filter/mapper.ts",
+      "to": "packages/shared/src/schema/filter/variable.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/action.ts",
+      "to": "packages/shared/src/schema/resource/action/sequence.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/entity.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/field.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/field.ts",
+      "to": "packages/shared/src/schema/resource/common/coordinate.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/image.ts",
+      "to": "packages/shared/src/schema/resource/common/coordinate.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/manifest.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/manifest.ts",
+      "to": "packages/shared/src/schema/resource/common/coordinate.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/manifest.ts",
+      "to": "packages/shared/src/schema/resource/variable/condition.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/manifest.ts",
+      "to": "packages/shared/src/schema/resource/variable/definition.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel-skin.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel-skin.ts",
+      "to": "packages/shared/src/schema/resource/common/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel.ts",
+      "to": "packages/shared/src/schema/resource/common/coordinate.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel.ts",
+      "to": "packages/shared/src/schema/resource/panel/panel-content.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/player.ts",
+      "to": "packages/shared/src/types/variable.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/schema/resource/player.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/player.ts",
+      "to": "packages/shared/src/schema/resource/variable/player-state.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/skin.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/texture.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/tile.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/tile.ts",
+      "to": "packages/shared/src/schema/resource/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/types/api/resource.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/api/resource.ts",
+      "to": "packages/shared/src/schema/api/resource/search.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/api/response.ts",
+      "to": "packages/shared/src/types/database/repository.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/collection.ts",
+      "to": "packages/shared/src/schema/database/namespace.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/collection.ts",
+      "to": "packages/shared/src/schema/database/namespace-permission.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/collection.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/collection.ts",
+      "to": "packages/shared/src/schema/database/resource-edge.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/collection.ts",
+      "to": "packages/shared/src/schema/database/user.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/collection.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/filter.ts",
+      "to": "packages/shared/src/schema/filter/operator.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/database/filter.ts",
+      "to": "packages/shared/src/schema/filter/domain.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/types/resource/action.ts",
+      "to": "packages/shared/src/schema/resource/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/action.ts",
+      "to": "packages/shared/src/schema/resource/action/movement.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/common/coordinate.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/variable/condition.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/common/resolver.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/types/resource/entity.ts",
+      "to": "packages/shared/src/schema/resource/entity.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/field.ts",
+      "to": "packages/shared/src/schema/resource/field.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/font.ts",
+      "to": "packages/shared/src/schema/resource/font.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/image.ts",
+      "to": "packages/shared/src/schema/resource/image.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/manifest.ts",
+      "to": "packages/shared/src/schema/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/panel-skin.ts",
+      "to": "packages/shared/src/schema/resource/panel-skin.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/panel.ts",
+      "to": "packages/shared/src/schema/resource/panel.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/player.ts",
+      "to": "packages/shared/src/schema/resource/player.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/player.ts",
+      "to": "packages/shared/src/types/variable.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/skin.ts",
+      "to": "packages/shared/src/schema/resource/skin.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/texture.ts",
+      "to": "packages/shared/src/schema/resource/texture.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/types/resource/tile.ts",
+      "to": "packages/shared/src/schema/resource/tile.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/tests/api/resource/search.test.ts",
+      "to": "packages/shared/src/schema/api/resource/search.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/font.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/font.ts",
+      "to": "packages/engine/src/resource/domain/panel/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "to": "packages/shared/src/types/resource/panel-skin.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "to": "packages/engine/src/resource/domain/panel/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel.ts",
+      "to": "packages/shared/src/types/resource/panel.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel.ts",
+      "to": "packages/engine/src/types/resource-deps.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel.ts",
+      "to": "packages/engine/src/resource/core/resource-base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/resource/domain/panel/panel.ts",
+      "to": "packages/engine/src/resource/domain/panel/panel-skin.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/alert.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/avatar.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/button.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/command.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/command.tsx",
+      "to": "packages/shared/src/base/components/ui/dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/command.tsx",
+      "to": "packages/shared/src/base/components/ui/input-group.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/dialog.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/dialog.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/dropdown-menu.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/input-group.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/input-group.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/input-group.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/input-group.tsx",
+      "to": "packages/shared/src/base/components/ui/textarea.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/input.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/item.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/item.tsx",
+      "to": "packages/shared/src/base/components/ui/separator.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/popover.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/select.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/separator.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/slider.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/textarea.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/types/variable.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/font.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/field.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/manifest.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/panel-skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/player.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/texture.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/common.ts",
+      "to": "packages/shared/src/schema/resource/tile.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/record.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/api/resource/search.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/action/movement.ts",
+      "to": "packages/shared/src/schema/resource/common/coordinate.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/base.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/field.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/font.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/manifest.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/panel-skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/player.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/texture.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/common/resolver.ts",
+      "to": "packages/shared/src/schema/resource/tile.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel/panel-content.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel/panel-content.ts",
+      "to": "packages/shared/src/schema/resource/common/coordinate.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/panel/panel-content.ts",
+      "to": "packages/shared/src/schema/resource/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/variable/operation.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/schema/resource/variable/player-state.ts",
+      "to": "packages/shared/src/types/variable.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/schema/resource/variable/player-state.ts",
+      "to": "packages/shared/src/schema/resource/variable/definition.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/shared/src/types/config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/engine/src/resource/domain/player.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/engine/src/manager/action/action-manager.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/engine/src/manager/field/field-core.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/index.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/core-panel-manager.test.ts",
+      "to": "packages/engine/src/index.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/core-panel-manager.test.ts",
+      "to": "packages/engine/src/manager/field/field-core.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/core-panel-manager.test.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/core-panel-manager.test.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/core-panel-manager.test.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/core-panel-manager.test.ts",
+      "to": "packages/shared/src/types/config.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/core-panel-manager.test.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/message-panel-integration.test.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/message-panel-integration.test.ts",
+      "to": "packages/engine/src/manager/panel/message-panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/message-panel-integration.test.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/message-panel-integration.test.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/message-panel-integration.test.ts",
+      "to": "packages/engine/src/resource/domain/panel/panel.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/message-panel-integration.test.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/message-panel-integration.test.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/panel-manager.test.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/panel-manager.test.ts",
+      "to": "packages/engine/src/manager/panel/message-panel.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/panel-manager.test.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/panel-manager.test.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/index.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/manager/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/manager/field/field-core.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/manager/field/field-pos.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/domain/texture.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/domain/skin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/domain/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/domain/field.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/domain/tile.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/domain/player.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/core/resource-factory.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/core/resource-store.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/core/asset-cache.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/shared/src/schema/resource/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/shared/src/types/config.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/utils/queue.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/this-binding.test.ts",
+      "to": "packages/engine/src/resource/domain/imageLoader.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/action/action-manager.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/action-manager.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/action-manager.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/action-manager.ts",
+      "to": "packages/engine/src/manager/action/sequence.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/action/sequence.ts",
+      "to": "packages/shared/src/schema/resource/action/sequence.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/sequence.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/sequence.ts",
+      "to": "packages/shared/src/schema/resource/variable/condition.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/sequence.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/sequence.ts",
+      "to": "packages/engine/src/manager/panel/panel-manager.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/action/sequence.ts",
+      "to": "packages/engine/src/manager/panel/message-panel.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/shared/src/types/resource/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/utils/queue.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/utils/pos.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/resource/domain/player.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/resource/domain/field.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/manager/action/action-manager.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/manager/entity.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/manager/field/field-pos.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/manager/field/layer-resolver.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/field-core.ts",
+      "to": "packages/engine/src/manager/field/movement-controller.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/layer-resolver.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/layer-resolver.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/layer-resolver.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/layer-resolver.ts",
+      "to": "packages/engine/src/resource/domain/field.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/layer-resolver.ts",
+      "to": "packages/engine/src/utils/pos.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/layer-resolver.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/src/manager/field/movement-controller.ts",
+      "to": "packages/shared/src/types/resource/action.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/movement-controller.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/movement-controller.ts",
+      "to": "packages/engine/src/resource/domain/field.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/src/manager/field/movement-controller.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/action/action-manager.test.ts",
+      "to": "packages/engine/src/manager/action/action-manager.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/action/action-manager.test.ts",
+      "to": "packages/engine/src/manager/action/sequence.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/action/sequence.test.ts",
+      "to": "packages/engine/src/manager/action/sequence.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/field-core.test.ts",
+      "to": "packages/engine/src/manager/field/field-core.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/field-core.test.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/field-core.test.ts",
+      "to": "packages/engine/src/manager/field/layer-resolver.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/field-core.test.ts",
+      "to": "packages/engine/src/manager/field/movement-controller.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/field-core.test.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/field/field-pos.test.ts",
+      "to": "packages/engine/src/manager/field/field-pos.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/layer-resolver.test.ts",
+      "to": "packages/engine/src/manager/field/layer-resolver.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/layer-resolver.test.ts",
+      "to": "packages/engine/src/utils/rect.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/movement-controller.test.ts",
+      "to": "packages/engine/src/manager/field/movement-controller.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/movement-controller.test.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/engine/field/movement-controller.test.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/engine/input/input-engine.test.ts",
+      "to": "packages/engine/src/manager/input/input-engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/asset-cache.test.ts",
+      "to": "packages/engine/src/resource/core/asset-cache.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/asset-cache.test.ts",
+      "to": "packages/engine/src/resource/core/resource-store.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/asset-cache.test.ts",
+      "to": "packages/engine/src/resource/domain/imageLoader.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/engine/src/resource/core/resource-store.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/engine/src/resource/core/game-context.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/engine/src/resource/domain/action.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/engine/src/utils/http/fetch.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/shared/src/schema/resource/manifest.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/shared/src/schema/config/resource-config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/engine/tests/resource/core/resource-store-factory.integration.test.ts",
+      "to": "packages/shared/src/types/config.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/client/pg-client.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/client/pg-client.ts",
+      "to": "packages/database/src/client/schema-config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/filters/namespace.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/filters/namespace.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/filters/namespace.ts",
+      "to": "packages/database/src/filters/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/filters/resource.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/filters/resource.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/filters/resource.ts",
+      "to": "packages/database/src/filters/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/filters/user.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/filters/user.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/filters/user.ts",
+      "to": "packages/database/src/filters/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/filters/utils.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/filters/utils.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/shared/src/schema/database/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/shared/src/schema/database/namespace-permission.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/shared/src/schema/filter/domain.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/shared/src/schema/database/namespace-capabilities.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/database/src/filters/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/database/src/repositories/utils/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/namespace.ts",
+      "to": "packages/database/src/repositories/utils/limits.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/shared/src/schema/filter/domain.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/database/src/utils/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/database/src/filters/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/database/src/filters/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/database/src/repositories/utils/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/resource.ts",
+      "to": "packages/database/src/repositories/utils/limits.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/user.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/repositories/user.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/user.ts",
+      "to": "packages/shared/src/schema/database/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/user.ts",
+      "to": "packages/database/src/repositories/utils/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/user.ts",
+      "to": "packages/database/src/repositories/utils/limits.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/user.ts",
+      "to": "packages/shared/src/schema/filter/domain.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/user.ts",
+      "to": "packages/database/src/filters/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/utils/resource.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/utils/resource.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/utils/resource.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/utils/resource.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/repositories/utils/common.ts",
+      "to": "packages/shared/src/types/database/repository.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/repositories/utils/filter.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/repositories/utils/filter.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/repositories/utils/filter.ts",
+      "to": "packages/shared/src/types/database/repository.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/src/repositories/utils/filter.ts",
+      "to": "packages/database/src/repositories/utils/limits.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/utils/filter.ts",
+      "to": "packages/database/src/repositories/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/utils/filter.ts",
+      "to": "packages/database/src/repositories/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/src/repositories/utils/filter.ts",
+      "to": "packages/database/src/repositories/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/namespace-errors.test.ts",
+      "to": "packages/database/src/repositories/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/namespace-errors.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/db.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/namespace-errors.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/namespace.test.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/namespace.test.ts",
+      "to": "packages/database/src/repositories/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/namespace.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/db.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/namespace.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource-errors.test.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource-errors.test.ts",
+      "to": "packages/database/src/repositories/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource-errors.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/mock-db.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource-errors.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource.test.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource.test.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource.test.ts",
+      "to": "packages/database/src/repositories/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource.test.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/db.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/resource.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user-errors.test.ts",
+      "to": "packages/shared/src/schema/database/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user-errors.test.ts",
+      "to": "packages/database/src/repositories/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user-errors.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/mock-db.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user-errors.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user.test.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user.test.ts",
+      "to": "packages/database/src/repositories/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/db.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/user.test.ts",
+      "to": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/utils/filter.test.ts",
+      "to": "packages/database/src/repositories/utils/filter.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/utils/limits.test.ts",
+      "to": "packages/database/src/repositories/utils/limits.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/helpers/db.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "to": "packages/database/src/client/pg-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/helpers/fixtures.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/database/tests/repositories/domain/helpers/mock-db.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/App.tsx",
+      "to": "apps/runtime/src/bootstrap.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/App.tsx",
+      "to": "apps/runtime/src/runtime-host.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/bootstrap.ts",
+      "to": "packages/engine/src/index.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/bootstrap.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/bootstrap.ts",
+      "to": "apps/runtime/src/hooks/softpad.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/bootstrap.ts",
+      "to": "apps/runtime/src/config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/bootstrap.ts",
+      "to": "apps/runtime/src/load-manifest.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/bootstrap.ts",
+      "to": "apps/runtime/src/runtime-config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/load-manifest.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/load-manifest.ts",
+      "to": "packages/shared/src/schema/api/resource/record.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/load-manifest.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/load-manifest.ts",
+      "to": "packages/shared/src/schema/resource/manifest.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/main.tsx",
+      "to": "apps/runtime/src/App.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/runtime-config.ts",
+      "to": "packages/shared/src/types/resource/manifest.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/runtime-host.tsx",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/runtime-host.tsx",
+      "to": "apps/runtime/src/bootstrap.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/runtime-host.tsx",
+      "to": "apps/runtime/src/components/shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/runtime-host.tsx",
+      "to": "apps/runtime/src/hooks/softpad.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/api/browser.ts",
+      "to": "apps/runtime/src/api/handlers.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/api/handlers.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/api/handlers.ts",
+      "to": "apps/runtime/src/api/errors.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/hud.tsx",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/components/hud.tsx",
+      "to": "apps/runtime/src/hooks/stats.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/shell.tsx",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/components/shell.tsx",
+      "to": "apps/runtime/src/stores/ui-state.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/shell.tsx",
+      "to": "apps/runtime/src/components/hud.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/shell.tsx",
+      "to": "apps/runtime/src/components/toolbar.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/shell.tsx",
+      "to": "apps/runtime/src/components/viewport.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/shell.tsx",
+      "to": "apps/runtime/src/components/softpad.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/toolbar.tsx",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/runtime/src/components/toolbar.tsx",
+      "to": "apps/runtime/src/hooks/stats.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/components/toolbar.tsx",
+      "to": "apps/runtime/src/stores/ui-state.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/hooks/softpad.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/runtime/src/hooks/stats.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/vitest.config.ts",
+      "to": "apps/editor/vite.config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/main.tsx",
+      "to": "apps/editor/src/i18n/config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/main.tsx",
+      "to": "apps/editor/src/app/route/router.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/main.tsx",
+      "to": "apps/editor/src/shared/providers/theme.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/main.tsx",
+      "to": "apps/editor/src/shared/providers/alert.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/main.tsx",
+      "to": "apps/editor/src/shared/providers/auth.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/main.tsx",
+      "to": "apps/editor/src/shared/lib/query-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/i18n/config.ts",
+      "to": "apps/editor/src/i18n/locales/ja/common.json",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/i18n/config.ts",
+      "to": "apps/editor/src/i18n/locales/en/common.json",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/helpers/graphics-save-fixtures.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/helpers/graphics-save-fixtures.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/tests/helpers/manifest-create-form.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/tests/integration/graphics-new.test.tsx",
+      "to": "apps/editor/tests/helpers/render-app.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/graphics-new.test.tsx",
+      "to": "apps/editor/tests/helpers/server.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/image-graphics-edit.test.tsx",
+      "to": "apps/editor/tests/helpers/render-app.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/image-graphics-edit.test.tsx",
+      "to": "apps/editor/tests/helpers/server.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/manifest-create-form.test.tsx",
+      "to": "apps/editor/tests/helpers/manifest-create-form.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/namespace-create.test.tsx",
+      "to": "apps/editor/tests/helpers/render-app.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/namespace-create.test.tsx",
+      "to": "apps/editor/tests/helpers/server.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/texture-graphics-edit.test.tsx",
+      "to": "apps/editor/tests/helpers/render-app.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/texture-graphics-edit.test.tsx",
+      "to": "apps/editor/tests/helpers/server.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/integration/tile-create.test.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/tests/integration/tile-create.test.tsx",
+      "to": "apps/editor/tests/helpers/render-app.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/setup/setup.ts",
+      "to": "apps/editor/src/i18n/config.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/setup/setup.ts",
+      "to": "apps/editor/tests/helpers/server.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/unit/graphics-editor-session.test.ts",
+      "to": "apps/editor/tests/helpers/graphics-save-fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/tests/unit/graphics-save-plan.test.ts",
+      "to": "apps/editor/tests/helpers/graphics-save-fixtures.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/home.tsx",
+      "to": "apps/editor/src/shared/form/components/control-section.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/home.tsx",
+      "to": "apps/editor/src/shared/parts/menu-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/home.tsx",
+      "to": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/home.tsx",
+      "to": "apps/editor/src/app/stores/workspace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/home.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/login.tsx",
+      "to": "apps/editor/src/shared/parts/menu-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/login.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/play.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/play.tsx",
+      "to": "apps/runtime/src/runtime-host.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/play.tsx",
+      "to": "apps/editor/src/features/player/hooks/play-session.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/play.tsx",
+      "to": "apps/editor/src/app/stores/workspace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/play.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/shared/lib/require-auth.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/login.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/home.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/manifest/new.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/namespace/new.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/namespace/edit.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/resource/image/new.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/resource/image/edit.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/resource/index.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/resource/search.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/router.tsx",
+      "to": "apps/editor/src/app/route/play.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/manifest-form/manifest.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/manifest-form/manifest.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/manifest-form/manifest.ts",
+      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/namespace-form/namespace.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/namespace-form/namespace.ts",
+      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/tile-form/tile.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/tile-form/tile.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/tile-form/tile.ts",
+      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/color.ts",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/default-image-palette.ts",
+      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-item.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-item.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-item.ts",
+      "to": "apps/editor/src/shared/lib/document-label.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-item.ts",
+      "to": "apps/editor/src/shared/lib/document-thumbnail.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-label.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-label.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
+      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
+      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
+      "to": "apps/editor/src/shared/api/hooks/resolved-document.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/empty-image-data.ts",
+      "to": "apps/editor/src/shared/lib/default-image-palette.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/empty-image-data.ts",
+      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/empty-skin-data.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/empty-texture-data.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/graphics-meta-validation.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/graphics-meta-validation.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/graphics-palette-match.ts",
+      "to": "apps/editor/src/shared/lib/default-image-palette.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/graphics-palette-match.ts",
+      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/graphics-save-plan.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/graphics-save-plan.ts",
+      "to": "apps/editor/src/shared/lib/graphics-context-label.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/image-palette-mutate.ts",
+      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/image-pixel-mutate.ts",
+      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/palette-swatch-items.tsx",
+      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/pixel-render.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/require-auth.tsx",
+      "to": "apps/editor/src/shared/providers/auth.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/require-auth.tsx",
+      "to": "apps/editor/src/shared/parts/backdrop.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/shared/api/hooks/search.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/shared/lib/allocate-resource-name.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/lib/resource-type-meta.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/lib/texture-layers.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/action-card.tsx",
+      "to": "apps/editor/src/shared/parts/card-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/cancel-card.tsx",
+      "to": "apps/editor/src/shared/parts/action-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/card-button.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-list-item-content.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/base/components/ui/dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "to": "apps/editor/src/shared/parts/select-document.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/shared/parts/document-list-item-content.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/shared/api/hooks/resolved-document.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/shared/lib/document-label.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/shared/lib/document-item.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "to": "packages/shared/src/base/components/ui/command.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "to": "apps/editor/src/shared/lib/document-item.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "to": "apps/editor/src/shared/api/hooks/search.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "to": "apps/editor/src/shared/parts/document-list-item-content.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/menu-bar.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/menu-card.tsx",
+      "to": "apps/editor/src/shared/parts/card-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "to": "apps/editor/src/shared/lib/document-item.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "to": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/styled-switch.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/parts/submit-card.tsx",
+      "to": "apps/editor/src/shared/parts/action-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/providers/auth.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/providers/auth.tsx",
+      "to": "apps/editor/src/shared/api/hooks/me.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/providers/theme.tsx",
+      "to": "apps/editor/src/shared/ui/theme-store.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/skeletons/form.tsx",
+      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/skeletons/user-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/ui/error-handler.ts",
+      "to": "apps/editor/src/shared/providers/alert.tsx",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/ui/error-handler.ts",
+      "to": "apps/editor/src/shared/api/lib/error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
+      "to": "apps/editor/src/shared/providers/alert.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
+      "to": "packages/shared/src/base/components/ui/alert.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/bottom-menu.tsx",
+      "to": "apps/editor/src/shared/parts/menu-bar.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "to": "apps/editor/src/app/layout/components/title-bar.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "to": "apps/editor/src/app/layout/components/bottom-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "to": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/title-bar.tsx",
+      "to": "apps/editor/src/app/stores/edit-state.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/dropdown-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/avatar.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "to": "apps/editor/src/shared/providers/auth.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "to": "apps/editor/src/shared/skeletons/user-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/manifest/new.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/manifest/new.tsx",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/manifest/new.tsx",
+      "to": "apps/editor/src/app/stores/workspace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/manifest/new.tsx",
+      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/manifest/new.tsx",
+      "to": "apps/editor/src/features/manifest-form/manifest.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/manifest/new.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/manifest/new.tsx",
+      "to": "apps/editor/src/shared/form/components/form-templete.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "packages/shared/src/schema/database/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "apps/editor/src/features/namespace-form/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "apps/editor/src/shared/form/components/form-templete.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/edit.tsx",
+      "to": "apps/editor/src/shared/skeletons/form.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/new.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/new.tsx",
+      "to": "packages/shared/src/schema/database/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/new.tsx",
+      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/new.tsx",
+      "to": "apps/editor/src/features/namespace-form/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/new.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/namespace/new.tsx",
+      "to": "apps/editor/src/shared/form/components/form-templete.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/index.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/index.tsx",
+      "to": "apps/editor/src/shared/form/components/control-section.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/index.tsx",
+      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/index.tsx",
+      "to": "apps/editor/src/shared/parts/menu-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/search.tsx",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/search.tsx",
+      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/search.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/search.tsx",
+      "to": "apps/editor/src/shared/parts/cancel-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/search.tsx",
+      "to": "apps/editor/src/shared/parts/menu-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/search.tsx",
+      "to": "apps/editor/src/shared/parts/select-document.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/popover.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
+      "to": "packages/shared/src/base/components/ui/slider.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
+      "to": "apps/editor/src/shared/lib/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "to": "packages/shared/src/base/components/ui/separator.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/shared/lib/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/palette.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/palette.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/base/components/ui/dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/shared/providers/alert.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/shared/ui/error-handler.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/shared/form/components/input-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/shared/parts/submit-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/sync-indicator-dot.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/sync-indicator-dot.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "to": "apps/editor/src/shared/lib/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/screen.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/screen.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
+      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/player/hooks/play-session.ts",
+      "to": "apps/runtime/src/bootstrap.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/features/player/hooks/play-session.ts",
+      "to": "apps/editor/src/app/stores/workspace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "to": "apps/editor/src/shared/api/lib/get.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "to": "apps/editor/src/shared/api/hooks/resource-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/me.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/me.ts",
+      "to": "apps/editor/src/shared/api/lib/get.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/shared/lib/query-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/shared/api/lib/post.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/shared/api/lib/put.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/shared/api/lib/delete.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/shared/api/hooks/resource-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/shared/api/hooks/search.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/resolved-document.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/resolved-document.ts",
+      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/resolved-documents.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/resolved-documents.ts",
+      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/resource-id.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/search.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/search.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/search.ts",
+      "to": "apps/editor/src/shared/api/lib/post.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/hooks/search.ts",
+      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/lib/common.ts",
+      "to": "apps/editor/src/shared/api/lib/error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/lib/delete.ts",
+      "to": "apps/editor/src/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/lib/error.ts",
+      "to": "packages/shared/src/types/api/response.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/api/lib/get.ts",
+      "to": "apps/editor/src/shared/lib/async-run.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/lib/get.ts",
+      "to": "apps/editor/src/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/lib/post.ts",
+      "to": "apps/editor/src/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/lib/put.ts",
+      "to": "apps/editor/src/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
+      "to": "apps/editor/src/shared/parts/styled-switch.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
+      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-pos-field.tsx",
+      "to": "apps/editor/src/shared/form/components/number-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-pos-field.tsx",
+      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/input-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/number-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/select-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/field-pos-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/switch-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/select-document-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/control-section.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
+      "to": "apps/editor/src/shared/parts/submit-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
+      "to": "apps/editor/src/shared/parts/cancel-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
+      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/input-field.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/input-field.tsx",
+      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/number-field.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/number-field.tsx",
+      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
+      "to": "apps/editor/src/shared/parts/document-picker.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
+      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/select-field.tsx",
+      "to": "packages/shared/src/base/components/ui/select.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/select-field.tsx",
+      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/switch-field.tsx",
+      "to": "apps/editor/src/shared/parts/styled-switch.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/form/components/switch-field.tsx",
+      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
+      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
+      "to": "apps/editor/src/shared/skeletons/form.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/image/new.tsx",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/image/new.tsx",
+      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/route/resource/image/new.tsx",
+      "to": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/index.ts",
+      "to": "apps/api/src/auth/middlewares/resolve-user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/index.ts",
+      "to": "apps/api/src/routes/auth.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/index.ts",
+      "to": "apps/api/src/routes/namespaces.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/index.ts",
+      "to": "apps/api/src/routes/resources.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/index.ts",
+      "to": "apps/api/src/utils/frontend-origin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/lambda.ts",
+      "to": "apps/api/src/index.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/auth/session-cookie.ts",
+      "to": "apps/api/src/utils/env.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/errors/convertor.ts",
+      "to": "packages/shared/src/types/api/response.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/errors/convertor.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/errors/http-error.ts",
+      "to": "packages/shared/src/types/api/response.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/loaders/local-loader.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/loaders/local-loader.ts",
+      "to": "packages/shared/src/schema/api/resource/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/loaders/local-loader.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/auth.ts",
+      "to": "packages/database/src/repositories/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/auth.ts",
+      "to": "apps/api/src/types/auth.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/routes/auth.ts",
+      "to": "apps/api/src/auth/session-cookie.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/auth.ts",
+      "to": "apps/api/src/utils/env.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/auth.ts",
+      "to": "apps/api/src/utils/frontend-origin.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/auth.ts",
+      "to": "apps/api/src/auth/middlewares/resolve-user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/auth.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/namespaces.ts",
+      "to": "apps/api/src/utils/handle.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/namespaces.ts",
+      "to": "packages/database/src/repositories/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/namespaces.ts",
+      "to": "packages/database/src/repositories/utils/filter.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/namespaces.ts",
+      "to": "apps/api/src/auth/middlewares/resolve-user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "packages/database/src/repositories/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "packages/database/src/repositories/utils/filter.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "apps/api/src/auth/middlewares/authorize-resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "apps/api/src/auth/middlewares/resolve-user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "apps/api/src/utils/authorize.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "apps/api/src/utils/handle.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/routes/resources.ts",
+      "to": "apps/api/src/utils/params.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/types/auth.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/utils/authorize.ts",
+      "to": "packages/database/src/repositories/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/authorize.ts",
+      "to": "packages/shared/src/schema/database/namespace-capabilities.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/utils/authorize.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/utils/authorize.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/frontend-origin.ts",
+      "to": "apps/api/src/utils/env.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/handle.ts",
+      "to": "packages/shared/src/types/database/repository.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/utils/handle.ts",
+      "to": "apps/api/src/errors/convertor.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/handle.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/params.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/resource-access.ts",
+      "to": "packages/database/src/repositories/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/resource-access.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/utils/resource-access.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/utils/resource-access.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/utils/resource-access.ts",
+      "to": "apps/api/src/utils/authorize.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/loaders/local-loader.test.ts",
+      "to": "apps/api/src/loaders/local-loader.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/loaders/local-loader.test.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/utils/authorize.test.ts",
+      "to": "apps/api/src/utils/authorize.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/utils/authorize.test.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/utils/authorize.test.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/tests/utils/resource-access.test.ts",
+      "to": "apps/api/src/utils/authorize.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/utils/resource-access.test.ts",
+      "to": "apps/api/src/utils/resource-access.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/utils/resource-access.test.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/tests/utils/resource-access.test.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/tests/utils/resource-access.test.ts",
+      "to": "packages/database/src/repositories/utils/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/authorize-resource.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/authorize-resource.ts",
+      "to": "apps/api/src/errors/http-error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/authorize-resource.ts",
+      "to": "apps/api/src/types/auth.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/authorize-resource.ts",
+      "to": "apps/api/src/utils/authorize.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/authorize-resource.ts",
+      "to": "apps/api/src/utils/resource-access.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/resolve-user.ts",
+      "to": "packages/database/src/repositories/user.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/resolve-user.ts",
+      "to": "apps/api/src/types/auth.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/api/src/auth/middlewares/resolve-user.ts",
+      "to": "apps/api/src/auth/session-cookie.ts",
+      "typeOnly": false
+    }
+  ]
+}
