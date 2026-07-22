@@ -19,7 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@engine': resolve(__dirname, 'packages/engine/src'),
-      '@schema': resolve(__dirname, 'packages/schema/src'),
+      '@schema': resolve(__dirname, 'packages/shared/src/schema'),
     },
   },
   plugins: [

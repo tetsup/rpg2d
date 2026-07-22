@@ -1,12 +1,11 @@
 {
   "files": [],
   "references": [
+    { "path": "./packages/shared" },
     { "path": "./packages/engine" },
-    { "path": "./packages/schema" },
     { "path": "./packages/database" },
     { "path": "./apps/runtime" },
     { "path": "./apps/editor" },
-    { "path": "./apps/api" },
-    { "path": "./types" }
+    { "path": "./apps/api" }
   ]
 }

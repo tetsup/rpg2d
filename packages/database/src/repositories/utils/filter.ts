@@ -1,12 +1,7 @@
 import type { Database } from '@sharedTypes/database/collection';
 import type { FilterMap } from '@sharedTypes/database/filter';
-import { RepositoryResult } from './common';
-import {
-  clampDbFetchLimit,
-  clampPageSize,
-  CURSOR_PROBE_EXTRA_ROWS,
-  FindOptions,
-} from './limits';
+import type { RepositoryResult } from '@sharedTypes/database/repository';
+import { clampDbFetchLimit, clampPageSize, CURSOR_PROBE_EXTRA_ROWS, FindOptions } from './limits';
 import { NamespaceRepository } from '../namespace';
 import { ResourceRepository } from '../resource';
 import { UserRepository } from '../user';

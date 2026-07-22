@@ -23,8 +23,8 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@database': path.resolve(__dirname, 'src'),
         '@tests': path.resolve(__dirname, 'tests'),
-        '@schema': path.resolve(__dirname, '../schema/src'),
-        '@sharedTypes': path.resolve(__dirname, '../../types'),
+        '@schema': path.resolve(__dirname, '../shared/src/schema'),
+        '@sharedTypes': path.resolve(__dirname, '../shared/src/types'),
       },
     },
   };

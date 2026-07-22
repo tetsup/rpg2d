@@ -19,17 +19,19 @@
     "dev:edit": "concurrently -n api,runtime,editor \"pnpm dev:api\" \"pnpm dev:runtime\" \"pnpm dev:editor\"",
     "lint": "eslint",
     "typecheck": "pnpm -r typecheck",
-    "test:schema":"pnpm --filter @tetsup/rpg2d-schema test",
-    "test:engine":"pnpm --filter @tetsup/rpg2d-engine test",
-    "test:database":"pnpm --filter @tetsup/rpg2d-database test",
-    "test:api":"pnpm --filter @tetsup/rpg2d-api test",
-    "test:editor":"pnpm --filter @tetsup/rpg2d-editor test",
+    "test:schema": "pnpm --filter @tetsup/rpg2d-schema test",
+    "test:engine": "pnpm --filter @tetsup/rpg2d-engine test",
+    "test:database": "pnpm --filter @tetsup/rpg2d-database test",
+    "test:api": "pnpm --filter @tetsup/rpg2d-api test",
+    "test:editor": "pnpm --filter @tetsup/rpg2d-editor test",
     "test": "pnpm test:schema && pnpm test:engine && pnpm test:database && pnpm test:api",
     "build:runtime": "pnpm --filter @tetsup/rpg2d-runtime build",
     "build:editor": "pnpm --filter @tetsup/rpg2d-editor build",
     "build:api:lambda": "pnpm --filter @tetsup/rpg2d-api build:lambda",
     "write-runtime-config": "node scripts/write-runtime-config.mjs",
-    "db:migrate": "pnpm --filter @tetsup/rpg2d-database migrate"
+    "db:migrate": "pnpm --filter @tetsup/rpg2d-database migrate",
+    "deps:build": "tsx scripts/deps-graph.ts",
+    "deps:dev": "pnpm --filter @tetsup/deps-graph dev"
   },
   "dependencies": {
     "zod": "^4.3.6"
@@ -43,6 +45,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
+    "ts-morph": "^28.0.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.13",

@@ -25,8 +25,9 @@ export default defineConfig({
       '@runtime': resolve(__dirname, '../runtime/src'),
       '@engine': resolve(__dirname, '../../packages/engine/src'),
       '@database': resolve(__dirname, '../../packages/database/src'),
-      '@schema': resolve(__dirname, '../../packages/schema/src'),
-      '@sharedTypes': resolve(__dirname, '../../types'),
+      '@schema': resolve(__dirname, '../../packages/shared/src/schema'),
+      '@sharedTypes': resolve(__dirname, '../../packages/shared/src/types'),
+      '@base': resolve(__dirname, '../../packages/shared/src/base'),
     },
   },
 });
