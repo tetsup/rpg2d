@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect } from 'react';
-import { useThemeStore } from '../ui/theme-store';
+import { useThemeStore } from '@editor/stores/theme-store';
 
 export function ThemeProvider({ children }: PropsWithChildren) {
   const theme = useThemeStore((s) => s.theme);

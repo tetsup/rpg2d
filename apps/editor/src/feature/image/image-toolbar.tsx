@@ -1,0 +1,43 @@
+import { useTranslation } from 'react-i18next';
+import { Hand, Paintbrush } from 'lucide-react';
+
+import { ResourcePath } from '@sharedTypes/resource/common';
+
+import { Toolbar } from '@base/components/toolbar/toolbar';
+import { ToolbarGroup } from '@base/components/toolbar/toolbar-group';
+import { ToolbarSeparator } from '@base/components/toolbar/toolbar-separator';
+import { ToolbarButton } from '@base/components/toolbar/toolbar-button';
+import type { useToolSet } from './hooks/use-tool-set';
+import { PalettePopupButton } from './components/palette-popup-button';
+import { ZoomPopupButton } from './components/zoom-popup-button';
+import { ToolbarResourceSaveButton } from '../resource/toolbar-resource-save-button';
+
+type ImageToolbarProps = {
+  toolSet: ReturnType<typeof useToolSet>;
+  defaultPath?: ResourcePath;
+};
+
+export function ImageToolbar({ toolSet, defaultPath }: ImageToolbarProps) {
+  const { t } = useTranslation();
+
+  return (
+    <Toolbar>
+      <ToolbarGroup>
+        <ToolbarButton label={t('移動')} active={toolSet.mode === 'hand'} onClick={() => toolSet.setMode('hand')}>
+          <Hand />
+        </ToolbarButton>
+        <ToolbarButton label={t('ペン')} active={toolSet.mode === 'pen'} onClick={() => toolSet.setMode('pen')}>
+          <Paintbrush />
+        </ToolbarButton>
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <PalettePopupButton paletteTool={toolSet.paletteTool} emptyLabel={t('パレット未設定')} />
+        <ZoomPopupButton zoomTool={toolSet.zoomTool} />
+        <ToolbarResourceSaveButton title={t('イメージを保存')} />
+      </ToolbarGroup>
+    </Toolbar>
+  );
+}

@@ -5,11 +5,11 @@ import { ja } from 'zod/locales';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import '@editor/i18n/config';
-import { AppRouter } from './app/route/router';
 import { ThemeProvider } from './shared/providers/theme';
 import { AlertProvider } from './shared/providers/alert';
 import { AuthProvider } from './shared/providers/auth';
-import { queryClient } from './shared/lib/query-client';
+import { queryClient } from './stores/query-client';
+import { AppRouter } from './app/router';
 import './styles/index.css';
 
 if (import.meta.env.DEV) {

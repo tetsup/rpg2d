@@ -34,7 +34,7 @@ export const ResourcePathSchema = z.object({
   name: ResourceNameSchema,
 });
 
-export function formatResourceId(path: z.infer<typeof ResourcePathSchema>): string {
+export function formatResourceId(path: z.infer<typeof ResourcePathSchema>) {
   return `${path.namespace}/${path.type}/${path.name}`;
 }
 
@@ -47,7 +47,6 @@ export const IdSchemaFromTypePattern = (typePattern: string) =>
     );
 
 export const IdSchemaFromType = (type: ResourceType) => IdSchemaFromTypePattern(type);
-
 export const IdSchema = IdSchemaFromTypePattern(resourceTypePattern);
 
 export const parseResourceId = IdSchema.transform((id) => {

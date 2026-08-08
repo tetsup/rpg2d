@@ -45,6 +45,11 @@
     "packages/engine/src/utils/image/png.ts",
     "packages/engine/src/utils/image/rgba.ts",
     "packages/shared/src/base/lib/utils.ts",
+    "packages/shared/src/base/theme/badge.ts",
+    "packages/shared/src/base/theme/button.ts",
+    "packages/shared/src/base/theme/dot.ts",
+    "packages/shared/src/base/theme/text.ts",
+    "packages/shared/src/base/theme/types.ts",
     "packages/shared/src/schema/common/string.ts",
     "packages/shared/src/schema/config/resource-config.ts",
     "packages/shared/src/schema/database/namespace-capabilities.ts",
@@ -95,6 +100,45 @@
     "packages/engine/src/resource/domain/panel/font.ts",
     "packages/engine/src/resource/domain/panel/panel-skin.ts",
     "packages/engine/src/resource/domain/panel/panel.ts",
+    "packages/shared/src/base/components/attachment/attachment-container.tsx",
+    "packages/shared/src/base/components/attachment/indicator-dot.tsx",
+    "packages/shared/src/base/components/canvas/canvas-layout.tsx",
+    "packages/shared/src/base/components/canvas/canvas-viewport.tsx",
+    "packages/shared/src/base/components/canvas/overlay-canvas.tsx",
+    "packages/shared/src/base/components/coder/puzzle.tsx",
+    "packages/shared/src/base/components/dialog/dialog-layout.tsx",
+    "packages/shared/src/base/components/feedback/alert-banner.tsx",
+    "packages/shared/src/base/components/feedback/alert-icon.tsx",
+    "packages/shared/src/base/components/feedback/alert-stack.tsx",
+    "packages/shared/src/base/components/form-control/action-card.tsx",
+    "packages/shared/src/base/components/form-control/card-button.tsx",
+    "packages/shared/src/base/components/form-control/list-item.tsx",
+    "packages/shared/src/base/components/form-control/menu-card.tsx",
+    "packages/shared/src/base/components/form-control/select-button.tsx",
+    "packages/shared/src/base/components/form-control/styled-switch.tsx",
+    "packages/shared/src/base/components/form-field/form-section.tsx",
+    "packages/shared/src/base/components/form-field/form-skeleton.tsx",
+    "packages/shared/src/base/components/form-field/inline-sub-field.tsx",
+    "packages/shared/src/base/components/form-field/multiple-field.tsx",
+    "packages/shared/src/base/components/form-field/single-field.tsx",
+    "packages/shared/src/base/components/layout/vertical-stacker.tsx",
+    "packages/shared/src/base/components/navigation/dirty-indicator.tsx",
+    "packages/shared/src/base/components/navigation/dropdown-menu.tsx",
+    "packages/shared/src/base/components/navigation/menu-bar.tsx",
+    "packages/shared/src/base/components/navigation/title-bar.tsx",
+    "packages/shared/src/base/components/navigation/user-indicator.tsx",
+    "packages/shared/src/base/components/navigation/user-menu-skeleton.tsx",
+    "packages/shared/src/base/components/page/page-layout.tsx",
+    "packages/shared/src/base/components/search/search-input.tsx",
+    "packages/shared/src/base/components/search/search-item-skelton.tsx",
+    "packages/shared/src/base/components/search/search-result-empty.tsx",
+    "packages/shared/src/base/components/search/search-result-item.tsx",
+    "packages/shared/src/base/components/search/search-result.tsx",
+    "packages/shared/src/base/components/search/search-root.tsx",
+    "packages/shared/src/base/components/toolbar/toolbar-button.tsx",
+    "packages/shared/src/base/components/toolbar/toolbar-group.tsx",
+    "packages/shared/src/base/components/toolbar/toolbar-separator.tsx",
+    "packages/shared/src/base/components/toolbar/toolbar.tsx",
     "packages/shared/src/base/components/ui/alert.tsx",
     "packages/shared/src/base/components/ui/avatar.tsx",
     "packages/shared/src/base/components/ui/button.tsx",
@@ -105,6 +149,7 @@
     "packages/shared/src/base/components/ui/input.tsx",
     "packages/shared/src/base/components/ui/item.tsx",
     "packages/shared/src/base/components/ui/popover.tsx",
+    "packages/shared/src/base/components/ui/scroll-area.tsx",
     "packages/shared/src/base/components/ui/select.tsx",
     "packages/shared/src/base/components/ui/separator.tsx",
     "packages/shared/src/base/components/ui/skeleton.tsx",
@@ -204,6 +249,7 @@
     "apps/editor/vite.config.ts",
     "apps/editor/vitest.config.ts",
     "apps/editor/src/main.tsx",
+    "apps/editor/src/app/router.tsx",
     "apps/editor/src/i18n/config.ts",
     "apps/editor/tests/helpers/graphics-save-fixtures.ts",
     "apps/editor/tests/helpers/manifest-create-form.tsx",
@@ -230,117 +276,146 @@
     "apps/editor/tests/unit/pixel-render.test.ts",
     "apps/editor/tests/unit/reserve-graphics-resource.test.ts",
     "apps/editor/tests/unit/zoom.test.ts",
-    "apps/editor/src/app/route/home.tsx",
-    "apps/editor/src/app/route/login.tsx",
-    "apps/editor/src/app/route/play.tsx",
-    "apps/editor/src/app/route/router.tsx",
+    "apps/editor/src/app/pages/home.tsx",
+    "apps/editor/src/app/pages/login.tsx",
+    "apps/editor/src/app/pages/play.tsx",
     "apps/editor/src/app/stores/edit-state.ts",
+    "apps/editor/src/app/stores/query-client.ts",
+    "apps/editor/src/app/stores/theme-store.ts",
     "apps/editor/src/app/stores/workspace.ts",
-    "apps/editor/src/features/manifest-form/manifest.ts",
-    "apps/editor/src/features/namespace-form/namespace.ts",
-    "apps/editor/src/features/tile-form/tile.ts",
-    "apps/editor/src/shared/lib/allocate-resource-name.ts",
-    "apps/editor/src/shared/lib/async-run.ts",
-    "apps/editor/src/shared/lib/color.ts",
-    "apps/editor/src/shared/lib/default-image-palette.ts",
-    "apps/editor/src/shared/lib/document-item.ts",
-    "apps/editor/src/shared/lib/document-label.ts",
-    "apps/editor/src/shared/lib/document-thumbnail.tsx",
-    "apps/editor/src/shared/lib/empty-image-data.ts",
-    "apps/editor/src/shared/lib/empty-skin-data.ts",
-    "apps/editor/src/shared/lib/empty-texture-data.ts",
-    "apps/editor/src/shared/lib/graphics-context-label.ts",
-    "apps/editor/src/shared/lib/graphics-meta-validation.ts",
-    "apps/editor/src/shared/lib/graphics-palette-match.ts",
-    "apps/editor/src/shared/lib/graphics-save-plan.ts",
-    "apps/editor/src/shared/lib/image-palette-mutate.ts",
-    "apps/editor/src/shared/lib/image-pixel-mutate.ts",
-    "apps/editor/src/shared/lib/palette-swatch-items.tsx",
-    "apps/editor/src/shared/lib/pixel-render.ts",
-    "apps/editor/src/shared/lib/query-client.ts",
-    "apps/editor/src/shared/lib/require-auth.tsx",
-    "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
-    "apps/editor/src/shared/lib/resource-type-meta.ts",
-    "apps/editor/src/shared/lib/skin-directions.ts",
-    "apps/editor/src/shared/lib/texture-layers.ts",
-    "apps/editor/src/shared/parts/action-card.tsx",
-    "apps/editor/src/shared/parts/backdrop.tsx",
-    "apps/editor/src/shared/parts/cancel-card.tsx",
-    "apps/editor/src/shared/parts/card-button.tsx",
-    "apps/editor/src/shared/parts/document-list-item-content.tsx",
-    "apps/editor/src/shared/parts/document-picker-dialog.tsx",
-    "apps/editor/src/shared/parts/document-picker.tsx",
-    "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
-    "apps/editor/src/shared/parts/info-card.tsx",
-    "apps/editor/src/shared/parts/menu-bar.tsx",
-    "apps/editor/src/shared/parts/menu-card.tsx",
-    "apps/editor/src/shared/parts/select-document.tsx",
-    "apps/editor/src/shared/parts/styled-switch.tsx",
-    "apps/editor/src/shared/parts/submit-card.tsx",
+    "apps/editor/src/feature/image/image-editor.tsx",
+    "apps/editor/src/feature/image/image-toolbar.tsx",
+    "apps/editor/src/feature/resource/resource-item.tsx",
+    "apps/editor/src/feature/resource/resource-save-form.tsx",
+    "apps/editor/src/feature/resource/resource-save-popup-button.tsx",
+    "apps/editor/src/feature/resource/resource-select.tsx",
+    "apps/editor/src/feature/resource/resource-types.tsx",
+    "apps/editor/src/shared/api/base.ts",
+    "apps/editor/src/shared/api/delete.ts",
+    "apps/editor/src/shared/api/get.ts",
+    "apps/editor/src/shared/api/post.ts",
+    "apps/editor/src/shared/api/put.ts",
     "apps/editor/src/shared/providers/alert.tsx",
     "apps/editor/src/shared/providers/auth.tsx",
     "apps/editor/src/shared/providers/theme.tsx",
-    "apps/editor/src/shared/skeletons/form.tsx",
-    "apps/editor/src/shared/skeletons/user-menu.tsx",
-    "apps/editor/src/shared/ui/error-handler.ts",
-    "apps/editor/src/shared/ui/theme-store.ts",
-    "apps/editor/src/app/layout/components/alert-viewport.tsx",
-    "apps/editor/src/app/layout/components/bottom-menu.tsx",
-    "apps/editor/src/app/layout/components/layout-shell.tsx",
-    "apps/editor/src/app/layout/components/title-bar.tsx",
-    "apps/editor/src/app/layout/components/user-menu.tsx",
-    "apps/editor/src/app/route/manifest/new.tsx",
-    "apps/editor/src/app/route/namespace/edit.tsx",
-    "apps/editor/src/app/route/namespace/new.tsx",
-    "apps/editor/src/app/route/resource/index.tsx",
-    "apps/editor/src/app/route/resource/search.tsx",
-    "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
-    "apps/editor/src/features/grid-editor/components/color-editor.tsx",
-    "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
-    "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-    "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-    "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-    "apps/editor/src/features/grid-editor/components/palette.tsx",
-    "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-    "apps/editor/src/features/grid-editor/components/sync-indicator-dot.tsx",
-    "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-    "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
-    "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
-    "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-    "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
-    "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
-    "apps/editor/src/features/grid-editor/hooks/screen.ts",
-    "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-    "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
-    "apps/editor/src/features/player/hooks/play-session.ts",
+    "apps/editor/src/shared/repository/factory.ts",
+    "apps/editor/src/shared/repository/namespace-repository.ts",
+    "apps/editor/src/shared/repository/resource-repository.ts",
+    "apps/editor/src/widget/control/hidden-field.tsx",
+    "apps/editor/src/widget/control/number-field.tsx",
+    "apps/editor/src/widget/control/position-field.tsx",
+    "apps/editor/src/widget/control/select-field.tsx",
+    "apps/editor/src/widget/control/switch-field.tsx",
+    "apps/editor/src/widget/control/text-field.tsx",
+    "apps/editor/src/widget/dialog/select-dialog.tsx",
+    "apps/editor/src/widget/layout/layout-shell.tsx",
+    "apps/editor/src/widget/navigation/bottom-menu.tsx",
+    "apps/editor/src/widget/navigation/editor-title-bar.tsx",
+    "apps/editor/src/widget/navigation/use-editor-state.ts",
+    "apps/editor/src/widget/navigation/use-user-menu.ts",
+    "apps/editor/src/widget/navigation/user-menu.tsx",
+    "apps/editor/src/widget/notification/alert-viewport.tsx",
+    "apps/editor/src/widget/notification/error-handler.ts",
+    "apps/editor/src/widget/player/use-play-session.ts",
+    "apps/editor/src/app/pages/namespace/edit.tsx",
+    "apps/editor/src/app/pages/namespace/namespace-form.tsx",
+    "apps/editor/src/app/pages/namespace/new.tsx",
+    "apps/editor/src/app/pages/resource/index.tsx",
+    "apps/editor/src/app/pages/resource/search.tsx",
     "apps/editor/src/i18n/locales/en/common.json",
     "apps/editor/src/i18n/locales/ja/common.json",
-    "apps/editor/src/shared/api/hooks/by-id.ts",
-    "apps/editor/src/shared/api/hooks/me.ts",
-    "apps/editor/src/shared/api/hooks/mutations.ts",
-    "apps/editor/src/shared/api/hooks/resolved-document.ts",
-    "apps/editor/src/shared/api/hooks/resolved-documents.ts",
-    "apps/editor/src/shared/api/hooks/resource-id.ts",
-    "apps/editor/src/shared/api/hooks/search.ts",
-    "apps/editor/src/shared/api/lib/common.ts",
-    "apps/editor/src/shared/api/lib/delete.ts",
-    "apps/editor/src/shared/api/lib/error.ts",
-    "apps/editor/src/shared/api/lib/get.ts",
-    "apps/editor/src/shared/api/lib/post.ts",
-    "apps/editor/src/shared/api/lib/put.ts",
-    "apps/editor/src/shared/form/components/control-section.tsx",
-    "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
-    "apps/editor/src/shared/form/components/field-pos-field.tsx",
-    "apps/editor/src/shared/form/components/field-templete.tsx",
-    "apps/editor/src/shared/form/components/field-wrapper.tsx",
-    "apps/editor/src/shared/form/components/form-templete.tsx",
-    "apps/editor/src/shared/form/components/input-field.tsx",
-    "apps/editor/src/shared/form/components/number-field.tsx",
-    "apps/editor/src/shared/form/components/select-document-field.tsx",
-    "apps/editor/src/shared/form/components/select-field.tsx",
-    "apps/editor/src/shared/form/components/switch-field.tsx",
-    "apps/editor/src/app/route/resource/image/edit.tsx",
-    "apps/editor/src/app/route/resource/image/new.tsx",
+    "apps/editor/src/old/features/manifest-form/manifest.ts",
+    "apps/editor/src/old/features/namespace-form/namespace.ts",
+    "apps/editor/src/old/features/tile-form/tile.ts",
+    "apps/editor/src/old/shared/lib/allocate-resource-name.ts",
+    "apps/editor/src/old/shared/lib/async-run.ts",
+    "apps/editor/src/old/shared/lib/color.ts",
+    "apps/editor/src/old/shared/lib/default-image-palette.ts",
+    "apps/editor/src/old/shared/lib/document-item.ts",
+    "apps/editor/src/old/shared/lib/document-label.ts",
+    "apps/editor/src/old/shared/lib/document-thumbnail.tsx",
+    "apps/editor/src/old/shared/lib/empty-image-data.ts",
+    "apps/editor/src/old/shared/lib/empty-skin-data.ts",
+    "apps/editor/src/old/shared/lib/empty-texture-data.ts",
+    "apps/editor/src/old/shared/lib/graphics-context-label.ts",
+    "apps/editor/src/old/shared/lib/graphics-meta-validation.ts",
+    "apps/editor/src/old/shared/lib/graphics-palette-match.ts",
+    "apps/editor/src/old/shared/lib/graphics-save-plan.ts",
+    "apps/editor/src/old/shared/lib/image-palette-mutate.ts",
+    "apps/editor/src/old/shared/lib/image-pixel-mutate.ts",
+    "apps/editor/src/old/shared/lib/palette-swatch-items.tsx",
+    "apps/editor/src/old/shared/lib/pixel-render.ts",
+    "apps/editor/src/old/shared/lib/query-client.ts",
+    "apps/editor/src/old/shared/lib/require-auth.tsx",
+    "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
+    "apps/editor/src/old/shared/lib/resource-type-meta.ts",
+    "apps/editor/src/old/shared/lib/skin-directions.ts",
+    "apps/editor/src/old/shared/lib/texture-layers.ts",
+    "apps/editor/src/old/shared/parts/backdrop.tsx",
+    "apps/editor/src/old/shared/parts/document-list-item-content.tsx",
+    "apps/editor/src/old/shared/parts/document-picker-dialog.tsx",
+    "apps/editor/src/old/shared/parts/document-picker.tsx",
+    "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+    "apps/editor/src/old/shared/parts/info-card.tsx",
+    "apps/editor/src/old/shared/parts/select-document.tsx",
+    "apps/editor/src/old/shared/parts/styled-switch.tsx",
+    "apps/editor/src/old/shared/skeletons/form.tsx",
+    "apps/editor/src/old/shared/skeletons/user-menu.tsx",
+    "apps/editor/src/shared/components/form-control/cancel-card.tsx",
+    "apps/editor/src/shared/components/form-control/draft-mode-toggle.tsx",
+    "apps/editor/src/shared/components/form-control/submit-card.tsx",
+    "apps/editor/src/shared/components/form-layout/form-shell.tsx",
+    "apps/editor/src/shared/components/infinite-list/infinite-list-trigger.tsx",
+    "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+    "apps/editor/src/shared/components/toolbar-control/save-button.tsx",
+    "apps/editor/src/app/pages/resource/image/edit.tsx",
+    "apps/editor/src/app/pages/resource/image/new.tsx",
+    "apps/editor/src/app/pages/resource/manifest/default-manifest.ts",
+    "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+    "apps/editor/src/app/pages/resource/manifest/new.tsx",
+    "apps/editor/src/old/features/grid-editor/components/anchored-editor-menu.tsx",
+    "apps/editor/src/old/features/grid-editor/components/color-editor.tsx",
+    "apps/editor/src/old/features/grid-editor/components/color-swatch.tsx",
+    "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+    "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+    "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+    "apps/editor/src/old/features/grid-editor/components/palette.tsx",
+    "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+    "apps/editor/src/old/features/grid-editor/components/sync-indicator-dot.tsx",
+    "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+    "apps/editor/src/old/features/grid-editor/components/zoom-popup-button.tsx",
+    "apps/editor/src/old/features/grid-editor/hooks/hand-tool.ts",
+    "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+    "apps/editor/src/old/features/grid-editor/hooks/palette-tool.ts",
+    "apps/editor/src/old/features/grid-editor/hooks/pen-tool.ts",
+    "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+    "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+    "apps/editor/src/old/features/grid-editor/hooks/zoom-tool.ts",
+    "apps/editor/src/old/features/player/hooks/play-session.ts",
+    "apps/editor/src/old/shared/api/hooks/by-id.ts",
+    "apps/editor/src/old/shared/api/hooks/me.ts",
+    "apps/editor/src/old/shared/api/hooks/mutations.ts",
+    "apps/editor/src/old/shared/api/hooks/resolved-document.ts",
+    "apps/editor/src/old/shared/api/hooks/resolved-documents.ts",
+    "apps/editor/src/old/shared/api/hooks/resource-id.ts",
+    "apps/editor/src/old/shared/api/hooks/search.ts",
+    "apps/editor/src/old/shared/api/lib/common.ts",
+    "apps/editor/src/old/shared/api/lib/delete.ts",
+    "apps/editor/src/old/shared/api/lib/error.ts",
+    "apps/editor/src/old/shared/api/lib/get.ts",
+    "apps/editor/src/old/shared/api/lib/post.ts",
+    "apps/editor/src/old/shared/api/lib/put.ts",
+    "apps/editor/src/old/shared/form/components/control-section.tsx",
+    "apps/editor/src/old/shared/form/components/draft-mode-toggle.tsx",
+    "apps/editor/src/old/shared/form/components/field-pos-field.tsx",
+    "apps/editor/src/old/shared/form/components/field-templete.tsx",
+    "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
+    "apps/editor/src/old/shared/form/components/form-templete.tsx",
+    "apps/editor/src/old/shared/form/components/input-field.tsx",
+    "apps/editor/src/old/shared/form/components/number-field.tsx",
+    "apps/editor/src/old/shared/form/components/select-document-field.tsx",
+    "apps/editor/src/old/shared/form/components/select-field.tsx",
+    "apps/editor/src/old/shared/form/components/switch-field.tsx",
     "apps/api/vite.config.ts",
     "apps/api/vitest.config.ts",
     "apps/api/src/config.ts",
@@ -1167,6 +1242,26 @@
       "typeOnly": true
     },
     {
+      "from": "packages/shared/src/base/theme/badge.ts",
+      "to": "packages/shared/src/base/theme/types.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/base/theme/button.ts",
+      "to": "packages/shared/src/base/theme/types.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/base/theme/dot.ts",
+      "to": "packages/shared/src/base/theme/types.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/base/theme/text.ts",
+      "to": "packages/shared/src/base/theme/types.ts",
+      "typeOnly": true
+    },
+    {
       "from": "packages/shared/src/schema/database/namespace-capabilities.ts",
       "to": "packages/shared/src/schema/database/namespace-permission.ts",
       "typeOnly": true
@@ -1557,6 +1652,191 @@
       "typeOnly": true
     },
     {
+      "from": "packages/shared/src/base/components/attachment/attachment-container.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/attachment/indicator-dot.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/attachment/indicator-dot.tsx",
+      "to": "packages/shared/src/base/theme/dot.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/attachment/indicator-dot.tsx",
+      "to": "packages/shared/src/base/theme/types.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "packages/shared/src/base/components/canvas/overlay-canvas.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/dialog/dialog-layout.tsx",
+      "to": "packages/shared/src/base/components/ui/dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/feedback/alert-banner.tsx",
+      "to": "packages/shared/src/base/components/ui/alert.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/feedback/alert-banner.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/feedback/alert-banner.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/feedback/alert-banner.tsx",
+      "to": "packages/shared/src/base/components/feedback/alert-icon.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/feedback/alert-stack.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-control/action-card.tsx",
+      "to": "packages/shared/src/base/components/form-control/card-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-control/card-button.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-control/list-item.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-control/menu-card.tsx",
+      "to": "packages/shared/src/base/components/form-control/card-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-control/select-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-control/styled-switch.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-field/form-section.tsx",
+      "to": "packages/shared/src/base/components/layout/vertical-stacker.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/form-field/form-skeleton.tsx",
+      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/navigation/dirty-indicator.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/navigation/dropdown-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/dropdown-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/navigation/menu-bar.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/navigation/user-indicator.tsx",
+      "to": "packages/shared/src/base/components/ui/avatar.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/navigation/user-menu-skeleton.tsx",
+      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/page/page-layout.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-input.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-item-skelton.tsx",
+      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-item-skelton.tsx",
+      "to": "packages/shared/src/base/components/search/search-result-item.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-result-empty.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-result-item.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-result.tsx",
+      "to": "packages/shared/src/base/components/ui/scroll-area.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-result.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/search/search-root.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/toolbar/toolbar-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/toolbar/toolbar-button.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/toolbar/toolbar-separator.tsx",
+      "to": "packages/shared/src/base/components/ui/separator.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/toolbar/toolbar.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
       "from": "packages/shared/src/base/components/ui/alert.tsx",
       "to": "packages/shared/src/base/lib/utils.ts",
       "typeOnly": false
@@ -1638,6 +1918,11 @@
     },
     {
       "from": "packages/shared/src/base/components/ui/popover.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "packages/shared/src/base/components/ui/scroll-area.tsx",
       "to": "packages/shared/src/base/lib/utils.ts",
       "typeOnly": false
     },
@@ -3003,11 +3288,6 @@
     },
     {
       "from": "apps/editor/src/main.tsx",
-      "to": "apps/editor/src/app/route/router.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/main.tsx",
       "to": "apps/editor/src/shared/providers/theme.tsx",
       "typeOnly": false
     },
@@ -3019,11 +3299,6 @@
     {
       "from": "apps/editor/src/main.tsx",
       "to": "apps/editor/src/shared/providers/auth.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/main.tsx",
-      "to": "apps/editor/src/shared/lib/query-client.ts",
       "typeOnly": false
     },
     {
@@ -3127,1478 +3402,1773 @@
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/home.tsx",
-      "to": "apps/editor/src/shared/form/components/control-section.tsx",
+      "from": "apps/editor/src/app/pages/home.tsx",
+      "to": "packages/shared/src/base/components/form-control/menu-card.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/home.tsx",
-      "to": "apps/editor/src/shared/parts/menu-card.tsx",
+      "from": "apps/editor/src/app/pages/home.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/home.tsx",
-      "to": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
+      "from": "apps/editor/src/app/pages/home.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/home.tsx",
+      "from": "apps/editor/src/app/pages/home.tsx",
+      "to": "apps/editor/src/widget/dialog/select-dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/home.tsx",
+      "to": "apps/editor/src/feature/resource/resource-item.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/home.tsx",
       "to": "apps/editor/src/app/stores/workspace.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/home.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "from": "apps/editor/src/app/pages/login.tsx",
+      "to": "packages/shared/src/base/components/form-control/menu-card.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/login.tsx",
-      "to": "apps/editor/src/shared/parts/menu-card.tsx",
+      "from": "apps/editor/src/app/pages/login.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/login.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/play.tsx",
+      "from": "apps/editor/src/app/pages/play.tsx",
       "to": "packages/shared/src/base/components/ui/button.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/play.tsx",
+      "from": "apps/editor/src/app/pages/play.tsx",
       "to": "apps/runtime/src/runtime-host.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/play.tsx",
-      "to": "apps/editor/src/features/player/hooks/play-session.ts",
+      "from": "apps/editor/src/app/pages/play.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/play.tsx",
+      "from": "apps/editor/src/app/pages/play.tsx",
+      "to": "apps/editor/src/widget/player/use-play-session.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/play.tsx",
       "to": "apps/editor/src/app/stores/workspace.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/play.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
+      "to": "packages/shared/src/base/components/canvas/canvas-layout.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/shared/lib/require-auth.tsx",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
+      "to": "packages/shared/src/base/components/canvas/canvas-viewport.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/login.tsx",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
+      "to": "packages/shared/src/base/components/canvas/overlay-canvas.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/home.tsx",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/manifest/new.tsx",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
+      "to": "packages/shared/src/types/resource/image.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/namespace/new.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/namespace/edit.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/resource/image/new.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/resource/image/edit.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/resource/index.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/resource/search.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/router.tsx",
-      "to": "apps/editor/src/app/route/play.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/manifest-form/manifest.ts",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
+      "typeOnly": false
     },
     {
-      "from": "apps/editor/src/features/manifest-form/manifest.ts",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
       "to": "packages/shared/src/schema/database/resource.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/features/manifest-form/manifest.ts",
-      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/namespace-form/namespace.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/namespace-form/namespace.ts",
-      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/tile-form/tile.ts",
-      "to": "packages/shared/src/schema/database/resource.ts",
+      "from": "apps/editor/src/feature/image/image-editor.tsx",
+      "to": "apps/editor/src/feature/image/image-toolbar.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/features/tile-form/tile.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/tile-form/tile.ts",
-      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/color.ts",
-      "to": "packages/shared/src/types/util/color.ts",
+      "from": "apps/editor/src/feature/image/image-toolbar.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/default-image-palette.ts",
-      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "from": "apps/editor/src/feature/image/image-toolbar.tsx",
+      "to": "packages/shared/src/base/components/toolbar/toolbar.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/document-item.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/document-item.ts",
-      "to": "packages/shared/src/types/database/filter.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/document-item.ts",
-      "to": "apps/editor/src/shared/lib/document-label.ts",
+      "from": "apps/editor/src/feature/image/image-toolbar.tsx",
+      "to": "packages/shared/src/base/components/toolbar/toolbar-group.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/document-item.ts",
-      "to": "apps/editor/src/shared/lib/document-thumbnail.tsx",
+      "from": "apps/editor/src/feature/image/image-toolbar.tsx",
+      "to": "packages/shared/src/base/components/toolbar/toolbar-separator.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/document-label.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/document-label.ts",
-      "to": "packages/shared/src/types/database/filter.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
-      "to": "packages/shared/src/types/database/filter.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
-      "to": "apps/editor/src/shared/lib/pixel-render.ts",
+      "from": "apps/editor/src/feature/image/image-toolbar.tsx",
+      "to": "packages/shared/src/base/components/toolbar/toolbar-button.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
-      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "from": "apps/editor/src/feature/resource/resource-item.tsx",
+      "to": "packages/shared/src/base/components/form-control/list-item.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/document-thumbnail.tsx",
-      "to": "apps/editor/src/shared/api/hooks/resolved-document.ts",
+      "from": "apps/editor/src/feature/resource/resource-item.tsx",
+      "to": "packages/shared/src/base/components/search/search-item-skelton.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/empty-image-data.ts",
-      "to": "apps/editor/src/shared/lib/default-image-palette.ts",
+      "from": "apps/editor/src/feature/resource/resource-item.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/empty-image-data.ts",
-      "to": "apps/editor/src/shared/lib/pixel-render.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/empty-skin-data.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/empty-texture-data.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/graphics-meta-validation.ts",
-      "to": "packages/shared/src/schema/database/resource.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/lib/graphics-meta-validation.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/graphics-palette-match.ts",
-      "to": "apps/editor/src/shared/lib/default-image-palette.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/lib/graphics-palette-match.ts",
-      "to": "apps/editor/src/shared/lib/pixel-render.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/graphics-save-plan.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/graphics-save-plan.ts",
-      "to": "apps/editor/src/shared/lib/graphics-context-label.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/lib/image-palette-mutate.ts",
-      "to": "apps/editor/src/shared/lib/pixel-render.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/image-pixel-mutate.ts",
-      "to": "apps/editor/src/shared/lib/pixel-render.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/palette-swatch-items.tsx",
-      "to": "apps/editor/src/shared/lib/pixel-render.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/pixel-render.ts",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/require-auth.tsx",
-      "to": "apps/editor/src/shared/providers/auth.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/lib/require-auth.tsx",
-      "to": "apps/editor/src/shared/parts/backdrop.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-form.tsx",
       "to": "packages/shared/src/types/resource/common.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-form.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-form.tsx",
       "to": "packages/shared/src/schema/resource/common/base.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
-      "to": "apps/editor/src/shared/api/hooks/search.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-form.tsx",
+      "to": "apps/editor/src/shared/providers/alert.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
-      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-form.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
-      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/lib/reserve-graphics-resource.ts",
-      "to": "apps/editor/src/shared/lib/allocate-resource-name.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-form.tsx",
+      "to": "apps/editor/src/widget/notification/error-handler.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/lib/resource-type-meta.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-form.tsx",
+      "to": "apps/editor/src/widget/control/text-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/feature/resource/resource-save-popup-button.tsx",
       "to": "packages/shared/src/types/resource/common.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/lib/texture-layers.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-popup-button.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/parts/action-card.tsx",
-      "to": "apps/editor/src/shared/parts/card-button.tsx",
+      "from": "apps/editor/src/feature/resource/resource-save-popup-button.tsx",
+      "to": "packages/shared/src/base/components/dialog/dialog-layout.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/parts/cancel-card.tsx",
-      "to": "apps/editor/src/shared/parts/action-card.tsx",
+      "from": "apps/editor/src/feature/resource/resource-save-popup-button.tsx",
+      "to": "apps/editor/src/shared/providers/alert.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/parts/card-button.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-popup-button.tsx",
+      "to": "apps/editor/src/widget/notification/error-handler.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/parts/document-list-item-content.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
+      "from": "apps/editor/src/feature/resource/resource-save-popup-button.tsx",
+      "to": "apps/editor/src/feature/resource/resource-save-form.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
-      "to": "packages/shared/src/types/database/filter.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
-      "to": "packages/shared/src/types/resource/common.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
-      "to": "packages/shared/src/base/components/ui/button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
-      "to": "packages/shared/src/base/components/ui/dialog.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
-      "to": "apps/editor/src/shared/parts/select-document.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "packages/shared/src/types/database/filter.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "packages/shared/src/types/resource/common.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "packages/shared/src/base/components/ui/button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "apps/editor/src/shared/parts/document-list-item-content.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "apps/editor/src/shared/parts/document-picker-dialog.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "apps/editor/src/shared/api/hooks/resolved-document.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "apps/editor/src/shared/lib/document-label.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/document-picker.tsx",
-      "to": "apps/editor/src/shared/lib/document-item.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
-      "to": "packages/shared/src/types/database/filter.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
-      "to": "packages/shared/src/base/components/ui/command.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
-      "to": "apps/editor/src/shared/lib/document-item.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
-      "to": "apps/editor/src/shared/api/hooks/search.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
-      "to": "apps/editor/src/shared/parts/document-list-item-content.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/menu-bar.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/menu-card.tsx",
-      "to": "apps/editor/src/shared/parts/card-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "from": "apps/editor/src/feature/resource/resource-select.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/parts/select-document.tsx",
-      "to": "packages/shared/src/types/database/filter.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "from": "apps/editor/src/feature/resource/resource-select.tsx",
       "to": "packages/shared/src/types/resource/common.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/parts/select-document.tsx",
+      "from": "apps/editor/src/feature/resource/resource-select.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/feature/resource/resource-select.tsx",
+      "to": "apps/editor/src/widget/control/select-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/feature/resource/resource-select.tsx",
+      "to": "apps/editor/src/feature/resource/resource-item.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/feature/resource/resource-types.tsx",
+      "to": "packages/shared/src/base/components/form-control/menu-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/feature/resource/resource-types.tsx",
+      "to": "packages/shared/src/base/components/form-field/form-section.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/feature/resource/resource-types.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/delete.ts",
+      "to": "apps/editor/src/shared/api/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/get.ts",
+      "to": "apps/editor/src/shared/api/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/post.ts",
+      "to": "apps/editor/src/shared/api/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/api/put.ts",
+      "to": "apps/editor/src/shared/api/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/providers/auth.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/repository/factory.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/repository/factory.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/repository/factory.ts",
+      "to": "apps/editor/src/app/stores/query-client.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/repository/factory.ts",
+      "to": "apps/editor/src/shared/api/delete.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/repository/factory.ts",
+      "to": "apps/editor/src/shared/api/get.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/repository/factory.ts",
+      "to": "apps/editor/src/shared/api/post.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/repository/factory.ts",
+      "to": "apps/editor/src/shared/api/put.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/repository/namespace-repository.ts",
+      "to": "apps/editor/src/shared/repository/factory.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/repository/resource-repository.ts",
+      "to": "apps/editor/src/shared/repository/factory.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/widget/control/number-field.tsx",
+      "to": "packages/shared/src/base/components/form-field/single-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/widget/control/number-field.tsx",
       "to": "packages/shared/src/base/components/ui/input.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/parts/select-document.tsx",
-      "to": "apps/editor/src/shared/lib/document-item.ts",
+      "from": "apps/editor/src/widget/control/position-field.tsx",
+      "to": "packages/shared/src/types/engine.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/parts/select-document.tsx",
-      "to": "apps/editor/src/shared/parts/infinite-scroll-select.tsx",
+      "from": "apps/editor/src/widget/control/position-field.tsx",
+      "to": "packages/shared/src/base/components/form-field/multiple-field.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/parts/styled-switch.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
+      "from": "apps/editor/src/widget/control/position-field.tsx",
+      "to": "packages/shared/src/base/components/form-field/inline-sub-field.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/parts/submit-card.tsx",
-      "to": "apps/editor/src/shared/parts/action-card.tsx",
+      "from": "apps/editor/src/widget/control/position-field.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/providers/auth.tsx",
+      "from": "apps/editor/src/widget/control/select-field.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/widget/control/select-field.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/providers/auth.tsx",
-      "to": "apps/editor/src/shared/api/hooks/me.ts",
+      "from": "apps/editor/src/widget/control/select-field.tsx",
+      "to": "packages/shared/src/base/components/form-field/single-field.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/providers/theme.tsx",
-      "to": "apps/editor/src/shared/ui/theme-store.ts",
+      "from": "apps/editor/src/widget/control/select-field.tsx",
+      "to": "packages/shared/src/base/components/form-control/select-button.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/skeletons/form.tsx",
-      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/skeletons/user-menu.tsx",
-      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/ui/error-handler.ts",
-      "to": "apps/editor/src/shared/providers/alert.tsx",
+      "from": "apps/editor/src/widget/control/select-field.tsx",
+      "to": "apps/editor/src/shared/repository/factory.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/ui/error-handler.ts",
-      "to": "apps/editor/src/shared/api/lib/error.ts",
+      "from": "apps/editor/src/widget/control/select-field.tsx",
+      "to": "apps/editor/src/widget/dialog/select-dialog.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
-      "to": "apps/editor/src/shared/providers/alert.tsx",
+      "from": "apps/editor/src/widget/control/switch-field.tsx",
+      "to": "packages/shared/src/base/components/form-field/single-field.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
-      "to": "packages/shared/src/base/components/ui/alert.tsx",
+      "from": "apps/editor/src/widget/control/switch-field.tsx",
+      "to": "packages/shared/src/base/components/form-control/styled-switch.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
-      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "from": "apps/editor/src/widget/control/text-field.tsx",
+      "to": "packages/shared/src/base/components/form-field/single-field.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/alert-viewport.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
+      "from": "apps/editor/src/widget/control/text-field.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/bottom-menu.tsx",
-      "to": "apps/editor/src/shared/parts/menu-bar.tsx",
+      "from": "apps/editor/src/widget/dialog/select-dialog.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/widget/dialog/select-dialog.tsx",
+      "to": "packages/shared/src/base/components/search/search-input.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
+      "from": "apps/editor/src/widget/dialog/select-dialog.tsx",
+      "to": "packages/shared/src/base/components/dialog/dialog-layout.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "to": "apps/editor/src/app/layout/components/title-bar.tsx",
+      "from": "apps/editor/src/widget/dialog/select-dialog.tsx",
+      "to": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "to": "apps/editor/src/app/layout/components/bottom-menu.tsx",
+      "from": "apps/editor/src/widget/dialog/select-dialog.tsx",
+      "to": "apps/editor/src/shared/repository/factory.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "to": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "from": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "to": "packages/shared/src/base/components/navigation/title-bar.tsx",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "to": "apps/editor/src/widget/navigation/bottom-menu.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/title-bar.tsx",
-      "to": "apps/editor/src/app/stores/edit-state.ts",
+      "from": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "to": "apps/editor/src/widget/navigation/editor-title-bar.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
-      "to": "packages/shared/src/base/components/ui/dropdown-menu.tsx",
+      "from": "apps/editor/src/widget/navigation/bottom-menu.tsx",
+      "to": "packages/shared/src/base/components/navigation/menu-bar.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
-      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "from": "apps/editor/src/widget/navigation/editor-title-bar.tsx",
+      "to": "packages/shared/src/base/components/navigation/title-bar.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
-      "to": "packages/shared/src/base/components/ui/avatar.tsx",
+      "from": "apps/editor/src/widget/navigation/editor-title-bar.tsx",
+      "to": "packages/shared/src/base/components/navigation/dirty-indicator.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
+      "from": "apps/editor/src/widget/navigation/editor-title-bar.tsx",
+      "to": "apps/editor/src/widget/navigation/user-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/widget/navigation/editor-title-bar.tsx",
+      "to": "apps/editor/src/widget/navigation/use-editor-state.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/widget/navigation/use-user-menu.ts",
+      "to": "packages/shared/src/base/components/navigation/dropdown-menu.tsx",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/widget/navigation/use-user-menu.ts",
       "to": "apps/editor/src/shared/providers/auth.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/layout/components/user-menu.tsx",
-      "to": "apps/editor/src/shared/skeletons/user-menu.tsx",
+      "from": "apps/editor/src/widget/navigation/user-menu.tsx",
+      "to": "packages/shared/src/base/components/navigation/dropdown-menu.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/manifest/new.tsx",
-      "to": "packages/shared/src/types/database/collection.ts",
+      "from": "apps/editor/src/widget/navigation/user-menu.tsx",
+      "to": "packages/shared/src/base/components/navigation/user-indicator.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/manifest/new.tsx",
-      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "from": "apps/editor/src/widget/navigation/user-menu.tsx",
+      "to": "apps/editor/src/widget/navigation/use-user-menu.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/manifest/new.tsx",
-      "to": "apps/editor/src/app/stores/workspace.ts",
+      "from": "apps/editor/src/widget/notification/alert-viewport.tsx",
+      "to": "packages/shared/src/base/components/feedback/alert-banner.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/manifest/new.tsx",
-      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "from": "apps/editor/src/widget/notification/alert-viewport.tsx",
+      "to": "packages/shared/src/base/components/feedback/alert-stack.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/manifest/new.tsx",
-      "to": "apps/editor/src/features/manifest-form/manifest.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/manifest/new.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/manifest/new.tsx",
-      "to": "apps/editor/src/shared/form/components/form-templete.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "packages/shared/src/schema/database/namespace.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "apps/editor/src/features/namespace-form/namespace.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "apps/editor/src/shared/form/components/form-templete.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/edit.tsx",
-      "to": "apps/editor/src/shared/skeletons/form.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/new.tsx",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/new.tsx",
-      "to": "packages/shared/src/schema/database/namespace.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/new.tsx",
-      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/new.tsx",
-      "to": "apps/editor/src/features/namespace-form/namespace.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/new.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/namespace/new.tsx",
-      "to": "apps/editor/src/shared/form/components/form-templete.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/index.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/index.tsx",
-      "to": "apps/editor/src/shared/form/components/control-section.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/index.tsx",
-      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/index.tsx",
-      "to": "apps/editor/src/shared/parts/menu-card.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/search.tsx",
-      "to": "packages/shared/src/schema/resource/common/base.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/search.tsx",
-      "to": "apps/editor/src/shared/lib/resource-type-meta.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/search.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/search.tsx",
-      "to": "apps/editor/src/shared/parts/cancel-card.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/search.tsx",
-      "to": "apps/editor/src/shared/parts/menu-card.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/app/route/resource/search.tsx",
-      "to": "apps/editor/src/shared/parts/select-document.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
-      "to": "packages/shared/src/base/components/ui/popover.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
-      "to": "packages/shared/src/types/util/color.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
-      "to": "packages/shared/src/base/components/ui/slider.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
-      "to": "apps/editor/src/shared/lib/color.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "packages/shared/src/types/resource/common.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "packages/shared/src/types/resource/image.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "packages/shared/src/schema/database/resource.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "to": "packages/shared/src/types/resource/common.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "to": "packages/shared/src/base/components/ui/separator.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "to": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/image-toolbar.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "packages/shared/src/types/util/color.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "apps/editor/src/shared/lib/color.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "packages/shared/src/base/components/ui/button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/palette.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/color-editor.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/color-swatch.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/palette.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "packages/shared/src/types/database/collection.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "packages/shared/src/types/resource/common.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "packages/shared/src/base/components/ui/dialog.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "packages/shared/src/schema/resource/common/base.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
+      "from": "apps/editor/src/widget/notification/alert-viewport.tsx",
       "to": "apps/editor/src/shared/providers/alert.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "apps/editor/src/shared/ui/error-handler.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "apps/editor/src/shared/form/components/input-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "apps/editor/src/shared/parts/submit-card.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/save-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/sync-indicator-dot.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/sync-indicator-dot.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-      "to": "packages/shared/src/base/components/ui/button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-      "to": "packages/shared/src/base/lib/utils.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
-      "to": "packages/shared/src/base/components/ui/button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/anchored-editor-menu.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/components/zoom-popup-button.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/toolbar-icon-button.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
-      "to": "packages/shared/src/types/engine.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "to": "packages/shared/src/types/engine.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "to": "packages/shared/src/types/resource/image.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "to": "packages/shared/src/types/util/color.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "to": "apps/editor/src/shared/lib/color.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
-      "to": "packages/shared/src/types/resource/image.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
-      "to": "packages/shared/src/types/util/color.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
-      "to": "packages/shared/src/types/engine.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/screen.ts",
-      "to": "packages/shared/src/types/engine.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/screen.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/image-data.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/palette-tool.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/hand-tool.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/tool-set.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/pen-tool.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/features/grid-editor/hooks/zoom-tool.ts",
-      "to": "apps/editor/src/features/grid-editor/hooks/screen.ts",
-      "typeOnly": true
-    },
-    {
-      "from": "apps/editor/src/features/player/hooks/play-session.ts",
+      "from": "apps/editor/src/widget/player/use-play-session.ts",
       "to": "apps/runtime/src/bootstrap.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/features/player/hooks/play-session.ts",
+      "from": "apps/editor/src/widget/player/use-play-session.ts",
       "to": "apps/editor/src/app/stores/workspace.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "from": "apps/editor/src/app/pages/namespace/edit.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/by-id.ts",
-      "to": "apps/editor/src/shared/api/lib/get.ts",
+      "from": "apps/editor/src/app/pages/namespace/edit.tsx",
+      "to": "packages/shared/src/base/components/form-field/form-skeleton.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/by-id.ts",
-      "to": "apps/editor/src/shared/api/hooks/resource-id.ts",
+      "from": "apps/editor/src/app/pages/namespace/edit.tsx",
+      "to": "apps/editor/src/shared/repository/namespace-repository.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/me.ts",
+      "from": "apps/editor/src/app/pages/namespace/edit.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/namespace/edit.tsx",
+      "to": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/me.ts",
-      "to": "apps/editor/src/shared/api/lib/get.ts",
+      "from": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
+      "to": "packages/shared/src/base/components/form-field/form-section.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
+      "from": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
+      "to": "packages/shared/src/schema/database/namespace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
+      "to": "apps/editor/src/shared/components/form-layout/form-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
+      "to": "apps/editor/src/widget/control/text-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
+      "to": "apps/editor/src/widget/control/switch-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/namespace/new.tsx",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "from": "apps/editor/src/app/pages/namespace/new.tsx",
+      "to": "apps/editor/src/shared/repository/namespace-repository.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "apps/editor/src/shared/lib/query-client.ts",
+      "from": "apps/editor/src/app/pages/namespace/new.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "apps/editor/src/shared/api/lib/post.ts",
+      "from": "apps/editor/src/app/pages/namespace/new.tsx",
+      "to": "apps/editor/src/app/pages/namespace/namespace-form.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "apps/editor/src/shared/api/lib/put.ts",
+      "from": "apps/editor/src/app/pages/resource/index.tsx",
+      "to": "apps/editor/src/feature/resource/resource-types.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "apps/editor/src/shared/api/lib/delete.ts",
+      "from": "apps/editor/src/app/pages/resource/index.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "apps/editor/src/shared/api/hooks/resource-id.ts",
+      "from": "apps/editor/src/app/pages/resource/search.tsx",
+      "to": "packages/shared/src/base/components/form-control/menu-card.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "from": "apps/editor/src/app/pages/resource/search.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/mutations.ts",
-      "to": "apps/editor/src/shared/api/hooks/search.ts",
+      "from": "apps/editor/src/app/pages/resource/search.tsx",
+      "to": "apps/editor/src/shared/components/form-control/cancel-card.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/resolved-document.ts",
+      "from": "apps/editor/src/app/pages/resource/search.tsx",
+      "to": "apps/editor/src/widget/dialog/select-dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/search.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/search.tsx",
+      "to": "apps/editor/src/feature/resource/resource-item.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/manifest-form/manifest.ts",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/resolved-document.ts",
-      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "from": "apps/editor/src/old/features/manifest-form/manifest.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/resolved-documents.ts",
+      "from": "apps/editor/src/old/features/namespace-form/namespace.ts",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/resolved-documents.ts",
-      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "from": "apps/editor/src/old/features/tile-form/tile.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/resource-id.ts",
-      "to": "packages/shared/src/schema/resource/common/base.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/api/hooks/search.ts",
+      "from": "apps/editor/src/old/features/tile-form/tile.ts",
       "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/search.ts",
+      "from": "apps/editor/src/old/shared/lib/color.ts",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/default-image-palette.ts",
+      "to": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/document-item.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/document-item.ts",
       "to": "packages/shared/src/types/database/filter.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/search.ts",
-      "to": "apps/editor/src/shared/api/lib/post.ts",
+      "from": "apps/editor/src/old/shared/lib/document-item.ts",
+      "to": "apps/editor/src/old/shared/lib/document-label.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/hooks/search.ts",
-      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "from": "apps/editor/src/old/shared/lib/document-item.ts",
+      "to": "apps/editor/src/old/shared/lib/document-thumbnail.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/api/lib/common.ts",
-      "to": "apps/editor/src/shared/api/lib/error.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/api/lib/delete.ts",
-      "to": "apps/editor/src/shared/api/lib/common.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/api/lib/error.ts",
-      "to": "packages/shared/src/types/api/response.ts",
+      "from": "apps/editor/src/old/shared/lib/document-label.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/api/lib/get.ts",
-      "to": "apps/editor/src/shared/lib/async-run.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/api/lib/get.ts",
-      "to": "apps/editor/src/shared/api/lib/common.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/api/lib/post.ts",
-      "to": "apps/editor/src/shared/api/lib/common.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/api/lib/put.ts",
-      "to": "apps/editor/src/shared/api/lib/common.ts",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
-      "to": "apps/editor/src/shared/parts/styled-switch.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
-      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-pos-field.tsx",
-      "to": "apps/editor/src/shared/form/components/number-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-pos-field.tsx",
-      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/input-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/number-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/select-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/field-pos-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/switch-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/select-document-field.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/control-section.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
-      "to": "apps/editor/src/shared/parts/submit-card.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
-      "to": "apps/editor/src/shared/parts/cancel-card.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/draft-mode-toggle.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/form-templete.tsx",
-      "to": "apps/editor/src/shared/form/components/field-templete.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/input-field.tsx",
-      "to": "packages/shared/src/base/components/ui/input.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/input-field.tsx",
-      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/number-field.tsx",
-      "to": "packages/shared/src/base/components/ui/input.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/number-field.tsx",
-      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
-      "typeOnly": false
-    },
-    {
-      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
+      "from": "apps/editor/src/old/shared/lib/document-label.ts",
       "to": "packages/shared/src/types/database/filter.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
+      "from": "apps/editor/src/old/shared/lib/document-thumbnail.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/document-thumbnail.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/document-thumbnail.tsx",
+      "to": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/document-thumbnail.tsx",
+      "to": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/document-thumbnail.tsx",
+      "to": "apps/editor/src/old/shared/api/hooks/resolved-document.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/empty-image-data.ts",
+      "to": "apps/editor/src/old/shared/lib/default-image-palette.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/empty-image-data.ts",
+      "to": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/empty-skin-data.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/empty-texture-data.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/graphics-meta-validation.ts",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/graphics-meta-validation.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/graphics-palette-match.ts",
+      "to": "apps/editor/src/old/shared/lib/default-image-palette.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/graphics-palette-match.ts",
+      "to": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/graphics-save-plan.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/graphics-save-plan.ts",
+      "to": "apps/editor/src/old/shared/lib/graphics-context-label.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/image-palette-mutate.ts",
+      "to": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/image-pixel-mutate.ts",
+      "to": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/palette-swatch-items.tsx",
+      "to": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/pixel-render.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/require-auth.tsx",
+      "to": "apps/editor/src/old/shared/parts/backdrop.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
       "to": "packages/shared/src/types/resource/common.ts",
       "typeOnly": true
     },
     {
-      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
-      "to": "apps/editor/src/shared/parts/document-picker.tsx",
+      "from": "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/form/components/select-document-field.tsx",
-      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "from": "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/search.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/form/components/select-field.tsx",
-      "to": "packages/shared/src/base/components/ui/select.tsx",
+      "from": "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/mutations.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/form/components/select-field.tsx",
-      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "from": "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/old/shared/lib/resource-type-meta.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/reserve-graphics-resource.ts",
+      "to": "apps/editor/src/old/shared/lib/allocate-resource-name.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/form/components/switch-field.tsx",
-      "to": "apps/editor/src/shared/parts/styled-switch.tsx",
+      "from": "apps/editor/src/old/shared/lib/resource-type-meta.ts",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/lib/texture-layers.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/document-list-item-content.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/shared/form/components/switch-field.tsx",
-      "to": "apps/editor/src/shared/form/components/field-wrapper.tsx",
+      "from": "apps/editor/src/old/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "from": "apps/editor/src/old/shared/parts/document-picker-dialog.tsx",
+      "to": "packages/shared/src/base/components/ui/dialog.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "from": "apps/editor/src/old/shared/parts/document-picker-dialog.tsx",
+      "to": "apps/editor/src/old/shared/parts/select-document.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
-      "to": "apps/editor/src/shared/api/hooks/by-id.ts",
+      "from": "apps/editor/src/old/shared/parts/document-picker.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/document-picker.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/old/shared/parts/document-picker-dialog.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/resource/image/edit.tsx",
-      "to": "apps/editor/src/shared/skeletons/form.tsx",
+      "from": "apps/editor/src/old/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/old/shared/lib/resource-type-meta.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/resource/image/new.tsx",
+      "from": "apps/editor/src/old/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/old/shared/api/hooks/resolved-document.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/document-picker.tsx",
+      "to": "apps/editor/src/old/shared/lib/document-label.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/document-picker.tsx",
+      "to": "packages/shared/src/base/components/form-control/select-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+      "to": "packages/shared/src/base/components/ui/command.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+      "to": "apps/editor/src/old/shared/lib/document-item.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+      "to": "apps/editor/src/old/shared/api/hooks/search.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+      "to": "apps/editor/src/old/shared/parts/document-list-item-content.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/select-document.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/select-document.tsx",
+      "to": "apps/editor/src/old/shared/lib/document-item.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/select-document.tsx",
+      "to": "apps/editor/src/old/shared/parts/infinite-scroll-select.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/parts/styled-switch.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/skeletons/form.tsx",
+      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/skeletons/user-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/form-control/cancel-card.tsx",
+      "to": "packages/shared/src/base/components/form-control/action-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/form-control/submit-card.tsx",
+      "to": "packages/shared/src/base/components/form-control/action-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/form-layout/form-shell.tsx",
+      "to": "packages/shared/src/base/components/layout/vertical-stacker.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/form-layout/form-shell.tsx",
+      "to": "apps/editor/src/shared/components/form-control/draft-mode-toggle.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/form-layout/form-shell.tsx",
+      "to": "apps/editor/src/shared/components/form-control/submit-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/form-layout/form-shell.tsx",
+      "to": "apps/editor/src/shared/components/form-control/cancel-card.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+      "to": "packages/shared/src/base/components/search/search-root.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+      "to": "packages/shared/src/base/components/search/search-result.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+      "to": "packages/shared/src/base/components/search/search-result-item.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+      "to": "packages/shared/src/base/components/search/search-result-empty.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+      "to": "packages/shared/src/base/components/search/search-item-skelton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/infinite-list/infinite-list.tsx",
+      "to": "apps/editor/src/shared/repository/factory.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/toolbar-control/save-button.tsx",
+      "to": "packages/shared/src/base/components/toolbar/toolbar-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/shared/components/toolbar-control/save-button.tsx",
+      "to": "packages/shared/src/base/components/attachment/indicator-dot.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/image/edit.tsx",
+      "to": "packages/shared/src/base/components/form-field/form-skeleton.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/image/edit.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/image/edit.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/image/edit.tsx",
+      "to": "apps/editor/src/feature/image/image-editor.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/image/new.tsx",
       "to": "packages/shared/src/types/resource/image.ts",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/resource/image/new.tsx",
-      "to": "apps/editor/src/app/layout/components/layout-shell.tsx",
+      "from": "apps/editor/src/app/pages/resource/image/new.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
       "typeOnly": false
     },
     {
-      "from": "apps/editor/src/app/route/resource/image/new.tsx",
-      "to": "apps/editor/src/features/grid-editor/components/image-editor.tsx",
+      "from": "apps/editor/src/app/pages/resource/image/new.tsx",
+      "to": "apps/editor/src/feature/image/image-editor.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/default-manifest.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "packages/shared/src/base/components/form-field/form-section.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "apps/editor/src/shared/components/form-layout/form-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "apps/editor/src/shared/repository/namespace-repository.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "apps/editor/src/widget/control/text-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "apps/editor/src/widget/control/select-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "apps/editor/src/widget/control/hidden-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "to": "apps/editor/src/widget/control/position-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/new.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/new.tsx",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/new.tsx",
+      "to": "apps/editor/src/widget/layout/layout-shell.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/new.tsx",
+      "to": "apps/editor/src/app/stores/workspace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/new.tsx",
+      "to": "apps/editor/src/app/pages/resource/manifest/manifest-form.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/new.tsx",
+      "to": "apps/editor/src/shared/repository/resource-repository.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/app/pages/resource/manifest/new.tsx",
+      "to": "apps/editor/src/app/pages/resource/manifest/default-manifest.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/anchored-editor-menu.tsx",
+      "to": "packages/shared/src/base/components/ui/popover.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/anchored-editor-menu.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/color-editor.tsx",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/color-editor.tsx",
+      "to": "packages/shared/src/base/components/ui/slider.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/color-editor.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/color-editor.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/color-swatch.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/color-swatch.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "packages/shared/src/schema/database/resource.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-editor.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "to": "packages/shared/src/base/components/ui/separator.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/zoom-popup-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/image-toolbar.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/palette-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/anchored-editor-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/palette.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/color-editor.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/color-swatch.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/palette.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/base/components/ui/dialog.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/shared/providers/alert.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/save-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/sync-indicator-dot.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/sync-indicator-dot.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+      "to": "packages/shared/src/base/lib/utils.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "packages/shared/src/base/components/ui/button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/zoom-tool.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/anchored-editor-menu.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/components/zoom-popup-button.tsx",
+      "to": "apps/editor/src/old/features/grid-editor/components/toolbar-icon-button.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/hand-tool.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/hand-tool.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/palette-tool.ts",
+      "to": "packages/shared/src/types/resource/image.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/palette-tool.ts",
+      "to": "packages/shared/src/types/util/color.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/palette-tool.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/pen-tool.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/pen-tool.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/pen-tool.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/pen-tool.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/palette-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+      "to": "packages/shared/src/types/engine.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/image-data.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/zoom-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/palette-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/hand-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/tool-set.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/pen-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/features/grid-editor/hooks/zoom-tool.ts",
+      "to": "apps/editor/src/old/features/grid-editor/hooks/screen.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/player/hooks/play-session.ts",
+      "to": "apps/runtime/src/bootstrap.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/features/player/hooks/play-session.ts",
+      "to": "apps/editor/src/app/stores/workspace.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "to": "apps/editor/src/old/shared/api/lib/get.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/resource-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/me.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/me.ts",
+      "to": "apps/editor/src/old/shared/api/lib/get.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/old/shared/api/lib/post.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/old/shared/api/lib/put.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/old/shared/api/lib/delete.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/resource-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/mutations.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/search.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/resolved-document.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/resolved-document.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/resolved-documents.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/resolved-documents.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/resource-id.ts",
+      "to": "packages/shared/src/schema/resource/common/base.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/search.ts",
+      "to": "packages/shared/src/types/database/collection.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/search.ts",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/search.ts",
+      "to": "apps/editor/src/old/shared/api/lib/post.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/hooks/search.ts",
+      "to": "apps/editor/src/old/shared/api/hooks/by-id.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/lib/common.ts",
+      "to": "apps/editor/src/old/shared/api/lib/error.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/lib/delete.ts",
+      "to": "apps/editor/src/old/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/lib/error.ts",
+      "to": "packages/shared/src/types/api/response.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/lib/get.ts",
+      "to": "apps/editor/src/old/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/lib/post.ts",
+      "to": "apps/editor/src/old/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/api/lib/put.ts",
+      "to": "apps/editor/src/old/shared/api/lib/common.ts",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/draft-mode-toggle.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-pos-field.tsx",
+      "to": "apps/editor/src/old/shared/form/components/number-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-pos-field.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/input-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/number-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/select-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-pos-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/switch-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/select-document-field.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/control-section.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/form-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/draft-mode-toggle.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/form-templete.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-templete.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/input-field.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/input-field.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/number-field.tsx",
+      "to": "packages/shared/src/base/components/ui/input.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/number-field.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/select-document-field.tsx",
+      "to": "packages/shared/src/types/database/filter.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/select-document-field.tsx",
+      "to": "packages/shared/src/types/resource/common.ts",
+      "typeOnly": true
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/select-document-field.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/select-field.tsx",
+      "to": "packages/shared/src/base/components/ui/select.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/select-field.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
+      "typeOnly": false
+    },
+    {
+      "from": "apps/editor/src/old/shared/form/components/switch-field.tsx",
+      "to": "apps/editor/src/old/shared/form/components/field-wrapper.tsx",
       "typeOnly": false
     },
     {

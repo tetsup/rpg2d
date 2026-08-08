@@ -1,3 +1,5 @@
+@source "../../../../packages/shared/src/base";
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';

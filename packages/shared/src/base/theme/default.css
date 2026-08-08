@@ -1,0 +1,16 @@
+@theme {
+  --color-neutral: var(--color-zinc-900);
+  --color-neutral-foreground: var(--color-white);
+
+  --color-success: var(--color-emerald-700);
+  --color-success-foreground: var(--color-white);
+
+  --color-warning: var(--color-amber-500);
+  --color-warning-foreground: var(--color-zinc-950);
+
+  --color-danger: var(--color-red-700);
+  --color-danger-foreground: var(--color-white);
+
+  --color-info: var(--color-sky-700);
+  --color-info-foreground: var(--color-white);
+}
