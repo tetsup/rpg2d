@@ -19,8 +19,8 @@ export default defineConfig({
       '@api': path.resolve(__dirname, 'src'),
       '@tests': path.resolve(__dirname, 'tests'),
       '@database': path.resolve(__dirname, '../../packages/database/src'),
-      '@schema': path.resolve(__dirname, '../../packages/schema/src'),
-      '@sharedTypes': path.resolve(__dirname, '../../types'),
+      '@schema': path.resolve(__dirname, '../../packages/shared/src/schema'),
+      '@sharedTypes': path.resolve(__dirname, '../../packages/shared/src/types'),
     },
   },
 });

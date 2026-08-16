@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import 'dotenv/config';
 import { resolveUserMiddleware } from './auth/middlewares/resolve-user';
 import { authRoute } from './routes/auth';
 import { namespacesRoute } from './routes/namespaces';
@@ -16,7 +15,7 @@ app.use(
     credentials: true,
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type'],
-  }),
+  })
 );
 app.use('*', resolveUserMiddleware);
 app.route('/api/auth', authRoute);

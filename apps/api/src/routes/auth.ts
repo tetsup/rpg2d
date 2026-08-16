@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { Hono } from 'hono';
 import { deleteCookie, setCookie } from 'hono/cookie';
 import { UserRepository } from '@database/repositories/user';
@@ -60,11 +59,13 @@ authRoute.get('/login', async (c) => {
     setCookie(c, 'session', token, sessionCookieOptions);
     return c.redirect(redirectToFrontend(c));
   }
-  return c.redirect(buildAuth0Url(c.req.url));
+  const origin = resolveFrontendOrigin(c);
+  return c.redirect(buildAuth0Url(origin));
 });
 
 authRoute.get('/callback', async (c) => {
   const code = c.req.query('code');
+  const origin = resolveFrontendOrigin(c);
   const tokenRes = await fetch(`https://${env.AUTH0_DOMAIN}/oauth/token`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -73,7 +74,7 @@ authRoute.get('/callback', async (c) => {
       client_id: env.AUTH0_CLIENT_ID,
       client_secret: env.AUTH0_CLIENT_SECRET,
       code,
-      redirect_uri: buildCallbackUrl(c.req.url),
+      redirect_uri: buildCallbackUrl(origin),
     }),
   });
   const authToken = (await tokenRes.json()) as SessionTokenResponse;
@@ -84,6 +85,8 @@ authRoute.get('/callback', async (c) => {
   });
   const user = (await userRes.json()) as Auth0UserInfo;
 
+  console.log('Auth0 user:', user);
+
   let dbUser;
   try {
     dbUser = await new UserRepository().upsert({
@@ -92,12 +95,15 @@ authRoute.get('/callback', async (c) => {
       email: user.email,
       isAdmin: false,
     });
+
+    console.log('User upsert result:', dbUser);
   } catch (e) {
-    console.error('User upsert failed', e);
+    console.error('User upsert failed:', e);
     return c.text('Internal Server Error', 500);
   }
 
   if (!dbUser.ok) {
+    console.error('User upsert returned failure:', dbUser);
     return c.text('Failed to create user', 500);
   }
 
