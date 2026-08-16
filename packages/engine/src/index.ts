@@ -2,7 +2,7 @@ import type { Game, GameRenderer } from '@tetsup/web2d';
 import type { RpgKey, RpgMode } from '@sharedTypes/engine';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
 import { ResourceConfig } from '@sharedTypes/config';
-import { GameContext } from '@engine/resource/core/game-context';
+import { GameContext, type GameContextLike } from '@engine/resource/core/game-context';
 import type { Player } from '@engine/resource/domain/player';
 import { ActionManager } from './manager/action/action-manager';
 import { FieldEngine } from './manager/field/field-core';
@@ -12,7 +12,7 @@ import { DEFAULT_RPG_KEYS, InputEngine } from './manager/input/input-engine';
 type RawInput = Parameters<InputEngine<RpgKey>['tick']>[1];
 
 export class RpgCore implements Game<RpgKey> {
-  private ctx: GameContext;
+  private ctx: GameContextLike;
   private input: InputEngine;
   private panels: PanelManager;
   private actions: ActionManager;

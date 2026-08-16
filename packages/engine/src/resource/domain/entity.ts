@@ -2,11 +2,11 @@ import { Direction2d } from '@sharedTypes/engine';
 import type { EntityData } from '@sharedTypes/resource/entity';
 import type { EntityDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '../core/resource-base';
-import type { GameContext } from '../core/game-context';
+import type { GameContextLike } from '../core/game-context';
 import type { Action } from './action';
 
 export class Entity extends ResourceBase<'entity'> {
-  static async loadDeps(ctx: GameContext, data: EntityData): Promise<EntityDeps> {
+  static async loadDeps(ctx: GameContextLike, data: EntityData): Promise<EntityDeps> {
     const actions = await Promise.all(
       Object.entries(data.actions).map(async ([trigger, action]) => ({
         trigger,

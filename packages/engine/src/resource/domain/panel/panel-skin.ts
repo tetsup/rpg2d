@@ -1,6 +1,6 @@
 import type { PanelSkinData } from '@sharedTypes/resource/panel-skin';
 import type { LayerWithPos } from '@sharedTypes/engine';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { PanelSkinDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '@engine/resource/core/resource-base';
 import { Rect } from '@engine/utils/rect';
@@ -16,7 +16,7 @@ export type TextArea = {
 export class PanelSkin extends ResourceBase<'panel-skin'> {
   private panelPriority: number = 0;
 
-  static async loadDeps(ctx: GameContext, data: PanelSkinData): Promise<PanelSkinDeps> {
+  static async loadDeps(ctx: GameContextLike, data: PanelSkinData): Promise<PanelSkinDeps> {
     return {
       plane: await ctx.resources.get(data.plane, 'texture'),
       topLeft: await ctx.resources.get(data.topLeft, 'texture'),

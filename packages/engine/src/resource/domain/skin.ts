@@ -2,10 +2,10 @@ import type { Direction2d } from '@sharedTypes/engine';
 import type { SkinData } from '@sharedTypes/resource/skin';
 import type { SkinDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '../core/resource-base';
-import type { GameContext } from '../core/game-context';
+import type { GameContextLike } from '../core/game-context';
 
 export class Skin extends ResourceBase<'skin'> {
-  static async loadDeps(ctx: GameContext, data: SkinData): Promise<SkinDeps> {
+  static async loadDeps(ctx: GameContextLike, data: SkinData): Promise<SkinDeps> {
     return {
       textures: {
         left: await ctx.resources.get(data.textures.left, 'texture'),

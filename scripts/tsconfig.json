@@ -11,9 +11,9 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@sharedTypes/*": ["types/*"],
+      "@sharedTypes/*": ["packages/shared/src/types/*"],
+      "@schema/*": ["packages/shared/src/schema/*"],
       "@engine/*": ["packages/engine/src/*"],
-      "@schema/*": ["packages/schema/src/*"],
       "@database/*": ["packages/database/src/*"],
       "@api/*": ["apps/api/src/*"],
       "@editor/*": ["apps/editor/src/*"],

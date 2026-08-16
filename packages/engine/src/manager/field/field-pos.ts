@@ -1,4 +1,4 @@
-import { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import { calcDest } from '@engine/utils/pos';
 import { Movement } from '@sharedTypes/resource/action';
 import type { Direction2d, Point2d, Size2d } from '@sharedTypes/engine';
@@ -29,7 +29,7 @@ export class FieldPos {
   private _currentMovement: MovementExecution | null = null;
 
   constructor(
-    private ctx: GameContext,
+    private ctx: GameContextLike,
     private config: FieldPosConfig
   ) {
     this._current = config.initialPos;

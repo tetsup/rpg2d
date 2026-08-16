@@ -5,6 +5,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+
+  base: process.env.VITE_BASE_PATH ?? '/',
+
   server: {
     port: 5173,
     strictPort: true,
@@ -19,6 +22,7 @@ export default defineConfig({
       },
     },
   },
+
   resolve: {
     alias: {
       '@editor': resolve(__dirname, 'src'),
@@ -27,6 +31,7 @@ export default defineConfig({
       '@database': resolve(__dirname, '../../packages/database/src'),
       '@schema': resolve(__dirname, '../../packages/shared/src/schema'),
       '@sharedTypes': resolve(__dirname, '../../packages/shared/src/types'),
+      '@sharedStyles': resolve(__dirname, '../../packages/shared/src/styles'),
       '@base': resolve(__dirname, '../../packages/shared/src/base'),
     },
   },

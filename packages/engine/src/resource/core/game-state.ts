@@ -2,8 +2,12 @@ import type { ResourceId } from '@sharedTypes/resource/common';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
 import type { VariableState } from '@sharedTypes/engine';
 
-export class GameState {
-  variables: Map<ResourceId, VariableState>;
+export interface GameStateLike {
+  get: (id: ResourceId) => VariableState | undefined;
+}
+
+export class GameState implements GameStateLike {
+  private variables: Map<ResourceId, VariableState>;
 
   constructor(manifest: ManifestData) {
     this.variables = new Map();
@@ -11,4 +15,6 @@ export class GameState {
       this.variables.set(key, value);
     });
   }
+
+  get = (id: ResourceId) => this.variables.get(id);
 }

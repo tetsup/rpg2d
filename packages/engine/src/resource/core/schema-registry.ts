@@ -13,7 +13,11 @@ import { SkinSchema } from '@schema/resource/skin';
 import { TextureSchema } from '@schema/resource/texture';
 import { TileSchema } from '@schema/resource/tile';
 
-export class SchemaRegistry {
+export interface SchemaRegistryLike {
+  get: (key: ResourceType) => z.ZodTypeAny;
+}
+
+export class SchemaRegistry implements SchemaRegistryLike {
   private schemas = new Map<ResourceType, z.ZodTypeAny>();
 
   constructor(manifest: ManifestData) {

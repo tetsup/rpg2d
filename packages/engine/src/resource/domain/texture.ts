@@ -1,7 +1,7 @@
 import type { ImageLayer } from '@sharedTypes/engine';
 import type { TextureData, LayerAnimation } from '@sharedTypes/resource/texture';
 import type { TextureDeps } from '@engine/types/resource-deps';
-import type { GameContext } from '../core/game-context';
+import type { GameContextLike } from '../core/game-context';
 import { ResourceBase } from '../core/resource-base';
 
 type PlayState = 'init' | 'play' | 'stop';
@@ -10,7 +10,7 @@ export class Texture extends ResourceBase<'texture'> {
   private startMs: number = 0;
   private playState: PlayState = 'init';
 
-  static async loadDeps(ctx: GameContext, data: TextureData): Promise<TextureDeps> {
+  static async loadDeps(ctx: GameContextLike, data: TextureData): Promise<TextureDeps> {
     data.layers.map((layer) => layer.images.map((image) => ctx.assets.cache(image)));
     return {};
   }

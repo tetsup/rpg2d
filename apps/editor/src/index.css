@@ -1,0 +1,21 @@
+@source "../../../packages/shared/src/base";
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/nunito';
+
+@import '@sharedStyles/tokens.css';
+@import '@sharedStyles/base.css';
+
+@import '@sharedStyles/themes/adult.css';
+@import '@sharedStyles/themes/kids.css';
+
+@import '@sharedStyles/modes/light.css';
+@import '@sharedStyles/modes/dark.css';
+
+@import '@sharedStyles/utilities/animations.css';
+@import '@sharedStyles/utilities/components.css';
+@import '@sharedStyles/utilities/resources.css';

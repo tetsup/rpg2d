@@ -2,7 +2,7 @@ import type { PanelData } from '@sharedTypes/resource/panel';
 import type { RpgKey } from '@sharedTypes/engine';
 import type { PanelDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '@engine/resource/core/resource-base';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import { Rect } from '@engine/utils/rect';
 import type { TextArea } from './panel-skin';
 
@@ -15,13 +15,13 @@ export class Panel extends ResourceBase<'panel'> {
   private parent: Panel | null = null;
   panelRect: Rect;
 
-  constructor(ctx: GameContext, data: PanelData, deps: PanelDeps) {
+  constructor(ctx: GameContextLike, data: PanelData, deps: PanelDeps) {
     super(ctx, data, deps);
     this.id = data.id;
     this.panelRect = this.resolveRect();
   }
 
-  static async loadDeps(ctx: GameContext, data: PanelData): Promise<PanelDeps> {
+  static async loadDeps(ctx: GameContextLike, data: PanelData): Promise<PanelDeps> {
     const skin = await ctx.resources.get(data.skin, 'panel-skin');
     return { skin };
   }

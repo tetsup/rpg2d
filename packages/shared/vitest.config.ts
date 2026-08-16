@@ -19,6 +19,7 @@ export default defineConfig({
       '@schema': path.resolve(__dirname, 'src/schema'),
       '@tests': path.resolve(__dirname, 'tests'),
       '@sharedTypes': path.resolve(__dirname, 'src/types'),
+      '@sharedStyles': path.resolve(__dirname, 'src/styles'),
     },
   },
 });

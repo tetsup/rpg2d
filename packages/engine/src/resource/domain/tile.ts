@@ -1,10 +1,10 @@
 import type { TileData } from '@sharedTypes/resource/tile';
 import type { TileDeps } from '@engine/types/resource-deps';
 import { ResourceBase } from '@engine/resource/core/resource-base';
-import type { GameContext } from '../core/game-context';
+import type { GameContextLike } from '../core/game-context';
 
 export class Tile extends ResourceBase<'tile'> {
-  static async loadDeps(ctx: GameContext, data: TileData): Promise<TileDeps> {
+  static async loadDeps(ctx: GameContextLike, data: TileData): Promise<TileDeps> {
     return {
       texture: await ctx.resources.get(data.texture, 'texture'),
       actions: Object.fromEntries(

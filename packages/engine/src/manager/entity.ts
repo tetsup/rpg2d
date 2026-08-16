@@ -2,7 +2,7 @@ import type { EntityState } from '@sharedTypes/engine';
 import type { Movement } from '@sharedTypes/resource/action';
 import type { EntityInitialState } from '@sharedTypes/resource/field';
 import { Queue } from '@engine/utils/queue';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { Entity } from '@engine/resource/domain/entity';
 import type { Action } from '@engine/resource/domain/action';
 import { FieldPos } from './field/field-pos';
@@ -12,7 +12,7 @@ export class EntityInstance {
   queue: Queue<Movement> = new Queue();
 
   constructor(
-    private ctx: GameContext,
+    private ctx: GameContextLike,
     private entity: Entity,
     initialState: EntityInitialState
   ) {

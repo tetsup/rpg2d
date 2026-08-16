@@ -1,7 +1,7 @@
 import { DEFAULT_RPG_KEYS, InputEngine } from '@engine/manager/input/input-engine';
 import { MessagePanel, type Message } from '@engine/manager/panel/message-panel';
 import { PanelManager, type ManagedPanel } from '@engine/manager/panel/panel-manager';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { Panel } from '@engine/resource/domain/panel/panel';
 import type { RpgKey } from '@sharedTypes/engine';
 import type { MessageConfig } from '@sharedTypes/resource/manifest';
@@ -21,7 +21,7 @@ function makePanelResource(): Panel {
 
 function makeContext(
   overrides: { getPanel?: ReturnType<typeof vi.fn>; messageConfig?: MessageConfig } = {}
-): GameContext {
+): GameContextLike {
   const messageConfig = overrides.messageConfig ?? {
     speedMs: 1,
     margin: { left: 0, right: 0, top: 0, bottom: 0 },
@@ -36,7 +36,7 @@ function makeContext(
     resources: {
       get: overrides.getPanel ?? vi.fn().mockResolvedValue(makePanelResource()),
     },
-  } as unknown as GameContext;
+  } as unknown as GameContextLike;
 }
 
 function makeManagedPanel(id: string): ManagedPanel & { sendKey: ReturnType<typeof vi.fn> } {

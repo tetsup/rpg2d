@@ -1,7 +1,7 @@
 import type { SequenceData } from '@schema/resource/action/sequence';
 import type { PrimitiveValue } from '@sharedTypes/resource/common';
 import type { ConditionData } from '@schema/resource/variable/condition';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { PanelManager } from '../panel/panel-manager';
 import type { Message } from '../panel/message-panel';
 
@@ -32,7 +32,7 @@ export class Sequence {
   status: RunningStatus = 'init';
 
   constructor(
-    private ctx: GameContext,
+    private ctx: GameContextLike,
     private panelManager: PanelManager,
     private sequenceData: SequenceData
   ) {}

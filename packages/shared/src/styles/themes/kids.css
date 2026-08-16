@@ -1,0 +1,17 @@
+[data-theme='kids'] {
+  --app-font-sans: 'Nunito Variable', sans-serif;
+
+  --app-font-heading: 'Nunito Variable', sans-serif;
+
+  --radius: 1rem;
+
+  --touch-size: 56px;
+
+  --page-padding: 20px;
+
+  --section-gap: 20px;
+
+  --card-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+
+  --content-width: 1100px;
+}

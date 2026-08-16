@@ -36,7 +36,7 @@ export class Font extends ResourceBase<'font'> {
 
   registerImage = (imageId: string, imageData: ImageBitmap) => {
     this.fontImages.set(imageId, imageData);
-    this.ctx.assets.renderer?.registerImage({ imageId, imageData });
+    this.ctx.assets.registerImage?.({ imageId, imageData });
   };
 
   resolveImages = (letter: string, color: Color): string[] => {

@@ -1,10 +1,10 @@
 import type { MessageConfig } from '@sharedTypes/resource/manifest';
 import type { LayerWithPos, RpgKey } from '@sharedTypes/engine';
-import { GameContext } from '@engine/resource/core/game-context';
-import { Panel } from '@engine/resource/domain/panel/panel';
+import type { GameContextLike } from '@engine/resource/core/game-context';
+import type { Panel } from '@engine/resource/domain/panel/panel';
 import { Queue } from '@engine/utils/queue';
 import { Rect } from '@engine/utils/rect';
-import { PanelInput } from './panel-manager';
+import type { PanelInput } from './panel-manager';
 
 export type Message = {
   type: 'simple';
@@ -39,7 +39,7 @@ export class MessagePanel {
   private advanceRequested = false;
 
   constructor(
-    private ctx: GameContext,
+    private ctx: GameContextLike,
     private panel: Panel,
     private config: MessageConfig,
     messages: Message[] = []

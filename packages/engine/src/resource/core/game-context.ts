@@ -1,20 +1,30 @@
 import type { ManifestData } from '@sharedTypes/resource/manifest';
 import type { ResourceConfig } from '@sharedTypes/config';
-import type { PanelManager } from '@engine/manager/panel/panel-manager';
-import { ResourceStore } from './resource-store';
-import { AssetCache } from './asset-cache';
-import { GameState } from './game-state';
-import { SchemaRegistry } from './schema-registry';
-import { ResourceFactory } from './resource-factory';
+import type { PanelManager, PanelManagerLike } from '@engine/manager/panel/panel-manager';
+import { ResourceStore, type ResourceStoreLike } from './resource-store';
+import { AssetCache, type AssetCacheLike } from './asset-cache';
+import { GameState, type GameStateLike } from './game-state';
+import { SchemaRegistry, type SchemaRegistryLike } from './schema-registry';
+import { ResourceFactory, type ResourceFactoryLike } from './resource-factory';
 
-export class GameContext {
+export interface GameContextLike {
+  readonly manifest: ManifestData;
+  readonly config: ResourceConfig;
+  assets: AssetCacheLike;
+  factory: ResourceFactoryLike;
+  resources: ResourceStoreLike;
+  state: GameStateLike;
+  schemas: SchemaRegistryLike;
+  panels?: PanelManagerLike;
+}
+
+export class GameContext implements GameContextLike {
   assets: AssetCache;
   factory: ResourceFactory;
   resources: ResourceStore;
   state: GameState;
   schemas: SchemaRegistry;
   panels?: PanelManager;
-
   constructor(
     readonly manifest: ManifestData,
     readonly config: ResourceConfig

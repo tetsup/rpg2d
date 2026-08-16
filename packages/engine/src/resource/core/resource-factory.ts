@@ -1,6 +1,6 @@
 import type { ExecutableResourceType, ResourceData } from '@sharedTypes/resource/common';
 import { ResourceStatic } from '@engine/types/resource';
-import type { GameContext } from './game-context';
+import type { GameContext, GameContextLike } from './game-context';
 import { Action } from '../domain/action';
 import { Entity } from '../domain/entity';
 import { Field } from '../domain/field';
@@ -27,8 +27,12 @@ export const ResourceClassMap = {
   tile: Tile,
 };
 
-export class ResourceFactory {
-  constructor(private ctx: GameContext) {}
+export interface ResourceFactoryLike {
+  create: <K extends ExecutableResourceType>(data: any, type: K) => Promise<InstanceType<(typeof ResourceClassMap)[K]>>;
+}
+
+export class ResourceFactory implements ResourceFactoryLike {
+  constructor(private ctx: GameContextLike) {}
 
   create = async <K extends ExecutableResourceType>(data: any, type: K) => {
     const cls = ResourceClassMap[type] as ResourceStatic<K>;

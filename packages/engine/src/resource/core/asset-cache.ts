@@ -9,10 +9,12 @@ type LazyImage =
     }
   | { loaded: true; image: ImageBitmap };
 
-export class AssetCache {
-  images: Map<ResourceId, LazyImage> = new Map();
-  renderer?: GameRenderer;
-  constructor(private resources: ResourceStore) {}
+export interface AssetCacheLike {}
+
+export class AssetCache implements AssetCacheLike {
+  private images: Map<ResourceId, LazyImage> = new Map();
+  private renderer?: GameRenderer;
+  constructor(protected resources: ResourceStore) {}
 
   setRenderer(renderer: GameRenderer) {
     this.renderer = renderer;
@@ -32,14 +34,10 @@ export class AssetCache {
     }
   };
 
+  registerImage = this.renderer?.registerImage;
+
   private async fetchBitmap(id: ResourceId) {
     const image = (await this.resources.get(id, 'image')) as ImageLoader;
     return await image.toBitmap();
   }
-
-  get = (id: ResourceId) => {
-    const lazy = this.images.get(id);
-    if (lazy === undefined) this.cache(id);
-    else if (lazy.loaded) return lazy.image;
-  };
 }

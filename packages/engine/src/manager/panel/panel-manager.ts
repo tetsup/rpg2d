@@ -1,5 +1,5 @@
 import type { LayerWithPos, RpgKey } from '@sharedTypes/engine';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { InputEngine } from '@engine/manager/input/input-engine';
 import { MessagePanel, type Message } from './message-panel';
 
@@ -23,10 +23,24 @@ export interface ManagedPanel {
   resolveLayers(nowMs: number): LayerWithPos[];
 }
 
-export class PanelManager {
+export interface PanelManagerLike {
+  openMessages: (message: Message[], panelId?: string) => Promise<void>;
+  push: (panel: ManagedPanel) => void;
+  pop: () => ManagedPanel | undefined;
+  replace: (panel: ManagedPanel) => ManagedPanel | undefined;
+  top: () => ManagedPanel | undefined;
+  hasOpenPanel: () => boolean;
+  tick: (nowMs: number, input?: PanelTickInput) => boolean;
+  render: () => void;
+  resolveLayers: (nowMs: number) => LayerWithPos[];
+  size: () => number;
+  clear: () => void;
+}
+
+export class PanelManager implements PanelManagerLike {
   private readonly stack: ManagedPanel[] = [];
 
-  constructor(private readonly ctx?: GameContext) {}
+  constructor(private readonly ctx?: GameContextLike) {}
 
   async openMessages(messages: Message[], panelId?: string): Promise<void> {
     if (!this.ctx) throw new Error('PanelManager requires GameContext to open message panels.');

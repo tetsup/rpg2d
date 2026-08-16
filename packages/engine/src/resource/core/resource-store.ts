@@ -4,28 +4,29 @@ import { NamespaceSchema, parseResourceId, ResourceNameSchema, resources } from 
 import { ResourceRecordResponseSchema } from '@schema/api/resource/record';
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
-import type { GameContext } from './game-context';
+import type { GameContextLike } from './game-context';
 
 type Resources = {
   [K in ExecutableResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
 };
 
-export class ResourceStore {
+export interface ResourceStoreLike {
+  get<K extends ExecutableResourceType>(id: ResourceId, expectedType: K): Promise<InstanceType<ResourceClass<K>>>;
+}
+
+export class ResourceStore implements ResourceStoreLike {
   private resources: Resources;
   constructor(
-    private ctx: GameContext,
+    private ctx: GameContextLike,
     private fetchFunc: <T>(params: FetchWithThrowParams<T>) => Promise<T> = fetchWithThrow
   ) {
     this.resources = Object.fromEntries(resources.map((name) => [name, new Map()])) as Resources;
   }
 
-  fetch = async <T>(namespace: string, type: string, name: string, schema: z.ZodType<T>): Promise<T> => {
-    return await fetchJson(
-      `${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`,
-      this.fetchFunc,
-      schema,
-      { credentials: 'include' }
-    );
+  private fetch = async <T>(namespace: string, type: string, name: string, schema: z.ZodType<T>): Promise<T> => {
+    return await fetchJson(`${this.ctx.config.resourceUri}/${namespace}/${type}/${name}`, this.fetchFunc, schema, {
+      credentials: 'include',
+    });
   };
 
   private async resolve<K extends ExecutableResourceType>(

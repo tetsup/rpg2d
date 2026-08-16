@@ -4,7 +4,7 @@ import type { Movement } from '@sharedTypes/resource/action';
 import { Queue } from '@engine/utils/queue';
 import { calcDest, move, samePos } from '@engine/utils/pos';
 import { Rect } from '@engine/utils/rect';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { Player } from '@engine/resource/domain/player';
 import type { Action } from '@engine/resource/domain/action';
 import type { Field } from '@engine/resource/domain/field';
@@ -19,7 +19,7 @@ export class FieldEngine {
   private state: FieldState;
 
   constructor(
-    private ctx: GameContext,
+    private ctx: GameContextLike,
     private field: Field,
     initialState: FieldState,
     private actionManager: ActionManager
@@ -27,7 +27,7 @@ export class FieldEngine {
     this.state = initialState;
   }
 
-  static async factory(ctx: GameContext, players: Player[], actionManager: ActionManager) {
+  static async factory(ctx: GameContextLike, players: Player[], actionManager: ActionManager) {
     const actions: Queue<Action> = new Queue();
     await Promise.all(
       ctx.manifest.initialState.field.actionIds.map(async (actionId) => {

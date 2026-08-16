@@ -1,6 +1,6 @@
 import type { FieldState, LayerWithPos } from '@sharedTypes/engine';
 import type { ManifestData } from '@sharedTypes/resource/manifest';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { Field } from '@engine/resource/domain/field';
 import { shiftPos } from '@engine/utils/pos';
 import { Rect } from '@engine/utils/rect';
@@ -54,7 +54,7 @@ export const retrieveLayers = (
 
 export const sortLayers = (layers: LayerWithPos[]) => layers.sort((a, b) => a.layer.priority - b.layer.priority);
 
-export const calcViewPort = (nowMs: number, state: FieldState, ctx: GameContext) => {
+export const calcViewPort = (nowMs: number, state: FieldState, ctx: GameContextLike) => {
   const anchorLeftTop = state.playerPos.getCurrentPixel(nowMs);
   const cameraCenter = {
     x: anchorLeftTop.x + (ctx.manifest.config.blockSize.width >> 1),

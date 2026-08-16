@@ -12,6 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "@sharedTypes/*": ["packages/shared/src/types/*"],
+      "@sharedStyles/*": ["packages/shared/src/styles/*"],
       "@base/*": ["packages/shared/src/base/*"],
       "@schema/*": ["packages/shared/src/schema/*"],
       "@engine/*": ["packages/engine/src/*"],
