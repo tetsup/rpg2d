@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 import { resolveUserMiddleware } from './auth/middlewares/resolve-user';
 import { authRoute } from './routes/auth';
@@ -8,6 +9,7 @@ import { createCorsOriginValidator } from './utils/frontend-origin';
 
 const app = new Hono();
 
+app.use(logger());
 app.use(
   '*',
   cors({
