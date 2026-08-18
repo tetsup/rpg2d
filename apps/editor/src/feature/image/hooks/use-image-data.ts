@@ -1,63 +1,64 @@
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { type Dispatch, type SetStateAction, useCallback, useMemo } from 'react';
 import type { Point2d, Size2d } from '@sharedTypes/engine';
 import type { ImageData } from '@sharedTypes/resource/image';
 import type { RGBA } from '@sharedTypes/util/color';
 import { rgbaToCss } from '@base/lib/color';
 
 type UseImageDataProps = {
-  defaultValue: ImageData;
-  onCommit: (resource: ImageData) => void;
+  data: ImageData;
+  setData: (prev: ImageData) => void;
 };
 
-export function resizeGrid<T>(grid: T[][], size: Size2d, fillValue: T): T[][] {
+export function resizeGrid<T>(flatGrid: T[], prevSize: Size2d, newSize: Size2d, fillValue: T): T[] {
+  const grid = toGrid(flatGrid, prevSize);
   return [
     ...grid
-      .slice(0, size.height)
-      .map((row) => [...row.slice(0, size.width), ...new Array(Math.max(0, size.width - row.length)).fill(fillValue)]),
-    ...new Array(Math.max(0, size.height - grid.length)).fill(null).map(() => new Array(size.width).fill(fillValue)),
-  ];
+      .slice(0, prevSize.height)
+      .map((row) => [
+        ...row.slice(0, prevSize.width),
+        ...new Array(Math.max(0, newSize.width - row.length)).fill(fillValue),
+      ]),
+    ...new Array(Math.max(0, newSize.height - grid.length))
+      .fill(null)
+      .map(() => new Array(newSize.width).fill(fillValue)),
+  ].flat();
 }
 
-const toMatrix = (strArray: string[]) => strArray.map((rowStr) => rowStr.split(' '));
+function toGrid<T>(flatArray: T[], size: Size2d) {
+  return Array(size.height).map((_, rowIndex) => flatArray.slice(rowIndex * size.width, (rowIndex + 1) * size.width));
+}
 
-export function useImageData({ defaultValue, onCommit }: UseImageDataProps) {
-  const [palette, setPalette] = useState<Record<string, number[]>>(defaultValue.palette ?? { ff: [0, 0, 0, 0] });
-  const [pixels, setPixels] = useState<string[][]>(toMatrix(defaultValue.pixels));
-  const [size, setSize] = useState<Size2d>(defaultValue.size);
+export function useImageData({ data, setData }: UseImageDataProps) {
+  const setPalette = (newPalette: Record<string, number[]>, newPixels?: string[]) => {
+    setData({ ...data, palette: newPalette, pixels: newPixels ?? data.pixels });
+  };
 
-  const load = useCallback((resource: ImageData) => {
-    setPalette(resource.palette);
-    setPixels(
-      Array.from({ length: resource.size.height }, (_, y) =>
-        resource.pixels.slice(y * resource.size.width, (y + 1) * resource.size.width)
-      )
-    );
-    setSize(resource.size);
-  }, []);
-
-  const commit = useCallback(() => {
-    onCommit({
-      size,
-      palette,
-      pixels: pixels.map((row) => row.join(' ')),
+  const setPixels = (newPixels: string[]) => {
+    setData({
+      ...data,
+      pixels: newPixels,
     });
-  }, [size, palette, pixels, onCommit]);
+  };
 
-  useLayoutEffect(() => {
-    setPixels((prev) => resizeGrid(prev, size, 'ff'));
-  }, [size]);
+  const setSize = (newSize: Size2d) => {
+    setData({ ...data, size: newSize, pixels: resizeGrid(data.pixels, data.size, newSize, 'ff').flat() });
+  };
 
-  const gridBounds = useMemo(() => ({ minX: 0, minY: 0, maxX: size.width - 1, maxY: size.height - 1 }), [size]);
+  const gridBounds = useMemo(
+    () => ({ minX: 0, minY: 0, maxX: data.size.width - 1, maxY: data.size.height - 1 }),
+    [data.size]
+  );
 
   const checkInRange = useCallback(
     ({ x, y }: Point2d) => x >= gridBounds.minX && y >= gridBounds.minY && x <= gridBounds.maxX && y <= gridBounds.maxY,
     [gridBounds]
   );
-  const getPixel = useCallback(({ x, y }: Point2d) => pixels[y][x], [pixels]);
+
+  const getPixel = useCallback(({ x, y }: Point2d) => data.pixels[y].split(' ')[x], [data.pixels, data.size]);
 
   const paletteCss = useMemo(
-    () => Object.fromEntries(Object.entries(palette).map(([key, rgba]) => [key, rgbaToCss(rgba as RGBA)])),
-    [palette]
+    () => Object.fromEntries(Object.entries(data.palette).map(([key, rgba]) => [key, rgbaToCss(rgba as RGBA)])),
+    [data.palette]
   );
 
   const getColorStyle = useCallback(
@@ -75,27 +76,26 @@ export function useImageData({ defaultValue, onCommit }: UseImageDataProps) {
       if (!checkInRange({ x, y })) return false;
       if (getPixel({ x, y }) === paletteKey) return false;
 
-      setPixels((pixels) => [
-        ...pixels.slice(0, y),
-        [...pixels[y].slice(0, x), paletteKey, ...pixels[y].slice(x + 1)],
-        ...pixels.slice(y + 1),
+      setPixels([
+        ...data.pixels.slice(0, y),
+        data.pixels[y]
+          .split(' ')
+          .map((cell, _x) => (x === _x ? paletteKey : cell))
+          .join(' '),
+        ...data.pixels.slice(y + 1),
       ]);
       return true;
     },
-    [checkInRange, getPixel]
+    [checkInRange, getPixel, setPixels, data]
   );
 
   return {
-    load,
-    commit,
-    pixels,
+    data,
     getPixel,
     getColorStyle,
     setPixel,
     setPixels,
     gridBounds,
-    size,
-    palette,
     setSize,
     setPalette,
   };

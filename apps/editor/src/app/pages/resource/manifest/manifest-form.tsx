@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { DatabaseInput } from '@sharedTypes/database/collection';
+import type { DatabaseInput, ResourceInput } from '@sharedTypes/database/collection';
 import { createResourceInputSchema } from '@schema/database/resource';
 import { FormSection } from '@base/components/form-field/form-section';
 import { resourceRepository } from '@editor/shared/repository/resource-repository';
@@ -11,8 +11,8 @@ import { PositionField } from '@editor/widget/field/position-field';
 import { FormShell } from '@editor/widget/shell/form-shell';
 
 type ManifestFormProps = {
-  defaultValues: DatabaseInput['resources'];
-  onSubmit: (v: DatabaseInput['resources']) => Promise<void>;
+  defaultValues: ResourceInput<'manifest'>;
+  onSubmit: (v: ResourceInput<'manifest'>) => Promise<void>;
 };
 
 export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {

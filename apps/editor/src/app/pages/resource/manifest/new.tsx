@@ -5,14 +5,14 @@ import { formatResourceId } from '@schema/resource/common/base';
 import { useWorkspaceStore } from '@editor/stores/workspace';
 import { resourceRepository } from '@editor/shared/repository/resource-repository';
 import { PageShell } from '@editor/widget/shell/page-shell';
+import { buildResource } from '@editor/factory/resource';
 import { ManifestForm } from './manifest-form';
-import { defaultManifest } from './default-manifest';
 
 export function NewManifestPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const setWorkspace = useWorkspaceStore((s) => s.setCurrent);
-  const defaultValues: ResourceInput<'manifest'> = defaultManifest;
+  const defaultValues = buildResource({ type: 'manifest' });
   const onSubmit = async (values: ResourceInput<'manifest'>) => {
     await resourceRepository.create(values);
     const manifestId = formatResourceId(values);

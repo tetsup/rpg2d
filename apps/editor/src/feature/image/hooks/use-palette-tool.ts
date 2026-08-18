@@ -15,8 +15,13 @@ const ensureDefaultPalette = (palette: ImageData['palette']) => {
   };
 };
 
-const normalizePixels = (pixels: string[][], palette: ImageData['palette']) => {
-  return pixels.map((row) => row.map((cell) => (cell in palette ? cell : 'ff')));
+const normalizePixels = (pixels: string[], palette: ImageData['palette']) => {
+  return pixels.map((row) =>
+    row
+      .split(' ')
+      .map((cell) => (cell in palette ? cell : 'ff'))
+      .join(' ')
+  );
 };
 
 const searchNextIndex = (palette: ImageData['palette']) => {
@@ -30,21 +35,19 @@ const searchNextIndex = (palette: ImageData['palette']) => {
 export const usePaletteTool = ({ image }: UsePaletteToolProps) => {
   const [current, setCurrent] = useState('ff');
 
-  const currentColor = useMemo(() => image.palette[current], [image.palette, current]);
+  const currentColor = useMemo(() => image.data.palette[current], [image.data.palette, current]);
 
   const applyPalette = useCallback(
-    (palette: ImageData['palette']) => {
+    (palette: ImageData['palette'], pixels?: string[]) => {
       const nextPalette = ensureDefaultPalette(palette);
-
-      image.setPalette(nextPalette);
-      image.setPixels((prev) => normalizePixels(prev, nextPalette));
+      image.setPalette(nextPalette, pixels);
     },
     [image]
   );
 
   const items = useMemo(
-    () => Object.entries(image.palette).map(([key, color]) => ({ key, label: key, color: color as RGBA })),
-    [image.palette]
+    () => Object.entries(image.data.palette).map(([key, color]) => ({ key, label: key, color: color as RGBA })),
+    [image.data.palette]
   );
 
   const load = useCallback(
@@ -57,33 +60,33 @@ export const usePaletteTool = ({ image }: UsePaletteToolProps) => {
   const change = useCallback(
     (index: string, color: number[]) => {
       applyPalette({
-        ...image.palette,
+        ...image.data.palette,
         [index]: color,
       });
     },
-    [applyPalette, image.palette]
+    [applyPalette, image.data.palette]
   );
 
   const create = useCallback(
     (color: number[]) => {
-      const index = searchNextIndex(image.palette);
+      const index = searchNextIndex(image.data.palette);
       if (!index) return;
 
       applyPalette({
-        ...image.palette,
+        ...image.data.palette,
         [index]: color,
       });
     },
-    [applyPalette, image.palette]
+    [applyPalette, image.data.palette]
   );
 
   const remove = useCallback(
     (index: string) => {
-      const nextPalette = Object.fromEntries(Object.entries(image.palette).filter(([k]) => k !== index));
-
-      applyPalette(nextPalette);
+      if (index === current) setCurrent('ff');
+      const nextPalette = Object.fromEntries(Object.entries(image.data.palette).filter(([k]) => k !== index));
+      applyPalette(nextPalette, normalizePixels(image.data.pixels, nextPalette));
     },
-    [applyPalette, image.palette]
+    [applyPalette, image.data.palette]
   );
 
   return {

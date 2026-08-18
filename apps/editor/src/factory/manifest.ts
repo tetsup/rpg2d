@@ -1,13 +1,7 @@
-import type { ResourceInput } from '@sharedTypes/database/collection';
+import { ResourceInput } from '@sharedTypes/database/collection';
 
-export const defaultManifest: ResourceInput<'manifest'> = {
-  namespace: '',
-  type: 'manifest',
-  name: '',
-  version: 0,
-  description: '',
-  isDraft: true,
-  data: {
+export function buildManifestData(data: Partial<ResourceInput<'manifest'>['data']>): ResourceInput<'manifest'>['data'] {
+  return {
     initialState: {
       core: { players: [], variables: {}, mode: 'field' },
       field: { fieldId: null, pos: { x: 0, y: 0 }, direction: 'down', actionIds: [] },
@@ -21,5 +15,6 @@ export const defaultManifest: ResourceInput<'manifest'> = {
       defaultMessagePanel: null,
       messageConfig: { speedMs: 100, margin: { left: 0, top: 0, right: 1, bottom: 1 } },
     },
-  },
-};
+    ...data,
+  };
+}

@@ -1,4 +1,4 @@
-import { PointerEventHandler, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { PointerEventHandler, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Point2d, Size2d } from '@sharedTypes/engine';
 import { useImageData } from './use-image-data';
 
@@ -49,8 +49,8 @@ export function useScreen({ image, cellSize }: UseScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const calcFitOffset = (zoom: number): Point2d => {
-    const imageWidth = image.size.width * cellSize.width * zoom;
-    const imageHeight = image.size.height * cellSize.height * zoom;
+    const imageWidth = image.data.size.width * cellSize.width * zoom;
+    const imageHeight = image.data.size.height * cellSize.height * zoom;
 
     return {
       x: (viewportSize.width - imageWidth) / 2,
@@ -59,8 +59,8 @@ export function useScreen({ image, cellSize }: UseScreenProps) {
   };
 
   const clampOffset = (offset: Point2d, zoom: number): Point2d => {
-    const imageWidth = image.size.width * cellSize.width * zoom;
-    const imageHeight = image.size.height * cellSize.height * zoom;
+    const imageWidth = image.data.size.width * cellSize.width * zoom;
+    const imageHeight = image.data.size.height * cellSize.height * zoom;
     let x = offset.x;
     let y = offset.y;
 
@@ -93,8 +93,8 @@ export function useScreen({ image, cellSize }: UseScreenProps) {
   };
 
   const calcMinZoom = () => {
-    const zoomX = viewportSize.width / (image.size.width * cellSize.width);
-    const zoomY = viewportSize.height / (image.size.height * cellSize.height);
+    const zoomX = viewportSize.width / (image.data.size.width * cellSize.width);
+    const zoomY = viewportSize.height / (image.data.size.height * cellSize.height);
     return Math.min(zoomX, zoomY);
   };
 
@@ -161,13 +161,13 @@ export function useScreen({ image, cellSize }: UseScreenProps) {
 
   useLayoutEffect(() => {
     redraw();
-  }, [viewportSize, visibleGridRect, image.palette, image.size, image.pixels]);
+  }, [viewportSize, visibleGridRect, image.data]);
 
   useLayoutEffect(() => {
     if (viewportSize.width === 0 || viewportSize.height === 0) return;
 
     zoomToFit();
-  }, [viewportSize, image.size.width, image.size.height]);
+  }, [viewportSize, image.data.size.width, image.data.size.height]);
 
   const gridToScreen = ({ x, y }: Point2d): Point2d => ({
     x: (x + 0.5) * scaledCellSize.width + offset.x,

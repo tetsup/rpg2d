@@ -1,8 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { Hand, Paintbrush } from 'lucide-react';
-
-import { ResourcePath } from '@sharedTypes/resource/common';
-
 import { Toolbar } from '@base/components/toolbar/toolbar';
 import { ToolbarGroup } from '@base/components/toolbar/toolbar-group';
 import { ToolbarSeparator } from '@base/components/toolbar/toolbar-separator';
@@ -14,10 +11,9 @@ import { ToolbarResourceSaveButton } from '../resource/toolbar-resource-save-but
 
 type ImageToolbarProps = {
   toolSet: ReturnType<typeof useToolSet>;
-  defaultPath?: ResourcePath;
 };
 
-export function ImageToolbar({ toolSet, defaultPath }: ImageToolbarProps) {
+export function ImageToolbar({ toolSet }: ImageToolbarProps) {
   const { t } = useTranslation();
 
   return (

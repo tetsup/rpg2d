@@ -36,6 +36,7 @@ export function Palette<TItem extends PaletteItem>({
     <PaletteLayout>
       {items.map((item) => (
         <PaletteItemButton
+          key={item.key}
           selected={item.key === selectedKey}
           deleteMode={deleteMode}
           onSelect={() => {

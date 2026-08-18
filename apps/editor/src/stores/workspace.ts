@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 export type WorkspaceState = {
+  namespace?: string;
   manifestId?: string;
 };
 

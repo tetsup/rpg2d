@@ -13,13 +13,11 @@ type UsePenToolProps = {
 export const usePenTool = ({ image, screen, paletteTool }: UsePenToolProps) => {
   const [isPointerDown, setIsPointerDown] = useState(false);
   const [prevGrid, setPrevGrid] = useState<Point2d | null>(null);
-  const [isDirty, setIsDirty] = useState(false);
 
   const write = (grid: Point2d) => {
     if (!image.setPixel(grid, paletteTool.current)) return;
     screen.redrawCell(grid);
     setPrevGrid(grid);
-    setIsDirty(true);
   };
 
   const onPointerDown = screen.createPointerHandler((e) => {
@@ -34,10 +32,6 @@ export const usePenTool = ({ image, screen, paletteTool }: UsePenToolProps) => {
   });
 
   const onPointerUp = screen.createPointerHandler(() => {
-    if (isDirty) {
-      image.commit();
-      setIsDirty(false);
-    }
     setIsPointerDown(false);
   });
 

@@ -1,41 +1,20 @@
 import { useTranslation } from 'react-i18next';
-import { ImageData } from '@sharedTypes/resource/image';
+import { ResourceInput } from '@sharedTypes/database/collection';
+import { resourceRepository } from '@editor/shared/repository/resource-repository';
+import { buildResource } from '@editor/factory/resource';
 import { PageShell } from '@editor/widget/shell/page-shell';
-import { ImageEditor } from '@editor/feature/image/image-editor';
+import { ImagePage } from './image-page';
 
 export function NewImagePage() {
   const { t } = useTranslation();
-  const data: ImageData = {
-    size: { width: 16, height: 16 },
-    palette: {
-      '00': [255, 255, 255, 255],
-      ff: [0, 0, 0, 0],
-    },
-    pixels: [
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-      'ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff',
-    ],
+  const defaultValues = buildResource({ type: 'image' });
+  const onSubmit = async (data: ResourceInput<'image'>) => {
+    await resourceRepository.create(data);
   };
 
   return (
     <PageShell flush titleBarProps={{ title: t('イメージ編集') }}>
-      <ImageEditor
-        defaultValues={{ namespace: 'test', type: 'image', name: 'test', version: 0, isDraft: false, data }}
-      />
+      <ImagePage defaultValues={defaultValues} onSubmit={onSubmit} />
     </PageShell>
   );
 }
