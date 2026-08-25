@@ -1,6 +1,4 @@
-import type { ExecutableResourceType, ResourceData } from '@sharedTypes/resource/common';
-import { ResourceStatic } from '@engine/types/resource';
-import type { GameContext, GameContextLike } from './game-context';
+import type { GameContextLike } from './game-context';
 import { Action } from '../domain/action';
 import { Entity } from '../domain/entity';
 import { Field } from '../domain/field';
@@ -12,6 +10,16 @@ import { Skin } from '../domain/skin';
 import { Texture } from '../domain/texture';
 import { Tile } from '../domain/tile';
 import { ImageLoader } from '../domain/imageLoader';
+
+export type ResourceClassMapLike = Record<string, abstract new (...args: any) => any>;
+
+export type ResourceInstanceMapLike<M extends ResourceClassMapLike> = {
+  [K in keyof M]: InstanceType<M[K]>;
+};
+
+export interface ResourceFactoryLike<M extends ResourceInstanceMapLike<ResourceClassMapLike>> {
+  create: <K extends keyof M>(id: string, data: any, type: K) => Promise<M[K]>;
+}
 
 export const ResourceClassMap = {
   action: Action,
@@ -27,18 +35,21 @@ export const ResourceClassMap = {
   tile: Tile,
 };
 
-export interface ResourceFactoryLike {
-  create: <K extends ExecutableResourceType>(data: any, type: K) => Promise<InstanceType<(typeof ResourceClassMap)[K]>>;
-}
+export type ResourceClassMap = typeof ResourceClassMap;
 
-export class ResourceFactory implements ResourceFactoryLike {
+export type ResourceInstanceMap = {
+  [K in keyof typeof ResourceClassMap]: InstanceType<(typeof ResourceClassMap)[K]>;
+};
+
+export class ResourceFactory implements ResourceFactoryLike<ResourceInstanceMap> {
   constructor(private ctx: GameContextLike) {}
 
-  create = async <K extends ExecutableResourceType>(data: any, type: K) => {
-    const cls = ResourceClassMap[type] as ResourceStatic<K>;
+  create = async <K extends keyof ResourceInstanceMap>(id: string, data: any, type: K) => {
+    const cls = ResourceClassMap[type];
     const schema = this.ctx.schemas.get(type);
-    const parsed = schema.parse(data) as ResourceData<K>;
-    const deps = await cls.loadDeps(this.ctx, parsed);
-    return new cls(this.ctx, parsed, deps);
+    const parsed = schema.parse(data) as any;
+    const deps = (await cls.loadDeps(this.ctx, parsed)) as any;
+
+    return new cls(this.ctx, id, parsed, deps) as ResourceInstanceMap[K];
   };
 }

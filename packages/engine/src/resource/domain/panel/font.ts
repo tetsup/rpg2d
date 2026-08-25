@@ -1,10 +1,13 @@
-import { ResourceBase } from '@engine/resource/core/resource-base';
+import { ResourceBase, type ResourceInstance } from '@engine/resource/core/resource-base';
 import { Color } from './color';
 
-export class Font extends ResourceBase<'font'> {
+export class Font extends ResourceBase<'font'> implements ResourceInstance<'font'> {
   private fontImages: Map<string, ImageBitmap> = new Map();
+  static async loadDeps() {
+    return {};
+  }
 
-  getImageId = (char: string, color: Color) => `${this.data.id}.${char}.${color.toHexString}`;
+  getImageId = (char: string, color: Color) => `${this.id}.${char}.${color.toHexString}`;
 
   getImage = (char: string, color: Color) => {
     const id = this.getImageId(char, color);

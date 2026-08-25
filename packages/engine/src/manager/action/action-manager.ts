@@ -1,5 +1,5 @@
 import type { PanelManager } from '@engine/manager/panel/panel-manager';
-import type { GameContext } from '@engine/resource/core/game-context';
+import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { Action } from '@engine/resource/domain/action';
 import { Sequence } from './sequence';
 
@@ -7,7 +7,7 @@ export class ActionManager {
   private sequences: Sequence[] = [];
 
   constructor(
-    private ctx: GameContext,
+    private ctx: GameContextLike,
     private panelManager: PanelManager
   ) {}
 

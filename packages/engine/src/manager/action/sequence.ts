@@ -91,7 +91,7 @@ export class Sequence {
   }
 
   private getVariable(path: string): PrimitiveValue | undefined {
-    const value = this.ctx?.state.variables.get(path);
+    const value = this.ctx?.state.get(path);
     if (typeof value === 'string' || typeof value === 'number') return value;
     return undefined;
   }

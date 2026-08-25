@@ -5,16 +5,17 @@ import { ResourceRecordResponseSchema } from '@schema/api/resource/record';
 import { fetchJson, fetchWithThrow, FetchWithThrowParams } from '@engine/utils/http/fetch';
 import type { ResourceClass } from '@engine/types/resource';
 import type { GameContextLike } from './game-context';
+import { ResourceInstanceMap, ResourceInstanceMapLike } from './resource-factory';
 
 type Resources = {
   [K in ExecutableResourceType]: Map<ResourceId, InstanceType<ResourceClass<K>>>;
 };
 
-export interface ResourceStoreLike {
-  get<K extends ExecutableResourceType>(id: ResourceId, expectedType: K): Promise<InstanceType<ResourceClass<K>>>;
+export interface ResourceStoreLike<M extends ResourceInstanceMapLike<any>> {
+  get<K extends keyof M>(id: ResourceId, expectedType: K): Promise<M[K]>;
 }
 
-export class ResourceStore implements ResourceStoreLike {
+export class ResourceStore implements ResourceStoreLike<ResourceInstanceMap> {
   private resources: Resources;
   constructor(
     private ctx: GameContextLike,
@@ -29,11 +30,7 @@ export class ResourceStore implements ResourceStoreLike {
     });
   };
 
-  private async resolve<K extends ExecutableResourceType>(
-    namespace: string,
-    type: K,
-    name: string
-  ): Promise<InstanceType<ResourceClass<K>>> {
+  private async resolve<K extends ExecutableResourceType>(namespace: string, type: K, name: string) {
     const schema = this.ctx.schemas.get(type);
     const body = await this.fetch(namespace, type, name, z.unknown());
     const record = ResourceRecordResponseSchema.extend({
@@ -42,18 +39,15 @@ export class ResourceStore implements ResourceStoreLike {
       name: ResourceNameSchema.refine((v) => v === name),
     }).parse(body);
     const payload = schema.parse(record.data);
-    return await this.ctx.factory.create(payload, type);
+    return await this.ctx.factory.create(record.id, payload, type);
   }
 
-  get = async <K extends ExecutableResourceType>(
-    id: ResourceId,
-    expectedType: K
-  ): Promise<InstanceType<ResourceClass<K>>> => {
+  get = async <K extends ExecutableResourceType>(id: ResourceId, expectedType: K): Promise<ResourceInstanceMap[K]> => {
     const { namespace, type, name } = parseResourceId.parse(id);
     if (type !== expectedType) throw new Error('mismatch id and type');
     const resource = this.resources[expectedType].get(id);
-    if (resource !== undefined) return resource;
-    const createdResource = await this.resolve(namespace, type, name);
+    if (resource !== undefined) return resource as ResourceInstanceMap[K];
+    const createdResource = (await this.resolve(namespace, type, name)) as ResourceInstanceMap[K];
     this.resources[expectedType].set(id, createdResource);
     return createdResource;
   };

@@ -1,5 +1,5 @@
 import type { ResourceType } from '@sharedTypes/resource/common';
-import { ActionSchema } from '@schema/resource/action';
+import { ActionSchema } from '../action';
 import { EntitySchema } from '../entity';
 import { FieldSchema } from '../field';
 import { FontSchema } from '../font';

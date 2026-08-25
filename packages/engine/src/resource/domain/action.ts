@@ -1,7 +1,16 @@
 import type { ActionDeps } from '@engine/types/resource-deps';
-import { ResourceBase } from '../core/resource-base';
+import type { ActionData } from '@sharedTypes/resource/action';
+import type { GameContextLike } from '../core/game-context';
+import type { ResourceBase } from '../core/resource-base';
 
-export class Action extends ResourceBase<'action'> {
+export class Action implements ResourceBase<'action'> {
+  constructor(
+    readonly ctx: GameContextLike,
+    readonly id: string,
+    readonly data: ActionData,
+    readonly deps: ActionDeps
+  ) {}
+
   static async loadDeps(): Promise<ActionDeps> {
     return {};
   }

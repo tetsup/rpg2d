@@ -2,11 +2,11 @@ import type { ImageLayer } from '@sharedTypes/engine';
 import type { TextureData, LayerAnimation } from '@sharedTypes/resource/texture';
 import type { TextureDeps } from '@engine/types/resource-deps';
 import type { GameContextLike } from '../core/game-context';
-import { ResourceBase } from '../core/resource-base';
+import { ResourceBase, type ResourceInstance } from '../core/resource-base';
 
 type PlayState = 'init' | 'play' | 'stop';
 
-export class Texture extends ResourceBase<'texture'> {
+export class Texture extends ResourceBase<'texture'> implements ResourceInstance<'texture'> {
   private startMs: number = 0;
   private playState: PlayState = 'init';
 

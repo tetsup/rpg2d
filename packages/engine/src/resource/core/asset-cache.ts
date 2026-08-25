@@ -1,7 +1,8 @@
-import { GameRenderer } from '@tetsup/web2d';
+import type { GameRenderer } from '@tetsup/web2d';
 import type { ResourceId } from '@sharedTypes/resource/common';
-import { ImageLoader } from '../domain/imageLoader';
-import { ResourceStore } from './resource-store';
+import type { ImageLoader } from '../domain/imageLoader';
+import type { ResourceStoreLike } from './resource-store';
+import type { ResourceInstanceMap } from './resource-factory';
 
 type LazyImage =
   | {
@@ -9,12 +10,16 @@ type LazyImage =
     }
   | { loaded: true; image: ImageBitmap };
 
-export interface AssetCacheLike {}
+export interface AssetCacheLike {
+  setRenderer: (renderer: GameRenderer) => void;
+  cache: (id: ResourceId) => Promise<void>;
+  registerImage?: (image: { imageId: ResourceId; imageData: ImageBitmap }) => void;
+}
 
 export class AssetCache implements AssetCacheLike {
   private images: Map<ResourceId, LazyImage> = new Map();
   private renderer?: GameRenderer;
-  constructor(protected resources: ResourceStore) {}
+  constructor(protected resources: ResourceStoreLike<ResourceInstanceMap>) {}
 
   setRenderer(renderer: GameRenderer) {
     this.renderer = renderer;
@@ -40,4 +45,10 @@ export class AssetCache implements AssetCacheLike {
     const image = (await this.resources.get(id, 'image')) as ImageLoader;
     return await image.toBitmap();
   }
+
+  get = (id: ResourceId) => {
+    const lazy = this.images.get(id);
+    if (lazy === undefined) this.cache(id);
+    else if (lazy.loaded) return lazy.image;
+  };
 }

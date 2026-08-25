@@ -1,9 +1,9 @@
 import type { PlayerData } from '@sharedTypes/resource/player';
 import type { PlayerDeps } from '@engine/types/resource-deps';
-import { ResourceBase } from '../core/resource-base';
+import { ResourceBase, type ResourceInstance } from '../core/resource-base';
 import type { GameContextLike } from '../core/game-context';
 
-export class Player extends ResourceBase<'player'> {
+export class Player extends ResourceBase<'player'> implements ResourceInstance<'player'> {
   static async loadDeps(ctx: GameContextLike, data: PlayerData): Promise<PlayerDeps> {
     const initialSkin = await ctx.resources.get(data.initialSkin, 'skin');
     return {

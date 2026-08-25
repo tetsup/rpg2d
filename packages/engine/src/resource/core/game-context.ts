@@ -5,20 +5,26 @@ import { ResourceStore, type ResourceStoreLike } from './resource-store';
 import { AssetCache, type AssetCacheLike } from './asset-cache';
 import { GameState, type GameStateLike } from './game-state';
 import { SchemaRegistry, type SchemaRegistryLike } from './schema-registry';
-import { ResourceFactory, type ResourceFactoryLike } from './resource-factory';
+import {
+  ResourceClassMapLike,
+  ResourceFactory,
+  ResourceInstanceMap,
+  ResourceInstanceMapLike,
+  type ResourceFactoryLike,
+} from './resource-factory';
 
-export interface GameContextLike {
+export interface GameContextLike<M extends ResourceInstanceMapLike<ResourceClassMapLike> = ResourceInstanceMap> {
   readonly manifest: ManifestData;
   readonly config: ResourceConfig;
   assets: AssetCacheLike;
-  factory: ResourceFactoryLike;
+  factory: ResourceFactoryLike<M>;
   resources: ResourceStoreLike;
   state: GameStateLike;
   schemas: SchemaRegistryLike;
   panels?: PanelManagerLike;
 }
 
-export class GameContext implements GameContextLike {
+export class GameContext implements GameContextLike<ResourceInstanceMap> {
   assets: AssetCache;
   factory: ResourceFactory;
   resources: ResourceStore;

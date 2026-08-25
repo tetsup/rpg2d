@@ -1,3 +1,4 @@
+import { ResourceType } from '@sharedTypes/resource/common';
 import type { Action } from '@engine/resource/domain/action';
 import type { Tile } from '@engine/resource/domain/tile';
 import type { Entity } from '@engine/resource/domain/entity';
@@ -26,6 +27,7 @@ export type FieldDeps = {
   entities: Map<string, Entity>;
 };
 export type FontDeps = {};
+export type ImageDeps = {};
 export type PanelSkinDeps = {
   plane: Texture;
   top: Texture;
@@ -45,9 +47,9 @@ export type PlayerDeps = {
 };
 export type SkinDeps = { textures: { left: Texture; right: Texture; up: Texture; down: Texture } };
 export type TextureDeps = {};
-export type TileDeps = { texture: Texture; actions: Record<string, Action> };
+export type TileDeps = { texture: Texture; actions: { trigger: string; action: Action }[] };
 
-export type ResourceDeps<Name> = Name extends 'action'
+export type ResourceDeps<Name extends ResourceType> = Name extends 'action'
   ? ActionDeps
   : Name extends 'entity'
     ? EntityDeps
@@ -55,16 +57,18 @@ export type ResourceDeps<Name> = Name extends 'action'
       ? FieldDeps
       : Name extends 'font'
         ? FontDeps
-        : Name extends 'panel'
-          ? PanelDeps
-          : Name extends 'panel-skin'
-            ? PanelSkinDeps
-            : Name extends 'player'
-              ? PlayerDeps
-              : Name extends 'skin'
-                ? SkinDeps
-                : Name extends 'texture'
-                  ? TextureDeps
-                  : Name extends 'tile'
-                    ? TileDeps
-                    : never;
+        : Name extends 'image'
+          ? ImageDeps
+          : Name extends 'panel'
+            ? PanelDeps
+            : Name extends 'panel-skin'
+              ? PanelSkinDeps
+              : Name extends 'player'
+                ? PlayerDeps
+                : Name extends 'skin'
+                  ? SkinDeps
+                  : Name extends 'texture'
+                    ? TextureDeps
+                    : Name extends 'tile'
+                      ? TileDeps
+                      : {};

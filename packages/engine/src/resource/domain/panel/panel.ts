@@ -1,13 +1,12 @@
 import type { PanelData } from '@sharedTypes/resource/panel';
 import type { RpgKey } from '@sharedTypes/engine';
 import type { PanelDeps } from '@engine/types/resource-deps';
-import { ResourceBase } from '@engine/resource/core/resource-base';
+import { ResourceBase, type ResourceInstance } from '@engine/resource/core/resource-base';
 import type { GameContextLike } from '@engine/resource/core/game-context';
 import { Rect } from '@engine/utils/rect';
 import type { TextArea } from './panel-skin';
 
-export class Panel extends ResourceBase<'panel'> {
-  readonly id: string;
+export class Panel extends ResourceBase<'panel'> implements ResourceInstance<'panel'> {
   active = false;
   protected textAreas: TextArea[] = [];
   protected visible: boolean = false;
@@ -15,9 +14,8 @@ export class Panel extends ResourceBase<'panel'> {
   private parent: Panel | null = null;
   panelRect: Rect;
 
-  constructor(ctx: GameContextLike, data: PanelData, deps: PanelDeps) {
-    super(ctx, data, deps);
-    this.id = data.id;
+  constructor(ctx: GameContextLike, id: string, data: PanelData, deps: PanelDeps) {
+    super(ctx, id, data, deps);
     this.panelRect = this.resolveRect();
   }
 

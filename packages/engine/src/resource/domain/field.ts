@@ -2,12 +2,12 @@ import type { FieldData } from '@sharedTypes/resource/field';
 import type { LayerWithPos, Point2d } from '@sharedTypes/engine';
 import type { FieldDeps } from '@engine/types/resource-deps';
 import { Rect } from '@engine/utils/rect';
-import { ResourceBase } from '../core/resource-base';
 import type { GameContextLike } from '../core/game-context';
+import { ResourceBase, type ResourceInstance } from '../core/resource-base';
 import type { Tile } from './tile';
 import type { Entity } from './entity';
 
-export class Field extends ResourceBase<'field'> {
+export class Field extends ResourceBase<'field'> implements ResourceInstance<'field'> {
   static async loadDeps(ctx: GameContextLike, data: FieldData): Promise<FieldDeps> {
     const tiles = new Map(
       await Promise.all(

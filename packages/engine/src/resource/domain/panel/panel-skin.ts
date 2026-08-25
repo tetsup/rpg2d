@@ -2,7 +2,7 @@ import type { PanelSkinData } from '@sharedTypes/resource/panel-skin';
 import type { LayerWithPos } from '@sharedTypes/engine';
 import type { GameContextLike } from '@engine/resource/core/game-context';
 import type { PanelSkinDeps } from '@engine/types/resource-deps';
-import { ResourceBase } from '@engine/resource/core/resource-base';
+import { ResourceBase, type ResourceInstance } from '@engine/resource/core/resource-base';
 import { Rect } from '@engine/utils/rect';
 import { Color } from './color';
 
@@ -13,7 +13,7 @@ export type TextArea = {
   overflowY: 'scroll' | 'hide';
 };
 
-export class PanelSkin extends ResourceBase<'panel-skin'> {
+export class PanelSkin extends ResourceBase<'panel-skin'> implements ResourceInstance<'panel-skin'> {
   private panelPriority: number = 0;
 
   static async loadDeps(ctx: GameContextLike, data: PanelSkinData): Promise<PanelSkinDeps> {
