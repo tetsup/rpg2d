@@ -145,15 +145,15 @@ function makeTextureData() {
 }
 
 function makeTexture(ctx?: GameContext) {
-  return new Texture(ctx ?? makeContext(), makeTextureData(), {});
+  return new Texture(ctx ?? makeContext(), 'dummyid', makeTextureData(), {});
 }
 
 function makeSkin(ctx?: GameContext) {
   const texture = makeTexture(ctx);
   return new Skin(
     ctx ?? makeContext(),
+    'sample/skin/test',
     {
-      id: 'sample/skin/test',
       textures: {
         left: 'sample/texture/test.l',
         right: 'sample/texture/test.r',
@@ -169,8 +169,8 @@ function makeEntity(ctx?: GameContext) {
   const texture = makeTexture(ctx);
   return new Entity(
     ctx ?? makeContext(),
+    'sample/entity/test',
     {
-      id: 'sample/entity/test',
       visual: 'texture',
       texture: 'sample/texture/test',
       allowOverwrap: false,
@@ -185,8 +185,8 @@ function makeField(ctx?: GameContext) {
   const mockTile = { allowOverwrap: true, resolveLayers: vi.fn().mockReturnValue([]) };
   return new Field(
     c,
+    'sample/field/test',
     {
-      id: 'sample/field/test',
       name: 'F',
       tiles: { '.': 'sample/tile/grass' },
       map: [
@@ -225,8 +225,9 @@ function makeTile(ctx?: GameContext) {
   const texture = makeTexture(ctx ?? makeContext());
   return new Tile(
     ctx ?? makeContext(),
-    { id: 'sample/tile/test', texture: 'sample/texture/test', allowOverwrap: true, actions: {} as any },
-    { texture, actions: {} }
+    'sample/tile/test',
+    { texture: 'sample/texture/test', allowOverwrap: true, actions: {} as any },
+    { texture, actions: [] }
   );
 }
 
@@ -234,8 +235,8 @@ function makePlayer(ctx?: GameContext) {
   const skin = makeSkin(ctx ?? makeContext());
   return new Player(
     ctx ?? makeContext(),
+    'sample/player/test',
     {
-      id: 'sample/player/test',
       name: { type: 'fixed', value: 'Hero' },
       initialSkin: 'sample/skin/test',
       initialState: {},
@@ -660,8 +661,8 @@ describe('ResourceFactory: unbound call must not throw', () => {
   it('keeps this binding in create — unbound call must not throw', async () => {
     const factory = new ResourceFactory(makeContext());
     const create = factory.create;
-    const actionData = { id: 'test/action/sample', sequence: [] };
-    await expect(create(actionData, 'action')).resolves.not.toThrow();
+    const actionData = { sequence: [] };
+    await expect(create('test/action/sample', actionData, 'action')).resolves.not.toThrow();
   });
 });
 

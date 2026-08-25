@@ -16,7 +16,7 @@ describe('resource repository error mapping', () => {
       const chain = {
         selectAll: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
-        executeTakeFirst: vi.fn().mockRejectedValue(createPgError('XX000')),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('XX000')),
       };
       const resources = new ResourceRepository({
         mockDb: createMockDb({
@@ -34,7 +34,7 @@ describe('resource repository error mapping', () => {
       const chain = {
         selectAll: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
-        executeTakeFirst: vi.fn().mockRejectedValue(new Error('unknown')),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(new Error('unknown')),
       };
       const resources = new ResourceRepository({
         mockDb: createMockDb({
@@ -57,7 +57,7 @@ describe('resource repository error mapping', () => {
             parse: vi.fn().mockImplementation(() => {
               throw new ZodError([]);
             }),
-          }) as ReturnType<typeof createResourceInputSchema>,
+          }) as unknown as ReturnType<typeof createResourceInputSchema>,
       });
       const result = await resources.create(validPlayerPath, validDocument, 'creator-user');
 
@@ -68,7 +68,8 @@ describe('resource repository error mapping', () => {
     it('maps already_exists', async () => {
       const chain = {
         values: vi.fn().mockReturnThis(),
-        execute: vi.fn().mockRejectedValue(createPgError('23505')),
+        returningAll: vi.fn().mockReturnThis(),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('23505')),
       };
       const resources = new ResourceRepository({
         mockDb: createMockDb({
@@ -84,7 +85,8 @@ describe('resource repository error mapping', () => {
     it('maps database_error', async () => {
       const chain = {
         values: vi.fn().mockReturnThis(),
-        execute: vi.fn().mockRejectedValue(createPgError('40001')),
+        returningAll: vi.fn().mockReturnThis(),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('40001')),
       };
       const resources = new ResourceRepository({
         mockDb: createMockDb({
@@ -122,7 +124,7 @@ describe('resource repository error mapping', () => {
             parse: vi.fn().mockImplementation(() => {
               throw new ZodError([]);
             }),
-          }) as ReturnType<typeof createResourceInputSchema>,
+          }) as unknown as ReturnType<typeof createResourceInputSchema>,
       });
       const result = await resources.update(validPlayerPath, {} as object);
 
@@ -134,7 +136,8 @@ describe('resource repository error mapping', () => {
       const chain = {
         set: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
-        executeTakeFirst: vi.fn().mockRejectedValue(createPgError('40001')),
+        returningAll: vi.fn().mockReturnThis(),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('40001')),
       };
       const resources = new ResourceRepository({
         mockDb: createMockDb({
@@ -193,7 +196,8 @@ describe('resource repository error mapping', () => {
     it('maps database_error', async () => {
       const chain = {
         where: vi.fn().mockReturnThis(),
-        executeTakeFirst: vi.fn().mockRejectedValue(createPgError('40001')),
+        returningAll: vi.fn().mockReturnThis(),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('40001')),
       };
       const resources = new ResourceRepository({
         mockDb: createMockDb({
@@ -209,7 +213,7 @@ describe('resource repository error mapping', () => {
     it('maps unknown', async () => {
       const chain = {
         where: vi.fn().mockReturnThis(),
-        executeTakeFirst: vi.fn().mockRejectedValue(new Error('unknown')),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(new Error('unknown')),
       };
       const resources = new ResourceRepository({
         mockDb: createMockDb({

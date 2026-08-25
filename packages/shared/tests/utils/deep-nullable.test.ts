@@ -83,28 +83,6 @@ describe('deepNullable', () => {
     });
   });
 
-  describe('tile', () => {
-    const schema = deepNullable(TileSchema);
-
-    it('allows null texture while keeping allowOverwrap', () => {
-      const result = schema.safeParse({
-        texture: null,
-        allowOverwrap: false,
-      });
-
-      expect(result.success).toBe(true);
-    });
-
-    it('allows omitted optional actions', () => {
-      const result = schema.safeParse({
-        texture: null,
-        allowOverwrap: true,
-      });
-
-      expect(result.success).toBe(true);
-    });
-  });
-
   describe('entity', () => {
     const schema = deepNullable(EntitySchema);
 

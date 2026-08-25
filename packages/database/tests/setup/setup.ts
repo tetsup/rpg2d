@@ -2,6 +2,9 @@ import { Client } from 'pg';
 import crypto from 'node:crypto';
 import { runner } from 'node-pg-migrate';
 
+process.env.DATABASE_URL = process.env.TEST_DATABASE_URL!;
+process.env.DATABASE_DRIVER = 'pg';
+
 let schemaName: string;
 let client: Client;
 

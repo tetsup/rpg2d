@@ -1,5 +1,5 @@
 import { Pool as NeonPool } from '@neondatabase/serverless';
-import { Kysely, PostgresDialect } from 'kysely';
+import { Kysely, PostgresDialect, PostgresPool } from 'kysely';
 import { Pool as PgPool } from 'pg';
 import type { Database } from '@sharedTypes/database/collection';
 import { getPoolOptions } from './schema-config';
@@ -36,7 +36,7 @@ export function getDb() {
   if (db) return db;
   db = new Kysely<Database>({
     dialect: new PostgresDialect({
-      pool: createPool(),
+      pool: createPool() as PostgresPool,
     }),
   });
   return db;

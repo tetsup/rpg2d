@@ -16,7 +16,7 @@ describe('user repository error mapping', () => {
       const chain = {
         selectAll: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
-        executeTakeFirst: vi.fn().mockRejectedValue(createPgError('40001')),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('40001')),
       };
       const users = new UserRepository({
         mockDb: createMockDb({
@@ -78,7 +78,8 @@ describe('user repository error mapping', () => {
       const chain = {
         set: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
-        execute: vi.fn().mockRejectedValue(createPgError('23505')),
+        returningAll: vi.fn().mockReturnThis(),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('23505')),
       };
       const users = new UserRepository({
         mockDb: createMockDb({
@@ -99,7 +100,8 @@ describe('user repository error mapping', () => {
       const chain = {
         set: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
-        execute: vi.fn().mockRejectedValue(createPgError('XX000')),
+        returningAll: vi.fn().mockReturnThis(),
+        executeTakeFirstOrThrow: vi.fn().mockRejectedValue(createPgError('XX000')),
       };
       const users = new UserRepository({
         mockDb: createMockDb({

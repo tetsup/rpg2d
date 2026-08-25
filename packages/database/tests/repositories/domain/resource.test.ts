@@ -28,12 +28,15 @@ async function seedResourceFindFixtures() {
   await insertPermission('sample', testUserId, 'reader');
   await insertPermission('other', testUserId, 'reader');
 
-  await insertResourceRow({ namespace: 'sample', type: 'player', name: 'hero' }, { name: { type: 'fixed', value: 'hero' } });
   await insertResourceRow(
-    { namespace: 'sample', type: 'player', name: 'villain' },
+    { namespace: 'sample', type: 'player', name: 'hero' },
+    { name: { type: 'fixed', value: 'hero' } }
+  );
+  await insertResourceRow(
+    { namespace: 'sample', type: 'entity', name: 'villain' },
     { name: { type: 'fixed', value: 'villain' } }
   );
-  await insertResourceRow({ namespace: 'other', type: 'map', name: 'test' }, {});
+  await insertResourceRow({ namespace: 'other', type: 'player', name: 'test' }, {});
 }
 
 describe('ResourceRepository', () => {
@@ -106,7 +109,11 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       const inserted = await execute(async (db) => {
-        return db.selectFrom('resources').selectAll().where('id', '=', formatResourceId(validPlayerPath)).executeTakeFirst();
+        return db
+          .selectFrom('resources')
+          .selectAll()
+          .where('id', '=', formatResourceId(validPlayerPath))
+          .executeTakeFirst();
       });
 
       expect(inserted).toBeTruthy();
@@ -119,7 +126,11 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       const edges = await execute(async (db) => {
-        return db.selectFrom('resource_edges').selectAll().where('from', '=', formatResourceId(validPlayerPath)).execute();
+        return db
+          .selectFrom('resource_edges')
+          .selectAll()
+          .where('from', '=', formatResourceId(validPlayerPath))
+          .execute();
       });
 
       expect(edges.length).toBeGreaterThan(0);
@@ -157,7 +168,10 @@ describe('ResourceRepository', () => {
       await insertUser({ id: testUserId });
       await insertPermission('sample', testUserId, 'reader');
       await insertResource(validPlayerPath);
-      await insertResourceEdge(formatResourceId(validPlayerPath), formatResourceId({ namespace: 'sample', type: 'skin', name: 'hero' }));
+      await insertResourceEdge(
+        formatResourceId(validPlayerPath),
+        formatResourceId({ namespace: 'sample', type: 'skin', name: 'hero' })
+      );
     });
 
     it('updates resource', async () => {
@@ -183,7 +197,11 @@ describe('ResourceRepository', () => {
       });
 
       const edges = await execute(async (db) => {
-        return db.selectFrom('resource_edges').selectAll().where('from', '=', formatResourceId(validPlayerPath)).execute();
+        return db
+          .selectFrom('resource_edges')
+          .selectAll()
+          .where('from', '=', formatResourceId(validPlayerPath))
+          .execute();
       });
 
       expect(edges).toHaveLength(1);
@@ -252,11 +270,7 @@ describe('ResourceRepository', () => {
     });
 
     it('filters by name', async () => {
-      const result = await new ResourceRepository().find(
-        [{ name: 'name', op: 'eq', value: 'hero' }],
-        testUserId,
-        'id'
-      );
+      const result = await new ResourceRepository().find([{ name: 'name', op: 'eq', value: 'hero' }], testUserId, 'id');
 
       expect(result.ok).toBeTruthy();
 
@@ -267,7 +281,7 @@ describe('ResourceRepository', () => {
 
     it('filters by id prefix', async () => {
       const result = await new ResourceRepository().find(
-        [{ name: 'id', op: 'startsWith', value: 'sample/player/v' }],
+        [{ name: 'id', op: 'startsWith', value: 'sample/player/h' }],
         testUserId,
         'id'
       );
@@ -276,7 +290,7 @@ describe('ResourceRepository', () => {
 
       if (result.ok) {
         expect(result.data).toHaveLength(1);
-        expect(result.data[0]?.id).toBe('sample/player/villain');
+        expect(result.data[0]?.id).toBe('sample/player/hero');
       }
     });
 
@@ -379,11 +393,11 @@ describe('ResourceRepository', () => {
       await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
       await insertSkinDependencies();
-      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'a' }, {});
-      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'b' }, {});
+      await insertResourceRow({ namespace: 'sample', type: 'image', name: 'a' }, {});
+      await insertResourceRow({ namespace: 'sample', type: 'image', name: 'b' }, {});
       await insertResource(validPlayerPath);
-      await insertResourceEdge(formatResourceId(validPlayerPath), 'sample/map/a');
-      await insertResourceEdge('sample/map/b', formatResourceId(validPlayerPath));
+      await insertResourceEdge(formatResourceId(validPlayerPath), 'sample/image/a');
+      await insertResourceEdge('sample/image/b', formatResourceId(validPlayerPath));
     });
 
     it('deletes resource', async () => {
@@ -392,7 +406,11 @@ describe('ResourceRepository', () => {
       expect(result.ok).toBeTruthy();
 
       const resource = await execute(async (db) => {
-        return db.selectFrom('resources').selectAll().where('id', '=', formatResourceId(validPlayerPath)).executeTakeFirst();
+        return db
+          .selectFrom('resources')
+          .selectAll()
+          .where('id', '=', formatResourceId(validPlayerPath))
+          .executeTakeFirst();
       });
 
       expect(resource).toBeUndefined();

@@ -102,7 +102,7 @@ export class NamespaceRepository {
     return repositorySafe(async () => {
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
-        await conn.deleteFrom('namespaces').where('id', '=', id).executeTakeFirstOrThrow();
+        await conn.deleteFrom('namespaces').where('id', '=', id).returningAll().executeTakeFirstOrThrow();
         await conn.deleteFrom('namespace_permissions').where('namespaceId', '=', id).execute();
       });
     });
@@ -134,6 +134,7 @@ export class NamespaceRepository {
           .deleteFrom('namespace_permissions')
           .where('namespaceId', '=', namespaceId)
           .where('userId', '=', userId)
+          .returningAll()
           .executeTakeFirstOrThrow();
       });
     });

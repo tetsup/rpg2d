@@ -102,7 +102,7 @@ export class ResourceRepository {
           })
           .where('id', '=', formatResourceId(path))
           .returningAll()
-          .executeTakeFirst();
+          .executeTakeFirstOrThrow();
         await conn.deleteFrom('resource_edges').where('from', '=', formatResourceId(path)).execute();
         const refs = extractResourceRefs(input.data);
         if (refs.length) {
@@ -209,11 +209,12 @@ export class ResourceRepository {
       return withTransaction(async (db) => {
         const conn = this.dbFactory(db);
         const id = formatResourceId(path);
-        await conn.deleteFrom('resources').where('id', '=', id).executeTakeFirstOrThrow();
+        await conn.deleteFrom('resources').where('id', '=', id).returningAll().executeTakeFirstOrThrow();
         await conn
           .deleteFrom('resource_edges')
           .where((eb) => eb.or([eb('from', '=', id), eb('to', '=', id)]))
-          .execute();
+          .returningAll()
+          .executeTakeFirst();
       });
     });
   }
