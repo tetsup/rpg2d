@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { DatabaseInput, ResourceInput } from '@sharedTypes/database/collection';
+import type { ResourceInput } from '@sharedTypes/database/collection';
 import { createResourceInputSchema } from '@schema/database/resource';
 import { FormSection } from '@base/components/form-field/form-section';
 import { resourceRepository } from '@editor/shared/repository/resource-repository';
