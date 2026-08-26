@@ -18,9 +18,11 @@ name: Deploy
 # Default Lambda function name from Terraform: RPG2d-api
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+    branches:
+      - main
 
 concurrency:
   group: deploy-production

@@ -1,8 +1,12 @@
 name: Deploy Pages
 
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   pages: write
