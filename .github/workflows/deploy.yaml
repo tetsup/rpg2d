@@ -1,21 +1,26 @@
 name: Deploy
 
-# Required GitHub environment: production
+# HCP Terraform:
+#   - Terraform state is stored in HCP Terraform.
+#   - Provider credentials (AWS, Cloudflare, Auth0, Neon, etc.)
+#     are configured in the HCP Terraform workspace.
+#
+# GitHub environment: production
 #
 # Secrets:
-#   DATABASE_URL, SESSION_SECRET, AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET
-#   AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CLOUDFLARE_API_TOKEN
+#   TFC_TOKEN
+#   DATABASE_URL
 #
 # Variables:
-#   AWS_REGION, AWS_LAMBDA_FUNCTION_NAME, FRONTEND_ORIGIN, VITE_API_BASE_URL
-#   CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_PAGES_PROJECT_EDITOR, CLOUDFLARE_PAGES_PROJECT_RUNTIME
+#   TFC_ORGANIZATION
+#   TFC_WORKSPACE
 #
 # Prerequisites:
-#   - Neon database with pg_trgm enabled via migrations
-#   - AWS resources created via `infra/aws` Terraform (Lambda + Function URL)
-#   - Two Cloudflare Pages projects (editor, runtime)
-#
-# Default Lambda function name from Terraform: RPG2d-api
+#   - CI workflow has completed successfully on main
+#   - HCP Terraform workspace is configured for remote state
+#   - Provider credentials are configured in HCP Terraform
+#   - pnpm build:aws writes all Terraform artifacts under
+#     infra/terraform/artifacts/
 
 on:
   workflow_run:
@@ -33,6 +38,7 @@ jobs:
     name: Migrate database
     runs-on: ubuntu-latest
     environment: production
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,11 +51,12 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-  deploy-api:
-    name: Deploy API to Lambda
+  deploy:
+    name: Deploy with Terraform
     needs: migrate
     runs-on: ubuntu-latest
     environment: production
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -57,108 +64,22 @@ jobs:
       - name: Setup project
         uses: ./.github/actions/setup
 
-      - name: Build Lambda bundle
-        run: pnpm build:api:lambda
+      - name: Build AWS artifacts
+        run: pnpm build:aws
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
+          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
 
-      - name: Package Lambda bundle
-        run: |
-          cd apps/api/dist/lambda
-          zip -q ../lambda.zip index.mjs
+      - name: Terraform init
+        working-directory: infra/terraform
+        run: terraform init
 
-      - name: Update Lambda code
-        run: |
-          aws lambda update-function-code \
-            --function-name "${{ vars.AWS_LAMBDA_FUNCTION_NAME }}" \
-            --zip-file fileb://apps/api/dist/lambda.zip
+      - name: Terraform plan
+        working-directory: infra/terraform
+        run: terraform plan
 
-      - name: Update Lambda configuration
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
-          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-          FRONTEND_ORIGIN: ${{ vars.FRONTEND_ORIGIN }}
-        run: |
-          jq -n \
-            --arg NODE_ENV production \
-            --arg DATABASE_DRIVER neon \
-            --arg DATABASE_URL "$DATABASE_URL" \
-            --arg SESSION_SECRET "$SESSION_SECRET" \
-            --arg AUTH0_DOMAIN "$AUTH0_DOMAIN" \
-            --arg AUTH0_CLIENT_ID "$AUTH0_CLIENT_ID" \
-            --arg AUTH0_CLIENT_SECRET "$AUTH0_CLIENT_SECRET" \
-            --arg FRONTEND_ORIGIN "$FRONTEND_ORIGIN" \
-            '{Variables: {
-              NODE_ENV: $NODE_ENV,
-              DATABASE_DRIVER: $DATABASE_DRIVER,
-              DATABASE_URL: $DATABASE_URL,
-              SESSION_SECRET: $SESSION_SECRET,
-              AUTH0_DOMAIN: $AUTH0_DOMAIN,
-              AUTH0_CLIENT_ID: $AUTH0_CLIENT_ID,
-              AUTH0_CLIENT_SECRET: $AUTH0_CLIENT_SECRET,
-              FRONTEND_ORIGIN: $FRONTEND_ORIGIN
-            }}' > lambda-env.json
-          aws lambda update-function-configuration \
-            --function-name "${{ vars.AWS_LAMBDA_FUNCTION_NAME }}" \
-            --runtime nodejs24.x \
-            --handler index.handler \
-            --environment file://lambda-env.json
-
-  deploy-editor:
-    name: Deploy editor to Cloudflare Pages
-    needs: migrate
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup project
-        uses: ./.github/actions/setup
-
-      - name: Build editor
-        run: pnpm build:editor
-        env:
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/editor/dist --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT_EDITOR }} --branch=main
-
-  deploy-runtime:
-    name: Deploy runtime to Cloudflare Pages
-    needs: migrate
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup project
-        uses: ./.github/actions/setup
-
-      - name: Write runtime config
-        run: pnpm write-runtime-config
-        env:
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
-
-      - name: Build runtime
-        run: pnpm build:runtime
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/runtime/dist --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT_RUNTIME }} --branch=main
+      - name: Terraform apply
+        working-directory: infra/terraform
+        run: terraform apply -auto-approve

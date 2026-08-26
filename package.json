@@ -31,6 +31,7 @@
     "build:editor": "pnpm --filter @tetsup/rpg2d-editor build",
     "build:editor:aws": "pnpm --filter @tetsup/rpg2d-editor build:aws",
     "build:api:aws": "pnpm --filter @tetsup/rpg2d-api build:aws",
+    "build:aws": "pnpm build:landing:aws && pnpm build:editor:aws && pnpm build:api:aws",
     "write-runtime-config": "node scripts/write-runtime-config.mjs",
     "db:migrate": "pnpm --filter @tetsup/rpg2d-database migrate",
     "deps:build": "tsx scripts/deps-graph.ts",
