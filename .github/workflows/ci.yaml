@@ -21,7 +21,7 @@ jobs:
   unit:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: postgresql://rpg2d:rpg2d@localhost:5432/rpg2d
+      TEST_DATABASE_URL: postgresql://rpg2d:rpg2d@localhost:5432/rpg2d
     services:
       postgres:
         image: postgres:17
