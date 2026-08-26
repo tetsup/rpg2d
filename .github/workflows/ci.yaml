@@ -54,8 +54,5 @@ jobs:
           echo "PostgreSQL did not become ready in time"
           exit 1
 
-      - name: Run database migrations
-        run: pnpm db:migrate
-
       - name: Run unit tests
         run: pnpm test
