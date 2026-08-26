@@ -9,6 +9,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@tetsup/web2d": "^0.0.17"
+    "@tetsup/web2d": "catalog:"
   }
 }

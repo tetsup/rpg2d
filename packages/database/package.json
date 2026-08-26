@@ -12,12 +12,12 @@
     "migrate:down": "node-pg-migrate --node-options --env-file-if-exists=../../.env down"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.1.0",
-    "kysely": "^0.29.2",
-    "pg": "^8.22.0"
+    "@neondatabase/serverless": "catalog:",
+    "kysely": "catalog:",
+    "pg": "catalog:"
   },
   "devDependencies": {
-    "@types/pg": "^8.20.0",
-    "node-pg-migrate": "^8.0.4"
+    "@types/pg": "catalog:",
+    "node-pg-migrate": "catalog:"
   }
 }

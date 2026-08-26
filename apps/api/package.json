@@ -12,18 +12,18 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^2.19.3",
-    "@aws-sdk/client-ssm": "*",
-    "@hono/zod-validator": "^0.8.0",
-    "hono": "^4.12.18",
-    "jose": "^6.1.3",
-    "openid-client": "^6.8.4",
-    "yaml": "^2.8.3"
+    "@auth0/auth0-spa-js": "catalog:",
+    "@aws-sdk/client-ssm": "catalog:",
+    "@hono/zod-validator": "catalog:",
+    "hono": "catalog:",
+    "jose": "catalog:",
+    "openid-client": "catalog:",
+    "yaml": "catalog:"
   },
   "devDependencies": {
-    "@hono/vite-dev-server": "^0.25.3",
-    "chokidar": "^5.0.0",
-    "tsx": "^4.22.0",
-    "esbuild": "^0.28.0"
+    "@hono/vite-dev-server": "catalog:",
+    "chokidar": "catalog:",
+    "tsx": "catalog:",
+    "esbuild": "catalog:"
   }
 }

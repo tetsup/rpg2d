@@ -13,21 +13,21 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@tetsup/web2d": "^0.0.17",
-    "msw": "^2.14.6",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "yaml": "^2.9.0",
-    "zustand": "^5.0.13"
+    "@tetsup/web2d": "catalog:",
+    "msw": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "yaml": "catalog:",
+    "zustand": "catalog:"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "eruda": "^3.4.3",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.6.0"
+    "@eslint/js": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "eruda": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-react-refresh": "catalog:",
+    "globals": "catalog:"
   }
 }
