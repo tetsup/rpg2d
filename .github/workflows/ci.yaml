@@ -54,5 +54,15 @@ jobs:
           echo "PostgreSQL did not become ready in time"
           exit 1
 
+      - name: Enable PostgreSQL extensions
+        env:
+          PGPASSWORD: rpg2d
+        run: |
+          psql \
+            -h localhost \
+            -U rpg2d \
+            -d rpg2d \
+            -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm;'
+
       - name: Run unit tests
         run: pnpm test
