@@ -1,5 +1,5 @@
 import { StyledSwitch } from '@base/components/form-control/styled-switch';
-import { FieldWrapper } from '@editor/old/shared/form/components/field-wrapper';
+import { SingleField } from '@base/components/form-field/single-field';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -8,11 +8,11 @@ export function DraftModeToggleField() {
   const { control, trigger } = useFormContext();
 
   return (
-    <FieldWrapper name="isDraft" label={t('保存形式')}>
-      <Controller
-        name="isDraft"
-        control={control}
-        render={({ field }) => (
+    <Controller
+      name="isDraft"
+      control={control}
+      render={({ field }) => (
+        <SingleField label={t('保存形式')}>
           <StyledSwitch
             variant="segmented"
             labelOn={t('下書き')}
@@ -23,8 +23,8 @@ export function DraftModeToggleField() {
               void trigger();
             }}
           />
-        )}
-      />
-    </FieldWrapper>
+        </SingleField>
+      )}
+    />
   );
 }
