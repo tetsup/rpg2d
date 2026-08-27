@@ -1,4 +1,4 @@
-import { PointerEventHandler, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { PointerEventHandler, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Point2d, Size2d } from '@sharedTypes/engine';
 import { useImageData } from './use-image-data';
 
@@ -134,40 +134,6 @@ export function useScreen({ image, cellSize }: UseScreenProps) {
     };
 
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
-  useLayoutEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    ctxRef.current = canvas.getContext('2d');
-  }, []);
-
-  useLayoutEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-
-    const resize = () => {
-      const { width, height } = container.getBoundingClientRect();
-      canvas.width = width;
-      canvas.height = height;
-      setViewportSize({ width, height });
-    };
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(container);
-
-    return () => observer.disconnect();
-  }, []);
-
-  useLayoutEffect(() => {
-    redraw();
-  }, [viewportSize, visibleGridRect, image.data]);
-
-  useLayoutEffect(() => {
-    if (viewportSize.width === 0 || viewportSize.height === 0) return;
-
-    zoomToFit();
-  }, [viewportSize, image.data.size.width, image.data.size.height]);
 
   const gridToScreen = ({ x, y }: Point2d): Point2d => ({
     x: (x + 0.5) * scaledCellSize.width + offset.x,
@@ -249,6 +215,42 @@ export function useScreen({ image, cellSize }: UseScreenProps) {
 
     drawCell(ctx, gridPos);
   };
+
+  useLayoutEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    ctxRef.current = canvas.getContext('2d');
+  }, []);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
+
+    const resize = () => {
+      const { width, height } = container.getBoundingClientRect();
+      canvas.width = width;
+      canvas.height = height;
+      setViewportSize({ width, height });
+    };
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useLayoutEffect(() => {
+    redraw();
+  }, [viewportSize, visibleGridRect, image.data]);
+
+  useLayoutEffect(() => {
+    if (viewportSize.width === 0 || viewportSize.height === 0) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    zoomToFit();
+  }, [viewportSize, image.data.size.width, image.data.size.height]);
 
   return {
     containerRef,

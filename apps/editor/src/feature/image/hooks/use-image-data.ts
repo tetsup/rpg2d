@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { Point2d, Size2d } from '@sharedTypes/engine';
 import type { ImageData } from '@sharedTypes/resource/image';
 import type { RGBA } from '@sharedTypes/util/color';

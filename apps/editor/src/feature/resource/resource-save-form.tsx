@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ResourceType } from '@sharedTypes/resource/common';
 import { SubmitCard } from '@editor/shared/components/form-control/submit-card';
 import { TextField } from '@editor/widget/field/text-field';
 

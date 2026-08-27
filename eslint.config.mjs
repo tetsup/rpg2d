@@ -21,7 +21,7 @@ export default defineConfig([
     '**/*.config.ts',
   ]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['apps/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,

@@ -55,7 +55,7 @@ function buildResourceData<T extends ResourceType>(type: T, data: Partial<Resour
   }
 }
 
-export function buildResource<T extends ResourceType>(resource: BuildResourceParams<T>): ResourceInput<T> {
+export function useResource<T extends ResourceType>(resource: BuildResourceParams<T>): ResourceInput<T> {
   const { current } = useWorkspaceStore();
   return {
     namespace: resource.namespace ?? current.namespace ?? '',
