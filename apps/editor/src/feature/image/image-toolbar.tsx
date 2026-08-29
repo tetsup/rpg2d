@@ -7,7 +7,7 @@ import { ToolbarButton } from '@base/components/toolbar/toolbar-button';
 import type { useToolSet } from './hooks/use-tool-set';
 import { PalettePopupButton } from './components/palette-popup-button';
 import { ZoomPopupButton } from './components/zoom-popup-button';
-import { ToolbarResourceSaveButton } from '../resource/toolbar-resource-save-button';
+import { ResourceSaveButton } from '../resource/resource-save-button';
 
 type ImageToolbarProps = {
   toolSet: ReturnType<typeof useToolSet>;
@@ -32,7 +32,7 @@ export function ImageToolbar({ toolSet }: ImageToolbarProps) {
       <ToolbarGroup>
         <PalettePopupButton paletteTool={toolSet.paletteTool} emptyLabel={t('パレット未設定')} />
         <ZoomPopupButton zoomTool={toolSet.zoomTool} />
-        <ToolbarResourceSaveButton title={t('イメージを保存')} />
+        <ResourceSaveButton />
       </ToolbarGroup>
     </Toolbar>
   );
