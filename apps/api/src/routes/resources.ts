@@ -37,11 +37,9 @@ resourcesRoute.get(
 );
 
 resourcesRoute.post(
-  '/:namespace/:type/:name',
-  authorizeResourceMiddleware(Action.CREATE),
+  '',
   handle(async (c) => {
-    const pathParams = parseParams(ResourcePathSchema, c.req.param());
-    return await new ResourceRepository().create(pathParams, await c.req.json(), c.get('user').id);
+    return await new ResourceRepository().create(await c.req.json(), c.get('user').id);
   })
 );
 

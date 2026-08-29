@@ -20,7 +20,6 @@ export function EditImagePage() {
   return (
     <PageShell flush titleBarProps={{ title: t('イメージ編集') }}>
       {isSuccess ? <ImagePage defaultValues={defaultValues} onSubmit={onSubmit} /> : <FormSkeleton />}
-      <ImagePage defaultValues={defaultValues} onSubmit={onSubmit} />;
     </PageShell>
   );
 }
