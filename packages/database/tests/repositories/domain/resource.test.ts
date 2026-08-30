@@ -104,7 +104,7 @@ describe('ResourceRepository', () => {
     });
 
     it('creates resource', async () => {
-      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
+      const result = await new ResourceRepository().create(createPlayerDocument(), 'creator-user');
 
       expect(result.ok).toBeTruthy();
 
@@ -121,7 +121,7 @@ describe('ResourceRepository', () => {
     });
 
     it('creates reference edges', async () => {
-      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
+      const result = await new ResourceRepository().create(createPlayerDocument(), 'creator-user');
 
       expect(result.ok).toBeTruthy();
 
@@ -138,7 +138,7 @@ describe('ResourceRepository', () => {
 
     it('returns already_exists on duplicate id', async () => {
       await insertResource(validPlayerPath);
-      const result = await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
+      const result = await new ResourceRepository().create(createPlayerDocument(), 'creator-user');
 
       expect(result.ok).toBeFalsy();
       expect(result.ok || result.reason).toBe('already_exists');
@@ -149,7 +149,7 @@ describe('ResourceRepository', () => {
 
       const before = await countRows('resources');
 
-      await new ResourceRepository().create(validPlayerPath, createPlayerDocument(), 'creator-user');
+      await new ResourceRepository().create(createPlayerDocument(), 'creator-user');
 
       const after = await countRows('resources');
 
@@ -331,9 +331,9 @@ describe('ResourceRepository', () => {
       await insertUser({ id: 'dummy-user' });
       await insertNamespace({ id: 'sample' });
       await insertSkinDependencies();
-      await insertResourceRow({ namespace: 'sample', type: 'map', name: 'test' }, {});
+      await insertResourceRow({ namespace: 'sample', type: 'skin', name: 'test' }, {});
       await insertResource(validPlayerPath);
-      await insertResourceEdge('sample/map/test', formatResourceId(validPlayerPath));
+      await insertResourceEdge('sample/skin/test', formatResourceId(validPlayerPath));
     });
 
     it('returns incoming references', async () => {
