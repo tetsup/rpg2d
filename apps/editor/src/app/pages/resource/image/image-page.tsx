@@ -9,8 +9,6 @@ import { ResourceInputSchemaMap } from '@schema/database/resource';
 import { DialogProvider } from '@base/components/dialog/dialog-context';
 import { ImageEditor } from '@editor/feature/image/image-editor';
 import { ResourceSaveForm } from '@editor/feature/resource/resource-save-form';
-import { useErrorHandler } from '@editor/widget/notification/error-handler';
-import { useAlert } from '@editor/shared/providers/alert';
 
 type ImagePageProps = {
   defaultValues: ResourceInput<'image'>;
@@ -25,13 +23,9 @@ export function ImagePage({ defaultValues, onSubmit }: ImagePageProps) {
     mode: 'all',
   });
   const navigate = useNavigate();
-  const alert = useAlert();
-  const errorHandler = useErrorHandler(form, alert);
-  const handleSubmit = (data: ResourceInput<'image'>) => {
-    errorHandler(async () => {
-      await onSubmit(data);
-      navigate(`/resources/${formatResourceId(data)}`);
-    });
+  const handleSubmit = async (data: ResourceInput<'image'>) => {
+    await onSubmit(data);
+    navigate(`/resources/${formatResourceId(data)}`);
   };
 
   return (

@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { DatabaseInput } from '@sharedTypes/database/collection';
 import { FormSection } from '@base/components/form-field/form-section';
 import { NamespaceInputSchema } from '@schema/database/namespace';
@@ -13,9 +15,10 @@ type NamespaceFormProps = {
 
 export function NamespaceForm({ defaultValues, onSubmit }: NamespaceFormProps) {
   const { t } = useTranslation();
+  const form = useForm({ mode: 'onChange', defaultValues, resolver: zodResolver(NamespaceInputSchema) });
 
   return (
-    <FormShell schema={NamespaceInputSchema} defaultValues={defaultValues} onSubmit={onSubmit}>
+    <FormShell form={form} onSubmit={onSubmit}>
       <FormSection title={t('グループ設定')}>
         <TextField name="id" label={t('ID')} />
         <TextField name="presenceName" label={t('グループ名')} />

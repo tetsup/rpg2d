@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { ResourceInput } from '@sharedTypes/database/collection';
-import { createResourceInputSchema } from '@schema/database/resource';
 import { FormSection } from '@base/components/form-field/form-section';
+import { ResourceInputSchemaMap } from '@schema/database/resource';
 import { resourceRepository } from '@editor/shared/repository/resource-repository';
 import { namespaceRepository } from '@editor/shared/repository/namespace-repository';
 import { TextField } from '@editor/widget/field/text-field';
@@ -17,9 +19,10 @@ type ManifestFormProps = {
 
 export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {
   const { t } = useTranslation();
+  const form = useForm({ mode: 'onChange', defaultValues, resolver: zodResolver(ResourceInputSchemaMap.manifest) });
 
   return (
-    <FormShell schema={createResourceInputSchema('manifest')} defaultValues={defaultValues} onSubmit={onSubmit}>
+    <FormShell form={form} onSubmit={onSubmit}>
       <FormSection title={t('プロジェクト概要')}>
         <SelectField
           name="namespace"
