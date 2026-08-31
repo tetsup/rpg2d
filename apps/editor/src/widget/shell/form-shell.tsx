@@ -8,7 +8,7 @@ import { CancelCard } from '@editor/shared/components/form-control/cancel-card';
 
 type FormShellProps<TValues extends FieldValues> = {
   form: UseFormReturn<TValues>;
-  onSubmit: (values: TValues) => Promise<void>;
+  onSubmit: (values: TValues) => void | Promise<void>;
   withDraftToggle?: boolean;
   children: React.ReactNode;
 };
