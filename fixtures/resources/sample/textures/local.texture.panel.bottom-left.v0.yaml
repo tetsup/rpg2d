@@ -5,7 +5,12 @@ version: 0
 createdAt: 2026-05-31T02:38:38.467Z
 updatedAt: 2026-05-31T02:38:38.467Z
 data:
-  layers:
-    - priority: 15
-      images:
-        - sample/image/panel.bottom-left.v0
+  frames:
+    - layers:
+        - image: sample/image/panel.bottom-left.v0
+          pos:
+            x: 0
+            y: 0
+          priority: 15
+      duration: 1000
+  postAction: loop

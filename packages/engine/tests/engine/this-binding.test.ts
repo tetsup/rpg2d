@@ -138,9 +138,8 @@ function makeFieldPos(ctx?: GameContext) {
 
 function makeTextureData() {
   return {
-    id: 'texture.test',
-    type: 'texture' as const,
-    layers: [{ priority: 0, images: ['img.test'] }],
+    frames: [{ layers: [{ image: 'dummyImageId', pos: { x: 0, y: 0 }, priority: 8 }], duration: 100 }],
+    postAction: 'off' as const,
   };
 }
 

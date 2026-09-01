@@ -4,7 +4,7 @@ import { FieldSchema } from '@schema/resource/field';
 import { ImageSchema } from '@schema/resource/image';
 import { SkinSchema } from '@schema/resource/skin';
 import { TextureSchema } from '@schema/resource/texture';
-import { TileSchema } from '@schema/resource/tile';
+import { p } from 'node_modules/vitest/dist/chunks/reporters.d.B0uk8id2';
 
 const validTextureId = 'sample/texture/hero.down.v0';
 const validImageId = 'sample/image/hero.down1.v0';
@@ -56,27 +56,20 @@ describe('deepNullable', () => {
   describe('texture', () => {
     const schema = deepNullable(TextureSchema);
 
-    it('allows empty layers', () => {
-      const result = schema.safeParse({ layers: [] });
+    it('allows empty frames', () => {
+      const result = schema.safeParse({ frames: [], postAction: 'off' });
       expect(result.success).toBe(true);
     });
 
-    it('allows null image references inside layers', () => {
+    it('allows empty layers and null duration inside frames', () => {
       const result = schema.safeParse({
-        layers: [
+        frames: [
           {
-            priority: 0,
-            images: [validImageId, null],
+            layers: [],
+            duration: null,
           },
         ],
-      });
-
-      expect(result.success).toBe(true);
-    });
-
-    it('allows a layer with an empty images array', () => {
-      const result = schema.safeParse({
-        layers: [{ priority: 0, images: [] }],
+        postAction: 'off',
       });
 
       expect(result.success).toBe(true);

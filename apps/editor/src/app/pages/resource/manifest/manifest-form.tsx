@@ -11,6 +11,7 @@ import { SelectField } from '@editor/widget/field/select-field';
 import { HiddenField } from '@editor/widget/field/hidden-field';
 import { PositionField } from '@editor/widget/field/position-field';
 import { FormShell } from '@editor/widget/shell/form-shell';
+import { ResourceItem } from '@editor/feature/resource/resource-item';
 
 type ManifestFormProps = {
   defaultValues: ResourceInput<'manifest'>;
@@ -27,7 +28,7 @@ export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {
         <SelectField
           name="namespace"
           label={t('グループ')}
-          renderItem={(id) => <NamespaceItem id={id} />}
+          renderItem={(id) => <ResourceItem id={id} />}
           mergeQuery={(q) => [{ name: 'q', value: q }]}
           useInfiniteSearch={namespaceRepository.useInfiniteSearch}
         />
@@ -39,7 +40,7 @@ export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {
         <SelectField
           name="fieldId"
           label={t('フィールド')}
-          renderItem={(id) => <FieldItem id={id} />}
+          renderItem={(id) => <ResourceItem id={id} />}
           mergeQuery={(q) => [
             { name: 'q', value: q },
             { name: 'type', op: 'eq', value: 'field' },
@@ -52,7 +53,7 @@ export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {
         <SelectField
           name="panelId"
           label={t('パネル')}
-          renderItem={(id) => <PanelItem id={id} />}
+          renderItem={(id) => <ResourceItem id={id} />}
           mergeQuery={(q) => [
             { name: 'q', value: q },
             { name: 'type', op: 'eq', value: 'panel' },

@@ -5,7 +5,12 @@ version: 0
 createdAt: 2026-05-31T02:38:38.467Z
 updatedAt: 2026-05-31T02:38:38.467Z
 data:
-  layers:
-    - priority: 0
-      images:
-        - sample/image/field.water.v0
+  frames:
+    - layers:
+        - image: sample/image/field.water.v0
+          pos:
+            x: 0
+            y: 0
+          priority: 0
+      duration: 1000
+  postAction: loop
