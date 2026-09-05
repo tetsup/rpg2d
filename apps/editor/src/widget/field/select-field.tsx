@@ -13,9 +13,11 @@ type SelectFieldProps<T extends keyof FilterMap> = {
   label: string;
   hint?: string;
   renderItem: (id: string) => React.ReactNode;
+  renderSelected?: (id: string) => React.ReactNode;
   renderEmpty?: () => React.ReactNode;
   mergeQuery: (searchText: string) => FilterMap[T][];
   useInfiniteSearch: ReturnType<typeof createRepository<T>>['useInfiniteSearch'];
+  itemSize?: 'full' | 'sm' | 'md' | 'lg';
 };
 
 export function SelectField<T extends keyof FilterMap>({
@@ -23,9 +25,11 @@ export function SelectField<T extends keyof FilterMap>({
   label,
   hint,
   renderItem,
+  renderSelected = renderItem,
   renderEmpty,
   mergeQuery,
   useInfiniteSearch,
+  itemSize = 'full',
 }: SelectFieldProps<T>) {
   const { t } = useTranslation();
   const { control } = useFormContext();
@@ -38,7 +42,7 @@ export function SelectField<T extends keyof FilterMap>({
       render={({ field, fieldState }) => (
         <SingleField label={label} hint={hint} error={fieldState.error?.message}>
           <SelectButton onClick={() => setOpen(true)}>
-            {field.value ? renderItem(field.value) : renderEmpty?.()}
+            {field.value ? renderSelected(field.value) : renderEmpty?.()}
           </SelectButton>
           <SelectDialog
             open={open}
@@ -50,6 +54,7 @@ export function SelectField<T extends keyof FilterMap>({
             useInfiniteSearch={useInfiniteSearch}
             onCommit={field.onChange}
             renderItem={renderItem}
+            itemSize={itemSize}
           />
         </SingleField>
       )}

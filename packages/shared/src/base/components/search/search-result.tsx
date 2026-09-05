@@ -3,7 +3,7 @@ import { cn } from '@base/lib/utils';
 import { ScrollArea } from '@base/components/ui/scroll-area';
 
 export type SearchResultProps = ComponentProps<typeof ScrollArea> & {
-  size?: 'full' | 'xs' | 'sm' | 'md';
+  size?: 'full' | 'sm' | 'md' | 'lg';
 };
 
 export function SearchResult({ size = 'full', className, children, ...props }: SearchResultProps) {
@@ -12,9 +12,9 @@ export function SearchResult({ size = 'full', className, children, ...props }: S
       <div
         className={cn(
           size === 'full' && 'flex flex-col',
-          size === 'xs' && 'grid grid-cols-6 gap-2 @md:grid-cols-9',
-          size === 'sm' && 'grid grid-cols-4 gap-2 @md:grid-cols-6',
-          size === 'md' && 'grid grid-cols-2 gap-2 @md:grid-cols-4',
+          size === 'sm' && 'grid grid-cols-6 gap-2 @md:grid-cols-9',
+          size === 'md' && 'grid grid-cols-4 gap-2 @md:grid-cols-6',
+          size === 'lg' && 'grid grid-cols-2 gap-2 @md:grid-cols-4',
           'flex-1'
         )}
       >

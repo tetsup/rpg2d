@@ -13,6 +13,7 @@ type SelectDialogProps<T extends keyof FilterMap> = {
   renderItem: (id: string) => React.ReactNode;
   mergeQuery: (text: string) => FilterMap[T][];
   useInfiniteSearch: ReturnType<typeof createRepository<T>>['useInfiniteSearch'];
+  itemSize: 'full' | 'sm' | 'md' | 'lg';
 };
 
 export function SelectDialog<T extends keyof FilterMap>({
@@ -23,6 +24,7 @@ export function SelectDialog<T extends keyof FilterMap>({
   renderItem,
   mergeQuery,
   useInfiniteSearch,
+  itemSize,
 }: SelectDialogProps<T>) {
   const [searchText, setSearchText] = useState('');
   const mergedQuery = useMemo(() => mergeQuery(searchText), [mergeQuery, searchText]);
@@ -40,7 +42,7 @@ export function SelectDialog<T extends keyof FilterMap>({
             useInfiniteSearch={useInfiniteSearch}
             renderItem={renderItem}
             onSelect={onCommit}
-            size="sm"
+            size={itemSize}
           />
         </>
       }

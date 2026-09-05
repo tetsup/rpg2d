@@ -13,7 +13,7 @@ export type InfiniteListProps<T extends keyof FilterMap> = {
   onSelect(id: string): void;
   useInfiniteSearch: ReturnType<typeof createRepository<T>>['useInfiniteSearch'];
   empty?: React.ReactNode;
-  size?: 'full' | 'xs' | 'sm' | 'md';
+  size?: 'full' | 'sm' | 'md' | 'lg';
 };
 
 export function InfiniteList<T extends keyof FilterMap>({

@@ -46,6 +46,7 @@ export function ResourceSearchPage() {
           { name: 'type', op: 'eq', value: type },
         ]}
         useInfiniteSearch={resourceRepository.useInfiniteSearch}
+        itemSize="md"
       />
     </PageShell>
   );
