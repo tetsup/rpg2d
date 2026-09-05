@@ -18,6 +18,7 @@ export function DialogLayout({ open, onClose, title, content }: DialogLayoutProp
     >
       <DialogContent
         className="
+            @container
             p-4
             gap-4
             overflow-hidden
@@ -29,8 +30,8 @@ export function DialogLayout({ open, onClose, title, content }: DialogLayoutProp
       >
         <DialogHeader className="p-0">
           <DialogTitle>{title}</DialogTitle>
-          {content}
         </DialogHeader>
+        {content}
       </DialogContent>
     </Dialog>
   );

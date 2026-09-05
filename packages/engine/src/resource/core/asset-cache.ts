@@ -2,7 +2,7 @@ import type { GameRenderer } from '@tetsup/web2d';
 import type { ResourceId } from '@sharedTypes/resource/common';
 import type { ImageLoader } from '../domain/imageLoader';
 import type { ResourceStoreLike } from './resource-store';
-import type { ResourceInstanceMap } from './resource-factory';
+import type { ResourceInstanceMapLike } from './resource-factory';
 
 type LazyImage =
   | {
@@ -19,7 +19,7 @@ export interface AssetCacheLike {
 export class AssetCache implements AssetCacheLike {
   private images: Map<ResourceId, LazyImage> = new Map();
   private renderer?: GameRenderer;
-  constructor(protected resources: ResourceStoreLike<ResourceInstanceMap>) {}
+  constructor(protected resources: ResourceStoreLike<ResourceInstanceMapLike<any>>) {}
 
   setRenderer(renderer: GameRenderer) {
     this.renderer = renderer;

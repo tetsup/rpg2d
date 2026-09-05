@@ -7,7 +7,7 @@ import { resourceRepository } from '@editor/shared/repository/resource-repositor
 import { CancelCard } from '@editor/shared/components/form-control/cancel-card';
 import { SelectDialog } from '@editor/widget/dialog/select-dialog';
 import { PageShell } from '@editor/widget/shell/page-shell';
-import { ResourceItem } from '@editor/feature/resource/resource-item';
+import { ResourcePreviewCard } from '@editor/shared/components/form-control/resource-preview-card';
 
 export function ResourceSearchPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -40,7 +40,7 @@ export function ResourceSearchPage() {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         onCommit={(id) => navigate(`/resources/${id}`)}
-        renderItem={(id) => <ResourceItem id={id} />}
+        renderItem={(id) => <ResourcePreviewCard id={id} />}
         mergeQuery={(q) => [
           { name: 'q', value: q },
           { name: 'type', op: 'eq', value: type },

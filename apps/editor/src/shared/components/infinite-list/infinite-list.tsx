@@ -1,7 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { useInView } from 'react-intersection-observer';
 import type { FilterMap } from '@sharedTypes/database/filter';
-import { SearchRoot } from '@base/components/search/search-root';
 import { SearchResult } from '@base/components/search/search-result';
 import { SearchResultItem } from '@base/components/search/search-result-item';
 import { SearchResultEmpty } from '@base/components/search/search-result-empty';
@@ -14,6 +13,7 @@ export type InfiniteListProps<T extends keyof FilterMap> = {
   onSelect(id: string): void;
   useInfiniteSearch: ReturnType<typeof createRepository<T>>['useInfiniteSearch'];
   empty?: React.ReactNode;
+  size?: 'full' | 'xs' | 'sm' | 'md';
 };
 
 export function InfiniteList<T extends keyof FilterMap>({
@@ -22,6 +22,7 @@ export function InfiniteList<T extends keyof FilterMap>({
   onSelect,
   useInfiniteSearch,
   empty,
+  size = 'full',
 }: InfiniteListProps<T>) {
   const { ref, inView } = useInView();
   const { data, hasNextPage, isLoading, fetchNextPage } = useInfiniteSearch(query);
@@ -33,29 +34,29 @@ export function InfiniteList<T extends keyof FilterMap>({
   }, [inView, hasNextPage, isLoading, fetchNextPage]);
 
   return (
-    <SearchRoot>
-      <SearchResult>
-        {data?.pages.length === 0 && !isLoading ? (
-          <SearchResultEmpty>{empty}</SearchResultEmpty>
-        ) : (
-          <>
-            {data?.pages.map((pages, pageIndex) =>
-              pages.items.map((item, itemIndex) => (
-                <SearchResultItem key={`${pageIndex}-${itemIndex}`} onClick={() => onSelect(item.id)}>
-                  {renderItem(item.id)}
-                </SearchResultItem>
-              ))
-            )}
+    <SearchResult size={size}>
+      {isLoading ? (
+        <SearchItemSkeleton />
+      ) : data?.pages.length === 0 ? (
+        <SearchResultEmpty>{empty}</SearchResultEmpty>
+      ) : (
+        <>
+          {data?.pages.map((pages, pageIndex) =>
+            pages.items.map((item, itemIndex) => (
+              <SearchResultItem key={`${pageIndex}-${itemIndex}`} onClick={() => onSelect(item.id)}>
+                {renderItem(item.id)}
+              </SearchResultItem>
+            ))
+          )}
 
-            {hasNextPage && (
-              <>
-                <div ref={ref} />
-                <SearchItemSkeleton />
-              </>
-            )}
-          </>
-        )}
-      </SearchResult>
-    </SearchRoot>
+          {hasNextPage && (
+            <>
+              <div ref={ref} />
+              <SearchItemSkeleton />
+            </>
+          )}
+        </>
+      )}
+    </SearchResult>
   );
 }

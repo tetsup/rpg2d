@@ -2,6 +2,8 @@ import type { ImageData } from '@sharedTypes/resource/image';
 import type { ImageLayer } from '@sharedTypes/engine';
 import type { GameContextLike } from '@engine/resource/core/game-context';
 import { ImageLoader } from '@engine/resource/domain/imageLoader';
+import { objToRgba } from '@engine/utils/image/rgba';
+import { rgbaToPng } from '@engine/utils/image/png';
 import type { PreviewResourceInstanceMap } from '../preview-factory';
 import { PreviewResourceBase, type PreviewResourceInstance } from './base';
 
@@ -12,5 +14,11 @@ export class PreviewImage extends PreviewResourceBase<'image'> implements Previe
 
   resolveLayers(_: number): ImageLayer[] {
     return [{ priority: 8, image: this.id }];
+  }
+
+  async toBitmap() {
+    const { size, rgba } = objToRgba(this.data);
+    const png = await rgbaToPng(size, rgba);
+    return createImageBitmap(png);
   }
 }

@@ -26,7 +26,7 @@ export function ResourcePreview<K extends PreviewableResourceType>({
   width,
   height,
   className,
-  screen = { width, height },
+  screen = { width: 16, height: 16 },
   blockSize = { width: 16, height: 16 },
   textSize = { width: 7, height: 7 },
   moveDurationMs = 500,
@@ -82,7 +82,7 @@ export function ResourcePreview<K extends PreviewableResourceType>({
       if (frameId !== undefined) cancelAnimationFrame(frameId);
       core.dispose();
     };
-  }, [resource.id, resource.type, resource.data, manifest]);
+  }, [resource, manifest]);
 
   return canvasRef ? (
     <canvas
@@ -90,7 +90,14 @@ export function ResourcePreview<K extends PreviewableResourceType>({
       width={screen.width}
       height={screen.height}
       className={className}
-      style={{ imageRendering: 'pixelated', width, height }}
+      style={
+        {
+          imageRendering: 'pixelated',
+          '--ratio': `${screen.width} / ${screen.height}`,
+          width: 'min(90cqw, calc(80cqh * var(--ratio)))',
+          aspectRatio: 'var(--ratio)',
+        } as React.CSSProperties
+      }
     />
   ) : (
     <CanvasSkeleton width={width} height={height} />

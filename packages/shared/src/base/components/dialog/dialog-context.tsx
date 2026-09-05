@@ -35,7 +35,7 @@ export function DialogProvider({ children, title, content }: DialogProviderProps
         }}
         title={title}
         content={content}
-      ></DialogLayout>
+      />
     </context.Provider>
   );
 }

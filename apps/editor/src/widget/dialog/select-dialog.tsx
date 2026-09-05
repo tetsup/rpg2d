@@ -40,6 +40,7 @@ export function SelectDialog<T extends keyof FilterMap>({
             useInfiniteSearch={useInfiniteSearch}
             renderItem={renderItem}
             onSelect={onCommit}
+            size="sm"
           />
         </>
       }

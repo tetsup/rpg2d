@@ -11,7 +11,7 @@ export class ResourceStoreAdapter implements ResourceStoreLike<PreviewResourceIn
     id: ResourceId,
     expectedType: K
   ): Promise<PreviewResourceInstanceMap[K]> => {
-    const { data: resource } = resourceRepository.useById(id);
+    const resource = await resourceRepository.getById(id);
     if (!resource) throw new Error(`Resource not found: ${id}`);
     if (resource.type !== expectedType)
       throw new Error(`Resource type mismatch: expected ${expectedType}, got ${resource.type}`);

@@ -34,6 +34,15 @@ export function createRepository<
   TRecord extends Database[K] = any,
   TQuery extends FilterMap[K][] = any,
 >({ key, basePath }: RepositoryOptions) {
+  const byIdQueryKey = (id: string) => [key, 'byId', id];
+
+  async function getById(id: string): Promise<TRecord> {
+    return queryClient.fetchQuery({
+      queryKey: byIdQueryKey(id),
+      queryFn: () => fetchGetApi<{}, TRecord>(`${basePath}/${id}`),
+    });
+  }
+
   function useById(id: string) {
     const byIdPath = `${basePath}/${id}`;
     return useQuery({
@@ -91,6 +100,7 @@ export function createRepository<
   }
 
   return {
+    getById,
     useById,
     create,
     update,
