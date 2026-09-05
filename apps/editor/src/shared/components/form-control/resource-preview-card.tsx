@@ -9,6 +9,8 @@ type ResourcePreviewCardProps = {
 export function ResourcePreviewCard({ id }: ResourcePreviewCardProps) {
   const { data } = resourceRepository.useById(id);
   return (
-    <PreviewCard label={data.name} renderImage={() => <ResourcePreview resource={data} width={24} height={24} />} />
+    data && (
+      <PreviewCard label={data.name} renderImage={() => <ResourcePreview resource={data} width={24} height={24} />} />
+    )
   );
 }
