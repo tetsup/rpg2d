@@ -11,7 +11,7 @@ export function SearchResult({ size = 'full', className, children, ...props }: S
     <ScrollArea {...props}>
       <div
         className={cn(
-          size === 'full' && 'flex flex-col',
+          size === 'full' && 'flex flex-col gap-2',
           size === 'sm' && 'grid grid-cols-6 gap-2 @md:grid-cols-9',
           size === 'md' && 'grid grid-cols-4 gap-2 @md:grid-cols-6',
           size === 'lg' && 'grid grid-cols-2 gap-2 @md:grid-cols-4',
