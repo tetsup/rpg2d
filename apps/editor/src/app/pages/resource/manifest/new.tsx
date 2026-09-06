@@ -21,7 +21,7 @@ export function NewManifestPage() {
   };
 
   return (
-    <PageShell titleBarProps={{ title: t('プロジェクト設定') }}>
+    <PageShell titleBarProps={{ title: t('プロジェクト作成') }}>
       <ManifestForm defaultValues={defaultValues} onSubmit={onSubmit} />
     </PageShell>
   );
