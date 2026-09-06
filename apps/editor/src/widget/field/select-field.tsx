@@ -52,7 +52,10 @@ export function SelectField<T extends keyof FilterMap>({
             title={t('選択してください')}
             mergeQuery={mergeQuery}
             useInfiniteSearch={useInfiniteSearch}
-            onCommit={field.onChange}
+            onCommit={(id) => {
+              field.onChange(id);
+              setOpen(false);
+            }}
             renderItem={renderItem}
             itemSize={itemSize}
           />
