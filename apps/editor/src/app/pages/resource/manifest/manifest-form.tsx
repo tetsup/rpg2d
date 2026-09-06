@@ -12,6 +12,7 @@ import { HiddenField } from '@editor/widget/field/hidden-field';
 import { PositionField } from '@editor/widget/field/position-field';
 import { FormShell } from '@editor/widget/shell/form-shell';
 import { ResourceItem } from '@editor/feature/resource/resource-item';
+import { NamespaceItem } from '@editor/feature/namespace/namespace-item';
 
 type ManifestFormProps = {
   defaultValues: ResourceInput<'manifest'>;
@@ -28,7 +29,7 @@ export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {
         <SelectField
           name="namespace"
           label={t('グループ')}
-          renderItem={(id) => <ResourceItem id={id} />}
+          renderItem={(id) => <NamespaceItem id={id} />}
           mergeQuery={(q) => [{ name: 'q', value: q }]}
           useInfiniteSearch={namespaceRepository.useInfiniteSearch}
         />
