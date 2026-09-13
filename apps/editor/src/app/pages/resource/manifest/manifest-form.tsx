@@ -5,10 +5,10 @@ import type { ResourceInput } from '@sharedTypes/database/collection';
 import { FormSection } from '@base/components/form-field/form-section';
 import { ResourceInputSchemaMap } from '@schema/database/resource';
 import { resourceRepository } from '@editor/shared/repository/resource-repository';
+import { ResourcePreviewCard } from '@editor/shared/components/form-control/resource-preview-card';
 import { SelectField } from '@editor/widget/field/select-field';
 import { PositionField } from '@editor/widget/field/position-field';
 import { FormShell } from '@editor/widget/shell/form-shell';
-import { ResourceItem } from '@editor/feature/resource/resource-item';
 import { ResourceCommonSection } from '@editor/feature/resource/resource-common-section';
 
 type ManifestFormProps = {
@@ -27,12 +27,13 @@ export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {
         <SelectField
           name="fieldId"
           label={t('フィールド')}
-          renderItem={(id) => <ResourceItem id={id} />}
+          renderItem={(id) => <ResourcePreviewCard id={id} />}
           mergeQuery={(q) => [
             { name: 'q', value: q },
             { name: 'type', op: 'eq', value: 'field' },
           ]}
           useInfiniteSearch={resourceRepository.useInfiniteSearch}
+          itemSize="md"
         />
         <PositionField name="fieldPos" label={t('開始位置')} />
       </FormSection>
@@ -40,12 +41,13 @@ export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {
         <SelectField
           name="panelId"
           label={t('パネル')}
-          renderItem={(id) => <ResourceItem id={id} />}
+          renderItem={(id) => <ResourcePreviewCard id={id} />}
           mergeQuery={(q) => [
             { name: 'q', value: q },
             { name: 'type', op: 'eq', value: 'panel' },
           ]}
           useInfiniteSearch={resourceRepository.useInfiniteSearch}
+          itemSize="md"
         />
       </FormSection>
     </FormShell>

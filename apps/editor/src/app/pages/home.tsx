@@ -5,9 +5,9 @@ import { FolderUp, Play, Settings2, Sparkles } from 'lucide-react';
 import { FormSection } from '@base/components/form-field/form-section';
 import { MenuCard } from '@base/components/form-control/menu-card';
 import { resourceRepository } from '@editor/shared/repository/resource-repository';
+import { ResourcePreviewCard } from '@editor/shared/components/form-control/resource-preview-card';
 import { SelectDialog } from '@editor/widget/dialog/select-dialog';
 import { PageShell } from '@editor/widget/shell/page-shell';
-import { ResourceItem } from '@editor/feature/resource/resource-item';
 import { useWorkspaceStore } from '@editor/stores/workspace';
 
 export function HomePage() {
@@ -66,12 +66,13 @@ export function HomePage() {
         onCommit={(id) => {
           setWorkspace({ manifestId: id });
         }}
-        renderItem={(id) => <ResourceItem id={id} />}
+        renderItem={(id) => <ResourcePreviewCard id={id} />}
         mergeQuery={(q) => [
           { name: 'q', value: q },
           { name: 'type', op: 'eq', value: 'manifest' },
         ]}
         useInfiniteSearch={resourceRepository.useInfiniteSearch}
+        itemSize="md"
       />
     </PageShell>
   );

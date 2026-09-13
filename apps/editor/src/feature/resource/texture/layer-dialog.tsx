@@ -8,6 +8,7 @@ import { ImageLayer } from '@sharedTypes/engine';
 import { NumberField } from '@editor/widget/field/number-field';
 import { PositionField } from '@editor/widget/field/position-field';
 import { ResourceSelect } from '../resource-select';
+import { GridStacker } from '@base/components/grid-list/grid-stacker';
 
 type LayerDialogProps = {
   name: FieldPathByValue<any, ImageLayer>;
@@ -25,7 +26,9 @@ export function LayerDialog({ name, open, onClose, onRemove }: LayerDialogProps)
       title={t('レイヤーの編集')}
       content={
         <FormSection title={t('レイヤーの編集')}>
-          <ResourceSelect name={`${name}.image`} label="画像" resourceType="image" />
+          <GridStacker size="lg">
+            <ResourceSelect name={`${name}.image`} label="画像" resourceType="image" />
+          </GridStacker>
           <NumberField name={`${name}.priority`} label={t('優先度')} />
           <PositionField name={`${name}.pos`} label={t('位置オフセット')} />
           <StyledButton variant="outline" onClick={onClose}>
