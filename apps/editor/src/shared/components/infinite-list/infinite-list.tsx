@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
 import type { FilterMap } from '@sharedTypes/database/filter';
 import { SearchResult } from '@base/components/search/search-result';
@@ -12,7 +13,6 @@ export type InfiniteListProps<T extends keyof FilterMap> = {
   renderItem(id: string): ReactNode;
   onSelect(id: string): void;
   useInfiniteSearch: ReturnType<typeof createRepository<T>>['useInfiniteSearch'];
-  empty?: React.ReactNode;
   size?: 'full' | 'sm' | 'md' | 'lg';
 };
 
@@ -21,9 +21,9 @@ export function InfiniteList<T extends keyof FilterMap>({
   renderItem,
   onSelect,
   useInfiniteSearch,
-  empty,
   size = 'full',
 }: InfiniteListProps<T>) {
+  const { t } = useTranslation();
   const { ref, inView } = useInView();
   const { data, hasNextPage, isLoading, fetchNextPage } = useInfiniteSearch(query);
 
@@ -33,28 +33,24 @@ export function InfiniteList<T extends keyof FilterMap>({
     }
   }, [inView, hasNextPage, isLoading, fetchNextPage]);
 
-  return (
+  return isLoading ? (
+    <SearchItemSkeleton />
+  ) : data?.pages.every((page) => page.items.length === 0) ? (
+    <SearchResultEmpty>{t('検索結果が0件でした')}</SearchResultEmpty>
+  ) : (
     <SearchResult size={size}>
-      {isLoading ? (
-        <SearchItemSkeleton />
-      ) : data?.pages.length === 0 ? (
-        <SearchResultEmpty>{empty}</SearchResultEmpty>
-      ) : (
-        <>
-          {data?.pages.map((pages, pageIndex) =>
-            pages.items.map((item, itemIndex) => (
-              <SearchResultItem key={`${pageIndex}-${itemIndex}`} onClick={() => onSelect(item.id)}>
-                {renderItem(item.id)}
-              </SearchResultItem>
-            ))
-          )}
+      {data?.pages.map((pages, pageIndex) =>
+        pages.items.map((item, itemIndex) => (
+          <SearchResultItem key={`${pageIndex}-${itemIndex}`} onClick={() => onSelect(item.id)}>
+            {renderItem(item.id)}
+          </SearchResultItem>
+        ))
+      )}
 
-          {hasNextPage && (
-            <>
-              <div ref={ref} />
-              <SearchItemSkeleton />
-            </>
-          )}
+      {hasNextPage && (
+        <>
+          <div ref={ref} />
+          <SearchItemSkeleton />
         </>
       )}
     </SearchResult>
