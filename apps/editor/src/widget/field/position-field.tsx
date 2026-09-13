@@ -8,15 +8,14 @@ type PositionFieldProps<T extends FieldValues> = {
   name: FieldPathByValue<T, Point2d>;
   label: string;
   hint?: string;
-  error?: string;
   disabled?: boolean;
 };
 
-export function PositionField({ name, label, hint, error, disabled }: PositionFieldProps<any>) {
-  const { register } = useFormContext();
+export function PositionField({ name, label, hint, disabled }: PositionFieldProps<any>) {
+  const { register, formState } = useFormContext();
 
   return (
-    <MultipleField label={label} hint={hint} error={error}>
+    <MultipleField label={label} hint={hint} error={formState.errors.root?.message?.toString()}>
       <InlineSubField label="x">
         <Input
           type="number"

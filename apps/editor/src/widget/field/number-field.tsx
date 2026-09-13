@@ -6,15 +6,14 @@ type NumberFieldProps<T extends FieldValues> = {
   name: FieldPathByValue<T, number>;
   label: string;
   hint?: string;
-  error?: string;
   disabled?: boolean;
 };
 
-export function NumberField<T extends FieldValues>({ name, label, hint, error, disabled }: NumberFieldProps<T>) {
-  const { register } = useFormContext<T>();
+export function NumberField<T extends FieldValues>({ name, label, hint, disabled }: NumberFieldProps<T>) {
+  const { register, formState } = useFormContext<T>();
 
   return (
-    <SingleField label={label} hint={hint} error={error}>
+    <SingleField label={label} hint={hint} error={formState.errors[name]?.message?.toString()}>
       <Input
         type="number"
         {...register(name, {
