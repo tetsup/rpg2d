@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 import { CircleX } from 'lucide-react';
 import { ResourceData } from '@sharedTypes/resource/common';
 import { CanvasSkeleton } from '@base/components/canvas/canvas-skeleton';

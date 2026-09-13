@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FieldValues, FormProvider, UseFormReturn } from 'react-hook-form';
-import { SubmitCard } from '@editor/shared/components/form-control/submit-card';
+import type { UseFormReturn } from 'react-hook-form';
+import type { ResourceInput } from '@sharedTypes/database/collection';
 import { TextField } from '@editor/widget/field/text-field';
 import { FormShell } from '@editor/widget/shell/form-shell';
-import { ResourceInput } from '@sharedTypes/database/collection';
 
 type ResourceSaveFormProps<T extends ResourceInput<any>> = {
   form: UseFormReturn<T>;

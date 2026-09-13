@@ -15,7 +15,8 @@ export function SearchResult({ size = 'full', className, children, ...props }: S
           size === 'sm' && 'grid grid-cols-6 gap-2 @md:grid-cols-9',
           size === 'md' && 'grid grid-cols-4 gap-2 @md:grid-cols-6',
           size === 'lg' && 'grid grid-cols-2 gap-2 @md:grid-cols-4',
-          'flex-1'
+          'flex-1',
+          className
         )}
       >
         {children}
