@@ -13,7 +13,7 @@ import { ResourceCommonSection } from '@editor/feature/resource/resource-common-
 
 type ManifestFormProps = {
   defaultValues: ResourceInput<'manifest'>;
-  onSubmit: (v: ResourceInput<'manifest'>) => Promise<void>;
+  onSubmit: (v: ResourceInput<'manifest'>) => Promise<void> | void;
 };
 
 export function ManifestForm({ defaultValues, onSubmit }: ManifestFormProps) {

@@ -10,12 +10,12 @@ import { DialogProvider } from '@base/components/dialog/dialog-context';
 import { ImageEditor } from '@editor/feature/image/image-editor';
 import { ResourceSaveForm } from '@editor/feature/resource/resource-save-form';
 
-type ImagePageProps = {
+type ImageFormProps = {
   defaultValues: ResourceInput<'image'>;
-  onSubmit: (values: ResourceInput<'image'>) => Promise<void>;
+  onSubmit: (values: ResourceInput<'image'>) => Promise<void> | void;
 };
 
-export function ImagePage({ defaultValues, onSubmit }: ImagePageProps) {
+export function ImageForm({ defaultValues, onSubmit }: ImageFormProps) {
   const { t } = useTranslation();
   const form = useForm<ResourceInput<'image'>>({
     defaultValues,
