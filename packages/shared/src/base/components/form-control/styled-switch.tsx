@@ -125,7 +125,7 @@ function SegmentedSwitch({
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-md border border-border/60 bg-background shadow-sm',
+          'pointer-events-none absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-md border border-border/60 bg-primary shadow-sm',
           'transition-transform duration-200 ease-out',
           isChecked ? 'translate-x-full' : 'translate-x-0'
         )}
