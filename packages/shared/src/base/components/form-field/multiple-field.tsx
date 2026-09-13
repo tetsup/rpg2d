@@ -18,7 +18,7 @@ export function MultipleField({ label, hint, error, columns = 2, children }: Mul
       >
         {children}
       </div>
-      <div className="min-h-5">
+      <div>
         {error ? (
           <p className="text-sm text-destructive">{error}</p>
         ) : hint ? (

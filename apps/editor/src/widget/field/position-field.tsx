@@ -1,4 +1,4 @@
-import type { FieldPathByValue, FieldValues } from 'react-hook-form';
+import { useFormContext, type FieldPathByValue, type FieldValues } from 'react-hook-form';
 import type { Point2d } from '@sharedTypes/engine';
 import { MultipleField } from '@base/components/form-field/multiple-field';
 import { InlineSubField } from '@base/components/form-field/inline-sub-field';
@@ -13,13 +13,27 @@ type PositionFieldProps<T extends FieldValues> = {
 };
 
 export function PositionField({ name, label, hint, error, disabled }: PositionFieldProps<any>) {
+  const { register } = useFormContext();
+
   return (
     <MultipleField label={label} hint={hint} error={error}>
       <InlineSubField label="x">
-        <Input name={`${name}.x`} type="number" disabled={disabled} />
+        <Input
+          type="number"
+          {...register(`${name}.x`, {
+            valueAsNumber: true,
+          })}
+          disabled={disabled}
+        />
       </InlineSubField>
       <InlineSubField label="y">
-        <Input name={`${name}.y`} type="number" disabled={disabled} />
+        <Input
+          type="number"
+          {...register(`${name}.y`, {
+            valueAsNumber: true,
+          })}
+          disabled={disabled}
+        />
       </InlineSubField>
     </MultipleField>
   );

@@ -1,22 +1,37 @@
+import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CircleX } from 'lucide-react';
+import { ResourceData } from '@sharedTypes/resource/common';
+import { CanvasSkeleton } from '@base/components/canvas/canvas-skeleton';
 import { PreviewCard } from '@base/components/form-control/preview-card';
-import { CardSkeleton } from '@base/components/form-control/card-skeleton';
-import { ResourcePreview } from '@editor/feature/resource/preview/resource-preview';
 import { resourceRepository } from '@editor/shared/repository/resource-repository';
+import { ResourcePreview } from '@editor/feature/resource/preview/resource-preview';
 
 type ResourcePreviewCardProps = {
   id: string;
+  label?: (data: ResourceData<any>) => ReactNode;
   orient?: 'horizontal' | 'vertical';
 };
 
-export function ResourcePreviewCard({ orient, id }: ResourcePreviewCardProps) {
-  const { data } = resourceRepository.useById(id);
-  return data ? (
+export function ResourcePreviewCard({
+  id,
+  label = (data) => data.name,
+  orient = 'vertical',
+}: ResourcePreviewCardProps) {
+  const { data, isLoading, isSuccess } = resourceRepository.useById(id);
+  return (
     <PreviewCard
-      label={data.name}
+      label={data ? label(data) : ''}
       orient={orient}
-      renderImage={() => <ResourcePreview resource={data} width={24} height={24} />}
+      renderImage={() =>
+        isSuccess ? (
+          <ResourcePreview resource={data} width={24} height={24} />
+        ) : isLoading ? (
+          <CanvasSkeleton width={24} height={24} />
+        ) : (
+          <CircleX size={24} />
+        )
+      }
     />
-  ) : (
-    <CardSkeleton orient={orient} />
   );
 }

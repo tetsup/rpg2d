@@ -12,7 +12,7 @@ export function FormSection({ title, description, icon: Icon, children }: FormSe
   return (
     <section
       className="
-        rounded-2xl
+        rounded-xl
         border
         bg-card
         p-5

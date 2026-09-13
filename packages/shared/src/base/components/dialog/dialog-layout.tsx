@@ -22,10 +22,9 @@ export function DialogLayout({ open, onClose, title, content }: DialogLayoutProp
             p-4
             gap-4
             overflow-hidden
-            top-[12vh]
             translate-y-0
-            sm:top-1/2
-            sm:-translate-y-1/2
+            top-1/2
+            -translate-y-1/2
           "
       >
         <DialogHeader className="p-0">

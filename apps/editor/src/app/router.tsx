@@ -5,6 +5,7 @@ import { ResourceTypeSelectPage } from './pages/resource';
 import { NewManifestPage } from './pages/resource/manifest/new';
 import { NewImagePage } from './pages/resource/image/new';
 import { EditImagePage } from './pages/resource/image/edit';
+import { NewTexturePage } from './pages/resource/texture/new';
 import { ResourceSearchPage } from './pages/resource/search';
 import { PlayPage } from './pages/play';
 import { NewNamespacePage } from './pages/namespace/new';
@@ -21,6 +22,7 @@ export function AppRouter() {
           <Route path="/resources" element={<ResourceTypeSelectPage />} />
           <Route path="/resources/manifest/new" element={<NewManifestPage />} />
           <Route path="/resources/image/new" element={<NewImagePage />} />
+          <Route path="/resources/texture/new" element={<NewTexturePage />} />
           <Route path="/resources/:namespace/image/:name" element={<EditImagePage />} />
           <Route path="/resources/:type" element={<ResourceSearchPage />} />
           <Route path="/play" element={<PlayPage />} />

@@ -10,7 +10,7 @@ export function SingleField({ label, hint, error, children }: SingleFieldProps) 
     <div className="space-y-2">
       <label className="text-sm font-medium">{label}</label>
       {children}
-      <div className="min-h-5">
+      <div>
         {error ? (
           <p className="text-sm text-destructive">{error}</p>
         ) : hint ? (
